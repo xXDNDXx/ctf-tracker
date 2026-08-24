@@ -200,6 +200,52 @@ textarea.form-control { min-height:380px; resize:vertical; line-height:1.5; font
         body.dark .skill-bar-bg { background:rgba(255,255,255,.08); }
         body.dark .search-box input:focus, body.dark .form-control:focus { background:rgba(13,16,22,.9); }
         body.dark #smokeCanvas { opacity:.4; }
+/* ==================== MOBILE / PHONE LAYOUT ==================== */
+.mobile-tabs { display:none; }
+
+@media (max-width:900px) {
+    /* header: drop desktop tab strip + subtitle; icon-only actions */
+    .nav-tabs { display:none; }
+    .brand { gap:.6rem; }
+    .brand > div:last-child { display:none; }
+    .header-actions { gap:.35rem; }
+    .header-actions .btn-action { font-size:0; gap:0; padding:.55rem .65rem; justify-content:center; }
+    .header-actions .btn-action i { font-size:.95rem; }
+    body { padding-bottom:calc(70px + env(safe-area-inset-bottom)); }
+
+    /* bottom app bar */
+    .mobile-tabs {
+        display:flex; position:fixed; left:0; right:0; bottom:0; z-index:900;
+        background:var(--bg-panel); -webkit-backdrop-filter:blur(20px); backdrop-filter:blur(20px);
+        border-top:1px solid var(--border-color);
+        padding:.4rem .6rem calc(.45rem + env(safe-area-inset-bottom));
+    }
+    .mtab {
+        flex:1; display:flex; flex-direction:column; align-items:center; gap:.18rem;
+        padding:.45rem 0 .25rem; border:none; background:none; cursor:pointer;
+        color:var(--text-muted); font-family:var(--font-ui); font-size:.6rem; font-weight:700;
+        border-radius:.7rem; transition:color .2s ease;
+    }
+    .mtab i { font-size:1.2rem; }
+    .mtab.active { color:var(--accent-cyan); }
+}
+
+@media (max-width:640px) {
+    /* grids collapse to single column so cards breathe on ~390px screens */
+    .machine-grid { grid-template-columns:1fr; gap:1rem; }
+    .recommended-scroll { grid-template-columns:1fr; }
+    .cheatsheet-grid { grid-template-columns:1fr; gap:1rem; }
+    .activity-side { min-width:0; }
+
+    /* thumb-friendly tap targets */
+    button, .chip { min-height:42px; }
+
+    /* full-screen slide-up modals */
+    .modal-overlay { padding:0; align-items:flex-end; }
+    .modal { width:100%; max-width:100%; height:auto; max-height:92vh;
+             border-radius:1.2rem 1.2rem 0 0; transform:translateY(30px); }
+    .modal-overlay.active .modal { transform:translateY(0); }
+}
 </style>
 </head>
 <body>
@@ -230,6 +276,13 @@ textarea.form-control { min-height:380px; resize:vertical; line-height:1.5; font
                 <button class="btn-action" id="themeToggle" onclick="toggleTheme()" title="Toggle dark mode"><i class="fa-solid fa-moon"></i></button>
             </div>
         </header>
+        <nav class="mobile-tabs" aria-label="Mobile navigation">
+            <button class="mtab active" data-tab="dashboard"><i class="fa-solid fa-chart-pie"></i><span>Dash</span></button>
+            <button class="mtab" data-tab="machines"><i class="fa-solid fa-list-check"></i><span>Boxes</span></button>
+            <button class="mtab" data-tab="paths"><i class="fa-solid fa-route"></i><span>Paths</span></button>
+            <button class="mtab" data-tab="cheatsheet"><i class="fa-solid fa-terminal"></i><span>Cheats</span></button>
+        </nav>
+
         <div id="targetBar" class="target-bar" style="display:none">
             <div class="target-info">
                 <div class="target-badge"><i class="fa-solid fa-crosshairs"></i> Active Target</div>
@@ -4728,7 +4781,27 @@ window.copyRevshell = (i) => {
 
     </script>
     <!-- FERROFLUID - interactive WebGL liquid cursor effect -->
-    <script src="ferrofluid.js"></script>
+    <script>
+/* FERROFLUID: mouse-cursor effect only - skip on touch devices / small screens to save battery */
+(function () {
+    var fine = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+    if (fine && window.innerWidth > 760) {
+        document.write('<scr' + 'ipt src="ferrofluid.js"></scr' + 'ipt>');
+    }
+})();
+</script>
+<script>
+/* MOBILE TAB BAR: mirrors desktop tab switching */
+document.querySelectorAll('.mobile-tabs .mtab').forEach(function (t) {
+    t.addEventListener('click', function () {
+        var target = document.querySelector('.nav-tab[data-tab="' + t.dataset.tab + '"]');
+        if (target) target.click();
+        document.querySelectorAll('.mobile-tabs .mtab').forEach(function (x) {
+            x.classList.toggle('active', x === t);
+        });
+    });
+});
+</script>
     <!-- ADD CUSTOM MACHINE MODAL -->
     <div class="modal-overlay" id="addMachineModalOverlay">
         <div class="modal" style="max-width:550px; height:auto;">
