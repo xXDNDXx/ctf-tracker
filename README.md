@@ -1,57 +1,123 @@
-# CTF Tracker
+<div align="center">
 
-A single-file CTF machine tracker for Hack The Box and TryHackMe. Tracks progress, hints, notes, timers, streaks and more — all in your browser with zero backend.
+# 🎯 CTF TRACKER
 
-## Features
+**Hack The Box · Try Hack Me · One Link · Any Device**
 
-- **417+ machines** — 347 HTB + 52 THM rooms pre-loaded
-- **Per-machine key hints** — 150+ curated exploitation hints
-- **Progress tracking** — user/root flag checkboxes with confetti
-- **Session timer** — track time spent per box (survives page reloads)
-- **Activity heatmap** — GitHub-style contribution grid
-- **Streak counter** — daily streak + best streak badges
-- **Reverse Shell Generator** — 6 payload types with listener suggestions
-- **Cheat Sheet** — 9 categories (TTY upgrades, recon, web, transfer, privesc, AD, cracking, pivoting)
-- **Learning Paths** — TJNull OSCP, web mastery, AD dominance tracks
-- **Dark mode toggle**
-- **Reset button** — progress-only or full factory reset (auto-backup first)
-- **Ferrofluid cursor effect** — interactive WebGL liquid simulation
-- **Smoke background** — animated ink-wash atmosphere
-- **100% ASCII source** — immune to encoding corruption
+[![Open Tracker](https://img.shields.io/badge/-%20OPEN%20TRACKER%20-9fef00?style=for-the-badge&labelColor=0d0f14)](https://xXDNDXx.github.io/ctf-tracker/)
+[![GitHub Pages](https://img.shields.io/badge/Live_on-GitHub_Pages-181717?style=flat-square&logo=github)](https://github.com/xXDNDXx/ctf-tracker)
+[![License](https://img.shields.io/badge/License-MIT-c9a227?style=flat-square)](LICENSE)
 
-## Quick Start
+*399 machines · 150+ hints · 52 THM rooms · zero backend*
 
-### Option A: Just open it
-Double-click `index.html`. That's it. Everything works from `file://`.
+</div>
 
-### Option B: GitHub Pages (share with others)
-1. Create a repo on GitHub
-2. Upload `index.html` and `ferrofluid.js`
-3. Go to Settings → Pages → Source: main branch → Save
-4. Your tracker is live at `https://yourusername.github.io/repo-name/`
+---
 
-Each visitor gets their own private tracker (all data stays in their browser).
+## What is this?
 
-### Option B: Any static host
-Netlify Drop, Vercel, Cloudflare Pages — just drag and drop the folder.
+A single-page tracker for your CTF journey. Browse machines, mark flags, take notes, time your sessions — all saved automatically in your browser. No login, no server, no setup.
 
-## Usage
+Works on **desktop and mobile** from the same link.
 
-| Shortcut | Action |
-|----------|--------|
-| `/` | Focus search box |
-| Click IP | Copy to clipboard |
+---
 
-## Files
+## Machines
 
-| File | Purpose |
-|------|---------|
-| `index.html` | Main app (self-contained CSS + JS) |
-| `ferrofluid.js` | WebGL cursor fluid effect |
-| `index_backup.html` | Automatic safety backup |
-| `.nojekyll` | Disables GH Pages Jekyll processing |
-| `HackTheBoxPDF/` | Optional local PDF writeups |
+| Platform | Rooms |
+|----------|-------|
+| **Hack The Box** | 347 (base catalog + newer releases) |
+| **Try Hack Me** | 52 popular rooms |
+| **Total** | **399** |
 
-## License
+Every machine comes with:
 
-MIT
+- Difficulty + OS + technique tags
+- User / Root flag checkboxes
+- A **key hint** so you're never fully stuck
+- Links to writeups (0xdf, IppSec, HTB Official, or THM Room)
+
+---
+
+## Cheat Sheet
+
+Nine built-in categories with copy-paste commands:
+
+| | | |
+|--|--|--|
+| Shell Upgrades / TTY | Recon & Scanning | Web Enumeration |
+| File Transfer | Linux PrivEsc | Windows PrivEsc |
+| Active Directory | Cracking & Passwords | Pivoting & Tunnels |
+
+---
+
+## Reverse Shell Generator
+
+Built-in payload generator with:
+- Bash, Python, PHP, Perl, PowerShell
+- Listener command shown alongside every payload
+- LHOST / LPORT substitution
+
+---
+
+## Extras
+
+- 🌗 **Dark mode toggle**
+- ⌨️ `/` shortcut to focus search
+- 📊 Live result counter with chip counts
+- 🕐 Session timer per machine (survives reloads)
+- 🔥 Activity heatmap + daily streak tracking
+- 💧 Ferrofluid cursor effect (WebGL)
+- 💨 Animated ink-smoke background
+- ♻️ Reset button (auto-backup before wiping)
+
+---
+
+## Deploy Your Own
+
+<details>
+<summary><b>Option A: GitHub Pages (recommended)</b></summary>
+
+1. Fork or clone this repo
+2. Go to **Settings → Pages → Source: main branch → Save**
+3. Done. Your tracker is live at `https://you.github.io/ctf-tracker/`
+
+</details>
+
+<details>
+<summary><b>Option B: Netlify Drop</b></summary>
+
+1. Grab `index.html` + `ferrofluid.js` + `.nojekyll`
+2. Drop them at [app.netlify.com/drop](https://app.netlify.com/drop)
+3. Instant URL
+
+</details>
+
+<details>
+<summary><b>Option C: Open locally</b></summary>
+
+Just double-click `index.html`. Everything works from `file://`.
+
+</details>
+
+---
+
+## Reset Options
+
+The header has a **Reset** button with two levels:
+
+| Level | What it clears | What it keeps |
+|-------|---------------|---------------|
+| **Progress Only** | Flags, notes, timers, streaks, activity | Custom machines + commands |
+| **Factory Reset** | Everything | Nothing |
+
+Both auto-download a JSON backup first.
+
+---
+
+<div align="center">
+
+**Built for people who break things.**
+
+</div>
+
