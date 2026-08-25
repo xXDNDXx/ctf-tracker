@@ -6,6 +6,15 @@
 <title>CTF Tracker - Machines, Hints, Cheats & Payloads</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta name="theme-color" content="#17140f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="CTF Tracker">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+
 <style>
 :root { --bg-dark:#eee8dc; --bg-panel:rgba(255,253,248,.55); --bg-card:rgba(255,253,248,.66); --bg-hover:rgba(255,255,255,.88); --text-main:#17140f; --text-muted:#857b6b; --htb-green:#1c1913; --htb-green-glow:rgba(28,25,19,.12); --accent-cyan:#96794a; --accent-purple:#7d6b4f; --accent-pink:#a98f6d; --status-user:#96794a; --diff-easy:#5f7d5a; --diff-medium:#b08a3e; --diff-hard:#b4622d; --diff-insane:#b03a3a; --border-color:rgba(23,20,15,.14); --glass-border:1px solid rgba(255,255,255,.65); --font-ui:'Inter',sans-serif; --font-code:'JetBrains Mono',monospace; }
 * { box-sizing:border-box; margin:0; padding:0; }
@@ -4802,6 +4811,15 @@ document.querySelectorAll('.mobile-tabs .mtab').forEach(function (t) {
     });
 });
 </script>
+<script>
+/* PWA: register service worker for offline use (https only) */
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+}
+</script>
+
     <!-- ADD CUSTOM MACHINE MODAL -->
     <div class="modal-overlay" id="addMachineModalOverlay">
         <div class="modal" style="max-width:550px; height:auto;">
