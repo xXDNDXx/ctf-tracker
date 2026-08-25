@@ -3557,7 +3557,7 @@ textarea.form-control { min-height:380px; resize:vertical; line-height:1.5; font
             document.getElementById('targetIp').innerText = m.ip;
             const st = state[m.id];
             const isComp = st.user && st.root;
-            document.getElementById('targetMeta').innerText = `${m.os} | ${m.diff} | ${isComp ? '<i class="fa-solid fa-circle-check"></i> Rooted' : st.user ? '<i class="fa-solid fa-user"></i> User Flagged' : '<i class="fa-solid fa-hourglass-half"></i> In Progress'}`;
+            document.getElementById('targetMeta').innerHTML = `${m.os} | ${m.diff} | ${isComp ? '<i class="fa-solid fa-circle-check"></i> Rooted' : st.user ? '<i class="fa-solid fa-user"></i> User Flagged' : '<i class="fa-solid fa-hourglass-half"></i> In Progress'}`;
 
             const tlbl = document.getElementById('targetTimerLabel');
             const tbtn = document.getElementById('targetTimerBtn');
@@ -4459,6 +4459,31 @@ window.copyRevshell = (i) => {
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
+
+        // ===== THEME ENGINE (dark mode) =====
+        function applyTheme(dark) {
+            document.body.classList.toggle('dark', dark);
+            const icon = document.querySelector('#themeToggle i');
+            if (icon) icon.className = dark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            const btn = document.getElementById('themeToggle');
+            if (btn) btn.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+            const meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', dark ? '#0b0d12' : '#17140f');
+            try { localStorage.setItem('htb_theme', dark ? 'dark' : 'light'); } catch (e) {}
+        }
+
+        function toggleTheme() {
+            applyTheme(!document.body.classList.contains('dark'));
+        }
+
+        // Restore saved theme on load; first visit follows OS preference
+        (function initTheme() {
+            let saved = null;
+            try { saved = localStorage.getItem('htb_theme'); } catch (e) {}
+            const osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            applyTheme(saved !== null ? saved === 'dark' : osDark);
+        })();
+
 
         // Confetti
         window.fireConfetti = () => {
