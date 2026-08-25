@@ -255,6 +255,42 @@ textarea.form-control { min-height:380px; resize:vertical; line-height:1.5; font
              border-radius:1.2rem 1.2rem 0 0; transform:translateY(30px); }
     .modal-overlay.active .modal { transform:translateY(0); }
 }
+        /* ===== TIME LOGGING UI ===== */
+        .time-chip {
+            display:inline-flex; align-items:center; gap:.5rem;
+            font-family:var(--font-code); font-size:.8rem; font-weight:700;
+            letter-spacing:.4px; font-variant-numeric:tabular-nums;
+            padding:.45rem .95rem; border-radius:2rem;
+            background:rgba(255,255,255,.5); border:1px solid var(--border-color);
+            color:var(--text-muted); cursor:pointer;
+            transition:all .22s ease;
+        }
+        .time-chip i { font-size:.75rem; opacity:.7; transition:inherit; }
+        .time-chip:hover { border-color:var(--htb-green); color:var(--htb-green); transform:translateY(-1px); box-shadow:0 4px 14px var(--htb-green-glow); }
+        .time-chip:hover i { opacity:1; }
+        .time-chip.tracked { background:var(--htb-green-glow); color:var(--text-main); border-color:transparent; box-shadow:inset 0 0 0 1px var(--htb-green-glow); }
+        .time-chip.tracked i { opacity:.9; color:var(--htb-green); }
+        .time-chip.running { background:var(--htb-green); color:var(--bg-dark); border-color:transparent; box-shadow:0 0 16px var(--htb-green-glow), 0 4px 14px rgba(0,0,0,.15); }
+        .time-chip.running i { opacity:1; }
+        .time-chip.running::before {
+            content:''; width:7px; height:7px; border-radius:50%; flex-shrink:0;
+            background:currentColor; animation:tcPulse 1.3s ease-in-out infinite;
+        }
+        @keyframes tcPulse { 0%,100%{opacity:1; transform:scale(1)} 50%{opacity:.3; transform:scale(.72)} }
+        .date-chip {
+            display:inline-flex; align-items:center; gap:.42rem;
+            font-family:var(--font-code); font-size:.72rem; font-weight:600;
+            padding:.34rem .75rem; border-radius:2rem;
+            background:rgba(23,20,15,.04); border:1px dashed var(--border-color);
+            color:var(--text-muted); letter-spacing:.3px;
+        }
+        .cmd-btn.running { background:var(--htb-green) !important; color:var(--bg-dark) !important; border-color:transparent !important; box-shadow:0 0 14px var(--htb-green-glow); }
+        .cmd-btn.running::before {
+            content:''; display:inline-block; width:7px; height:7px; border-radius:50%;
+            background:currentColor; margin-right:.15rem; animation:tcPulse 1.3s ease-in-out infinite;
+        }
+
+        /* ===== DARK MODE OVERRIDES v2
         /* ===== DARK MODE OVERRIDES v2 - covers hardcoded light-theme colors ===== */
         body.dark::before, body.dark::after { opacity:.10; filter:blur(90px) saturate(.6); }
         body.dark .brand-title { background:linear-gradient(90deg,#e8e6e1,#9fef00); -webkit-background-clip:text; background-clip:text; }
@@ -281,6 +317,11 @@ textarea.form-control { min-height:380px; resize:vertical; line-height:1.5; font
         body.dark select { background-color:rgba(13,16,22,.65); color:#e8e6e1; border-color:rgba(255,255,255,.09); }
         body.dark select option { background:#14171f; color:#e8e6e1; }
         body.dark .search-box input::placeholder, body.dark .form-control::placeholder { color:#5b6270; }
+
+        body.dark .time-chip { background:rgba(255,255,255,.06); }
+        body.dark .time-chip.tracked { background:var(--htb-green-glow); color:#dfe6cf; }
+        body.dark .time-chip.running { background:var(--htb-green); color:var(--bg-dark); }
+        body.dark .date-chip { background:rgba(159,239,0,.05); border-color:rgba(255,255,255,.14); color:#aeb6c2; }
 
 </style>
 </head>
