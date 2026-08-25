@@ -255,6 +255,33 @@ textarea.form-control { min-height:380px; resize:vertical; line-height:1.5; font
              border-radius:1.2rem 1.2rem 0 0; transform:translateY(30px); }
     .modal-overlay.active .modal { transform:translateY(0); }
 }
+        /* ===== DARK MODE OVERRIDES v2 - covers hardcoded light-theme colors ===== */
+        body.dark::before, body.dark::after { opacity:.10; filter:blur(90px) saturate(.6); }
+        body.dark .brand-title { background:linear-gradient(90deg,#e8e6e1,#9fef00); -webkit-background-clip:text; background-clip:text; }
+        body.dark .brand-logo { color:#9fef00; filter:drop-shadow(0 0 10px rgba(159,239,0,.35)); }
+        body.dark ::-webkit-scrollbar-track { background:#10131a; } body.dark ::-webkit-scrollbar-thumb { background:#2c3340; }
+        body.dark .nav-tabs { background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.09); }
+        body.dark .nav-tab:hover { background:rgba(255,255,255,.06); }
+        body.dark .nav-tab.active, body.dark .chip.active, body.dark .chip:hover,
+        body.dark .target-badge, body.dark .btn-primary,
+        body.dark .flag-checkbox input:checked::after, body.dark .btn-target:hover { color:#0d0f14; }
+        body.dark .nav-tab.active { box-shadow:0 4px 18px rgba(159,239,0,.25); }
+        body.dark .tag { background:rgba(159,239,0,.06); border-color:rgba(255,255,255,.1); color:#aeb6c2; }
+        body.dark .table-view th, body.dark .table-view td { border-bottom-color:rgba(255,255,255,.07); }
+        body.dark .machine-card:hover { border-color:rgba(159,239,0,.35); box-shadow:0 16px 40px rgba(0,0,0,.5), 0 0 22px var(--card-glow, transparent); }
+        body.dark .heat-cell, body.dark .mini-heat { background:rgba(255,255,255,.08); }
+        body.dark .heat-cell.lv1, body.dark .mini-heat.lv1 { background:rgba(159,239,0,.25); }
+        body.dark .heat-cell.lv2, body.dark .mini-heat.lv2 { background:rgba(159,239,0,.45); }
+        body.dark .heat-cell.lv3, body.dark .mini-heat.lv3 { background:rgba(159,239,0,.68); }
+        body.dark .heat-cell.lv4, body.dark .mini-heat.lv4 { background:#9fef00; box-shadow:0 0 7px rgba(159,239,0,.55); }
+        body.dark .btn-icon { background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.12); color:#aeb6c2; }
+        body.dark .btn-icon:hover { background:#9fef00; color:#0d0f14; border-color:#9fef00; }
+        body.dark .btn-ghost { border-color:rgba(255,255,255,.16); }
+        body.dark .btn-ghost:hover { background:rgba(255,255,255,.06); }
+        body.dark select { background-color:rgba(13,16,22,.65); color:#e8e6e1; border-color:rgba(255,255,255,.09); }
+        body.dark select option { background:#14171f; color:#e8e6e1; }
+        body.dark .search-box input::placeholder, body.dark .form-control::placeholder { color:#5b6270; }
+
 </style>
 </head>
 <body>
