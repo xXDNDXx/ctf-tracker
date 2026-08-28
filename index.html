@@ -323,6 +323,15 @@ textarea.form-control { min-height:380px; resize:vertical; line-height:1.5; font
         body.dark .time-chip.running { background:var(--htb-green); color:var(--bg-dark); }
         body.dark .date-chip { background:rgba(159,239,0,.05); border-color:rgba(255,255,255,.14); color:#aeb6c2; }
 
+        /* ===== FOOTER LINKS ===== */
+        .site-footer { max-width:1560px; margin:2.25rem auto 1.25rem; padding:0 2rem; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.85rem; }
+        .site-footer .foot-brand { font-family:var(--font-code); font-size:.78rem; font-weight:600; color:var(--text-muted); white-space:nowrap; }
+        .site-footer .foot-links { display:flex; flex-wrap:wrap; gap:.5rem; }
+        .foot-link { display:inline-flex; align-items:center; gap:.45rem; padding:.42rem .9rem; border-radius:2rem; background:rgba(255,255,255,.45); border:var(--glass-border); color:var(--text-main); text-decoration:none; font-size:.78rem; font-weight:600; transition:all .2s; }
+        .foot-link i { color:var(--text-muted); transition:color .2s; }
+        .foot-link:hover { transform:translateY(-2px); border-color:var(--htb-green); box-shadow:0 6px 16px var(--htb-green-glow); }
+        .foot-link:hover i { color:var(--htb-green); }
+        body.dark .foot-link { background:rgba(13,16,22,.65); border-color:rgba(255,255,255,.09); }
 </style>
 </head>
 <body>
@@ -4996,6 +5005,17 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
             </div>
         </div>
     </div>
+    <!-- FOOTER LINKS -->
+    <footer class="site-footer">
+        <div class="foot-brand">&gt;_ built by DANIEL &middot; happy hacking</div>
+        <div class="foot-links">
+            <a class="foot-link" href="https://xXDNDXx.github.io/" target="_blank" rel="noopener"><i class="fa-solid fa-user-astronaut"></i> Portfolio</a>
+            <a class="foot-link" href="https://xxdndxx.gitbook.io/thm-writeups/" target="_blank" rel="noopener"><i class="fa-solid fa-book-open"></i> Write-ups</a>
+            <a class="foot-link" href="https://github.com/xXDNDXx" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> GitHub</a>
+            <a class="foot-link" href="https://www.linkedin.com/in/daniel-dayan-a66322352/" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+            <a class="foot-link" href="https://github.com/xXDNDXx/ctf-tracker" target="_blank" rel="noopener"><i class="fa-solid fa-crosshairs"></i> Tracker Repo</a>
+        </div>
+    </footer>
 
 </body>
 </html>

@@ -115,6 +115,19 @@ Both auto-download a JSON backup first.
 
 ---
 
+## Links
+
+Built by **DANIEL** ([@xXDNDXx](https://github.com/xXDNDXx))
+
+| | |
+|---|---|
+| 🧑‍🚀 Portfolio | <https://xXDNDXx.github.io/> |
+| 📝 CTF Write-ups | <https://xxdndxx.gitbook.io/thm-writeups/> |
+| 💻 GitHub | <https://github.com/xXDNDXx> |
+| 💼 LinkedIn | <https://www.linkedin.com/in/daniel-dayan-a66322352/> |
+
+---
+
 <div align="center">
 
 **Built for people who break things.**
