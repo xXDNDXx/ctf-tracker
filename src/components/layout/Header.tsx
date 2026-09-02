@@ -1,41 +1,44 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useCtfStore } from '../../store/useCtfStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import { 
-  Crosshair, 
-  Play, 
-  Pause, 
-  RotateCcw, 
+  Search, 
+  Plus, 
   Tv, 
   Volume2, 
   VolumeX, 
   Database, 
-  Search, 
-  Plus, 
+  ChevronDown, 
+  Play, 
+  Pause, 
+  RotateCcw, 
   Copy, 
   Check, 
-  Server,
-  ChevronDown,
-  Sparkles,
+  Zap, 
   Flag,
-  ExternalLink,
-  Zap
+  Server,
+  Sparkles
 } from 'lucide-react';
-import { useCtfStore, BRAND_THEMES } from '../../store/useCtfStore';
-import { formatSeconds, playCyberSound, triggerRootCelebration } from '../../utils/helpers';
 import { CyberLogo } from '../common/CyberLogo';
 import { PlatformIcon } from '../common/PlatformBadge';
+import { playCyberSound, formatSeconds, triggerRootCelebration } from '../../utils/helpers';
 import { UserMenu } from '../auth/UserMenu';
+
+const BRAND_THEMES = [
+  { id: 'rootvector', namePrefix: 'ROOT', nameSuffix: 'VECTOR', suffixColor: 'text-cyber-emerald', tagline: 'CTF & Lab Operations Tracker' },
+  { id: 'specter', namePrefix: 'SPECTER', nameSuffix: 'CTF', suffixColor: 'text-cyber-cyan', tagline: 'Offensive Cyber Command Suite' },
+  { id: 'hextracker', namePrefix: 'HEX', nameSuffix: 'TRACKER', suffixColor: 'text-cyber-purple', tagline: 'Tactical Pwn Tracker // v2.0' },
+  { id: 'zeroday', namePrefix: '0DAY', nameSuffix: 'LOGS', suffixColor: 'text-cyber-crimson', tagline: 'Red Team Attack Lifecycle Tracker' },
+];
 
 export const Header: React.FC = () => {
   const {
-    appBrand,
-    setAppBrand,
-    globalVars,
-    setGlobalVars,
-    activeTargetId,
     machines,
-    isTimerRunning,
+    activeTargetId,
+    setActiveTarget,
     activeTimerSeconds,
+    isTimerRunning,
     startTimer,
     pauseTimer,
     resetTimer,
@@ -44,29 +47,32 @@ export const Header: React.FC = () => {
     toggleCrtOverlay,
     soundEnabled,
     toggleSound,
+    globalVars,
+    setGlobalVars,
+    appBrand,
+    setAppBrand,
+    updateMachine,
     setCommandPaletteOpen,
     setNewMachineModalOpen,
     setBackupModalOpen,
     setReconAutomationModalOpen,
-    setActiveTarget,
-    setSelectedMachineId,
-    updateMachineStatus,
-    updateMachine,
   } = useCtfStore();
 
-  const [copiedLhost, setCopiedLhost] = useState(false);
-  const [copiedTargetIp, setCopiedTargetIp] = useState(false);
+  const { user } = useAuthStore();
+
   const [brandDropdownOpen, setBrandDropdownOpen] = useState(false);
   const [targetSelectorOpen, setTargetSelectorOpen] = useState(false);
   const [targetSearchTerm, setTargetSearchTerm] = useState('');
+  const [copiedTargetIp, setCopiedTargetIp] = useState(false);
+  const [copiedLhost, setCopiedLhost] = useState(false);
 
   const activeMachine = machines.find((m) => m.id === activeTargetId);
   const activeBrand = BRAND_THEMES.find((b) => b.id === appBrand) || BRAND_THEMES[0];
 
   const handleQuickUserPwn = () => {
     if (!activeMachine) return;
-    updateMachineStatus(activeMachine.id, 'foothold');
-    updateMachine(activeMachine.id, { 
+    updateMachine(activeMachine.id, {
+      status: activeMachine.status === 'root' || activeMachine.status === 'completed' ? activeMachine.status : 'foothold',
       userPwnedAt: new Date().toISOString(),
       userFlag: activeMachine.userFlag || 'FLAG{USER_CAPTURED_VIA_COMBAT_HUD}'
     });
@@ -75,8 +81,8 @@ export const Header: React.FC = () => {
 
   const handleQuickRootPwn = () => {
     if (!activeMachine) return;
-    updateMachineStatus(activeMachine.id, 'root');
-    updateMachine(activeMachine.id, { 
+    updateMachine(activeMachine.id, {
+      status: 'root',
       rootPwnedAt: new Date().toISOString(),
       rootFlag: activeMachine.rootFlag || 'FLAG{ROOT_CAPTURED_VIA_COMBAT_HUD}'
     });
@@ -113,10 +119,12 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-cyber-border bg-cyber-bg/95 backdrop-blur-md px-4 py-2.5 transition-colors">
-      <div className="flex flex-wrap items-center justify-between gap-3 max-w-[1920px] mx-auto">
+    <header className="sticky top-0 z-40 border-b border-cyber-border bg-cyber-bg/95 backdrop-blur-md transition-colors">
+      
+      {/* Tier 1: Primary Bar (Brand + Search on Left, Tools & Profile ALWAYS on Right) */}
+      <div className="px-4 py-2 border-b border-cyber-border/40 flex items-center justify-between gap-3 max-w-[1920px] mx-auto">
         
-        {/* Left: Brand & Tactical Identity */}
+        {/* Left: Brand Identity & Global Search */}
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className="flex items-center gap-2.5">
@@ -197,59 +205,53 @@ export const Header: React.FC = () => {
           </button>
         </div>
 
-        {/* Center: Live Variable Injection Hub */}
-        <div className="hidden xl:flex items-center gap-2 bg-cyber-card/80 border border-cyber-border/80 rounded-lg p-1 px-2.5 font-mono text-xs">
-          <span className="text-[10px] uppercase font-semibold text-cyber-cyan tracking-wider flex items-center gap-1">
-            <Server className="w-3 h-3" /> PAYLOAD VARS:
-          </span>
-
-          {/* LHOST */}
-          <div className="flex items-center gap-1 bg-cyber-bg px-2 py-1 rounded border border-cyber-border focus-within:border-cyber-cyan">
-            <span className="text-[10px] text-cyber-muted">LHOST:</span>
-            <input
-              type="text"
-              value={globalVars.lhost}
-              onChange={(e) => setGlobalVars({ lhost: e.target.value })}
-              className="w-24 md:w-28 bg-transparent text-white font-mono text-xs focus:outline-none"
-              placeholder="10.10.14.x"
-            />
+        {/* Right: Tactical Toggles & GOOGLE PROFILE (PERMANENTLY PINNED TOP RIGHT) */}
+        <div className="flex items-center gap-2">
+          {/* Tactical Utilities (CRT, Sound, Backup) */}
+          <div className="hidden sm:flex items-center gap-1 border-r border-cyber-border/80 pr-2">
             <button
-              onClick={handleCopyLhost}
-              className="text-cyber-muted hover:text-cyber-cyan transition-colors"
-              title="Copy LHOST to clipboard"
+              onClick={toggleCrtOverlay}
+              className={`p-1.5 rounded-md border transition-all ${
+                crtOverlay 
+                  ? 'bg-cyber-cyan/20 border-cyber-cyan text-cyber-cyan shadow-glow-cyan/50' 
+                  : 'bg-cyber-card border-cyber-border text-cyber-muted hover:text-white'
+              }`}
+              title="Toggle Retro CRT Scanline Overlay"
             >
-              {copiedLhost ? <Check className="w-3 h-3 text-cyber-emerald" /> : <Copy className="w-3 h-3" />}
+              <Tv className="w-3.5 h-3.5" />
+            </button>
+
+            <button
+              onClick={toggleSound}
+              className={`p-1.5 rounded-md border transition-all ${
+                soundEnabled 
+                  ? 'bg-cyber-card border-cyber-border text-cyber-emerald hover:border-cyber-emerald/50' 
+                  : 'bg-cyber-card border-cyber-border text-cyber-muted hover:text-white'
+              }`}
+              title={soundEnabled ? 'Mute Cyber Audio FX' : 'Enable Cyber Audio FX'}
+            >
+              {soundEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+            </button>
+
+            <button
+              onClick={() => setBackupModalOpen(true)}
+              className="p-1.5 rounded-md bg-cyber-card border border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-purple transition-all"
+              title="Backup & Restore JSON State"
+            >
+              <Database className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          {/* LPORT */}
-          <div className="flex items-center gap-1 bg-cyber-bg px-2 py-1 rounded border border-cyber-border focus-within:border-cyber-cyan">
-            <span className="text-[10px] text-cyber-muted">LPORT:</span>
-            <input
-              type="text"
-              value={globalVars.lport}
-              onChange={(e) => setGlobalVars({ lport: e.target.value })}
-              className="w-14 bg-transparent text-white font-mono text-xs focus:outline-none"
-              placeholder="4444"
-            />
-          </div>
-
-          {/* TARGET_IP */}
-          <div className="flex items-center gap-1 bg-cyber-bg px-2 py-1 rounded border border-cyber-border focus-within:border-cyber-emerald">
-            <span className="text-[10px] text-cyber-muted">TARGET:</span>
-            <input
-              type="text"
-              value={globalVars.targetIp}
-              onChange={(e) => setGlobalVars({ targetIp: e.target.value })}
-              className="w-24 md:w-28 bg-transparent text-cyber-emerald font-mono text-xs font-semibold focus:outline-none"
-              placeholder="10.10.10.x"
-            />
-          </div>
+          {/* User Profile & 1-Click Save Station */}
+          <UserMenu />
         </div>
+      </div>
 
-        {/* Right: Active Target Stopwatch & Tactical Toggles */}
-        <div className="flex items-center gap-2.5">
-          {/* Active Target Combat HUD / Selector */}
+      {/* Tier 2: Tactical Operations Strip (Combat HUD, Automations, Add Box & Payload Vars) */}
+      <div className="px-4 py-1.5 bg-cyber-card/40 flex items-center justify-between gap-3 overflow-x-auto scrollbar-none max-w-[1920px] mx-auto text-xs font-mono">
+        
+        {/* Left: Active Target HUD / Quick Selector & Action Buttons */}
+        <div className="flex items-center gap-2 flex-shrink-0">
           {activeMachine ? (
             <div className="flex items-center gap-2 bg-cyber-card border border-cyber-emerald/50 px-2.5 py-1 rounded-lg text-xs font-mono shadow-[0_0_15px_rgba(16,185,129,0.25)] relative">
               <PlatformIcon platform={activeMachine.platform} className="w-4 h-4 flex-shrink-0" />
@@ -277,7 +279,6 @@ export const Header: React.FC = () => {
 
               {/* 1-Click Quick Flags */}
               <div className="flex items-center gap-1 border-l border-cyber-border pl-1.5">
-                {/* User Flag */}
                 {Boolean(activeMachine.userPwnedAt || activeMachine.userFlag || activeMachine.status === 'foothold' || activeMachine.status === 'root' || activeMachine.status === 'completed') ? (
                   <span 
                     className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-cyber-amber/20 text-cyber-amber border border-cyber-amber/40 flex items-center gap-0.5"
@@ -295,7 +296,6 @@ export const Header: React.FC = () => {
                   </button>
                 )}
 
-                {/* Root Flag */}
                 {Boolean(activeMachine.rootPwnedAt || activeMachine.rootFlag || activeMachine.status === 'root' || activeMachine.status === 'completed') ? (
                   <span 
                     className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-cyber-emerald/20 text-cyber-emerald border border-cyber-emerald/40 shadow-glow-emerald/20 flex items-center gap-0.5"
@@ -348,38 +348,36 @@ export const Header: React.FC = () => {
                     if (soundEnabled) playCyberSound('click');
                   }}
                   className="p-1 rounded hover:bg-cyber-bg text-cyber-muted hover:text-white transition-colors"
-                  title="Reset Timer"
+                  title="Reset Stopwatch"
                 >
                   <RotateCcw className="w-3 h-3" />
                 </button>
-                <button
-                  onClick={() => {
-                    setActiveTarget(null);
-                    if (soundEnabled) playCyberSound('click');
-                  }}
-                  className="text-[10px] text-cyber-muted hover:text-cyber-crimson ml-1 p-0.5"
-                  title="Disengage Active Target"
-                >
-                  ✕
-                </button>
               </div>
+
+              {/* Switch Target Trigger */}
+              <button
+                onClick={() => setTargetSelectorOpen(!targetSelectorOpen)}
+                className="p-1 rounded hover:bg-cyber-bg text-cyber-muted hover:text-white transition-colors border-l border-cyber-border pl-1.5"
+                title="Switch Target Box"
+              >
+                <ChevronDown className="w-3 h-3" />
+              </button>
             </div>
           ) : (
             <div className="relative">
               <button
                 onClick={() => setTargetSelectorOpen(!targetSelectorOpen)}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-cyber-card border border-cyber-border hover:border-cyber-emerald text-cyber-muted hover:text-white text-xs font-mono transition-all group"
-                title="Select machine to engage"
+                className="flex items-center gap-2 px-3 py-1 rounded-lg bg-cyber-bg border border-cyber-border hover:border-cyber-cyan text-white text-xs font-semibold transition-all shadow-sm group"
               >
-                <Crosshair className="w-3.5 h-3.5 text-cyber-emerald transition-transform group-hover:rotate-45" />
+                <span className="w-2 h-2 rounded-full bg-cyber-muted group-hover:bg-cyber-cyan transition-colors" />
                 <span>ENGAGE TARGET</span>
-                <ChevronDown className="w-3 h-3 text-cyber-muted" />
+                <ChevronDown className="w-3 h-3 text-cyber-muted group-hover:text-cyber-cyan" />
               </button>
 
-              {/* Target Quick Selector Dropdown */}
+              {/* Target Selector Dropdown */}
               {targetSelectorOpen && (
                 <div 
-                  className="absolute right-0 top-full mt-2 w-72 p-2 rounded-xl bg-cyber-card border border-cyber-border shadow-2xl z-50 font-mono text-xs space-y-1.5 backdrop-blur-md"
+                  className="absolute left-0 top-full mt-2 w-72 p-2 rounded-xl bg-cyber-card border border-cyber-border shadow-2xl z-50 font-mono text-xs space-y-1.5 backdrop-blur-md"
                   onMouseLeave={() => setTargetSelectorOpen(false)}
                 >
                   <div className="text-[10px] text-cyber-muted uppercase px-1 font-bold flex items-center justify-between">
@@ -428,69 +426,79 @@ export const Header: React.FC = () => {
             </div>
           )}
 
-          {/* Tactical Automation Hub */}
+          {/* Tactical Automation Hub Button */}
           <button
             onClick={() => setReconAutomationModalOpen(true)}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/40 hover:bg-cyber-cyan hover:text-black font-mono text-xs font-semibold transition-all shadow-glow-cyan/20"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/40 hover:bg-cyber-cyan hover:text-black font-mono text-xs font-semibold transition-all shadow-glow-cyan/20"
             title="Open Tactical Automation Hub (Nmap Parser & Payload Engine)"
           >
             <Zap className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Automations</span>
+            <span>Automations</span>
           </button>
 
-          {/* Quick Add Custom Machine */}
+          {/* Quick Add Custom Machine Button */}
           <button
             onClick={() => setNewMachineModalOpen(true)}
-            className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-md bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/40 hover:bg-cyber-emerald hover:text-black font-mono text-xs font-semibold transition-all shadow-sm"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/40 hover:bg-cyber-emerald hover:text-black font-mono text-xs font-semibold transition-all shadow-sm"
             title="Deploy Custom Lab Box"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Box</span>
           </button>
+        </div>
 
-          {/* Tactical Utilities (CRT, Sound, Backup) */}
-          <div className="hidden sm:flex items-center gap-1 border-l border-cyber-border pl-2">
-            <button
-              onClick={toggleCrtOverlay}
-              className={`p-1.5 rounded-md border transition-all ${
-                crtOverlay 
-                  ? 'bg-cyber-cyan/20 border-cyber-cyan text-cyber-cyan shadow-glow-cyan/50' 
-                  : 'bg-cyber-card border-cyber-border text-cyber-muted hover:text-white'
-              }`}
-              title="Toggle Retro CRT Scanline Overlay"
-            >
-              <Tv className="w-3.5 h-3.5" />
-            </button>
+        {/* Right: Live Variable Injection Hub (LHOST, LPORT, TARGET) */}
+        <div className="hidden lg:flex items-center gap-2 bg-cyber-card/80 border border-cyber-border/80 rounded-lg p-1 px-2.5 font-mono text-xs flex-shrink-0">
+          <span className="text-[10px] uppercase font-semibold text-cyber-cyan tracking-wider flex items-center gap-1">
+            <Server className="w-3 h-3" /> PAYLOAD VARS:
+          </span>
 
+          {/* LHOST */}
+          <div className="flex items-center gap-1 bg-cyber-bg px-2 py-0.5 rounded border border-cyber-border focus-within:border-cyber-cyan">
+            <span className="text-[10px] text-cyber-muted">LHOST:</span>
+            <input
+              type="text"
+              value={globalVars.lhost}
+              onChange={(e) => setGlobalVars({ lhost: e.target.value })}
+              className="w-24 bg-transparent text-white font-mono text-xs focus:outline-none"
+              placeholder="10.10.14.x"
+            />
             <button
-              onClick={toggleSound}
-              className={`p-1.5 rounded-md border transition-all ${
-                soundEnabled 
-                  ? 'bg-cyber-card border-cyber-border text-cyber-emerald hover:border-cyber-emerald/50' 
-                  : 'bg-cyber-card border-cyber-border text-cyber-muted hover:text-white'
-              }`}
-              title={soundEnabled ? 'Mute Cyber Audio FX' : 'Enable Cyber Audio FX'}
+              onClick={handleCopyLhost}
+              className="text-cyber-muted hover:text-cyber-cyan transition-colors"
+              title="Copy LHOST to clipboard"
             >
-              {soundEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
-            </button>
-
-            <button
-              onClick={() => setBackupModalOpen(true)}
-              className="p-1.5 rounded-md bg-cyber-card border border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-purple transition-all"
-              title="Backup & Restore JSON State"
-            >
-              <Database className="w-3.5 h-3.5" />
+              {copiedLhost ? <Check className="w-3 h-3 text-cyber-emerald" /> : <Copy className="w-3 h-3" />}
             </button>
           </div>
 
-          {/* Google Sign-In / User Profile Station */}
-          <div className="flex items-center pl-1 border-l border-cyber-border">
-            <UserMenu />
+          {/* LPORT */}
+          <div className="flex items-center gap-1 bg-cyber-bg px-2 py-0.5 rounded border border-cyber-border focus-within:border-cyber-cyan">
+            <span className="text-[10px] text-cyber-muted">LPORT:</span>
+            <input
+              type="text"
+              value={globalVars.lport}
+              onChange={(e) => setGlobalVars({ lport: e.target.value })}
+              className="w-12 bg-transparent text-white font-mono text-xs focus:outline-none"
+              placeholder="4444"
+            />
           </div>
 
+          {/* TARGET_IP */}
+          <div className="flex items-center gap-1 bg-cyber-bg px-2 py-0.5 rounded border border-cyber-border focus-within:border-cyber-emerald">
+            <span className="text-[10px] text-cyber-muted">TARGET:</span>
+            <input
+              type="text"
+              value={globalVars.targetIp}
+              onChange={(e) => setGlobalVars({ targetIp: e.target.value })}
+              className="w-24 bg-transparent text-cyber-emerald font-mono text-xs font-semibold focus:outline-none"
+              placeholder="10.10.10.x"
+            />
+          </div>
         </div>
 
       </div>
+
     </header>
   );
 };

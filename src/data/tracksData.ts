@@ -81,8 +81,9 @@ export const PRACTICE_TRACKS: PracticeTrack[] = [
     badgeColor: 'border-blue-500/40 bg-blue-500/10 text-blue-400',
     accentColor: '#3B82F6',
     filterFn: (m) => 
-      (m.os === 'Windows' || m.os === 'Active Directory') &&
-      m.tags.some(t => ['potato', 'seimpersonate', 'unquoted', 'token', 'privesc', 'service', 'uac', 'dll', 'registry', 'sam', 'lsass'].includes(t.toLowerCase())),
+      m.os === 'Windows' || 
+      m.os === 'Active Directory' ||
+      m.tags.some(t => ['windows', 'smb', 'rdp', 'winrm', 'ad', 'potato', 'seimpersonate', 'unquoted', 'token', 'privesc', 'service', 'uac', 'dll', 'registry', 'sam', 'lsass'].includes(t.toLowerCase())),
   },
   {
     id: 'beginner-essentials',
