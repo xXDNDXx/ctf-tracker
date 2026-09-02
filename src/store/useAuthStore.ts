@@ -17,12 +17,14 @@ export const DEFAULT_DANIEL_PROFILE: User = {
   updatedAt: '2026-01-01T00:00:00.000Z',
 };
 
-const getInitialGoogleClientId = (): string | null => {
+export const PUBLIC_GOOGLE_CLIENT_ID = '495621757694-hvhvo2snbcmj12jat6srh679i1s7mpih.apps.googleusercontent.com';
+
+const getInitialGoogleClientId = (): string => {
   if (typeof window !== 'undefined') {
     const stored = localStorage.getItem(CLIENT_ID_STORAGE_KEY);
-    if (stored) return stored;
+    if (stored && stored.includes('.apps.googleusercontent.com')) return stored;
   }
-  return (import.meta as any).env?.VITE_GOOGLE_CLIENT_ID || null;
+  return (import.meta as any).env?.VITE_GOOGLE_CLIENT_ID || PUBLIC_GOOGLE_CLIENT_ID;
 };
 
 export const useAuthStore = create<AuthState>()(

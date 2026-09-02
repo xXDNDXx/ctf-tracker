@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useAuthStore } from '../../store/useAuthStore';
+import React, { useState } from 'react';
+import { useAuthStore, PUBLIC_GOOGLE_CLIENT_ID } from '../../store/useAuthStore';
 import { useCtfStore } from '../../store/useCtfStore';
 import { playCyberSound } from '../../utils/helpers';
 import { 
@@ -18,7 +18,7 @@ import {
   Zap,
   Key,
   ExternalLink,
-  Copy,
+  ChevronUp,
   User as UserIcon
 } from 'lucide-react';
 
@@ -29,7 +29,6 @@ export const UserMenu: React.FC = () => {
     isAuthenticated,
     googleClientId,
     setGoogleClientId,
-    loginWithGoogleCredential,
     loginWithGoogleUserInfo,
     loginAsOperator,
     switchProfile, 
@@ -54,10 +53,9 @@ export const UserMenu: React.FC = () => {
   const [newProfileInput, setNewProfileInput] = useState('');
   const [showNewProfileInput, setShowNewProfileInput] = useState(false);
 
-  // Google OAuth Client ID setup state
-  const [clientIdInput, setClientIdInput] = useState(googleClientId || '');
-  const [showClientIdConfig, setShowClientIdConfig] = useState(!googleClientId);
-  const [copiedOrigin, setCopiedOrigin] = useState(false);
+  // Optional Advanced Google Client ID toggle
+  const [showClientIdConfig, setShowClientIdConfig] = useState(false);
+  const [clientIdInput, setClientIdInput] = useState(googleClientId || PUBLIC_GOOGLE_CLIENT_ID);
   const [loginCallsign, setLoginCallsign] = useState('');
 
   const activeName = user?.name || 'Daniel';
@@ -76,28 +74,17 @@ export const UserMenu: React.FC = () => {
 
   // Launch Authentic Google Sign-In Popup
   const handleLaunchGoogleSignIn = (targetClientId?: string) => {
-    const activeId = (targetClientId || googleClientId || clientIdInput).trim();
-
-    if (!activeId) {
-      setShowClientIdConfig(true);
-      return;
-    }
-
-    // Save ID permanently
-    if (activeId !== googleClientId) {
-      setGoogleClientId(activeId);
-    }
+    const activeId = (targetClientId || googleClientId || PUBLIC_GOOGLE_CLIENT_ID).trim();
 
     if (typeof window !== 'undefined') {
       const w = window as any;
 
-      // 1. Check if Google Identity Services is available
+      // 1. Google Identity Services standard OAuth token client
       if (w.google?.accounts?.oauth2) {
         try {
           const client = w.google.accounts.oauth2.initTokenClient({
             client_id: activeId,
             scope: 'openid profile email',
-            prompt: 'select_account',
             callback: async (tokenResponse: any) => {
               if (tokenResponse?.access_token) {
                 try {
@@ -128,22 +115,16 @@ export const UserMenu: React.FC = () => {
         window.location.origin
       )}&response_type=token&scope=${encodeURIComponent('openid profile email')}&prompt=select_account`;
 
-      window.open(authUrl, '_blank', 'width=500,height=600,menubar=no,status=no,toolbar=no');
+      window.open(authUrl, '_blank', 'width=520,height=620,menubar=no,status=no,toolbar=no');
     }
   };
 
-  const handleCopyOrigin = () => {
-    navigator.clipboard.writeText(currentOrigin);
-    setCopiedOrigin(true);
-    playCyberSound('copy');
-    setTimeout(() => setCopiedOrigin(false), 2000);
-  };
-
-  const handleSaveClientIdAndLogin = (e: React.FormEvent) => {
+  const handleSaveClientId = (e: React.FormEvent) => {
     e.preventDefault();
     if (clientIdInput.trim()) {
       setGoogleClientId(clientIdInput.trim());
       handleLaunchGoogleSignIn(clientIdInput.trim());
+      setShowClientIdConfig(false);
     }
   };
 
@@ -258,7 +239,7 @@ export const UserMenu: React.FC = () => {
 
         {dropdownOpen && (
           <div
-            className="absolute right-0 top-full mt-2 w-84 p-4 rounded-2xl bg-cyber-card border border-cyber-border shadow-2xl z-50 space-y-3.5 backdrop-blur-md"
+            className="absolute right-0 top-full mt-2 w-80 p-4 rounded-2xl bg-cyber-card border border-cyber-border shadow-2xl z-50 space-y-3.5 backdrop-blur-md"
             onMouseLeave={() => setDropdownOpen(false)}
           >
             {/* Google Authentication Trigger */}
@@ -269,14 +250,14 @@ export const UserMenu: React.FC = () => {
                   <span>GOOGLE AUTHENTICATION</span>
                 </span>
                 <span className="text-[9px] text-cyber-emerald bg-cyber-emerald/10 border border-cyber-emerald/30 px-1.5 py-0.5 rounded font-bold">
-                  OAuth 2.0
+                  Active
                 </span>
               </div>
 
-              {/* 1. Fast Google Sign-In Button */}
+              {/* 1. Official Google Sign-In Button */}
               <button
                 onClick={() => handleLaunchGoogleSignIn()}
-                className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-gray-100 text-gray-800 font-bold text-xs transition-all shadow-md flex items-center justify-center gap-2 border border-gray-300"
+                className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-gray-100 text-gray-800 font-bold text-xs transition-all shadow-md flex items-center justify-center gap-2.5 border border-gray-300 group"
               >
                 <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
                   <path
@@ -299,49 +280,35 @@ export const UserMenu: React.FC = () => {
                 <span>Click & Choose Google Account</span>
               </button>
 
-              {/* Client ID Configuration Prompt */}
-              {showClientIdConfig && (
-                <form onSubmit={handleSaveClientIdAndLogin} className="p-3 rounded-xl bg-cyber-bg border border-cyber-border space-y-2 text-[10px]">
-                  <div className="flex items-center justify-between text-cyber-muted">
-                    <span>Google Cloud Client ID:</span>
-                    <a
-                      href="https://console.cloud.google.com/apis/credentials"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-cyber-cyan hover:underline flex items-center gap-1 font-bold"
-                    >
-                      Console <ExternalLink className="w-2.5 h-2.5" />
-                    </a>
-                  </div>
+              {/* Optional Advanced Settings Toggle */}
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowClientIdConfig(!showClientIdConfig)}
+                  className="text-[10px] text-cyber-muted hover:text-white flex items-center gap-1 transition-colors"
+                >
+                  <span>OAuth Client ID: {PUBLIC_GOOGLE_CLIENT_ID.slice(0, 12)}...</span>
+                  {showClientIdConfig ? <ChevronUp className="w-2.5 h-2.5" /> : <ChevronDown className="w-2.5 h-2.5" />}
+                </button>
 
-                  <div className="flex items-center justify-between bg-cyber-card p-1.5 rounded border border-cyber-border text-white text-[10px]">
-                    <span className="text-cyber-emerald truncate flex-1">{currentOrigin}</span>
+                {showClientIdConfig && (
+                  <form onSubmit={handleSaveClientId} className="mt-2 p-2.5 rounded-xl bg-cyber-bg border border-cyber-border space-y-1.5 text-[10px]">
+                    <span className="text-cyber-muted">Custom Client ID:</span>
+                    <input
+                      type="text"
+                      value={clientIdInput}
+                      onChange={(e) => setClientIdInput(e.target.value)}
+                      className="w-full bg-cyber-card p-1.5 rounded border border-cyber-border text-white text-[11px] font-mono focus:outline-none"
+                    />
                     <button
-                      type="button"
-                      onClick={handleCopyOrigin}
-                      className="text-cyber-muted hover:text-white ml-1.5 font-bold"
+                      type="submit"
+                      className="w-full py-1 rounded bg-cyber-cyan text-black font-bold text-[10px]"
                     >
-                      {copiedOrigin ? '✓ Copied' : 'Copy'}
+                      Update Client ID
                     </button>
-                  </div>
-
-                  <input
-                    type="text"
-                    value={clientIdInput}
-                    onChange={(e) => setClientIdInput(e.target.value)}
-                    placeholder="Paste Client ID: ...apps.googleusercontent.com"
-                    className="w-full bg-cyber-card p-2 rounded border border-cyber-border text-white text-xs font-mono focus:outline-none focus:border-cyber-cyan"
-                  />
-
-                  <button
-                    type="submit"
-                    disabled={!clientIdInput.trim()}
-                    className="w-full py-1.5 rounded-lg bg-cyber-cyan hover:bg-cyber-cyan/90 text-black font-bold text-xs transition-colors disabled:opacity-50"
-                  >
-                    Save & Open Google Popup
-                  </button>
-                </form>
-              )}
+                  </form>
+                )}
+              </div>
             </div>
 
             {/* Clean Divider */}
