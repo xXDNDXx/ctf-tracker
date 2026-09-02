@@ -143,7 +143,10 @@ interface CtfStoreState {
   setFilters: (filters: Partial<FilterState>) => void;
   resetFilters: () => void;
 
-  // Data Import & Export
+  // Data Import & Export & Profile Data Isolation
+  currentProfileId: string;
+  loadProfileData: (profileId: string) => void;
+  saveProfileData: (profileId?: string) => void;
   exportBackup: () => string;
   importBackup: (jsonStr: string) => boolean;
   resetAllProgress: () => void;
@@ -172,14 +175,55 @@ const DEFAULT_FILTERS: FilterState = {
   selectedTags: [],
 };
 
+export const getProfileStorageKey = (profileId: string) => `specter_ctf_profile_${profileId || 'guest'}`;
+
+export const getInitialProfileId = (): string => {
+  if (typeof window !== 'undefined') {
+    try {
+      const auth = localStorage.getItem('rootvector_auth_session');
+      if (auth) {
+        const parsed = JSON.parse(auth);
+        if (parsed.state?.user?.id) {
+          return parsed.state.user.id;
+        }
+      }
+    } catch {}
+  }
+  return 'guest';
+};
+
+export const loadInitialProfileData = (profileId: string) => {
+  if (typeof window !== 'undefined') {
+    try {
+      const raw = localStorage.getItem(getProfileStorageKey(profileId));
+      if (raw) {
+        return JSON.parse(raw);
+      }
+      const legacy = localStorage.getItem('specter_ctf_store_v2');
+      if (legacy) {
+        const parsed = JSON.parse(legacy);
+        const state = parsed.state || parsed;
+        if (state.machines) {
+          return state;
+        }
+      }
+    } catch {}
+  }
+  return null;
+};
+
+const initialProfileId = getInitialProfileId();
+const initialProfileData = loadInitialProfileData(initialProfileId);
+
 export const useCtfStore = create<CtfStoreState>()(
   persist(
     (set, get) => ({
-      machines: INITIAL_MACHINES,
-      activeTargetId: null,
-      globalVars: DEFAULT_GLOBAL_VARS,
-      cheatsheets: INITIAL_CHEATSHEET,
-      activitySessions: [],
+      machines: initialProfileData?.machines || INITIAL_MACHINES,
+      activeTargetId: initialProfileData?.activeTargetId || null,
+      globalVars: initialProfileData?.globalVars || DEFAULT_GLOBAL_VARS,
+      cheatsheets: initialProfileData?.cheatsheets || INITIAL_CHEATSHEET,
+      activitySessions: initialProfileData?.activitySessions || [],
+      currentProfileId: initialProfileId,
 
       appBrand: 'rootvector',
       activeTab: 'tracker',
@@ -608,19 +652,86 @@ export const useCtfStore = create<CtfStoreState>()(
         }
       },
 
+      loadProfileData: (profileId: string) => {
+        const currentId = get().currentProfileId || 'guest';
+        get().saveProfileData(currentId);
+
+        const targetKey = getProfileStorageKey(profileId);
+        const raw = localStorage.getItem(targetKey);
+        if (raw) {
+          try {
+            const data = JSON.parse(raw);
+            set({
+              currentProfileId: profileId,
+              machines: Array.isArray(data.machines) ? data.machines : INITIAL_MACHINES,
+              activeTargetId: data.activeTargetId || null,
+              globalVars: data.globalVars || DEFAULT_GLOBAL_VARS,
+              cheatsheets: data.cheatsheets || INITIAL_CHEATSHEET,
+              activitySessions: Array.isArray(data.activitySessions) ? data.activitySessions : [],
+            });
+            return;
+          } catch (e) {
+            console.error('Failed to parse target profile data:', e);
+          }
+        }
+
+        if (currentId === 'guest' && profileId !== 'guest') {
+          const payload = {
+            machines: get().machines,
+            activeTargetId: get().activeTargetId,
+            globalVars: get().globalVars,
+            cheatsheets: get().cheatsheets,
+            activitySessions: get().activitySessions,
+          };
+          localStorage.setItem(targetKey, JSON.stringify(payload));
+          set({ currentProfileId: profileId });
+          return;
+        }
+
+        set({
+          currentProfileId: profileId,
+          machines: INITIAL_MACHINES,
+          activeTargetId: null,
+          globalVars: DEFAULT_GLOBAL_VARS,
+          cheatsheets: INITIAL_CHEATSHEET,
+          activitySessions: [],
+        });
+        get().saveProfileData(profileId);
+      },
+
+      saveProfileData: (profileId?: string) => {
+        const targetId = profileId || get().currentProfileId || 'guest';
+        const targetKey = getProfileStorageKey(targetId);
+        const payload = {
+          machines: get().machines,
+          activeTargetId: get().activeTargetId,
+          globalVars: get().globalVars,
+          cheatsheets: get().cheatsheets,
+          activitySessions: get().activitySessions,
+        };
+        try {
+          localStorage.setItem(targetKey, JSON.stringify(payload));
+        } catch (e) {
+          console.error('Failed to save profile data:', e);
+        }
+      },
+
       resetAllProgress: () => {
+        const targetId = get().currentProfileId || 'guest';
         set(() => ({
           machines: INITIAL_MACHINES,
           activeTargetId: null,
           isTimerRunning: false,
           activitySessions: [],
         }));
+        get().saveProfileData(targetId);
       }
     }),
     {
       name: 'specter_ctf_store_v2',
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
+        currentProfileId: state.currentProfileId,
         machines: state.machines,
         activeTargetId: state.activeTargetId,
         globalVars: state.globalVars,
@@ -633,3 +744,21 @@ export const useCtfStore = create<CtfStoreState>()(
     }
   )
 );
+
+// Auto-save data to the active profile whenever state changes
+useCtfStore.subscribe((state) => {
+  if (typeof window !== 'undefined' && state.currentProfileId) {
+    const targetKey = getProfileStorageKey(state.currentProfileId);
+    const payload = {
+      machines: state.machines,
+      activeTargetId: state.activeTargetId,
+      globalVars: state.globalVars,
+      cheatsheets: state.cheatsheets,
+      activitySessions: state.activitySessions,
+    };
+    try {
+      localStorage.setItem(targetKey, JSON.stringify(payload));
+    } catch {}
+  }
+});
+
