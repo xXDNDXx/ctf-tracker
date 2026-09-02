@@ -30,7 +30,7 @@ import {
 } from 'lucide-react';
 import { useCtfStore, BRAND_THEMES } from '../../store/useCtfStore';
 import { PipelineStatus, Difficulty } from '../../types';
-import { formatSeconds, playCyberSound, triggerRootCelebration } from '../../utils/helpers';
+import { formatSeconds, playCyberSound, triggerRootCelebration, safeCopyToClipboard } from '../../utils/helpers';
 import { ChecklistWorkspace } from '../checklist/ChecklistWorkspace';
 import { PlatformBadge } from '../common/PlatformBadge';
 import { OsBadge } from '../common/OsBadge';
@@ -91,9 +91,9 @@ export const MachineDetailModal: React.FC = () => {
 
   if (!selectedMachineId || !machine) return null;
 
-  const handleCopy = (text: string, type: 'user' | 'root') => {
+  const handleCopy = async (text: string, type: 'user' | 'root') => {
     if (!text) return;
-    navigator.clipboard.writeText(text);
+    await safeCopyToClipboard(text);
     if (type === 'user') {
       setCopiedUser(true);
       setTimeout(() => setCopiedUser(false), 2000);
@@ -612,10 +612,21 @@ During the security assessment of target host ${machine.name} (${machine.ip}), s
                     <button
                       type="button"
                       onClick={() => handleCopy(machine.userFlag || '', 'user')}
-                      className="p-1 rounded text-cyber-muted hover:text-white"
+                      className={`p-1 rounded transition-all flex items-center gap-1 ${
+                        copiedUser
+                          ? 'bg-cyber-emerald text-black font-extrabold shadow-glow-emerald px-1.5'
+                          : 'text-cyber-muted hover:text-white'
+                      }`}
                       title="Copy User Flag"
                     >
-                      {copiedUser ? <Check className="w-3 h-3 text-cyber-emerald" /> : <Copy className="w-3 h-3" />}
+                      {copiedUser ? (
+                        <>
+                          <Check className="w-3 h-3 stroke-[3]" />
+                          <span className="text-[9px] uppercase font-bold text-black">COPIED!</span>
+                        </>
+                      ) : (
+                        <Copy className="w-3 h-3" />
+                      )}
                     </button>
                   </div>
                 </div>
@@ -653,10 +664,21 @@ During the security assessment of target host ${machine.name} (${machine.ip}), s
                     <button
                       type="button"
                       onClick={() => handleCopy(machine.rootFlag || '', 'root')}
-                      className="p-1 rounded text-cyber-muted hover:text-white"
+                      className={`p-1 rounded transition-all flex items-center gap-1 ${
+                        copiedRoot
+                          ? 'bg-cyber-emerald text-black font-extrabold shadow-glow-emerald px-1.5'
+                          : 'text-cyber-muted hover:text-white'
+                      }`}
                       title="Copy Root Flag"
                     >
-                      {copiedRoot ? <Check className="w-3 h-3 text-cyber-emerald" /> : <Copy className="w-3 h-3" />}
+                      {copiedRoot ? (
+                        <>
+                          <Check className="w-3 h-3 stroke-[3]" />
+                          <span className="text-[9px] uppercase font-bold text-black">COPIED!</span>
+                        </>
+                      ) : (
+                        <Copy className="w-3 h-3" />
+                      )}
                     </button>
                   </div>
                 </div>

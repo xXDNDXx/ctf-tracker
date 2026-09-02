@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { useCtfStore, BRAND_THEMES } from '../../store/useCtfStore';
 import { useAuthStore } from '../../store/useAuthStore';
-import { playCyberSound } from '../../utils/helpers';
+import { playCyberSound, safeCopyToClipboard } from '../../utils/helpers';
 import { CyberLogo } from '../common/CyberLogo';
 
 export const MobileNav: React.FC = () => {
@@ -56,7 +56,7 @@ export const MobileNav: React.FC = () => {
   } = useCtfStore();
 
   const user = useAuthStore((s) => s.user);
-  const [copiedLhost, setCopiedLhost] = React.useState(false);
+  const [copiedVar, setCopiedVar] = React.useState<'lhost' | 'lport' | null>(null);
   const [justSavedMobile, setJustSavedMobile] = React.useState(false);
 
   const totalMachines = machines.length;
@@ -76,12 +76,12 @@ export const MobileNav: React.FC = () => {
     if (soundEnabled) playCyberSound('click');
   };
 
-  const handleCopyLhost = () => {
-    if (!globalVars.lhost) return;
-    navigator.clipboard.writeText(globalVars.lhost);
-    setCopiedLhost(true);
+  const handleCopyVar = async (val: string, field: 'lhost' | 'lport') => {
+    if (!val) return;
+    await safeCopyToClipboard(val);
+    setCopiedVar(field);
     if (soundEnabled) playCyberSound('copy');
-    setTimeout(() => setCopiedLhost(false), 2000);
+    setTimeout(() => setCopiedVar(null), 2000);
   };
 
   return (
@@ -251,27 +251,66 @@ export const MobileNav: React.FC = () => {
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <span className="text-[10px] text-cyber-muted">LHOST (tun0):</span>
-                      <div className="flex items-center gap-1 mt-0.5 bg-cyber-card px-2 py-1 rounded border border-cyber-border">
+                      <div className={`flex items-center gap-1 mt-0.5 bg-cyber-card px-2 py-1 rounded border transition-all ${
+                        copiedVar === 'lhost' ? 'border-cyber-emerald bg-cyber-emerald/10' : 'border-cyber-border'
+                      }`}>
                         <input
                           type="text"
                           value={globalVars.lhost}
                           onChange={(e) => setGlobalVars({ lhost: e.target.value })}
                           className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
                         />
-                        <button onClick={handleCopyLhost} className="text-cyber-muted hover:text-cyber-cyan">
-                          {copiedLhost ? <Check className="w-3 h-3 text-cyber-emerald" /> : <Copy className="w-3 h-3" />}
+                        <button
+                          onClick={() => handleCopyVar(globalVars.lhost, 'lhost')}
+                          className={`p-1 rounded transition-all flex items-center gap-0.5 ${
+                            copiedVar === 'lhost'
+                              ? 'bg-cyber-emerald text-black font-bold shadow-glow-emerald px-1.5'
+                              : 'text-cyber-muted hover:text-cyber-cyan'
+                          }`}
+                          title="Copy LHOST"
+                        >
+                          {copiedVar === 'lhost' ? (
+                            <>
+                              <Check className="w-3 h-3 stroke-[3]" />
+                              <span className="text-[8px] uppercase font-bold text-black">COPIED</span>
+                            </>
+                          ) : (
+                            <Copy className="w-3 h-3" />
+                          )}
                         </button>
                       </div>
                     </div>
 
                     <div>
                       <span className="text-[10px] text-cyber-muted">LPORT:</span>
-                      <input
-                        type="text"
-                        value={globalVars.lport}
-                        onChange={(e) => setGlobalVars({ lport: e.target.value })}
-                        className="w-full mt-0.5 bg-cyber-card px-2 py-1 rounded border border-cyber-border text-white font-mono text-xs focus:outline-none"
-                      />
+                      <div className={`flex items-center gap-1 mt-0.5 bg-cyber-card px-2 py-1 rounded border transition-all ${
+                        copiedVar === 'lport' ? 'border-cyber-emerald bg-cyber-emerald/10' : 'border-cyber-border'
+                      }`}>
+                        <input
+                          type="text"
+                          value={globalVars.lport}
+                          onChange={(e) => setGlobalVars({ lport: e.target.value })}
+                          className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                        />
+                        <button
+                          onClick={() => handleCopyVar(globalVars.lport, 'lport')}
+                          className={`p-1 rounded transition-all flex items-center gap-0.5 ${
+                            copiedVar === 'lport'
+                              ? 'bg-cyber-emerald text-black font-bold shadow-glow-emerald px-1.5'
+                              : 'text-cyber-muted hover:text-cyber-cyan'
+                          }`}
+                          title="Copy LPORT"
+                        >
+                          {copiedVar === 'lport' ? (
+                            <>
+                              <Check className="w-3 h-3 stroke-[3]" />
+                              <span className="text-[8px] uppercase font-bold text-black">COPIED</span>
+                            </>
+                          ) : (
+                            <Copy className="w-3 h-3" />
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

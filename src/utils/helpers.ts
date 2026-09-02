@@ -129,3 +129,37 @@ export function triggerRootCelebration() {
     colors: ['#10B981', '#06B6D4', '#EF4444', '#8B5CF6', '#F59E0B']
   });
 }
+
+export async function safeCopyToClipboard(text: string): Promise<boolean> {
+  if (!text) return false;
+  try {
+    if (typeof navigator !== 'undefined' && navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch (err) {
+    console.warn('navigator.clipboard.writeText failed, using fallback', err);
+  }
+
+  try {
+    if (typeof document !== 'undefined') {
+      const el = document.createElement('textarea');
+      el.value = text;
+      el.setAttribute('readonly', '');
+      el.style.position = 'fixed';
+      el.style.opacity = '0';
+      el.style.pointerEvents = 'none';
+      el.style.left = '-9999px';
+      document.body.appendChild(el);
+      el.focus();
+      el.select();
+      const success = document.execCommand('copy');
+      document.body.removeChild(el);
+      return success;
+    }
+  } catch (err) {
+    console.error('Fallback copy failed', err);
+  }
+  return false;
+}
+

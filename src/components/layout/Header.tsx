@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import { CyberLogo } from '../common/CyberLogo';
 import { PlatformIcon } from '../common/PlatformBadge';
-import { playCyberSound, formatSeconds, triggerRootCelebration } from '../../utils/helpers';
+import { playCyberSound, formatSeconds, triggerRootCelebration, safeCopyToClipboard } from '../../utils/helpers';
 import { UserMenu } from '../auth/UserMenu';
 
 const BRAND_THEMES = [
@@ -64,7 +64,7 @@ export const Header: React.FC = () => {
   const [targetSelectorOpen, setTargetSelectorOpen] = useState(false);
   const [targetSearchTerm, setTargetSearchTerm] = useState('');
   const [copiedTargetIp, setCopiedTargetIp] = useState(false);
-  const [copiedLhost, setCopiedLhost] = useState(false);
+  const [copiedVar, setCopiedVar] = useState<'lhost' | 'lport' | 'target' | null>(null);
 
   const activeMachine = machines.find((m) => m.id === activeTargetId);
   const activeBrand = BRAND_THEMES.find((b) => b.id === appBrand) || BRAND_THEMES[0];
@@ -91,9 +91,9 @@ export const Header: React.FC = () => {
     if (soundEnabled) playCyberSound('root');
   };
 
-  const handleCopyTargetIp = () => {
+  const handleCopyTargetIp = async () => {
     if (!activeMachine) return;
-    navigator.clipboard.writeText(activeMachine.ip);
+    await safeCopyToClipboard(activeMachine.ip);
     setCopiedTargetIp(true);
     if (soundEnabled) playCyberSound('copy');
     setTimeout(() => setCopiedTargetIp(false), 2000);
@@ -112,11 +112,12 @@ export const Header: React.FC = () => {
     };
   }, [isTimerRunning, tickTimer]);
 
-  const handleCopyLhost = () => {
-    navigator.clipboard.writeText(globalVars.lhost);
-    setCopiedLhost(true);
+  const handleCopyVar = async (val: string, field: 'lhost' | 'lport' | 'target') => {
+    if (!val) return;
+    await safeCopyToClipboard(val);
+    setCopiedVar(field);
     if (soundEnabled) playCyberSound('copy');
-    setTimeout(() => setCopiedLhost(false), 2000);
+    setTimeout(() => setCopiedVar(null), 2000);
   };
 
   return (
@@ -270,11 +271,22 @@ export const Header: React.FC = () => {
                 {/* Quick Copy IP */}
                 <button
                   onClick={handleCopyTargetIp}
-                  className="px-1.5 py-0.5 rounded bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white flex items-center gap-1 text-[10px]"
+                  className={`px-1.5 py-0.5 rounded border flex items-center gap-1 text-[10px] transition-all ${
+                    copiedTargetIp
+                      ? 'bg-cyber-emerald text-black font-bold border-cyber-emerald shadow-glow-emerald scale-105'
+                      : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-white'
+                  }`}
                   title="Click to copy target IP"
                 >
                   <span>{activeMachine.ip}</span>
-                  {copiedTargetIp ? <Check className="w-2.5 h-2.5 text-cyber-emerald" /> : <Copy className="w-2.5 h-2.5" />}
+                  {copiedTargetIp ? (
+                    <>
+                      <Check className="w-2.5 h-2.5 stroke-[3]" />
+                      <span className="text-[9px] uppercase font-bold">COPIED!</span>
+                    </>
+                  ) : (
+                    <Copy className="w-2.5 h-2.5" />
+                  )}
                 </button>
               </div>
 
@@ -455,7 +467,11 @@ export const Header: React.FC = () => {
           </span>
 
           {/* LHOST */}
-          <div className="flex items-center gap-1 bg-cyber-bg px-2 py-0.5 rounded border border-cyber-border focus-within:border-cyber-cyan">
+          <div className={`flex items-center gap-1 bg-cyber-bg px-2 py-0.5 rounded border transition-all ${
+            copiedVar === 'lhost'
+              ? 'border-cyber-emerald shadow-[0_0_10px_rgba(16,185,129,0.35)] bg-cyber-emerald/10'
+              : 'border-cyber-border focus-within:border-cyber-cyan'
+          }`}>
             <span className="text-[10px] text-cyber-muted">LHOST:</span>
             <input
               type="text"
@@ -465,16 +481,31 @@ export const Header: React.FC = () => {
               placeholder="10.10.14.x"
             />
             <button
-              onClick={handleCopyLhost}
-              className="text-cyber-muted hover:text-cyber-cyan transition-colors"
+              onClick={() => handleCopyVar(globalVars.lhost, 'lhost')}
+              className={`p-1 rounded transition-all flex items-center gap-1 ${
+                copiedVar === 'lhost'
+                  ? 'bg-cyber-emerald text-black font-extrabold shadow-glow-emerald px-1.5 py-0.5 scale-105'
+                  : 'text-cyber-muted hover:text-cyber-cyan hover:bg-cyber-card'
+              }`}
               title="Copy LHOST to clipboard"
             >
-              {copiedLhost ? <Check className="w-3 h-3 text-cyber-emerald" /> : <Copy className="w-3 h-3" />}
+              {copiedVar === 'lhost' ? (
+                <>
+                  <Check className="w-3 h-3 stroke-[3]" />
+                  <span className="text-[9px] uppercase font-bold text-black">COPIED!</span>
+                </>
+              ) : (
+                <Copy className="w-3 h-3" />
+              )}
             </button>
           </div>
 
           {/* LPORT */}
-          <div className="flex items-center gap-1 bg-cyber-bg px-2 py-0.5 rounded border border-cyber-border focus-within:border-cyber-cyan">
+          <div className={`flex items-center gap-1 bg-cyber-bg px-2 py-0.5 rounded border transition-all ${
+            copiedVar === 'lport'
+              ? 'border-cyber-emerald shadow-[0_0_10px_rgba(16,185,129,0.35)] bg-cyber-emerald/10'
+              : 'border-cyber-border focus-within:border-cyber-cyan'
+          }`}>
             <span className="text-[10px] text-cyber-muted">LPORT:</span>
             <input
               type="text"
@@ -483,10 +514,32 @@ export const Header: React.FC = () => {
               className="w-12 bg-transparent text-white font-mono text-xs focus:outline-none"
               placeholder="4444"
             />
+            <button
+              onClick={() => handleCopyVar(globalVars.lport, 'lport')}
+              className={`p-1 rounded transition-all flex items-center gap-1 ${
+                copiedVar === 'lport'
+                  ? 'bg-cyber-emerald text-black font-extrabold shadow-glow-emerald px-1.5 py-0.5 scale-105'
+                  : 'text-cyber-muted hover:text-cyber-cyan hover:bg-cyber-card'
+              }`}
+              title="Copy LPORT to clipboard"
+            >
+              {copiedVar === 'lport' ? (
+                <>
+                  <Check className="w-3 h-3 stroke-[3]" />
+                  <span className="text-[9px] uppercase font-bold text-black">COPIED!</span>
+                </>
+              ) : (
+                <Copy className="w-3 h-3" />
+              )}
+            </button>
           </div>
 
           {/* TARGET_IP */}
-          <div className="flex items-center gap-1 bg-cyber-bg px-2 py-0.5 rounded border border-cyber-border focus-within:border-cyber-emerald">
+          <div className={`flex items-center gap-1 bg-cyber-bg px-2 py-0.5 rounded border transition-all ${
+            copiedVar === 'target'
+              ? 'border-cyber-emerald shadow-[0_0_10px_rgba(16,185,129,0.35)] bg-cyber-emerald/10'
+              : 'border-cyber-border focus-within:border-cyber-emerald'
+          }`}>
             <span className="text-[10px] text-cyber-muted">TARGET:</span>
             <input
               type="text"
@@ -495,6 +548,24 @@ export const Header: React.FC = () => {
               className="w-24 bg-transparent text-cyber-emerald font-mono text-xs font-semibold focus:outline-none"
               placeholder="10.10.10.x"
             />
+            <button
+              onClick={() => handleCopyVar(globalVars.targetIp, 'target')}
+              className={`p-1 rounded transition-all flex items-center gap-1 ${
+                copiedVar === 'target'
+                  ? 'bg-cyber-emerald text-black font-extrabold shadow-glow-emerald px-1.5 py-0.5 scale-105'
+                  : 'text-cyber-muted hover:text-cyber-emerald hover:bg-cyber-card'
+              }`}
+              title="Copy TARGET IP to clipboard"
+            >
+              {copiedVar === 'target' ? (
+                <>
+                  <Check className="w-3 h-3 stroke-[3]" />
+                  <span className="text-[9px] uppercase font-bold text-black">COPIED!</span>
+                </>
+              ) : (
+                <Copy className="w-3 h-3" />
+              )}
+            </button>
           </div>
         </div>
 
