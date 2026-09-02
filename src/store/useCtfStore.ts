@@ -212,13 +212,29 @@ export const loadInitialProfileData = (profileId: string) => {
   return null;
 };
 
+export const mergeMachinesWithCatalog = (storedMachines?: Machine[]): Machine[] => {
+  const map = new Map<string, Machine>();
+  INITIAL_MACHINES.forEach((m) => map.set(m.id, m));
+  if (Array.isArray(storedMachines)) {
+    storedMachines.forEach((m) => {
+      const defaultM = map.get(m.id);
+      if (defaultM?.status === 'completed' && m.status !== 'completed') {
+        map.set(m.id, { ...m, ...defaultM });
+      } else {
+        map.set(m.id, m);
+      }
+    });
+  }
+  return Array.from(map.values());
+};
+
 const initialProfileId = getInitialProfileId();
 const initialProfileData = loadInitialProfileData(initialProfileId);
 
 export const useCtfStore = create<CtfStoreState>()(
   persist(
     (set, get) => ({
-      machines: initialProfileData?.machines || INITIAL_MACHINES,
+      machines: mergeMachinesWithCatalog(initialProfileData?.machines),
       activeTargetId: initialProfileData?.activeTargetId || null,
       globalVars: initialProfileData?.globalVars || DEFAULT_GLOBAL_VARS,
       cheatsheets: initialProfileData?.cheatsheets || INITIAL_CHEATSHEET,
@@ -684,7 +700,7 @@ export const useCtfStore = create<CtfStoreState>()(
             const data = JSON.parse(raw);
             set({
               currentProfileId: profileId,
-              machines: Array.isArray(data.machines) ? data.machines : INITIAL_MACHINES,
+              machines: mergeMachinesWithCatalog(data.machines),
               activeTargetId: data.activeTargetId || null,
               globalVars: data.globalVars || DEFAULT_GLOBAL_VARS,
               cheatsheets: data.cheatsheets || INITIAL_CHEATSHEET,

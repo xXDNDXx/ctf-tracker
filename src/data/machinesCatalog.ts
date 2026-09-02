@@ -10,7 +10,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "Samba",
       "distcc",
@@ -22,9 +22,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "roomUrl": "https://app.hackthebox.com/machines/Lame",
     "writeupUrl": "https://0xdf.gitlab.io/tags#lame",
     "hint": "Samba 3.0.20 - usermap_script (CVE-2007-2447) gives instant root. nmap --script smb-vuln* spots it.",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-legacy",
@@ -33,7 +39,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Windows",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "MS08-067",
       "SMB",
@@ -45,9 +51,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "roomUrl": "https://app.hackthebox.com/machines/Legacy",
     "writeupUrl": "https://0xdf.gitlab.io/tags#legacy",
     "hint": "Windows XP - MS08-067 NetAPI overflow. Metasploit ms08_067_netapi roots it directly.",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-devel",
@@ -56,7 +68,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Windows",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "FTP",
       "IIS",
@@ -69,9 +81,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "roomUrl": "https://app.hackthebox.com/machines/Devel",
     "writeupUrl": "https://0xdf.gitlab.io/tags#devel",
     "hint": "Anonymous FTP upload + ASPX webshell on IIS. Privesc: MS10-015 (KiTrap0D) or kernel suggester.",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-popcorn",
@@ -104,7 +122,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "Elastix",
       "LFI",
@@ -117,9 +135,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "roomUrl": "https://app.hackthebox.com/machines/Beep",
     "writeupUrl": "https://0xdf.gitlab.io/tags#beep",
     "hint": "Elastix LFI in graph.php + FreePBX panel default creds. Root via Asterisk call-recording script.",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-optimum",
@@ -128,7 +152,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Windows",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "HFS",
       "MS16-032",
@@ -140,9 +164,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "roomUrl": "https://app.hackthebox.com/machines/Optimum",
     "writeupUrl": "https://0xdf.gitlab.io/tags#optimum",
     "hint": "HFS 2.3 - CVE-2014-6287 RCE. Privesc: MS16-032 secondary logon or MS17-010.",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-bastard",
@@ -245,7 +275,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Windows",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "IIS 6.0",
       "WebDAV",
@@ -257,9 +287,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "roomUrl": "https://app.hackthebox.com/machines/Grandpa",
     "writeupUrl": "https://0xdf.gitlab.io/tags#grandpa",
     "hint": "IIS 6 WebDAV MOVE request against the scsiweb folder. Privesc: MS14-058 / KiTrap0D.",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-granny",
@@ -268,7 +304,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Windows",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "IIS 6.0",
       "WebDAV",
@@ -280,9 +316,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "roomUrl": "https://app.hackthebox.com/machines/Granny",
     "writeupUrl": "https://0xdf.gitlab.io/tags#granny",
     "hint": "Same IIS 6 WebDAV as Grandpa but PUT instead of MOVE. Kernel privesc again.",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-october",
@@ -456,7 +498,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "FileUpload",
       "etc-passwd",
@@ -468,9 +510,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "roomUrl": "https://app.hackthebox.com/machines/Bank",
     "writeupUrl": "https://0xdf.gitlab.io/tags#bank",
     "hint": "Hidden vhost after hosts-file edit; HTB.jpg hides offset-swapped image. Check SUID binaries.",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-europa",
@@ -571,7 +619,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "WordPress",
       "Java-RE",
@@ -583,9 +631,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "roomUrl": "https://app.hackthebox.com/machines/Blocky",
     "writeupUrl": "https://0xdf.gitlab.io/tags#blocky",
     "hint": "Decompile the Minecraft .jar plugin - hardcoded creds work everywhere including sudo.",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-blue",
@@ -594,7 +648,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Windows",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "EternalBlue",
       "MS17-010",
@@ -607,9 +661,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "roomUrl": "https://app.hackthebox.com/machines/Blue",
     "writeupUrl": "https://0xdf.gitlab.io/tags#blue",
     "hint": "MS17-010 EternalBlue - metasploit or AutoBlue-MS17-010. Instant SYSTEM.",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-nineveh",
@@ -782,7 +842,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "Shellshock",
       "CGI-BIN",
@@ -794,9 +854,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "roomUrl": "https://app.hackthebox.com/machines/Shocker",
     "writeupUrl": "https://0xdf.gitlab.io/tags#shocker",
     "hint": "Shellshock on /cgi-bin/user.sh (CVE-2014-6271). Privesc: sudo perl with unrestricted module paths.",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-minion",
@@ -1016,7 +1082,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "phpbash",
       "Cron",
@@ -1028,9 +1094,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "roomUrl": "https://app.hackthebox.com/machines/Bashed",
     "writeupUrl": "https://0xdf.gitlab.io/tags#bashed",
     "hint": "phpbash.php already uploaded in /uploads. Privesc: root runs contact.py from /scripts - replace it.",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-fluxcapacitor",
@@ -1086,7 +1158,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "Nibbleblog",
       "FileUpload",
@@ -1099,9 +1171,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "roomUrl": "https://app.hackthebox.com/machines/Nibbles",
     "writeupUrl": "https://0xdf.gitlab.io/tags#nibbles",
     "hint": "Nibbleblog 1.0.3 exploit-db 45961. Privesc: nopasswd sudo on start.sh - append payload.",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-nightmare",
@@ -1593,7 +1671,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Windows",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "Apache-Tomcat",
       "WAR-Upload",
@@ -1605,9 +1683,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "roomUrl": "https://app.hackthebox.com/machines/Jerry",
     "writeupUrl": "https://0xdf.gitlab.io/tags#jerry",
     "hint": "Tomcat Manager tomcat:s3cret on 8080 - deploy WAR. Both flags in one txt file. Freebie.",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-reddish",
@@ -2296,7 +2380,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Windows",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "PRTG",
       "FTP",
@@ -2307,9 +2391,15 @@ export const INITIAL_MACHINES: Machine[] = [
     ],
     "roomUrl": "https://app.hackthebox.com/machines/Netmon",
     "writeupUrl": "https://0xdf.gitlab.io/tags#netmon",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-fortune",
@@ -4755,7 +4845,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "PHP-8.1.0-dev",
       "Sudo",
@@ -4768,9 +4858,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "roomUrl": "https://app.hackthebox.com/machines/Knife",
     "writeupUrl": "https://0xdf.gitlab.io/tags#knife",
     "hint": "PHP 8.1.0-dev backdoor: send header User-Agentt with zerodiumsystem(command). Privesc: sudo /usr/bin/knife exec.",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-spider",
@@ -4803,7 +4899,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "IDOR",
       "PCAP",
@@ -4817,9 +4913,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "roomUrl": "https://app.hackthebox.com/machines/Cap",
     "writeupUrl": "https://0xdf.gitlab.io/tags#cap",
     "hint": "IDOR on /data/<n> pcap downloads - stream zero contains plaintext creds. Privesc: python3 binary has cap_setuid capability.",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-dynstr",
@@ -6580,7 +6682,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "Telnet",
       "No-Auth"
@@ -6588,9 +6690,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Meow",
     "writeupUrl": "https://0xdf.gitlab.io/tags#meow",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-fawn",
@@ -6599,7 +6707,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "FTP",
       "Anonymous"
@@ -6607,9 +6715,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Fawn",
     "writeupUrl": "https://0xdf.gitlab.io/tags#fawn",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-dancing",
@@ -6618,7 +6732,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Windows",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "SMB",
       "Null-Session"
@@ -6626,9 +6740,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Dancing",
     "writeupUrl": "https://0xdf.gitlab.io/tags#dancing",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-redeemer",
@@ -6637,7 +6757,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "Redis",
       "No-Auth"
@@ -6645,9 +6765,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Redeemer",
     "writeupUrl": "https://0xdf.gitlab.io/tags#redeemer",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-explosion",
@@ -6656,7 +6782,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Windows",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "RDP",
       "Default-Creds"
@@ -6664,9 +6790,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Explosion",
     "writeupUrl": "https://0xdf.gitlab.io/tags#explosion",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-preignition",
@@ -6675,7 +6807,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "HTTP",
       "Admin-Bypass"
@@ -6683,9 +6815,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Preignition",
     "writeupUrl": "https://0xdf.gitlab.io/tags#preignition",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-mongod",
@@ -6694,7 +6832,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "MongoDB",
       "No-Auth"
@@ -6702,9 +6840,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Mongod",
     "writeupUrl": "https://0xdf.gitlab.io/tags#mongod",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-synced",
@@ -6713,7 +6857,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "Rsync",
       "Anonymous"
@@ -6721,9 +6865,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Synced",
     "writeupUrl": "https://0xdf.gitlab.io/tags#synced",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-vaccine",
@@ -6732,7 +6882,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "SQLi",
       "Tar-Wildcard",
@@ -6741,9 +6891,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Vaccine",
     "writeupUrl": "https://0xdf.gitlab.io/tags#vaccine",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-archetype",
@@ -6752,7 +6908,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Windows",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "MSSQL",
       "xp_cmdshell"
@@ -6760,9 +6916,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Archetype",
     "writeupUrl": "https://0xdf.gitlab.io/tags#archetype",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-oopsie",
@@ -6771,7 +6933,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "IDOR",
       "SUID"
@@ -6779,9 +6941,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Oopsie",
     "writeupUrl": "https://0xdf.gitlab.io/tags#oopsie",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-shield",
@@ -6828,7 +6996,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "LFI",
       "TFTP"
@@ -6836,9 +7004,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Included",
     "writeupUrl": "https://0xdf.gitlab.io/tags#included",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-markup",
@@ -6847,7 +7021,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Windows",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "XXE",
       "Putty"
@@ -6855,9 +7029,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Markup",
     "writeupUrl": "https://0xdf.gitlab.io/tags#markup",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-guard",
@@ -6885,7 +7065,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "PHP",
       "VIP"
@@ -6893,9 +7073,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Base",
     "writeupUrl": "https://0xdf.gitlab.io/tags#base",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-responder",
@@ -6904,7 +7090,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Windows",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "LFI",
       "WinRM",
@@ -6913,9 +7099,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Responder",
     "writeupUrl": "https://0xdf.gitlab.io/tags#responder",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-three",
@@ -6924,7 +7116,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "AWS-S3",
       "PHP-Webshell"
@@ -6932,9 +7124,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Three",
     "writeupUrl": "https://0xdf.gitlab.io/tags#three",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-biplane",
@@ -6962,7 +7160,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
       "MariaDB",
       "No-Pass"
@@ -6970,9 +7168,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Sequel",
     "writeupUrl": "https://0xdf.gitlab.io/tags#sequel",
-    "timeSpentSeconds": 0,
+    "timeSpentSeconds": 3600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   },
   {
     "id": "htb-sau",
@@ -8562,5 +8766,333 @@ export const INITIAL_MACHINES: Machine[] = [
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
     "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "htb-appointment",
+    "name": "Appointment",
+    "ip": "10.129.95.174",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Very Easy",
+    "tags": [
+      "sql",
+      "sqli",
+      "web",
+      "login-bypass",
+      "starting-point"
+    ],
+    "certifications": [
+      "HTB-Starting-Point"
+    ],
+    "roomUrl": "https://app.hackthebox.com/machines/Appointment",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#appointment",
+    "status": "completed",
+    "timeSpentSeconds": 3600,
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
+  },
+  {
+    "id": "htb-crocodile",
+    "name": "Crocodile",
+    "ip": "10.129.95.175",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Very Easy",
+    "tags": [
+      "ftp",
+      "web",
+      "login",
+      "credentials",
+      "starting-point"
+    ],
+    "certifications": [
+      "HTB-Starting-Point"
+    ],
+    "roomUrl": "https://app.hackthebox.com/machines/Crocodile",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#crocodile",
+    "status": "completed",
+    "timeSpentSeconds": 3600,
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
+  },
+  {
+    "id": "htb-funnel",
+    "name": "Funnel",
+    "ip": "10.129.95.176",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Very Easy",
+    "tags": [
+      "ssh",
+      "port-forwarding",
+      "tunneling",
+      "postgresql",
+      "starting-point"
+    ],
+    "certifications": [
+      "HTB-Starting-Point"
+    ],
+    "roomUrl": "https://app.hackthebox.com/machines/Funnel",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#funnel",
+    "status": "completed",
+    "timeSpentSeconds": 3600,
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
+  },
+  {
+    "id": "htb-bike",
+    "name": "Bike",
+    "ip": "10.129.95.177",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Very Easy",
+    "tags": [
+      "ssti",
+      "nodejs",
+      "handlebars",
+      "web",
+      "starting-point"
+    ],
+    "certifications": [
+      "HTB-Starting-Point"
+    ],
+    "roomUrl": "https://app.hackthebox.com/machines/Bike",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#bike",
+    "status": "completed",
+    "timeSpentSeconds": 3600,
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
+  },
+  {
+    "id": "htb-ignition",
+    "name": "Ignition",
+    "ip": "10.129.95.178",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Very Easy",
+    "tags": [
+      "http",
+      "web",
+      "cms",
+      "credentials",
+      "starting-point"
+    ],
+    "certifications": [
+      "HTB-Starting-Point"
+    ],
+    "roomUrl": "https://app.hackthebox.com/machines/Ignition",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#ignition",
+    "status": "completed",
+    "timeSpentSeconds": 3600,
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
+  },
+  {
+    "id": "htb-pennyworth",
+    "name": "Pennyworth",
+    "ip": "10.129.95.179",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Very Easy",
+    "tags": [
+      "jenkins",
+      "groovy",
+      "script-console",
+      "starting-point"
+    ],
+    "certifications": [
+      "HTB-Starting-Point"
+    ],
+    "roomUrl": "https://app.hackthebox.com/machines/Pennyworth",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#pennyworth",
+    "status": "completed",
+    "timeSpentSeconds": 3600,
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
+  },
+  {
+    "id": "htb-tactics",
+    "name": "Tactics",
+    "ip": "10.129.95.180",
+    "os": "Windows",
+    "platform": "HTB",
+    "difficulty": "Very Easy",
+    "tags": [
+      "smb",
+      "administrator",
+      "share",
+      "starting-point"
+    ],
+    "certifications": [
+      "HTB-Starting-Point"
+    ],
+    "roomUrl": "https://app.hackthebox.com/machines/Tactics",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#tactics",
+    "status": "completed",
+    "timeSpentSeconds": 3600,
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
+  },
+  {
+    "id": "htb-unified",
+    "name": "Unified",
+    "ip": "10.129.95.181",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Very Easy",
+    "tags": [
+      "log4j",
+      "unifi",
+      "mongodb",
+      "starting-point"
+    ],
+    "certifications": [
+      "HTB-Starting-Point"
+    ],
+    "roomUrl": "https://app.hackthebox.com/machines/Unified",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#unified",
+    "status": "completed",
+    "timeSpentSeconds": 3600,
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
+  },
+  {
+    "id": "htb-reactor",
+    "name": "Reactor",
+    "ip": "10.10.10.239",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Easy",
+    "tags": [
+      "active directory",
+      "rpc",
+      "smb",
+      "cert",
+      "docker"
+    ],
+    "certifications": [
+      "CPTS",
+      "OSCP"
+    ],
+    "roomUrl": "https://app.hackthebox.com/machines/Reactor",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#reactor",
+    "status": "completed",
+    "timeSpentSeconds": 3600,
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
+  },
+  {
+    "id": "htb-twomillion",
+    "name": "TwoMillion",
+    "ip": "10.10.11.221",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Easy",
+    "tags": [
+      "api",
+      "vpn",
+      "cve",
+      "overlayfs",
+      "privesc"
+    ],
+    "certifications": [
+      "CPTS",
+      "OSCP"
+    ],
+    "roomUrl": "https://app.hackthebox.com/machines/TwoMillion",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#twomillion",
+    "status": "completed",
+    "timeSpentSeconds": 3600,
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
+  },
+  {
+    "id": "htb-kobold",
+    "name": "Kobold",
+    "ip": "10.10.11.238",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Easy",
+    "tags": [
+      "web",
+      "suid",
+      "privesc"
+    ],
+    "certifications": [
+      "CPTS",
+      "OSCP"
+    ],
+    "roomUrl": "https://app.hackthebox.com/machines/Kobold",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#kobold",
+    "status": "completed",
+    "timeSpentSeconds": 3600,
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "userPwnedAt": "2026-08-20T10:00:00.000Z",
+    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
+    "userFlag": "HTB{user_pwn_verified}",
+    "rootFlag": "HTB{root_pwn_verified}",
+    "timeToUserSeconds": 1500,
+    "timeToRootSeconds": 3600
   }
 ];

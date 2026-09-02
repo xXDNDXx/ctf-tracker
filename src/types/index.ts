@@ -15,7 +15,7 @@ export interface Machine {
   difficulty: Difficulty;
   status: PipelineStatus;
   tags: string[];
-  certifications: ('OSCP' | 'CPTS' | 'CRTO')[];
+  certifications: ('OSCP' | 'CPTS' | 'CRTO' | 'HTB-Starting-Point')[];
   roomUrl?: string;
   writeupUrl?: string;
   hint?: string;
