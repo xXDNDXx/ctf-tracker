@@ -24,6 +24,7 @@ export interface AuthState {
   loginWithGoogleUserInfo: (userInfo: { sub: string; email: string; name: string; picture?: string }, token: string) => Promise<void>;
   switchProfile: (profileId: string) => void;
   createProfile: (name: string, email?: string, avatarUrl?: string) => void;
+  renameProfile: (newName: string) => void;
   deleteProfile: (profileId: string) => void;
   logout: () => void;
   migrateGuestData: () => Promise<{ success: boolean; count: number }>;

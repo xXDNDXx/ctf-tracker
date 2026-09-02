@@ -7,6 +7,16 @@ import { useCtfStore } from './useCtfStore';
 const AUTH_STORAGE_KEY = 'rootvector_auth_session';
 const CLIENT_ID_STORAGE_KEY = 'rootvector_google_client_id';
 
+export const DEFAULT_DANIEL_PROFILE: User = {
+  id: 'usr_daniel',
+  googleId: '',
+  email: 'daniel@operator.lab',
+  name: 'Daniel',
+  avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80',
+  createdAt: '2026-01-01T00:00:00.000Z',
+  updatedAt: '2026-01-01T00:00:00.000Z',
+};
+
 const getInitialGoogleClientId = (): string | null => {
   if (typeof window !== 'undefined') {
     const stored = localStorage.getItem(CLIENT_ID_STORAGE_KEY);
@@ -18,12 +28,12 @@ const getInitialGoogleClientId = (): string | null => {
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
-      user: null,
-      profiles: [],
-      isAuthenticated: false,
+      user: DEFAULT_DANIEL_PROFILE,
+      profiles: [DEFAULT_DANIEL_PROFILE],
+      isAuthenticated: true,
       isLoading: false,
-      token: null,
-      guestDataMigrated: false,
+      token: 'session_daniel_active',
+      guestDataMigrated: true,
       googleClientId: getInitialGoogleClientId(),
 
       setGoogleClientId: (clientId: string) => {
@@ -48,7 +58,7 @@ export const useAuthStore = create<AuthState>()(
             googleId: '',
             email: email?.trim() || `${cleanName.toLowerCase().replace(/\s+/g, '')}@operator.lab`,
             name: cleanName,
-            avatarUrl: avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&auto=format&fit=crop&q=80',
+            avatarUrl: avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80',
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           };
@@ -72,6 +82,20 @@ export const useAuthStore = create<AuthState>()(
           console.error('Operator login error:', err);
           set({ isLoading: false });
         }
+      },
+
+      // Rename Active Profile
+      renameProfile: (newName: string) => {
+        const cleanName = newName.trim();
+        if (!cleanName) return;
+
+        const current = get().user;
+        if (!current) return;
+
+        const updated: User = { ...current, name: cleanName, updatedAt: new Date().toISOString() };
+        const updatedProfiles = get().profiles.map((p) => (p.id === current.id ? updated : p));
+        set({ user: updated, profiles: updatedProfiles });
+        playCyberSound('click');
       },
 
       // Switch Profile
@@ -101,8 +125,8 @@ export const useAuthStore = create<AuthState>()(
             set({ user: remaining[0], profiles: remaining });
             useCtfStore.getState().loadProfileData(remaining[0].id);
           } else {
-            set({ user: null, profiles: [], isAuthenticated: false });
-            useCtfStore.getState().loadProfileData('guest');
+            set({ user: DEFAULT_DANIEL_PROFILE, profiles: [DEFAULT_DANIEL_PROFILE], isAuthenticated: true });
+            useCtfStore.getState().loadProfileData('usr_daniel');
           }
         } else {
           set({ profiles: remaining });
@@ -188,16 +212,16 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      // Logout and clear authentication session
+      // Logout and reset to default
       logout: () => {
         set({
-          user: null,
-          token: null,
-          isAuthenticated: false,
-          guestDataMigrated: false,
+          user: DEFAULT_DANIEL_PROFILE,
+          profiles: [DEFAULT_DANIEL_PROFILE],
+          isAuthenticated: true,
+          guestDataMigrated: true,
         });
 
-        useCtfStore.getState().loadProfileData('guest');
+        useCtfStore.getState().loadProfileData('usr_daniel');
         playCyberSound('click');
       },
 

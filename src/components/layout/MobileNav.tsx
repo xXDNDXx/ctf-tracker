@@ -20,9 +20,11 @@ import {
   Server,
   Copy,
   Check,
-  ChevronRight
+  ChevronRight,
+  Save
 } from 'lucide-react';
 import { useCtfStore, BRAND_THEMES } from '../../store/useCtfStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import { playCyberSound } from '../../utils/helpers';
 import { CyberLogo } from '../common/CyberLogo';
 
@@ -49,12 +51,23 @@ export const MobileNav: React.FC = () => {
     setGlobalVars,
     appBrand,
     setAppBrand,
+    saveProfileData,
+    currentProfileId,
   } = useCtfStore();
 
+  const user = useAuthStore((s) => s.user);
   const [copiedLhost, setCopiedLhost] = React.useState(false);
+  const [justSavedMobile, setJustSavedMobile] = React.useState(false);
 
   const totalMachines = machines.length;
   const rootedMachines = machines.filter(m => m.status === 'root' || m.status === 'completed').length;
+
+  const handleMobileQuickSave = () => {
+    saveProfileData(currentProfileId);
+    setJustSavedMobile(true);
+    if (soundEnabled) playCyberSound('root');
+    setTimeout(() => setJustSavedMobile(false), 2000);
+  };
 
   const handleNavClick = (path: string, tabId: any) => {
     setActiveTab(tabId);
@@ -206,7 +219,30 @@ export const MobileNav: React.FC = () => {
               </div>
 
               {/* Drawer Body */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-5 text-xs scrollbar-thin">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs scrollbar-thin">
+                {/* 1-Click Save Progress Card */}
+                <div className="p-3 rounded-xl bg-cyber-bg border border-cyber-border space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="text-[10px] uppercase font-bold text-cyber-muted">
+                      OPERATOR: <span className="text-white font-bold">{user?.name || 'Daniel'}</span>
+                    </div>
+                    <div className="text-[10px] text-cyber-emerald font-bold">
+                      {rootedMachines} / {totalMachines} Pwned
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleMobileQuickSave}
+                    className={`w-full py-2 px-3 rounded-lg font-bold text-xs transition-all flex items-center justify-center gap-2 ${
+                      justSavedMobile
+                        ? 'bg-cyber-emerald text-black shadow-glow-emerald/30'
+                        : 'bg-cyber-emerald/15 border border-cyber-emerald text-cyber-emerald hover:bg-cyber-emerald hover:text-black'
+                    }`}
+                  >
+                    <Save className="w-3.5 h-3.5" />
+                    <span>{justSavedMobile ? '✓ ALL DATA SAVED!' : '1-CLICK SAVE DATA'}</span>
+                  </button>
+                </div>
+
                 {/* 1. Mobile Payload Variables Hub */}
                 <div className="p-3 rounded-xl bg-cyber-bg border border-cyber-border space-y-2">
                   <div className="text-[10px] uppercase font-bold text-cyber-cyan flex items-center gap-1.5">
