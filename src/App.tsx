@@ -18,12 +18,20 @@ import { AnalyticsView } from './components/analytics/AnalyticsView';
 import { TargetDetailPage } from './pages/TargetDetailPage';
 import { MethodologyPage } from './pages/MethodologyPage';
 import { ExamSimulatorPage } from './pages/ExamSimulatorPage';
-import { useCtfStore } from './store/useCtfStore';
+import { useCtfStore, mergeMachinesWithCatalog } from './store/useCtfStore';
 
 const MainAppContent: React.FC = () => {
   const { setScrollElement, scrollProgress } = useWorkspaceScroll();
   const location = useLocation();
   const setActiveTab = useCtfStore((s) => s.setActiveTab);
+
+  // Guarantee that all 45 completed HTB targets are populated in active state and profile
+  useEffect(() => {
+    const current = useCtfStore.getState().machines;
+    const merged = mergeMachinesWithCatalog(current);
+    useCtfStore.setState({ machines: merged });
+    useCtfStore.getState().saveProfileData();
+  }, []);
 
   // Sync store activeTab with route
   useEffect(() => {

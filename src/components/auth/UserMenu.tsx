@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuthStore, PUBLIC_GOOGLE_CLIENT_ID } from '../../store/useAuthStore';
-import { useCtfStore } from '../../store/useCtfStore';
-import { playCyberSound } from '../../utils/helpers';
+import { useCtfStore, mergeMachinesWithCatalog } from '../../store/useCtfStore';
+import { playCyberSound, triggerRootCelebration } from '../../utils/helpers';
 import { 
   Save, 
   Check, 
@@ -10,7 +10,8 @@ import {
   Upload, 
   RotateCcw,
   LogOut,
-  ShieldCheck
+  ShieldCheck,
+  Sparkles
 } from 'lucide-react';
 
 export const UserMenu: React.FC = () => {
@@ -277,6 +278,25 @@ export const UserMenu: React.FC = () => {
               <div className="text-[9px] text-cyber-muted uppercase">Pwned</div>
             </div>
           </div>
+
+          {/* Force Sync 45 HTB Solves */}
+          <button
+            onClick={() => {
+              const current = useCtfStore.getState().machines;
+              const merged = mergeMachinesWithCatalog(current);
+              useCtfStore.setState({ machines: merged });
+              useCtfStore.getState().saveProfileData();
+              playCyberSound('root');
+              triggerRootCelebration();
+              setJustSaved(true);
+              setTimeout(() => setJustSaved(false), 3000);
+            }}
+            className="w-full py-2 px-3 rounded-xl font-bold text-xs bg-cyber-amber/15 hover:bg-cyber-amber/25 text-cyber-amber border border-cyber-amber/40 hover:border-cyber-amber transition-all flex items-center justify-center gap-2"
+            title="Force reload all 45 HTB solved boxes into your active profile"
+          >
+            <Sparkles className="w-4 h-4 text-cyber-amber" />
+            <span>FORCE SYNC 45 HTB SOLVES</span>
+          </button>
 
           {/* 1-Click Large Save Button */}
           <button
