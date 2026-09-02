@@ -86,6 +86,7 @@ export const Header: React.FC = () => {
       rootPwnedAt: new Date().toISOString(),
       rootFlag: activeMachine.rootFlag || 'FLAG{ROOT_CAPTURED_VIA_COMBAT_HUD}'
     });
+    pauseTimer();
     triggerRootCelebration();
     if (soundEnabled) playCyberSound('root');
   };

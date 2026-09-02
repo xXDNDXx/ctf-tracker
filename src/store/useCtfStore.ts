@@ -258,27 +258,38 @@ export const useCtfStore = create<CtfStoreState>()(
         set((state) => {
           const now = new Date().toISOString();
           const today = now.slice(0, 10);
+          const isNowRoot = status === 'root' || status === 'completed';
+          const isNowFoothold = status === 'foothold' || isNowRoot;
+          
+          // Automatically stop the stopwatch timer when machine is rooted or completed
+          const shouldStopTimer = isNowRoot && (state.activeTargetId === id || state.isTimerRunning);
+
           const updated = state.machines.map((m) => {
             if (m.id !== id) return m;
 
-            const isNowRoot = status === 'root' || status === 'completed';
-            const isNowFoothold = status === 'foothold' || isNowRoot;
+            const elapsed = state.activeTargetId === id ? state.activeTimerSeconds : 0;
+            const finalTime = m.timeSpentSeconds > 0 ? m.timeSpentSeconds : elapsed;
 
             return {
               ...m,
               status,
+              timeSpentSeconds: finalTime > 0 ? finalTime : m.timeSpentSeconds,
               userPwnedAt: isNowFoothold && !m.userPwnedAt ? now : m.userPwnedAt,
               rootPwnedAt: isNowRoot && !m.rootPwnedAt ? now : m.rootPwnedAt,
-              timeToUserSeconds: isNowFoothold && !m.timeToUserSeconds ? m.timeSpentSeconds : m.timeToUserSeconds,
-              timeToRootSeconds: isNowRoot && !m.timeToRootSeconds ? m.timeSpentSeconds : m.timeToRootSeconds,
+              timeToUserSeconds: isNowFoothold && !m.timeToUserSeconds ? finalTime : m.timeToUserSeconds,
+              timeToRootSeconds: isNowRoot && !m.timeToRootSeconds ? finalTime : m.timeToRootSeconds,
               updatedAt: now,
             };
           });
 
           // Log activity session if root or completed
           let sessions = state.activitySessions;
-          if (status === 'root' || status === 'completed') {
+          if (isNowRoot) {
             const m = state.machines.find(x => x.id === id);
+            const duration = (state.activeTargetId === id && state.activeTimerSeconds > 0)
+              ? state.activeTimerSeconds
+              : (m?.timeSpentSeconds || 0);
+
             sessions = [
               ...sessions,
               {
@@ -286,22 +297,32 @@ export const useCtfStore = create<CtfStoreState>()(
                 machineId: id,
                 machineName: m?.name || 'Unknown',
                 date: today,
-                durationSeconds: m?.timeSpentSeconds || 0,
+                durationSeconds: duration,
                 type: 'root',
               }
             ];
           }
 
-          return { machines: updated, activitySessions: sessions };
+          return { 
+            machines: updated, 
+            activitySessions: sessions,
+            isTimerRunning: shouldStopTimer ? false : state.isTimerRunning,
+          };
         });
       },
 
       updateMachine: (id, updates) => {
-        set((state) => ({
-          machines: state.machines.map((m) =>
-            m.id === id ? { ...m, ...updates, updatedAt: new Date().toISOString() } : m
-          ),
-        }));
+        set((state) => {
+          const isNowCompleted = updates.status === 'root' || updates.status === 'completed';
+          const shouldStopTimer = isNowCompleted && (state.activeTargetId === id || state.isTimerRunning);
+
+          return {
+            machines: state.machines.map((m) =>
+              m.id === id ? { ...m, ...updates, updatedAt: new Date().toISOString() } : m
+            ),
+            isTimerRunning: shouldStopTimer ? false : state.isTimerRunning,
+          };
+        });
       },
 
       addCustomMachine: (data) => {
