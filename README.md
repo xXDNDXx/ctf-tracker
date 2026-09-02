@@ -1,136 +1,123 @@
 <div align="center">
 
-# 🎯 CTF TRACKER
+# ⚡ SPECTER CTF // HexTracker v2.0
+### Advanced CTF Machine Tracking, Attack Lifecycle Management & Offensive Cheatsheet Dashboard
 
-**Hack The Box · Try Hack Me · One Link · Any Device**
+[![Open Tracker](https://img.shields.io/badge/-%20LAUNCH%20SPECTER%20CTF%20-10B981?style=for-the-badge&labelColor=0B0F19)](https://xXDNDXx.github.io/ctf-tracker/)
+[![Live on GitHub Pages](https://img.shields.io/badge/Live_on-GitHub_Pages-181717?style=flat-square&logo=github)](https://xXDNDXx.github.io/ctf-tracker/)
+[![Tech Stack](https://img.shields.io/badge/Built%20With-React%2018%20%7C%20TypeScript%20%7C%20Tailwind-06B6D4?style=flat-square)](#tech-stack)
+[![License](https://img.shields.io/badge/License-MIT-EF4444?style=flat-square)](LICENSE)
 
-[![Open Tracker](https://img.shields.io/badge/-%20OPEN%20TRACKER%20-9fef00?style=for-the-badge&labelColor=0d0f14)](https://xXDNDXx.github.io/ctf-tracker/)
-[![GitHub Pages](https://img.shields.io/badge/Live_on-GitHub_Pages-181717?style=flat-square&logo=github)](https://github.com/xXDNDXx/ctf-tracker)
-[![License](https://img.shields.io/badge/License-MIT-c9a227?style=flat-square)](LICENSE)
-
-*399 machines · 150+ hints · 52 THM rooms · zero backend*
+*400+ Machines · 5-Stage Attack Pipeline · Live Parameter Injection · Obsidian Writeup Studio · Skill Radar*
 
 </div>
 
 ---
 
-## What is this?
+## 🎯 Overview
 
-A single-page tracker for your CTF journey. Browse machines, mark flags, take notes, time your sessions — all saved automatically in your browser. No login, no server, no setup.
+**SpecterCTF / HexTracker** is a high-performance, cybersecurity-themed dashboard engineered for penetration testers, security researchers, and CTF competitors targeting **Hack The Box (HTB)**, **TryHackMe (THM)**, **VulnHub**, **ProLabs**, and custom offline labs.
 
-Works on **desktop and mobile** from the same link.
-
----
-
-## Machines
-
-| Platform | Rooms |
-|----------|-------|
-| **Hack The Box** | 347 (base catalog + newer releases) |
-| **Try Hack Me** | 52 popular rooms |
-| **Total** | **399** |
-
-Every machine comes with:
-
-- Difficulty + OS + technique tags
-- User / Root flag checkboxes
-- A **key hint** so you're never fully stuck
-- Links to writeups (0xdf, IppSec, HTB Official, or THM Room)
+Built with an **offline-first architecture** (Zustand + LocalStorage/IndexedDB), zero backend dependency, and instantaneous command palette (`Ctrl+K`) navigation.
 
 ---
 
-## Cheat Sheet
+## 🚀 Core Modules
 
-Nine built-in categories with copy-paste commands:
+### 1. 🛡️ Module A: The Advanced Machine & Lab Tracker
+- **Multi-Platform Coverage:** Hack The Box (340+ boxes), TryHackMe (50+ rooms), VulnHub classics, ProLabs enterprise Active Directory environments, and custom user targets.
+- **5-Stage Attack Lifecycle Pipeline:**
+  1. `Target Backlog`
+  2. `Active Recon` (Port & service discovery)
+  3. `Foothold Obtained` (Initial user shell)
+  4. `System Pwned` (Root / SYSTEM flag captured)
+  5. `Completed & Logged` (Retired / writeup archived)
+- **Multi-Mode Views:**
+  - **Kanban Board:** Fluid drag-and-drop & stage progression with Framer Motion layout animations.
+  - **Data Table:** Dense terminal-style table with multi-column sorting (Name, Platform, OS, Difficulty, Status, Time) and quick flag toggles.
+  - **Cyber Cards Grid:** High-contrast cards featuring platform dots, difficulty badges, and hint spoiler buttons.
+- **Flags Vault:** Secure obfuscated fields (`••••••••`) with one-click copy and instant verification.
+- **Live Stopwatch:** Tracks real engagement duration with granular `Time-to-User` and `Time-to-Root` metrics.
+- **Global Command Palette (`Ctrl+K`):** Jump to any box, cheatsheet command, or execute actions from anywhere.
 
-| | | |
-|--|--|--|
-| Shell Upgrades / TTY | Recon & Scanning | Web Enumeration |
-| File Transfer | Linux PrivEsc | Windows PrivEsc |
-| Active Directory | Cracking & Passwords | Pivoting & Tunnels |
+### 2. ⚡ Module B: Dynamic Cheatsheet & Reverse Shell Builder
+- **Real-Time Variable Injection:** Global sticky parameters (`LHOST`, `LPORT`, `TARGET_IP`, `INTERFACE`) dynamically interpolate into all commands simultaneously!
+- **Dedicated Reverse Shell Studio:** Interactive generator supporting **Bash, Python 3, PHP, Netcat, PowerShell, Socat TTY, Perl, and Ruby**, with ready-to-run listener commands.
+- **Curated Offensive Categories:**
+  1. Network Discovery & Port Scanning (`nmap`, `masscan`, `rustscan`)
+  2. Web Enumeration & Fuzzing (`ffuf`, `gobuster`, `feroxbuster`, `nikto`, `wpscan`)
+  3. Exploitation & Payloads (`sqlmap`, LFI wrappers, `msfvenom` one-liners)
+  4. Linux Post-Exploitation & PrivEsc (Interactive TTY stabilization, `LinPEAS`, SUID, `getcap`, `sudo -l`)
+  5. Windows & Active Directory (`BloodHound`, `PowerView`, `Mimikatz`, `impacket`, `NetExec`, `Evil-WinRM`)
+  6. Pivoting & Tunneling (`Chisel`, SSH Dynamic Forwarding, `Ligolo-ng`, `socat` relays)
+  7. File Transfers (`python3 http`, `certutil`, `powershell`, `smbserver`)
+- **Custom Payload Vault:** Add, edit, bookmark, and tag your personal exploit snippets.
 
----
+### 3. 📝 Module C: Embedded Writeup Studio (Obsidian & GitBook Ready)
+- **Dual-Pane Live Editor:** Raw markdown on the left, live rendered preview on the right.
+- **Automated Pentest Templates:** Pre-populates target IP, platform, OS, difficulty, and standard reporting sections:
+  1. Executive Summary & Attack Path
+  2. Reconnaissance & Nmap Scan Results
+  3. Vulnerability Analysis & Foothold Proof-of-Concept
+  4. Privilege Escalation & Root Evidence
+  5. Post-Exploitation Loot & Remediation
+- **Standardized YAML Frontmatter:** Directly exportable as `.md` files into Obsidian vaults or GitBook documentation repositories.
 
-## Reverse Shell Generator
-
-Built-in payload generator with:
-- Bash, Python, PHP, Perl, PowerShell
-- Listener command shown alongside every payload
-- LHOST / LPORT substitution
-
----
-
-## Extras
-
-- 🌗 **Dark mode toggle**
-- ⌨️ `/` shortcut to focus search
-- 📊 Live result counter with chip counts
-- 🕐 Session timer per machine (survives reloads)
-- 🔥 Activity heatmap + daily streak tracking
-- 💧 Ferrofluid cursor effect (WebGL)
-- 💨 Animated ink-smoke background
-- ♻️ Reset button (auto-backup before wiping)
-
----
-
-## Deploy Your Own
-
-<details>
-<summary><b>Option A: GitHub Pages (recommended)</b></summary>
-
-1. Fork or clone this repo
-2. Go to **Settings → Pages → Source: main branch → Save**
-3. Done. Your tracker is live at `https://you.github.io/ctf-tracker/`
-
-</details>
-
-<details>
-<summary><b>Option B: Netlify Drop</b></summary>
-
-1. Grab `index.html` + `ferrofluid.js` + `.nojekyll`
-2. Drop them at [app.netlify.com/drop](https://app.netlify.com/drop)
-3. Instant URL
-
-</details>
-
-<details>
-<summary><b>Option C: Open locally</b></summary>
-
-Just double-click `index.html`. Everything works from `file://`.
-
-</details>
+### 4. 📊 Module D: Operational Analytics & Skill Radar
+- **Offensive Skill Vector Radar:** Interactive SVG radar chart visualizing proficiencies across Web Security, Active Directory, Linux PrivEsc, Windows PrivEsc, Network/Pivoting, and Binary Exploitation.
+- **Pwn Progress Matrix:** Tier-by-tier completion rates across Very Easy, Easy, Medium, Hard, and Insane difficulties.
+- **90-Day Activity Heatmap:** GitHub/HTB-style calendar tracking daily study sessions and root captures.
+- **Speed Benchmarks:** Average time to initial access and average time to root.
 
 ---
 
-## Reset Options
-
-The header has a **Reset** button with two levels:
-
-| Level | What it clears | What it keeps |
-|-------|---------------|---------------|
-| **Progress Only** | Flags, notes, timers, streaks, activity | Custom machines + commands |
-| **Factory Reset** | Everything | Nothing |
-
-Both auto-download a JSON backup first.
+## 🎨 Theme & UI/UX Design
+- **Cyberpunk Palette:** Jet Black (`#0B0F19`), Slate Cards (`#111827`), Glowing Emerald (`#10B981` HTB), Crimson (`#EF4444` THM), Cyan (`#06B6D4` Tech), and Purple (`#8B5CF6` AD).
+- **Retro CRT Mode:** Optional CRT scanlines, screen curvature vignette, and phosphor beam overlay.
+- **Web Audio FX:** Synthesized tactical clicks, confirmation chimes, and root fanfares with zero external audio assets.
+- **Data Portability:** 1-Click JSON export and import restore.
 
 ---
 
-## Links
+## 🛠️ Local Development & Build
 
-Built by **DANIEL** ([@xXDNDXx](https://github.com/xXDNDXx))
+### Prerequisites
+- Node.js 18+ (tested on Node.js 24)
+- npm 9+
 
-| | |
+```bash
+# Clone the repository
+git clone https://github.com/xXDNDXx/ctf-tracker.git
+cd ctf-tracker
+
+# Install dependencies
+npm install
+
+# Start local development server
+npm run dev
+
+# Build production bundle
+npm run build
+
+# Preview production build locally
+npm run preview
+```
+
+---
+
+## 🔗 Author & Community Links
+
+Built with precision by **DANIEL** ([@xXDNDXx](https://github.com/xXDNDXx))
+
+| Link | Destination |
 |---|---|
 | 🧑‍🚀 Portfolio | <https://xXDNDXx.github.io/> |
 | 📝 CTF Write-ups | <https://xxdndxx.gitbook.io/thm-writeups/> |
-| 💻 GitHub | <https://github.com/xXDNDXx> |
+| 💻 GitHub Profile | <https://github.com/xXDNDXx> |
 | 💼 LinkedIn | <https://www.linkedin.com/in/daniel-dayan-a66322352/> |
 
 ---
 
-<div align="center">
-
-**Built for people who break things.**
-
-</div>
+## 📜 License
+MIT License. Created for the cybersecurity and CTF community.
 
