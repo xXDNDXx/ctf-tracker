@@ -15,8 +15,7 @@ import {
   Award,
   Radio,
   Compass,
-  GraduationCap,
-  Share2
+  GraduationCap
 } from 'lucide-react';
 import { useCtfStore } from '../../store/useCtfStore';
 import { playCyberSound } from '../../utils/helpers';
@@ -167,7 +166,7 @@ export const Sidebar: React.FC = () => {
             <div className="px-2 text-[10px] uppercase font-bold tracking-wider text-cyber-muted mb-2">
               LAYOUT MODES
             </div>
-            <div className="grid grid-cols-4 gap-1 bg-cyber-card p-1 rounded-lg border border-cyber-border">
+            <div className="grid grid-cols-3 gap-1 bg-cyber-card p-1 rounded-lg border border-cyber-border">
               <button
                 onClick={() => {
                   setViewMode('kanban');
@@ -212,21 +211,6 @@ export const Sidebar: React.FC = () => {
               >
                 <LayoutGrid className="w-3.5 h-3.5 mb-0.5" />
                 <span>Cards</span>
-              </button>
-              <button
-                onClick={() => {
-                  setViewMode('graph');
-                  if (soundEnabled) playCyberSound('click');
-                }}
-                className={`flex flex-col items-center justify-center py-1.5 rounded text-[10px] transition-all ${
-                  viewMode === 'graph'
-                    ? 'bg-cyber-emerald/20 text-cyber-emerald border border-cyber-emerald/40 font-bold'
-                    : 'text-cyber-muted hover:text-white'
-                }`}
-                title="BloodHound Attack Graph View"
-              >
-                <Share2 className="w-3.5 h-3.5 mb-0.5" />
-                <span>Graph</span>
               </button>
             </div>
           </div>

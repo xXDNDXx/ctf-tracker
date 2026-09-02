@@ -69,4 +69,4 @@ export interface ActivitySession {
   type: 'recon' | 'foothold' | 'root' | 'session';
 }
 
-export type ViewMode = 'kanban' | 'table' | 'grid' | 'graph';
+export type ViewMode = 'kanban' | 'table' | 'grid';
