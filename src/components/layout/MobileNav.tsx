@@ -224,7 +224,7 @@ export const MobileNav: React.FC = () => {
                 <div className="p-3 rounded-xl bg-cyber-bg border border-cyber-border space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="text-[10px] uppercase font-bold text-cyber-muted">
-                      OPERATOR: <span className="text-white font-bold">{user?.name || 'Daniel'}</span>
+                      ACCOUNT: <span className="text-white font-bold">{user ? user.name : 'Google Guest'}</span>
                     </div>
                     <div className="text-[10px] text-cyber-emerald font-bold">
                       {rootedMachines} / {totalMachines} Pwned

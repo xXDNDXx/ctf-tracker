@@ -30,12 +30,12 @@ const getInitialGoogleClientId = (): string => {
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
-      user: DEFAULT_DANIEL_PROFILE,
-      profiles: [DEFAULT_DANIEL_PROFILE],
-      isAuthenticated: true,
+      user: null,
+      profiles: [],
+      isAuthenticated: false,
       isLoading: false,
-      token: 'session_daniel_active',
-      guestDataMigrated: true,
+      token: null,
+      guestDataMigrated: false,
       googleClientId: getInitialGoogleClientId(),
 
       setGoogleClientId: (clientId: string) => {
