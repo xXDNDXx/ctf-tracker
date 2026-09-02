@@ -18,7 +18,8 @@ import {
   Target,
   Zap
 } from 'lucide-react';
-import { useCtfStore, BoxVectorCategory } from '../../store/useCtfStore';
+import { useCtfStore, BoxVectorCategory, mergeMachinesWithCatalog } from '../../store/useCtfStore';
+import { playCyberSound, triggerRootCelebration } from '../../utils/helpers';
 import { Platform, Difficulty, OperatingSystem } from '../../types';
 import { KanbanBoard } from './KanbanBoard';
 import { TableView } from './TableView';
@@ -306,6 +307,23 @@ export const TrackerView: React.FC = () => {
               );
             })}
           </div>
+
+          {/* Direct 1-Click Sync 45 HTB Solves */}
+          <button
+            onClick={() => {
+              const current = useCtfStore.getState().machines;
+              const merged = mergeMachinesWithCatalog(current);
+              useCtfStore.setState({ machines: merged });
+              useCtfStore.getState().saveProfileData();
+              playCyberSound('root');
+              triggerRootCelebration();
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyber-amber/20 text-cyber-amber border border-cyber-amber/50 hover:bg-cyber-amber hover:text-black font-bold text-xs transition-all shadow-[0_0_12px_rgba(245,158,11,0.25)] whitespace-nowrap group"
+            title="Force reload all 45 HTB solved targets into completed column"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-cyber-amber group-hover:scale-110 transition-transform" />
+            <span>⚡ Sync 45 HTB Solves</span>
+          </button>
 
           {/* Tactical Recon Automation Launcher */}
           <button

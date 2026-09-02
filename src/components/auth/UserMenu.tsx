@@ -45,7 +45,21 @@ export const UserMenu: React.FC = () => {
     saveProfileData(currentProfileId);
     setJustSaved(true);
     playCyberSound('root');
-    setTimeout(() => setJustSaved(false), 2000);
+    setTimeout(() => setJustSaved(false), 2500);
+    playCyberSound('export');
+  };
+
+  // Force Sync 45 Solves Handler
+  const handleForceSyncHtbSolves = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    const current = useCtfStore.getState().machines;
+    const merged = mergeMachinesWithCatalog(current);
+    useCtfStore.setState({ machines: merged });
+    useCtfStore.getState().saveProfileData();
+    playCyberSound('root');
+    triggerRootCelebration();
+    setJustSaved(true);
+    setTimeout(() => setJustSaved(false), 3000);
   };
 
   // Launch Official Google Sign-In Popup
@@ -150,7 +164,18 @@ export const UserMenu: React.FC = () => {
   // ==========================================
   if (!isAuthenticated || !user) {
     return (
-      <div className="relative font-mono text-xs">
+      <div className="flex items-center gap-2 font-mono text-xs">
+        {/* Visible 1-Click Sync 45 Solves Button */}
+        <button
+          onClick={handleForceSyncHtbSolves}
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl font-bold text-xs bg-cyber-amber/20 hover:bg-cyber-amber/30 text-cyber-amber border border-cyber-amber/60 hover:border-cyber-amber transition-all shadow-[0_0_12px_rgba(245,158,11,0.25)] group"
+          title="Force sync your 45 Hack The Box solves into completed column"
+        >
+          <Sparkles className="w-3.5 h-3.5 text-cyber-amber group-hover:scale-110 transition-transform" />
+          <span className="hidden sm:inline">⚡ SYNC 45 SOLVES</span>
+          <span className="sm:hidden">⚡ 45</span>
+        </button>
+
         <button
           onClick={handleLaunchGoogleSignIn}
           className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white hover:bg-gray-100 text-gray-800 font-bold transition-all shadow-md border border-gray-300 group"
@@ -187,8 +212,19 @@ export const UserMenu: React.FC = () => {
   // ==========================================
   return (
     <div className="relative font-mono text-xs">
-      {/* Header Button Group: 1-Click Save + Google Profile Badge */}
+      {/* Header Button Group: Sync 45 Solves + 1-Click Save + Google Profile Badge */}
       <div className="flex items-center gap-1.5 bg-cyber-card/90 border border-cyber-border rounded-xl p-1 shadow-sm">
+        {/* Visible 1-Click Sync 45 Solves Button */}
+        <button
+          onClick={handleForceSyncHtbSolves}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-bold text-[11px] bg-cyber-amber/20 hover:bg-cyber-amber/30 text-cyber-amber border border-cyber-amber/60 hover:border-cyber-amber transition-all shadow-[0_0_10px_rgba(245,158,11,0.25)] group"
+          title="Force sync your 45 Hack The Box solves into completed column"
+        >
+          <Sparkles className="w-3.5 h-3.5 text-cyber-amber group-hover:scale-110 transition-transform" />
+          <span className="hidden sm:inline">⚡ SYNC 45 SOLVES</span>
+          <span className="sm:hidden">⚡ 45</span>
+        </button>
+
         {/* Instant 1-Click Quick Save Button */}
         <button
           onClick={handleQuickSave}
