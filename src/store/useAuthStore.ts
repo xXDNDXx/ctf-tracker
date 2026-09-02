@@ -120,29 +120,6 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      // Instant Dev Sandbox Simulation
-      simulateGoogleLogin: (profile?: Partial<User>) => {
-        const dummyUser: User = {
-          id: 'usr_google_89412491',
-          googleId: '109849201948201',
-          email: profile?.email || 'operator@rootvector.lab',
-          name: profile?.name || 'Daniel (Operator)',
-          avatarUrl: profile?.avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&auto=format&fit=crop&q=80',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          ...profile,
-        };
-
-        set({
-          user: dummyUser,
-          token: 'mock_jwt_session_token_' + Date.now(),
-          isAuthenticated: true,
-          isLoading: false,
-        });
-
-        playCyberSound('engage');
-      },
-
       // Logout and clear authentication session
       logout: () => {
         fetch('/api/auth/logout', { method: 'POST' }).catch(() => {});

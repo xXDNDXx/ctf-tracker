@@ -98,7 +98,7 @@ export const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({
 
     if (tokenClientRef.current) {
       // Request real Google account selector popup
-      tokenClientRef.current.requestAccessToken();
+      tokenClientRef.current.requestAccessToken({ prompt: 'select_account' });
     } else if (typeof window !== 'undefined' && (window as any).google?.accounts?.oauth2) {
       // Re-init on the fly if needed
       tokenClientRef.current = (window as any).google.accounts.oauth2.initTokenClient({
@@ -114,7 +114,7 @@ export const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({
           }
         },
       });
-      tokenClientRef.current.requestAccessToken();
+      tokenClientRef.current.requestAccessToken({ prompt: 'select_account' });
     } else {
       // Fallback: direct Google OAuth 2.0 popup window
       const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(

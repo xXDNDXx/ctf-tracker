@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   X, 
   Key, 
   ExternalLink, 
   Check, 
   Sparkles, 
-  ShieldCheck, 
-  AlertCircle,
-  Copy,
-  Terminal,
-  Zap
+  Copy
 } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useCtfStore } from '../../store/useCtfStore';
@@ -27,7 +23,7 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({
   onClose,
   onLaunchLogin,
 }) => {
-  const { googleClientId, setGoogleClientId, simulateGoogleLogin } = useAuthStore();
+  const { googleClientId, setGoogleClientId } = useAuthStore();
   const soundEnabled = useCtfStore((s) => s.soundEnabled);
   const [inputClientId, setInputClientId] = useState(googleClientId || '');
   const [copiedOrigin, setCopiedOrigin] = useState(false);
@@ -56,7 +52,7 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({
     setTimeout(() => {
       onClose();
       onLaunchLogin(cleanId);
-    }, 500);
+    }, 400);
   };
 
   return (
@@ -97,10 +93,10 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({
             </div>
             <div>
               <h2 className="text-sm font-bold text-white tracking-wide">
-                REAL GOOGLE OAUTH 2.0 SETUP
+                SIGN IN WITH GOOGLE
               </h2>
               <p className="text-[11px] text-cyber-muted">
-                Connect your Google Cloud OAuth Client ID for real Google account sign-in
+                Connect your Google OAuth Client ID to authenticate with your real account
               </p>
             </div>
           </div>
@@ -133,7 +129,7 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({
               <li>Click <strong>+ CREATE CREDENTIALS ➔ OAuth client ID</strong></li>
               <li>Application type: <strong>Web application</strong></li>
               <li>
-                In <strong>Authorized JavaScript origins</strong>, add this exact URL:
+                In <strong>Authorized JavaScript origins</strong>, add your local origin:
                 <div className="mt-1 flex items-center gap-2 bg-cyber-card p-1.5 px-2.5 rounded border border-cyber-border font-mono text-white text-[11px]">
                   <span className="text-cyber-emerald flex-1 select-all">{currentOrigin}</span>
                   <button
@@ -178,32 +174,17 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({
                 {saveSuccess ? (
                   <>
                     <Check className="w-4 h-4" />
-                    <span>LAUNCHING GOOGLE LOGIN...</span>
+                    <span>OPENING GOOGLE ACCOUNT SELECTOR...</span>
                   </>
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4" />
-                    <span>CONNECT & LAUNCH REAL GOOGLE LOGIN</span>
+                    <span>CONNECT & CHOOSE GOOGLE ACCOUNT</span>
                   </>
                 )}
               </button>
             </div>
           </form>
-
-          {/* Or instant test login */}
-          <div className="pt-2 border-t border-cyber-border/70 flex items-center justify-between text-[11px] text-cyber-muted">
-            <span>Want to preview authenticated mode first?</span>
-            <button
-              onClick={() => {
-                simulateGoogleLogin();
-                onClose();
-              }}
-              className="text-cyber-cyan hover:underline font-semibold flex items-center gap-1"
-            >
-              <Zap className="w-3 h-3 text-cyber-cyan" />
-              <span>Instant Test Account (Daniel)</span>
-            </button>
-          </div>
         </div>
       </motion.div>
     </div>

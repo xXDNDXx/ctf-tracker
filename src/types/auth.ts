@@ -20,7 +20,6 @@ export interface AuthState {
   setGoogleClientId: (clientId: string) => void;
   loginWithGoogleCredential: (credential: string) => Promise<void>;
   loginWithGoogleUserInfo: (userInfo: { sub: string; email: string; name: string; picture?: string }, token: string) => Promise<void>;
-  simulateGoogleLogin: (userProfile?: Partial<User>) => void;
   logout: () => void;
   migrateGuestData: () => Promise<{ success: boolean; count: number }>;
   checkSession: () => Promise<void>;

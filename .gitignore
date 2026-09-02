@@ -34,9 +34,18 @@ node_modules/
 *.sln
 *.sw?
 
-# Environment files
+# Sensitive Environment & Key files (NEVER COMMIT SECRETS)
 .env
-.env*.local
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.pfx
+secrets.*
+credentials.*
+id_rsa*
+*.secret
 
 # Scratch and intermediate files
 linux_full.svg
