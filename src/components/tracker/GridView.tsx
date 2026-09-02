@@ -34,6 +34,7 @@ export const GridView: React.FC<GridViewProps> = ({ filteredMachines }) => {
     soundEnabled,
     toggleUserFlag,
     toggleRootFlag,
+    setReportMachineId,
   } = useCtfStore();
 
   const [revealedHints, setRevealedHints] = useState<Record<string, boolean>>({});
@@ -277,6 +278,19 @@ export const GridView: React.FC<GridViewProps> = ({ filteredMachines }) => {
                   title="Open Dedicated Full-Page Mission"
                 >
                   <Maximize2 className="w-3.5 h-3.5" />
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
+                  onClick={(e: React.MouseEvent) => {
+                    e.stopPropagation();
+                    setReportMachineId(m.id);
+                  }}
+                  className="p-1.5 rounded bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-purple-300 hover:border-purple-600 transition-all"
+                  title="Open Executive Pentest Pre-Report"
+                >
+                  <FileText className="w-3.5 h-3.5 text-purple-400" />
                 </motion.button>
 
                 <motion.button

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Plus, Server } from 'lucide-react';
 import { useCtfStore } from '../../store/useCtfStore';
 import { Platform, OperatingSystem, Difficulty } from '../../types';
@@ -16,6 +17,16 @@ export const NewMachineModal: React.FC = () => {
   const [roomUrl, setRoomUrl] = useState('');
   const [tags, setTags] = useState('');
   const [hint, setHint] = useState('');
+
+  useEffect(() => {
+    if (newMachineModalOpen) {
+      const orig = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = orig;
+      };
+    }
+  }, [newMachineModalOpen]);
 
   if (!newMachineModalOpen) return null;
 
@@ -53,10 +64,13 @@ export const NewMachineModal: React.FC = () => {
     setHint('');
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md animate-fade-in font-mono">
+  const modalContent = (
+    <div 
+      className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-md animate-fade-in font-mono overflow-y-auto"
+      onClick={() => setNewMachineModalOpen(false)}
+    >
       <div 
-        className="w-full sm:max-w-lg h-full sm:h-auto sm:max-h-[90vh] flex flex-col rounded-none sm:rounded-xl border-0 sm:border border-cyber-border bg-cyber-card shadow-2xl overflow-hidden"
+        className="w-full sm:max-w-lg max-h-[90vh] flex flex-col rounded-xl border border-cyber-border bg-cyber-card shadow-2xl overflow-hidden my-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex-shrink-0 flex items-center justify-between border-b border-cyber-border p-4 bg-cyber-bg/95">
@@ -215,4 +229,6 @@ export const NewMachineModal: React.FC = () => {
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 };

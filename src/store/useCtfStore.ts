@@ -82,6 +82,7 @@ interface CtfStoreState {
   viewMode: ViewMode;
   selectedMachineId: string | null;
   writeupMachineId: string | null;
+  reportMachineId: string | null;
   commandPaletteOpen: boolean;
   newMachineModalOpen: boolean;
   backupModalOpen: boolean;
@@ -103,6 +104,7 @@ interface CtfStoreState {
   setViewMode: (mode: ViewMode) => void;
   setSelectedMachineId: (id: string | null) => void;
   setWriteupMachineId: (id: string | null) => void;
+  setReportMachineId: (id: string | null) => void;
   setCommandPaletteOpen: (open: boolean) => void;
   setNewMachineModalOpen: (open: boolean) => void;
   setBackupModalOpen: (open: boolean) => void;
@@ -291,6 +293,7 @@ export const useCtfStore = create<CtfStoreState>()(
       viewMode: 'kanban',
       selectedMachineId: null,
       writeupMachineId: null,
+      reportMachineId: null,
       commandPaletteOpen: false,
       newMachineModalOpen: false,
       backupModalOpen: false,
@@ -307,6 +310,7 @@ export const useCtfStore = create<CtfStoreState>()(
       setViewMode: (mode) => set({ viewMode: mode }),
       setSelectedMachineId: (id) => set({ selectedMachineId: id }),
       setWriteupMachineId: (id) => set({ writeupMachineId: id }),
+      setReportMachineId: (id) => set({ reportMachineId: id }),
       setCommandPaletteOpen: (open) => set({ commandPaletteOpen: open }),
       setNewMachineModalOpen: (open) => set({ newMachineModalOpen: open }),
       setBackupModalOpen: (open) => set({ backupModalOpen: open }),

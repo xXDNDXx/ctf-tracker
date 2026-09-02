@@ -18,12 +18,20 @@ import { AnalyticsView } from './components/analytics/AnalyticsView';
 import { TargetDetailPage } from './pages/TargetDetailPage';
 import { MethodologyPage } from './pages/MethodologyPage';
 import { ExamSimulatorPage } from './pages/ExamSimulatorPage';
+import { MachineDetailModal } from './components/tracker/MachineDetailModal';
+import { NewMachineModal } from './components/tracker/NewMachineModal';
+import { PentestReportModal } from './components/writeup/PentestReportModal';
 import { useCtfStore, mergeMachinesWithCatalog } from './store/useCtfStore';
 
 const MainAppContent: React.FC = () => {
   const { setScrollElement, scrollProgress } = useWorkspaceScroll();
   const location = useLocation();
   const setActiveTab = useCtfStore((s) => s.setActiveTab);
+  const machines = useCtfStore((s) => s.machines);
+  const reportMachineId = useCtfStore((s) => s.reportMachineId);
+  const setReportMachineId = useCtfStore((s) => s.setReportMachineId);
+
+  const reportMachine = reportMachineId ? machines.find((m) => m.id === reportMachineId) || null : null;
 
   // Guarantee that all 45 completed HTB targets are populated in active state and profile
   useEffect(() => {
@@ -70,6 +78,19 @@ const MainAppContent: React.FC = () => {
 
       {/* Tactical Recon Automation & Payload Engine */}
       <ReconAutomationModal />
+
+      {/* Deep Target Inspection Modal */}
+      <MachineDetailModal />
+
+      {/* Deploy Target Modal */}
+      <NewMachineModal />
+
+      {/* Executive Pentest Pre-Report Modal */}
+      <PentestReportModal
+        machine={reportMachine}
+        isOpen={Boolean(reportMachineId)}
+        onClose={() => setReportMachineId(null)}
+      />
 
       {/* Tactical Top Header */}
       <Header />

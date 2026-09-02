@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -21,9 +22,13 @@ import {
   Trash2,
   ListChecks,
   Maximize2,
-  Zap
+  Zap,
+  Printer,
+  ShieldAlert,
+  AlertOctagon,
+  CheckCircle2
 } from 'lucide-react';
-import { useCtfStore } from '../../store/useCtfStore';
+import { useCtfStore, BRAND_THEMES } from '../../store/useCtfStore';
 import { PipelineStatus, Difficulty } from '../../types';
 import { formatSeconds, playCyberSound, triggerRootCelebration } from '../../utils/helpers';
 import { ChecklistWorkspace } from '../checklist/ChecklistWorkspace';
@@ -45,8 +50,10 @@ export const MachineDetailModal: React.FC = () => {
     pauseTimer,
     resetTimer,
     soundEnabled,
+    appBrand,
     setActiveTab,
     setWriteupMachineId,
+    setReportMachineId,
     deleteMachine,
     setReconAutomationModalOpen,
   } = useCtfStore();
@@ -57,9 +64,10 @@ export const MachineDetailModal: React.FC = () => {
   const [showRootFlag, setShowRootFlag] = useState(false);
   const [copiedUser, setCopiedUser] = useState(false);
   const [copiedRoot, setCopiedRoot] = useState(false);
+  const [copiedReportMd, setCopiedReportMd] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [newTagInput, setNewTagInput] = useState('');
-  const [activeModalTab, setActiveModalTab] = useState<'overview' | 'checklist'>('overview');
+  const [activeModalTab, setActiveModalTab] = useState<'overview' | 'checklist' | 'report'>('overview');
 
   const machine = machines.find((m) => m.id === selectedMachineId);
   const isActiveTarget = Boolean(machine && activeTargetId === machine.id);
@@ -127,6 +135,51 @@ export const MachineDetailModal: React.FC = () => {
     setActiveTab('writeup');
   };
 
+  // Prevent background body scroll when modal is open
+  useEffect(() => {
+    if (selectedMachineId) {
+      const orig = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = orig;
+      };
+    }
+  }, [selectedMachineId]);
+
+  const activeBrand = BRAND_THEMES.find((b) => b.id === appBrand) || BRAND_THEMES[0];
+
+  const handleCopyReportMd = () => {
+    const md = `# EXECUTIVE PENETRATION TESTING REPORT
+**Classification:** STRICTLY CONFIDENTIAL // PROPRIETARY
+**Target:** ${machine.name} (${machine.ip})
+**Platform / OS:** ${machine.platform} // ${machine.os}
+**Difficulty:** ${machine.difficulty}
+**Assessment Date:** ${new Date().toLocaleDateString()}
+**Assessor:** ${activeBrand.namePrefix}${activeBrand.nameSuffix} Offensive Operations
+
+## 1. Executive Summary
+During the security assessment of target host ${machine.name} (${machine.ip}), security vulnerabilities were identified allowing adversaries to establish unauthorized footholds and escalate to administrative root privileges.
+
+## 2. Threat Findings Matrix
+- **Initial Foothold:** ${machine.tags.slice(0, 3).join(', ') || 'Remote Service Exploitation'} (CVSS 8.8 - HIGH)
+- **Privilege Escalation:** ${machine.tags.slice(3, 6).join(', ') || 'Local Misconfiguration'} (CVSS 9.4 - CRITICAL)
+
+## 3. Proof of Concept & Compromise Flags
+- **User Flag:** ${machine.userFlag || (machine.userPwnedAt ? 'CAPTURED' : 'PENDING')}
+- **Root Flag:** ${machine.rootFlag || (machine.rootPwnedAt ? 'CAPTURED' : 'PENDING')}
+- **Notes:** ${machine.quickNotes || machine.writeupMarkdown || 'No detailed transcript logged.'}
+
+## 4. Remediation Plan
+1. Immediate: Patch vulnerable exposed services and restrict listening ports.
+2. Short-Term: Enforce strict least-privilege policies.
+3. Long-Term: Deploy centralized audit logging and EDR telemetry.
+`;
+    navigator.clipboard.writeText(md);
+    setCopiedReportMd(true);
+    if (soundEnabled) playCyberSound('copy');
+    setTimeout(() => setCopiedReportMd(false), 2000);
+  };
+
   const pipelineStages: { id: PipelineStatus; label: string; color: string }[] = [
     { id: 'backlog', label: 'Backlog', color: 'border-cyber-muted text-cyber-muted' },
     { id: 'recon', label: 'Recon In-Progress', color: 'border-cyber-cyan text-cyber-cyan' },
@@ -135,9 +188,9 @@ export const MachineDetailModal: React.FC = () => {
     { id: 'completed', label: 'Completed & Logged', color: 'border-cyber-emerald text-cyber-emerald' },
   ];
 
-  return (
+  const modalContent = (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md font-mono"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md font-mono overflow-y-auto"
       onClick={() => setSelectedMachineId(null)}
     >
       <motion.div 
@@ -145,7 +198,7 @@ export const MachineDetailModal: React.FC = () => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 10 }}
         transition={{ duration: 0.15 }}
-        className="w-full sm:max-w-4xl h-full sm:h-[92vh] max-h-none sm:max-h-[860px] flex flex-col rounded-none sm:rounded-2xl border-0 sm:border border-cyber-border bg-cyber-card shadow-2xl overflow-hidden relative z-10"
+        className="w-full sm:max-w-4xl max-h-[92vh] flex flex-col rounded-xl sm:rounded-2xl border border-cyber-border bg-cyber-card shadow-2xl overflow-hidden relative my-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header (Pinned at Top) */}
@@ -189,7 +242,7 @@ export const MachineDetailModal: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             {machine.isCustom && (
               <button
                 onClick={() => {
@@ -203,6 +256,17 @@ export const MachineDetailModal: React.FC = () => {
                 <Trash2 className="w-4 h-4" />
               </button>
             )}
+
+            {/* Direct Pentest Pre-Report Button */}
+            <button
+              onClick={() => setReportMachineId(machine.id)}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-purple-950/40 text-purple-300 border border-purple-800/60 hover:bg-purple-900/60 hover:text-white font-semibold text-xs transition-all shadow-sm group"
+              title="Open Executive Pentest Pre-Report"
+            >
+              <FileText className="w-3.5 h-3.5 text-purple-400 group-hover:scale-110 transition-transform" />
+              <span className="hidden sm:inline">Pre-Report</span>
+            </button>
+
             <button
               onClick={() => setReconAutomationModalOpen(true)}
               className="flex items-center gap-1 px-2 py-1.5 rounded bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/40 hover:bg-cyber-emerald hover:text-black font-semibold text-xs transition-all shadow-glow-emerald/20"
@@ -259,12 +323,153 @@ export const MachineDetailModal: React.FC = () => {
               </span>
             )}
           </button>
+          <button
+            onClick={() => setActiveModalTab('report')}
+            className={`flex items-center gap-1.5 py-2.5 px-4 font-bold text-xs border-b-2 transition-all ${
+              activeModalTab === 'report'
+                ? 'border-purple-400 text-purple-300 bg-purple-950/20'
+                : 'border-transparent text-cyber-muted hover:text-white'
+            }`}
+          >
+            <FileText className="w-3.5 h-3.5 text-purple-400" />
+            <span>📄 PENTEST REPORT</span>
+          </button>
         </div>
 
         {/* Modal Body (Scrollable Center Workspace) */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-5 text-xs scrollbar-thin">
           {activeModalTab === 'checklist' ? (
             <ChecklistWorkspace machine={machine} onOpenInWriteup={handleOpenInWriteup} />
+          ) : activeModalTab === 'report' ? (
+            <div className="space-y-6">
+              {/* Report Header Bar */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-cyber-bg/80 border border-cyber-border">
+                <div>
+                  <div className="text-[10px] text-purple-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                    <FileText className="w-3.5 h-3.5" /> EXECUTIVE SECURITY ASSESSMENT PRE-REPORT
+                  </div>
+                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                    <span>{machine.name}</span>
+                    <span className="text-cyber-muted font-normal text-xs font-mono">({machine.ip})</span>
+                  </h3>
+                  <div className="text-xs text-cyber-muted mt-1">
+                    Classification: <span className="text-cyber-amber font-semibold">CONFIDENTIAL // CLIENT PENETRATION AUDIT</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleCopyReportMd}
+                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-cyber-card border border-cyber-border hover:border-cyber-cyan text-cyber-muted hover:text-white text-xs transition-colors"
+                  >
+                    {copiedReportMd ? <Check className="w-3.5 h-3.5 text-cyber-emerald" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedReportMd ? 'Copied' : 'Copy MD'}</span>
+                  </button>
+
+                  <button
+                    onClick={() => setReportMachineId(machine.id)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-950/50 border border-purple-800 text-purple-300 hover:bg-purple-900/60 hover:text-white font-bold text-xs transition-colors shadow-sm"
+                  >
+                    <Printer className="w-3.5 h-3.5" />
+                    <span>Print / PDF</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Threat Level & Severity Matrix */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="p-3.5 rounded-xl bg-cyber-bg border border-cyber-border">
+                  <div className="text-[10px] text-cyber-muted uppercase font-bold mb-1">COMPROMISE STATUS</div>
+                  <div className="text-sm font-bold flex items-center gap-2">
+                    {machine.status === 'completed' || machine.status === 'root' ? (
+                      <span className="text-cyber-emerald flex items-center gap-1">
+                        <CheckCircle2 className="w-4 h-4" /> 100% ROOT PWNED
+                      </span>
+                    ) : machine.status === 'foothold' ? (
+                      <span className="text-cyber-amber flex items-center gap-1">
+                        <AlertOctagon className="w-4 h-4" /> FOOTHOLD OBTAINED
+                      </span>
+                    ) : (
+                      <span className="text-cyber-cyan flex items-center gap-1">
+                        <AlertCircle className="w-4 h-4" /> RECON IN-PROGRESS
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-cyber-bg border border-cyber-border">
+                  <div className="text-[10px] text-cyber-muted uppercase font-bold mb-1">RISK SEVERITY</div>
+                  <div className="text-sm font-bold text-cyber-crimson flex items-center gap-1.5">
+                    <ShieldAlert className="w-4 h-4" />
+                    <span>CVSS 9.4 CRITICAL</span>
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-cyber-bg border border-cyber-border">
+                  <div className="text-[10px] text-cyber-muted uppercase font-bold mb-1">TOTAL TIME LOGGED</div>
+                  <div className="text-sm font-bold text-cyber-cyan flex items-center gap-1.5">
+                    <Clock className="w-4 h-4" />
+                    <span>{formatSeconds(machine.timeSpentSeconds)}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Executive Summary Narrative */}
+              <div className="p-4 rounded-xl bg-cyber-bg/60 border border-cyber-border space-y-2">
+                <div className="text-[10px] uppercase font-bold text-cyber-cyan tracking-wider">
+                  1. EXECUTIVE SUMMARY
+                </div>
+                <p className="text-cyber-muted leading-relaxed">
+                  During security validation on target host <strong className="text-white">{machine.name}</strong> ({machine.ip}), high-impact vulnerabilities were verified. Remote access vectors allowed adversaries to breach network perimeters and subsequently escalate privileges to root / system administrator.
+                </p>
+              </div>
+
+              {/* Attack Path & Flag Proof of Compromise */}
+              <div className="p-4 rounded-xl bg-cyber-bg/60 border border-cyber-border space-y-3">
+                <div className="text-[10px] uppercase font-bold text-cyber-emerald tracking-wider">
+                  2. ATTACK CHAIN & PROOF OF COMPROMISE
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono">
+                  <div className="p-3 rounded-lg bg-cyber-card border border-cyber-border">
+                    <div className="text-[10px] text-cyber-cyan font-bold mb-1 flex items-center justify-between">
+                      <span>USER ACCESS FLAG</span>
+                      <span>{machine.userPwnedAt ? '✓ PWNED' : 'PENDING'}</span>
+                    </div>
+                    <div className="p-2 rounded bg-cyber-bg text-cyber-muted text-[11px] truncate">
+                      {machine.userFlag || (machine.userPwnedAt ? 'HTB{user_flag_verified}' : 'Not Captured')}
+                    </div>
+                  </div>
+                  <div className="p-3 rounded-lg bg-cyber-card border border-cyber-border">
+                    <div className="text-[10px] text-cyber-emerald font-bold mb-1 flex items-center justify-between">
+                      <span>ROOT / SYSTEM FLAG</span>
+                      <span>{machine.rootPwnedAt ? '✓ ROOTED' : 'PENDING'}</span>
+                    </div>
+                    <div className="p-2 rounded bg-cyber-bg text-cyber-muted text-[11px] truncate">
+                      {machine.rootFlag || (machine.rootPwnedAt ? 'HTB{root_flag_verified}' : 'Not Captured')}
+                    </div>
+                  </div>
+                </div>
+
+                {machine.quickNotes && (
+                  <div className="p-3 rounded-lg bg-cyber-card border border-cyber-border space-y-1">
+                    <div className="text-[10px] text-cyber-muted font-bold uppercase">Assessor Field Notes:</div>
+                    <div className="text-white whitespace-pre-wrap">{machine.quickNotes}</div>
+                  </div>
+                )}
+              </div>
+
+              {/* Remediation Action Plan */}
+              <div className="p-4 rounded-xl bg-cyber-bg/60 border border-cyber-border space-y-2">
+                <div className="text-[10px] uppercase font-bold text-cyber-amber tracking-wider">
+                  3. STRATEGIC REMEDIATION ROADMAP
+                </div>
+                <ul className="space-y-1.5 text-cyber-muted list-disc list-inside">
+                  <li><strong className="text-white">Immediate:</strong> Terminate vulnerable listening services and patch software packages to stable releases.</li>
+                  <li><strong className="text-white">Defensive:</strong> Harden local sudoers configurations and eliminate unauthorized SUID binaries.</li>
+                  <li><strong className="text-white">Monitoring:</strong> Deploy SIEM ingestion for authentication failure telemetry and privilege escalation alerting.</li>
+                </ul>
+              </div>
+            </div>
           ) : (
             <div className="space-y-6">
           
@@ -337,7 +542,12 @@ export const MachineDetailModal: React.FC = () => {
                     </button>
                   )}
                   <button
-                    onClick={() => resetTimer(machine.id)}
+                    onClick={() => {
+                      if (confirm('Reset session timer?')) {
+                        resetTimer();
+                        if (soundEnabled) playCyberSound('click');
+                      }
+                    }}
                     className="p-1.5 rounded-md bg-cyber-card border border-cyber-border text-cyber-muted hover:text-white"
                     title="Reset Timer"
                   >
@@ -347,16 +557,17 @@ export const MachineDetailModal: React.FC = () => {
               )}
             </div>
 
-            <div className="text-[11px] space-y-1 text-cyber-muted border-t sm:border-t-0 sm:border-l border-cyber-border sm:pl-3 pt-2 sm:pt-0">
-              <div className="flex justify-between">
-                <span>Time to User:</span>
-                <span className="text-cyber-cyan font-bold">
+            {/* Time to User & Root Milestones */}
+            <div className="grid grid-cols-2 gap-2 text-[10px] w-full sm:w-auto border-t sm:border-t-0 sm:border-l border-cyber-border pt-2 sm:pt-0 sm:pl-4">
+              <div>
+                <span className="text-cyber-muted block">Time to User:</span>
+                <span className="font-bold text-cyber-cyan font-mono">
                   {machine.timeToUserSeconds ? formatSeconds(machine.timeToUserSeconds) : '--:--:--'}
                 </span>
               </div>
-              <div className="flex justify-between">
-                <span>Time to Root:</span>
-                <span className="text-cyber-emerald font-bold">
+              <div>
+                <span className="text-cyber-muted block">Time to Root:</span>
+                <span className="font-bold text-cyber-crimson font-mono">
                   {machine.timeToRootSeconds ? formatSeconds(machine.timeToRootSeconds) : '--:--:--'}
                 </span>
               </div>
@@ -366,139 +577,146 @@ export const MachineDetailModal: React.FC = () => {
           {/* Section 3: Flags Vault */}
           <div>
             <div className="text-[10px] uppercase font-bold tracking-wider text-cyber-muted mb-2 flex items-center gap-1.5">
-              <Flag className="w-3.5 h-3.5 text-cyber-crimson" /> FLAGS VAULT (OBFUSCATED & COPYABLE)
+              <Flag className="w-3.5 h-3.5 text-cyber-amber" /> FLAGS VAULT (OBFUSCATED & COPYABLE)
             </div>
-            
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {/* User Flag */}
-              <div className="p-3 rounded-lg bg-cyber-bg border border-cyber-border">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="font-semibold text-cyber-cyan flex items-center gap-1">
+              <div className="p-3 rounded-lg border border-cyber-border bg-cyber-bg/50 space-y-2">
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="text-cyber-cyan font-semibold flex items-center gap-1">
                     <Flag className="w-3 h-3" /> USER FLAG
                   </span>
                   {machine.userPwnedAt && (
-                    <span className="text-[10px] text-cyber-emerald flex items-center gap-1">
+                    <span className="text-[9px] text-cyber-emerald flex items-center gap-0.5">
                       <Check className="w-3 h-3" /> PWNED
                     </span>
                   )}
                 </div>
-                
-                <div className="flex items-center gap-2">
+                <div className="relative">
                   <input
                     type={showUserFlag ? 'text' : 'password'}
                     value={machine.userFlag || ''}
                     onChange={(e) => updateMachine(machine.id, { userFlag: e.target.value })}
                     placeholder="Enter user flag (e.g. 7a3f...)"
-                    className="flex-1 bg-cyber-card px-2.5 py-1.5 rounded border border-cyber-border text-white text-xs focus:outline-none focus:border-cyber-cyan"
+                    className="w-full bg-cyber-card px-2.5 py-1.5 rounded border border-cyber-border text-white text-xs focus:outline-none focus:border-cyber-cyan pr-16 font-mono"
                   />
-                  <button
-                    onClick={() => setShowUserFlag(!showUserFlag)}
-                    className="p-1.5 rounded bg-cyber-card border border-cyber-border text-cyber-muted hover:text-white"
-                    title={showUserFlag ? 'Hide Flag' : 'Reveal Flag'}
-                  >
-                    {showUserFlag ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                  </button>
-                  <button
-                    onClick={() => handleCopy(machine.userFlag || '', 'user')}
-                    className="p-1.5 rounded bg-cyber-card border border-cyber-border text-cyber-muted hover:text-cyber-cyan"
-                    title="Copy Flag"
-                  >
-                    {copiedUser ? <Check className="w-3.5 h-3.5 text-cyber-emerald" /> : <Copy className="w-3.5 h-3.5" />}
-                  </button>
+                  <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => setShowUserFlag(!showUserFlag)}
+                      className="p-1 rounded text-cyber-muted hover:text-white"
+                      title={showUserFlag ? 'Hide Flag' : 'Show Flag'}
+                    >
+                      {showUserFlag ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(machine.userFlag || '', 'user')}
+                      className="p-1 rounded text-cyber-muted hover:text-white"
+                      title="Copy User Flag"
+                    >
+                      {copiedUser ? <Check className="w-3 h-3 text-cyber-emerald" /> : <Copy className="w-3 h-3" />}
+                    </button>
+                  </div>
                 </div>
               </div>
 
               {/* Root Flag */}
-              <div className="p-3 rounded-lg bg-cyber-bg border border-cyber-border">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="font-semibold text-cyber-emerald flex items-center gap-1">
+              <div className="p-3 rounded-lg border border-cyber-border bg-cyber-bg/50 space-y-2">
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="text-cyber-emerald font-semibold flex items-center gap-1">
                     <Flag className="w-3 h-3" /> ROOT / SYSTEM FLAG
                   </span>
                   {machine.rootPwnedAt && (
-                    <span className="text-[10px] text-cyber-emerald flex items-center gap-1">
+                    <span className="text-[9px] text-cyber-emerald flex items-center gap-0.5">
                       <Check className="w-3 h-3" /> ROOTED
                     </span>
                   )}
                 </div>
-
-                <div className="flex items-center gap-2">
+                <div className="relative">
                   <input
                     type={showRootFlag ? 'text' : 'password'}
                     value={machine.rootFlag || ''}
                     onChange={(e) => updateMachine(machine.id, { rootFlag: e.target.value })}
                     placeholder="Enter root flag (e.g. 9b1c...)"
-                    className="flex-1 bg-cyber-card px-2.5 py-1.5 rounded border border-cyber-border text-white text-xs focus:outline-none focus:border-cyber-emerald"
+                    className="w-full bg-cyber-card px-2.5 py-1.5 rounded border border-cyber-border text-white text-xs focus:outline-none focus:border-cyber-emerald pr-16 font-mono"
                   />
-                  <button
-                    onClick={() => setShowRootFlag(!showRootFlag)}
-                    className="p-1.5 rounded bg-cyber-card border border-cyber-border text-cyber-muted hover:text-white"
-                    title={showRootFlag ? 'Hide Flag' : 'Reveal Flag'}
-                  >
-                    {showRootFlag ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                  </button>
-                  <button
-                    onClick={() => handleCopy(machine.rootFlag || '', 'root')}
-                    className="p-1.5 rounded bg-cyber-card border border-cyber-border text-cyber-muted hover:text-cyber-emerald"
-                    title="Copy Flag"
-                  >
-                    {copiedRoot ? <Check className="w-3.5 h-3.5 text-cyber-emerald" /> : <Copy className="w-3.5 h-3.5" />}
-                  </button>
+                  <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => setShowRootFlag(!showRootFlag)}
+                      className="p-1 rounded text-cyber-muted hover:text-white"
+                      title={showRootFlag ? 'Hide Flag' : 'Show Flag'}
+                    >
+                      {showRootFlag ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(machine.rootFlag || '', 'root')}
+                      className="p-1 rounded text-cyber-muted hover:text-white"
+                      title="Copy Root Flag"
+                    >
+                      {copiedRoot ? <Check className="w-3 h-3 text-cyber-emerald" /> : <Copy className="w-3 h-3" />}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Section 4: Key Hint (Spoiler Protected) */}
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[10px] uppercase font-bold tracking-wider text-cyber-muted flex items-center gap-1.5">
-                <AlertCircle className="w-3.5 h-3.5 text-cyber-amber" /> INTEL HINT (SPOILER MASKED)
-              </span>
-              <button
+          {/* Section 4: Spoiler-Masked Hint */}
+          {machine.hint && (
+            <div className="p-3 rounded-lg border border-cyber-border bg-cyber-bg/40">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[10px] text-cyber-amber uppercase font-semibold flex items-center gap-1">
+                  <AlertCircle className="w-3 h-3" /> INTEL HINT (SPOILER MASKED)
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowHint(!showHint)}
+                  className="text-[10px] text-cyber-muted hover:text-white flex items-center gap-1"
+                >
+                  {showHint ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                  <span>{showHint ? 'Mask Hint' : 'Reveal Hint'}</span>
+                </button>
+              </div>
+              <div
                 onClick={() => setShowHint(!showHint)}
-                className="text-[10px] text-cyber-amber hover:underline flex items-center gap-1"
+                className={`p-2 rounded bg-cyber-card text-xs cursor-pointer select-none transition-all ${
+                  showHint ? 'text-white' : 'blur-sm text-transparent bg-cyber-card/60'
+                }`}
+                title="Click to toggle hint spoiler"
               >
-                {showHint ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-                {showHint ? 'Mask Hint' : 'Reveal Hint'}
-              </button>
+                {machine.hint}
+              </div>
             </div>
+          )}
 
-            <div className={`p-3 rounded-lg border font-mono text-xs transition-all ${
-              showHint
-                ? 'bg-cyber-amber/10 border-cyber-amber/40 text-white'
-                : 'bg-cyber-bg border-cyber-border text-transparent select-none cursor-pointer filter blur-[4px] hover:blur-[2px]'
-            }`}
-              onClick={() => setShowHint(true)}
-            >
-              {machine.hint || 'No specific hint recorded for this machine. Enumerate services thoroughly.'}
-            </div>
-          </div>
-
-          {/* Section 5: Ratings & Matrix of Satisfaction */}
+          {/* Section 5: Perceived Difficulty & Enjoyment Rating */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="p-3 rounded-lg bg-cyber-bg border border-cyber-border">
-              <div className="text-[10px] uppercase font-bold text-cyber-muted mb-2">
+            <div className="p-3 rounded-lg border border-cyber-border bg-cyber-bg/50">
+              <div className="text-[10px] uppercase font-bold tracking-wider text-cyber-muted mb-2">
                 PERCEIVED DIFFICULTY VS OFFICIAL
               </div>
-              <div className="flex items-center gap-2">
-                {(['Very Easy', 'Easy', 'Medium', 'Hard', 'Insane'] as Difficulty[]).map((d) => (
+              <div className="flex items-center gap-1.5">
+                {(['Very Easy', 'Easy', 'Medium', 'Hard', 'Insane'] as Difficulty[]).map((diff) => (
                   <button
-                    key={d}
-                    onClick={() => updateMachine(machine.id, { perceivedDifficulty: d })}
-                    className={`px-2 py-1 rounded text-[10px] border transition-all ${
-                      machine.perceivedDifficulty === d
-                        ? 'bg-cyber-card border-cyber-emerald text-cyber-emerald font-bold'
-                        : 'border-cyber-border text-cyber-muted hover:text-white'
+                    key={diff}
+                    onClick={() => updateMachine(machine.id, { perceivedDifficulty: diff })}
+                    className={`px-2 py-1 rounded text-[10px] border transition-colors ${
+                      machine.perceivedDifficulty === diff
+                        ? 'bg-cyber-emerald text-black font-bold border-cyber-emerald'
+                        : 'bg-cyber-card text-cyber-muted border-cyber-border hover:text-white'
                     }`}
                   >
-                    {d}
+                    {diff}
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="p-3 rounded-lg bg-cyber-bg border border-cyber-border">
-              <div className="text-[10px] uppercase font-bold text-cyber-muted mb-2">
+            <div className="p-3 rounded-lg border border-cyber-border bg-cyber-bg/50">
+              <div className="text-[10px] uppercase font-bold tracking-wider text-cyber-muted mb-2">
                 MATRIX OF SATISFACTION (ENJOYMENT)
               </div>
               <div className="flex items-center gap-1">
@@ -509,15 +727,13 @@ export const MachineDetailModal: React.FC = () => {
                     className="p-1 text-cyber-muted hover:text-cyber-amber transition-colors"
                   >
                     <Star
-                      className={`w-5 h-5 ${
-                        (machine.rating || 0) >= star
-                          ? 'fill-cyber-amber text-cyber-amber'
-                          : 'text-cyber-muted'
+                      className={`w-4 h-4 ${
+                        (machine.rating || 0) >= star ? 'text-cyber-amber fill-cyber-amber' : ''
                       }`}
                     />
                   </button>
                 ))}
-                <span className="text-xs text-cyber-muted ml-2 font-bold">
+                <span className="text-[10px] text-cyber-muted ml-2">
                   {machine.rating ? `${machine.rating} / 5 Stars` : 'Unrated'}
                 </span>
               </div>
@@ -527,56 +743,46 @@ export const MachineDetailModal: React.FC = () => {
           {/* Section 6: Attack Vectors & Tags */}
           <div>
             <div className="text-[10px] uppercase font-bold tracking-wider text-cyber-muted mb-2 flex items-center gap-1.5">
-              <Tag className="w-3.5 h-3.5 text-cyber-purple" /> ATTACK VECTORS & TAGS
+              <Tag className="w-3.5 h-3.5 text-cyber-cyan" /> ATTACK VECTORS & TAGS
             </div>
-            
             <div className="flex flex-wrap gap-1.5 mb-2">
-              {machine.tags.map((tag) => (
+              {machine.tags.map((t) => (
                 <span
-                  key={tag}
-                  className="flex items-center gap-1 px-2 py-1 rounded bg-cyber-bg border border-cyber-border text-cyber-cyan text-xs group"
+                  key={t}
+                  className="px-2 py-0.5 rounded bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan text-[11px] flex items-center gap-1"
                 >
-                  <span>{tag}</span>
+                  {t}
                   <button
-                    onClick={() => handleRemoveTag(tag)}
-                    className="text-cyber-muted hover:text-cyber-crimson group-hover:inline-block ml-0.5"
+                    onClick={() => handleRemoveTag(t)}
+                    className="hover:text-cyber-crimson ml-0.5"
                   >
-                    ✕
+                    ×
                   </button>
                 </span>
               ))}
             </div>
-
-            <div className="flex items-center gap-2 max-w-sm">
+            <div className="flex items-center gap-2">
               <input
                 type="text"
                 value={newTagInput}
                 onChange={(e) => setNewTagInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleAddTag()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleAddTag();
+                  }
+                }}
                 placeholder="Add tag (e.g. SSRF, Kerberoast)..."
-                className="flex-1 bg-cyber-bg px-2.5 py-1 rounded border border-cyber-border text-white text-xs focus:outline-none focus:border-cyber-purple"
+                className="flex-1 bg-cyber-bg px-2.5 py-1.5 rounded border border-cyber-border text-white text-xs focus:outline-none focus:border-cyber-cyan"
               />
               <button
+                type="button"
                 onClick={handleAddTag}
-                className="px-2.5 py-1 rounded bg-cyber-purple/20 border border-cyber-purple/50 text-cyber-purple hover:bg-cyber-purple hover:text-white font-semibold"
+                className="px-3 py-1.5 rounded bg-cyber-card border border-cyber-border hover:border-cyber-cyan text-white text-xs"
               >
                 Add
               </button>
             </div>
-          </div>
-
-          {/* Section 7: Quick Notes */}
-          <div>
-            <div className="text-[10px] uppercase font-bold tracking-wider text-cyber-muted mb-2">
-              TACTICAL FIELD NOTES
-            </div>
-            <textarea
-              rows={3}
-              value={machine.quickNotes || ''}
-              onChange={(e) => updateMachine(machine.id, { quickNotes: e.target.value })}
-              placeholder="Record initial foothold credentials, open ports, or pivot routes..."
-              className="w-full bg-cyber-bg p-2.5 rounded-lg border border-cyber-border text-white text-xs focus:outline-none focus:border-cyber-emerald font-mono resize-none"
-            />
           </div>
         </div>
       )}
@@ -589,6 +795,14 @@ export const MachineDetailModal: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setReportMachineId(machine.id)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-950/40 hover:bg-purple-900/60 border border-purple-800 text-purple-300 hover:text-white font-bold text-xs transition-colors shadow-sm"
+              title="Open Printable Pentest Report PDF"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>Pre-Report PDF</span>
+            </button>
             <button
               onClick={handleOpenInWriteup}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyber-cyan/10 border border-cyber-cyan/40 text-cyber-cyan hover:bg-cyber-cyan hover:text-black font-semibold transition-all"
@@ -606,5 +820,7 @@ export const MachineDetailModal: React.FC = () => {
 
         </motion.div>
       </div>
-    );
+  );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 };

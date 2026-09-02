@@ -24,8 +24,6 @@ import { Platform, Difficulty, OperatingSystem } from '../../types';
 import { KanbanBoard } from './KanbanBoard';
 import { TableView } from './TableView';
 import { GridView } from './GridView';
-import { MachineDetailModal } from './MachineDetailModal';
-import { NewMachineModal } from './NewMachineModal';
 import { PlatformBadge, PlatformIcon } from '../common/PlatformBadge';
 import { OsIcon } from '../common/OsBadge';
 import { PRACTICE_TRACKS, PracticeTrack } from '../../data/tracksData';
@@ -519,12 +517,6 @@ export const TrackerView: React.FC = () => {
       {viewMode === 'kanban' && <KanbanBoard filteredMachines={filteredMachines} />}
       {viewMode === 'table' && <TableView filteredMachines={filteredMachines} />}
       {viewMode === 'grid' && <GridView filteredMachines={filteredMachines} />}
-
-      {/* Deep Inspection Modal */}
-      <MachineDetailModal />
-
-      {/* New Machine Modal */}
-      <NewMachineModal />
     </div>
   );
 };

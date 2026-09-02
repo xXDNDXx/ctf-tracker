@@ -35,6 +35,7 @@ export const TableView: React.FC<TableViewProps> = ({ filteredMachines }) => {
     soundEnabled,
     toggleUserFlag,
     toggleRootFlag,
+    setReportMachineId,
   } = useCtfStore();
 
   const [sortField, setSortField] = useState<SortField>('name');
@@ -319,6 +320,19 @@ export const TableView: React.FC<TableViewProps> = ({ filteredMachines }) => {
                         title="Open Dedicated Full-Page Mission"
                       >
                         <Maximize2 className="w-3.5 h-3.5" />
+                      </motion.button>
+
+                      <motion.button
+                        whileHover={{ scale: 1.12 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={(e: React.MouseEvent) => {
+                          e.stopPropagation();
+                          setReportMachineId(m.id);
+                        }}
+                        className="p-1 rounded bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-purple-300 hover:border-purple-600 transition-all"
+                        title="Open Executive Pentest Pre-Report"
+                      >
+                        <FileText className="w-3.5 h-3.5 text-purple-400" />
                       </motion.button>
 
                       <motion.button

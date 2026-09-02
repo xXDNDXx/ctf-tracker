@@ -5,7 +5,8 @@ import {
   Flag, 
   Clock, 
   ChevronRight, 
-  ChevronLeft
+  ChevronLeft,
+  FileText
 } from 'lucide-react';
 import { Machine, PipelineStatus } from '../../types';
 import { useCtfStore } from '../../store/useCtfStore';
@@ -77,6 +78,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ filteredMachines }) =>
     setActiveTarget,
     startTimer,
     soundEnabled,
+    setReportMachineId,
   } = useCtfStore();
 
   const handleAdvance = (e: React.MouseEvent, m: Machine, nextStatus: PipelineStatus) => {
@@ -227,9 +229,21 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ filteredMachines }) =>
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-1 text-cyber-muted">
-                          <Clock className="w-3 h-3" />
-                          <span>{formatDurationHuman(m.timeSpentSeconds)}</span>
+                        <div className="flex items-center gap-2 text-cyber-muted">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setReportMachineId(m.id);
+                            }}
+                            className="p-1 rounded bg-cyber-bg hover:bg-purple-950/60 border border-cyber-border hover:border-purple-600 text-cyber-muted hover:text-purple-300 transition-colors"
+                            title="Open Pentest Pre-Report"
+                          >
+                            <FileText className="w-3 h-3" />
+                          </button>
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            <span>{formatDurationHuman(m.timeSpentSeconds)}</span>
+                          </div>
                         </div>
                       </div>
 
