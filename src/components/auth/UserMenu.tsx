@@ -12,15 +12,19 @@ import {
   Users, 
   Edit3, 
   RotateCcw,
-  Sparkles,
-  ShieldCheck,
-  Zap
+  LogOut,
+  LogIn,
+  Shield,
+  Zap,
+  User as UserIcon
 } from 'lucide-react';
 
 export const UserMenu: React.FC = () => {
   const { 
     user, 
     profiles, 
+    isAuthenticated,
+    loginAsOperator,
     switchProfile, 
     createProfile, 
     renameProfile, 
@@ -42,6 +46,9 @@ export const UserMenu: React.FC = () => {
   const [nameInput, setNameInput] = useState(user?.name || 'Daniel');
   const [newProfileInput, setNewProfileInput] = useState('');
   const [showNewProfileInput, setShowNewProfileInput] = useState(false);
+
+  // Login form state when logged out
+  const [loginCallsign, setLoginCallsign] = useState('');
 
   const activeName = user?.name || 'Daniel';
   const rootedCount = machines.filter((m) => m.status === 'root' || m.status === 'completed').length;
@@ -116,6 +123,15 @@ export const UserMenu: React.FC = () => {
     }
   };
 
+  const handleLoginSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (loginCallsign.trim()) {
+      loginAsOperator(loginCallsign.trim());
+      setLoginCallsign('');
+      setDropdownOpen(false);
+    }
+  };
+
   const handleReset = () => {
     if (confirm(`Reset all machine progress for profile "${activeName}"?`)) {
       resetAllProgress();
@@ -123,6 +139,100 @@ export const UserMenu: React.FC = () => {
     }
   };
 
+  // ==========================================
+  // VIEW: LOGGED OUT (Choose / Login Account)
+  // ==========================================
+  if (!isAuthenticated || !user) {
+    return (
+      <div className="relative font-mono text-xs">
+        <button
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-cyber-card border border-cyber-border hover:border-cyber-emerald text-white hover:text-cyber-emerald font-bold transition-all shadow-sm"
+        >
+          <LogIn className="w-3.5 h-3.5 text-cyber-emerald" />
+          <span>Log In / Select Account</span>
+          <ChevronDown className="w-3 h-3 text-cyber-muted" />
+        </button>
+
+        {dropdownOpen && (
+          <div
+            className="absolute right-0 top-full mt-2 w-80 p-4 rounded-2xl bg-cyber-card border border-cyber-border shadow-2xl z-50 space-y-3.5 backdrop-blur-md"
+            onMouseLeave={() => setDropdownOpen(false)}
+          >
+            <div className="flex items-center justify-between pb-2 border-b border-cyber-border">
+              <div className="font-bold text-white text-xs tracking-wider flex items-center gap-1.5">
+                <Shield className="w-3.5 h-3.5 text-cyber-emerald" />
+                <span>OPERATOR LOGIN</span>
+              </div>
+              <span className="text-[10px] text-cyber-muted">Select or Enter</span>
+            </div>
+
+            {/* Existing Accounts List */}
+            {profiles.length > 0 && (
+              <div className="space-y-1.5">
+                <div className="text-[10px] uppercase font-bold text-cyber-muted">
+                  EXISTING ACCOUNTS:
+                </div>
+                <div className="space-y-1 max-h-36 overflow-y-auto">
+                  {profiles.map((p) => (
+                    <button
+                      key={p.id}
+                      onClick={() => {
+                        switchProfile(p.id);
+                        setDropdownOpen(false);
+                      }}
+                      className="w-full p-2 rounded-xl bg-cyber-bg hover:bg-cyber-emerald/20 border border-cyber-border hover:border-cyber-emerald text-white flex items-center justify-between transition-all text-left"
+                    >
+                      <div className="flex items-center gap-2">
+                        {p.avatarUrl ? (
+                          <img src={p.avatarUrl} alt={p.name} className="w-5 h-5 rounded-full object-cover" />
+                        ) : (
+                          <div className="w-5 h-5 rounded-full bg-cyber-emerald/20 flex items-center justify-center text-[10px] font-bold text-cyber-emerald">
+                            {p.name.charAt(0)}
+                          </div>
+                        )}
+                        <span className="font-bold text-xs">{p.name}</span>
+                      </div>
+                      <span className="text-[10px] text-cyber-emerald font-bold">Enter ➔</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Login as New Callsign / Account */}
+            <form onSubmit={handleLoginSubmit} className="space-y-2 pt-1 border-t border-cyber-border/70">
+              <label className="block text-[10px] uppercase font-bold text-cyber-muted">
+                LOG IN WITH DIFFERENT CALLSIGN:
+              </label>
+              <div className="relative">
+                <UserIcon className="w-3.5 h-3.5 text-cyber-muted absolute left-2.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={loginCallsign}
+                  onChange={(e) => setLoginCallsign(e.target.value)}
+                  placeholder="e.g. Daniel, Alex, OSCP..."
+                  className="w-full bg-cyber-bg pl-8 pr-3 py-1.5 rounded-lg border border-cyber-border text-white text-xs font-mono focus:outline-none focus:border-cyber-emerald"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full py-2 px-3 rounded-lg bg-cyber-emerald hover:bg-cyber-emerald/90 text-black font-bold text-xs transition-all shadow-glow-emerald/30 flex items-center justify-center gap-1.5"
+              >
+                <Zap className="w-3.5 h-3.5 fill-current" />
+                <span>LOG IN & ENTER STATION</span>
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ==========================================
+  // VIEW: LOGGED IN (Active Profile & 1-Click Save)
+  // ==========================================
   return (
     <div className="relative font-mono text-xs">
       {/* Header Button Group: 1-Click Save + Profile Indicator */}
@@ -156,7 +266,7 @@ export const UserMenu: React.FC = () => {
           className="flex items-center gap-2 px-1.5 py-0.5 rounded-lg hover:bg-cyber-bg transition-colors group"
           title={`Active Profile: ${activeName}`}
         >
-          {user?.avatarUrl ? (
+          {user.avatarUrl ? (
             <img
               src={user.avatarUrl}
               alt={activeName}
@@ -187,7 +297,7 @@ export const UserMenu: React.FC = () => {
           {/* Active Profile Header */}
           <div className="flex items-center justify-between pb-2.5 border-b border-cyber-border/70">
             <div className="flex items-center gap-2.5 min-w-0">
-              {user?.avatarUrl ? (
+              {user.avatarUrl ? (
                 <img
                   src={user.avatarUrl}
                   alt={activeName}
@@ -282,13 +392,13 @@ export const UserMenu: React.FC = () => {
           <div className="pt-2 border-t border-cyber-border/70 space-y-1.5">
             <div className="flex items-center justify-between text-[10px] uppercase font-bold text-cyber-muted px-1">
               <span className="flex items-center gap-1">
-                <Users className="w-3 h-3" /> PROFILES
+                <Users className="w-3 h-3" /> SWITCH ACCOUNT:
               </span>
               <button
                 onClick={() => setShowNewProfileInput(!showNewProfileInput)}
                 className="text-cyber-cyan hover:underline flex items-center gap-0.5"
               >
-                <Plus className="w-3 h-3" /> New Profile
+                <Plus className="w-3 h-3" /> Add Account
               </button>
             </div>
 
@@ -298,7 +408,7 @@ export const UserMenu: React.FC = () => {
                   type="text"
                   value={newProfileInput}
                   onChange={(e) => setNewProfileInput(e.target.value)}
-                  placeholder="e.g. OSCP Prep"
+                  placeholder="New Account Name..."
                   className="w-full bg-transparent text-white font-mono text-xs focus:outline-none px-1"
                   autoFocus
                 />
@@ -310,7 +420,7 @@ export const UserMenu: React.FC = () => {
 
             <div className="space-y-1 max-h-32 overflow-y-auto pr-0.5">
               {profiles.map((p) => {
-                const isSelected = p.id === (user?.id || 'usr_daniel');
+                const isSelected = p.id === user.id;
                 return (
                   <button
                     key={p.id}
@@ -332,14 +442,26 @@ export const UserMenu: React.FC = () => {
             </div>
           </div>
 
-          {/* Reset Profile Progress */}
-          <div className="pt-1.5 border-t border-cyber-border/70">
+          {/* Reset & Log Out Actions */}
+          <div className="pt-2 border-t border-cyber-border/70 space-y-1.5">
             <button
               onClick={handleReset}
-              className="w-full py-1.5 px-2 rounded-lg bg-cyber-bg hover:bg-cyber-crimson/10 border border-cyber-border hover:border-cyber-crimson/40 text-cyber-muted hover:text-cyber-crimson text-[11px] font-semibold transition-colors flex items-center justify-center gap-1.5"
+              className="w-full py-1.5 px-2 rounded-lg bg-cyber-bg hover:bg-cyber-card border border-cyber-border text-cyber-muted hover:text-white text-[11px] font-semibold transition-colors flex items-center justify-center gap-1.5"
             >
               <RotateCcw className="w-3 h-3 text-cyber-amber" />
               <span>Reset {activeName}'s Progress</span>
+            </button>
+
+            {/* Prominent Log Out Button */}
+            <button
+              onClick={() => {
+                logout();
+                setDropdownOpen(false);
+              }}
+              className="w-full py-2 px-3 rounded-xl bg-cyber-crimson/15 hover:bg-cyber-crimson border border-cyber-crimson/30 hover:border-cyber-crimson text-cyber-crimson hover:text-white font-bold text-xs transition-all flex items-center justify-center gap-2"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>LOG OUT / SWITCH OPERATOR</span>
             </button>
           </div>
         </div>

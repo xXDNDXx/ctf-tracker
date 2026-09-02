@@ -212,16 +212,15 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      // Logout and reset to default
+      // Logout and reset to unauthenticated guest
       logout: () => {
         set({
-          user: DEFAULT_DANIEL_PROFILE,
-          profiles: [DEFAULT_DANIEL_PROFILE],
-          isAuthenticated: true,
-          guestDataMigrated: true,
+          user: null,
+          isAuthenticated: false,
+          token: null,
         });
 
-        useCtfStore.getState().loadProfileData('usr_daniel');
+        useCtfStore.getState().loadProfileData('guest');
         playCyberSound('click');
       },
 
