@@ -18,6 +18,7 @@ export interface AuthState {
   
   // Actions
   setGoogleClientId: (clientId: string) => void;
+  loginAsOperator: (name: string, email?: string, avatarUrl?: string) => Promise<void>;
   loginWithGoogleCredential: (credential: string) => Promise<void>;
   loginWithGoogleUserInfo: (userInfo: { sub: string; email: string; name: string; picture?: string }, token: string) => Promise<void>;
   logout: () => void;

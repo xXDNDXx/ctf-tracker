@@ -31,6 +31,36 @@ export const useAuthStore = create<AuthState>()(
         set({ googleClientId: clientId });
       },
 
+      // Simple Operator Profile Login (1-Click Seamless Login)
+      loginAsOperator: async (name: string, email?: string, avatarUrl?: string) => {
+        set({ isLoading: true });
+        try {
+          const cleanName = name.trim() || 'Daniel';
+          const user: User = {
+            id: `usr_${Date.now()}`,
+            googleId: '',
+            email: email?.trim() || `${cleanName.toLowerCase().replace(/\s+/g, '')}@operator.lab`,
+            name: cleanName,
+            avatarUrl: avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&auto=format&fit=crop&q=80',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+
+          set({
+            user,
+            token: `operator_token_${Date.now()}`,
+            isAuthenticated: true,
+            isLoading: false,
+          });
+
+          await get().migrateGuestData();
+          playCyberSound('root');
+        } catch (err) {
+          console.error('Operator login error:', err);
+          set({ isLoading: false });
+        }
+      },
+
       // Live Google Identity Services ID Token (JWT) Handler
       loginWithGoogleCredential: async (credential: string) => {
         set({ isLoading: true });
