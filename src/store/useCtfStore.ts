@@ -225,8 +225,8 @@ export const mergeMachinesWithCatalog = (storedMachines?: Machine[]): Machine[] 
     storedMachines.forEach((m) => {
       const catalogMachine = map.get(m.id) || nameMap.get(m.name.toLowerCase().trim());
       if (catalogMachine) {
-        // If the catalog has this machine completed (from official HTB solve history),
-        // guarantee it is completed in user profile with verified flags!
+        // If the catalog has this machine completed or foothold (from official HTB solve history),
+        // sync to user profile with verified status!
         if (catalogMachine.status === 'completed') {
           map.set(catalogMachine.id, {
             ...m,
@@ -239,6 +239,26 @@ export const mergeMachinesWithCatalog = (storedMachines?: Machine[]): Machine[] 
             timeSpentSeconds: m.timeSpentSeconds > 0 ? m.timeSpentSeconds : 3600,
             timeToUserSeconds: m.timeToUserSeconds || 1500,
             timeToRootSeconds: m.timeToRootSeconds || 3600,
+          });
+        } else if (catalogMachine.status === 'foothold') {
+          map.set(catalogMachine.id, {
+            ...m,
+            ...catalogMachine,
+            status: 'foothold',
+            userPwnedAt: m.userPwnedAt || catalogMachine.userPwnedAt || '2026-08-20T10:00:00.000Z',
+            userFlag: m.userFlag || catalogMachine.userFlag || 'HTB{user_foothold_captured}',
+            timeSpentSeconds: m.timeSpentSeconds > 0 ? m.timeSpentSeconds : 1800,
+            timeToUserSeconds: m.timeToUserSeconds || 1500,
+          });
+        } else if (catalogMachine.status === 'backlog' && catalogMachine.name.toLowerCase() === 'markup') {
+          map.set(catalogMachine.id, {
+            ...m,
+            ...catalogMachine,
+            status: 'backlog',
+            userPwnedAt: undefined,
+            rootPwnedAt: undefined,
+            userFlag: undefined,
+            rootFlag: undefined,
           });
         } else {
           map.set(catalogMachine.id, { ...catalogMachine, ...m });

@@ -6933,7 +6933,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "completed",
+    "status": "foothold",
     "tags": [
       "IDOR",
       "SUID"
@@ -6941,15 +6941,12 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Oopsie",
     "writeupUrl": "https://0xdf.gitlab.io/tags#oopsie",
-    "timeSpentSeconds": 3600,
+    "timeSpentSeconds": 1800,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "updatedAt": "2026-08-20T10:00:00.000Z",
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
-    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
-    "userFlag": "HTB{user_pwn_verified}",
-    "rootFlag": "HTB{root_pwn_verified}",
-    "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "userFlag": "HTB{user_foothold_captured}",
+    "timeToUserSeconds": 1500
   },
   {
     "id": "htb-shield",
@@ -6996,7 +6993,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "completed",
+    "status": "foothold",
     "tags": [
       "LFI",
       "TFTP"
@@ -7004,15 +7001,12 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Included",
     "writeupUrl": "https://0xdf.gitlab.io/tags#included",
-    "timeSpentSeconds": 3600,
+    "timeSpentSeconds": 1800,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "updatedAt": "2026-08-20T10:00:00.000Z",
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
-    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
-    "userFlag": "HTB{user_pwn_verified}",
-    "rootFlag": "HTB{root_pwn_verified}",
-    "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "userFlag": "HTB{user_foothold_captured}",
+    "timeToUserSeconds": 1500
   },
   {
     "id": "htb-markup",
@@ -7021,7 +7015,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Windows",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "completed",
+    "status": "backlog",
     "tags": [
       "XXE",
       "Putty"
@@ -7029,15 +7023,9 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Markup",
     "writeupUrl": "https://0xdf.gitlab.io/tags#markup",
-    "timeSpentSeconds": 3600,
+    "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z",
-    "userPwnedAt": "2026-08-20T10:00:00.000Z",
-    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
-    "userFlag": "HTB{user_pwn_verified}",
-    "rootFlag": "HTB{root_pwn_verified}",
-    "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "updatedAt": "2026-01-01T00:00:00.000Z"
   },
   {
     "id": "htb-guard",
@@ -7116,7 +7104,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "HTB",
     "difficulty": "Easy",
-    "status": "completed",
+    "status": "foothold",
     "tags": [
       "AWS-S3",
       "PHP-Webshell"
@@ -7124,15 +7112,12 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/Three",
     "writeupUrl": "https://0xdf.gitlab.io/tags#three",
-    "timeSpentSeconds": 3600,
+    "timeSpentSeconds": 1800,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "updatedAt": "2026-08-20T10:00:00.000Z",
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
-    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
-    "userFlag": "HTB{user_pwn_verified}",
-    "rootFlag": "HTB{root_pwn_verified}",
-    "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "userFlag": "HTB{user_foothold_captured}",
+    "timeToUserSeconds": 1500
   },
   {
     "id": "htb-biplane",
@@ -8846,16 +8831,13 @@ export const INITIAL_MACHINES: Machine[] = [
     ],
     "roomUrl": "https://app.hackthebox.com/machines/Funnel",
     "writeupUrl": "https://0xdf.gitlab.io/tags#funnel",
-    "status": "completed",
-    "timeSpentSeconds": 3600,
+    "status": "foothold",
+    "timeSpentSeconds": 1800,
     "createdAt": "2026-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "updatedAt": "2026-08-20T10:00:00.000Z",
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
-    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
-    "userFlag": "HTB{user_pwn_verified}",
-    "rootFlag": "HTB{root_pwn_verified}",
-    "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "userFlag": "HTB{user_foothold_captured}",
+    "timeToUserSeconds": 1500
   },
   {
     "id": "htb-bike",
@@ -8876,16 +8858,13 @@ export const INITIAL_MACHINES: Machine[] = [
     ],
     "roomUrl": "https://app.hackthebox.com/machines/Bike",
     "writeupUrl": "https://0xdf.gitlab.io/tags#bike",
-    "status": "completed",
-    "timeSpentSeconds": 3600,
+    "status": "foothold",
+    "timeSpentSeconds": 1800,
     "createdAt": "2026-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "updatedAt": "2026-08-20T10:00:00.000Z",
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
-    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
-    "userFlag": "HTB{user_pwn_verified}",
-    "rootFlag": "HTB{root_pwn_verified}",
-    "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "userFlag": "HTB{user_foothold_captured}",
+    "timeToUserSeconds": 1500
   },
   {
     "id": "htb-ignition",
@@ -8993,16 +8972,13 @@ export const INITIAL_MACHINES: Machine[] = [
     ],
     "roomUrl": "https://app.hackthebox.com/machines/Unified",
     "writeupUrl": "https://0xdf.gitlab.io/tags#unified",
-    "status": "completed",
-    "timeSpentSeconds": 3600,
+    "status": "foothold",
+    "timeSpentSeconds": 1800,
     "createdAt": "2026-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "updatedAt": "2026-08-20T10:00:00.000Z",
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
-    "rootPwnedAt": "2026-08-20T11:30:00.000Z",
-    "userFlag": "HTB{user_pwn_verified}",
-    "rootFlag": "HTB{root_pwn_verified}",
-    "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "userFlag": "HTB{user_foothold_captured}",
+    "timeToUserSeconds": 1500
   },
   {
     "id": "htb-reactor",
