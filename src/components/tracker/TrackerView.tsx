@@ -44,7 +44,25 @@ export const TrackerView: React.FC = () => {
     setReconAutomationModalOpen,
   } = useCtfStore();
 
-  const [tracksCollapsed, setTracksCollapsed] = useState(false);
+  const [tracksCollapsed, setTracksCollapsed] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('specter-tracks-collapsed');
+      if (saved !== null) return saved === 'true';
+      return typeof window !== 'undefined' && window.innerWidth < 1280;
+    } catch {
+      return false;
+    }
+  });
+
+  const toggleTracksCollapsed = () => {
+    setTracksCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('specter-tracks-collapsed', String(next));
+      } catch {}
+      return next;
+    });
+  };
 
   // Extract all unique tags across machines
   const allTags = useMemo(() => {
@@ -226,7 +244,7 @@ export const TrackerView: React.FC = () => {
               </button>
             )}
             <button
-              onClick={() => setTracksCollapsed(!tracksCollapsed)}
+              onClick={toggleTracksCollapsed}
               className="p-1 px-2 rounded-md bg-cyber-bg hover:bg-cyber-card border border-cyber-border text-cyber-muted hover:text-white transition-all flex items-center gap-1 text-[10px]"
               title={tracksCollapsed ? 'Expand Pathways' : 'Collapse Pathways to save vertical space'}
             >
