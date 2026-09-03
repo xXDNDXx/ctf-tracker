@@ -14,7 +14,8 @@ import {
   ChevronRight,
   Sparkles,
   Compass,
-  Zap
+  Zap,
+  Globe
 } from 'lucide-react';
 import { useCtfStore } from '../../store/useCtfStore';
 
@@ -31,6 +32,7 @@ export const CommandPalette: React.FC = () => {
     setNewMachineModalOpen,
     setBackupModalOpen,
     setReconAutomationModalOpen,
+    setOperatorModalOpen,
     toggleCrtOverlay,
     setWriteupMachineId
   } = useCtfStore();
@@ -118,6 +120,28 @@ export const CommandPalette: React.FC = () => {
               <Sparkles className="w-3 h-3 text-cyber-cyan" /> QUICK ACTIONS
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+              <a
+                href="https://xXDNDXx.github.io/"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setCommandPaletteOpen(false)}
+                className="flex items-center gap-2 p-2 rounded-lg bg-cyber-emerald/15 hover:bg-cyber-emerald/25 hover:border-cyber-emerald border border-cyber-emerald/40 text-left transition-all group"
+              >
+                <Globe className="w-4 h-4 text-cyber-emerald group-hover:scale-110 transition-transform" />
+                <span className="text-white group-hover:text-cyber-emerald font-bold">Launch Daniel Dayan's Portfolio</span>
+              </a>
+
+              <button
+                onClick={() => {
+                  setCommandPaletteOpen(false);
+                  setOperatorModalOpen(true);
+                }}
+                className="flex items-center gap-2 p-2 rounded-lg bg-cyber-bg hover:bg-cyber-cyan/15 hover:border-cyber-cyan/50 border border-cyber-border text-left transition-all group"
+              >
+                <Terminal className="w-4 h-4 text-cyber-cyan" />
+                <span className="text-white group-hover:text-cyber-cyan font-medium">View Operator Dossier (Daniel Dayan)</span>
+              </button>
+
               <button
                 onClick={() => {
                   setCommandPaletteOpen(false);

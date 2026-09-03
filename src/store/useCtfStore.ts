@@ -108,6 +108,7 @@ interface CtfStoreState {
   newMachineModalOpen: boolean;
   backupModalOpen: boolean;
   reconAutomationModalOpen: boolean;
+  operatorModalOpen: boolean;
   mobileMenuOpen: boolean;
   crtOverlay: boolean;
   soundEnabled: boolean;
@@ -130,6 +131,7 @@ interface CtfStoreState {
   setNewMachineModalOpen: (open: boolean) => void;
   setBackupModalOpen: (open: boolean) => void;
   setReconAutomationModalOpen: (open: boolean) => void;
+  setOperatorModalOpen: (open: boolean) => void;
   setMobileMenuOpen: (open: boolean) => void;
   toggleCrtOverlay: () => void;
   toggleSound: () => void;
@@ -322,6 +324,7 @@ export const useCtfStore = create<CtfStoreState>()(
       newMachineModalOpen: false,
       backupModalOpen: false,
       reconAutomationModalOpen: false,
+      operatorModalOpen: false,
       mobileMenuOpen: false,
       crtOverlay: false,
       soundEnabled: true,
@@ -339,6 +342,7 @@ export const useCtfStore = create<CtfStoreState>()(
       setNewMachineModalOpen: (open) => set({ newMachineModalOpen: open }),
       setBackupModalOpen: (open) => set({ backupModalOpen: open }),
       setReconAutomationModalOpen: (open) => set({ reconAutomationModalOpen: open }),
+      setOperatorModalOpen: (open) => set({ operatorModalOpen: open }),
       setMobileMenuOpen: (open) => set({ mobileMenuOpen: open }),
       toggleCrtOverlay: () => set((s) => ({ crtOverlay: !s.crtOverlay })),
       toggleSound: () => set((s) => ({ soundEnabled: !s.soundEnabled })),

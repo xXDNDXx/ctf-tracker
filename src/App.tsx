@@ -21,6 +21,7 @@ import { ExamSimulatorPage } from './pages/ExamSimulatorPage';
 import { MachineDetailModal } from './components/tracker/MachineDetailModal';
 import { NewMachineModal } from './components/tracker/NewMachineModal';
 import { PentestReportModal } from './components/writeup/PentestReportModal';
+import { OperatorDossierModal } from './components/common/OperatorDossierModal';
 import { useCtfStore, mergeMachinesWithCatalog } from './store/useCtfStore';
 
 const MainAppContent: React.FC = () => {
@@ -97,6 +98,9 @@ const MainAppContent: React.FC = () => {
         isOpen={Boolean(reportMachineId)}
         onClose={() => setReportMachineId(null)}
       />
+
+      {/* Operator & Creator Classified Dossier Modal */}
+      <OperatorDossierModal />
 
       {/* Tactical Top Header */}
       <Header />

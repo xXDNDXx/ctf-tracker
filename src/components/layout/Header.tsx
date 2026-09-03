@@ -56,6 +56,7 @@ export const Header: React.FC = () => {
     setNewMachineModalOpen,
     setBackupModalOpen,
     setReconAutomationModalOpen,
+    setOperatorModalOpen,
   } = useCtfStore();
 
   const { user } = useAuthStore();
@@ -159,6 +160,35 @@ export const Header: React.FC = () => {
                 title="Switch Callsign / Brand Theme"
               >
                 <ChevronDown className="w-3.5 h-3.5" />
+              </button>
+
+              {/* Creator & Portfolio Launcher Badge (Responsive) */}
+              <button
+                onClick={() => {
+                  setOperatorModalOpen(true);
+                  if (soundEnabled) playCyberSound('click');
+                }}
+                className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyber-emerald/10 hover:bg-cyber-emerald/20 border border-cyber-emerald/40 hover:border-cyber-emerald text-cyber-emerald hover:text-white transition-all text-xs font-mono group ml-1"
+                title="View Creator Dossier & Portfolio (Daniel Dayan)"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-cyber-emerald animate-pulse" />
+                <span className="text-[10px] text-cyber-muted uppercase font-bold group-hover:text-cyber-emerald transition-colors">CREATOR:</span>
+                <span className="font-bold text-white group-hover:text-cyber-emerald">Daniel Dayan</span>
+                <span className="text-[9px] font-black px-1.5 py-0.2 rounded bg-cyber-emerald/20 text-cyber-emerald border border-cyber-emerald/40 uppercase">
+                  PORTFOLIO
+                </span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setOperatorModalOpen(true);
+                  if (soundEnabled) playCyberSound('click');
+                }}
+                className="hidden md:flex lg:hidden items-center gap-1 px-2 py-1 rounded-lg bg-cyber-emerald/10 border border-cyber-emerald/40 text-cyber-emerald text-[10px] font-bold ml-1"
+                title="View Creator Dossier & Portfolio (Daniel Dayan)"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-cyber-emerald" />
+                <span>PORTFOLIO</span>
               </button>
             </div>
 
