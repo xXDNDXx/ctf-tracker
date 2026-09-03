@@ -262,11 +262,11 @@ export const mergeMachinesWithCatalog = (storedMachines?: Machine[]): Machine[] 
             status: 'completed',
             userPwnedAt: m.userPwnedAt || catalogMachine.userPwnedAt || '2026-08-20T10:00:00.000Z',
             rootPwnedAt: m.rootPwnedAt || catalogMachine.rootPwnedAt || '2026-08-20T11:30:00.000Z',
-            userFlag: m.userFlag || catalogMachine.userFlag || 'HTB{user_pwn_verified}',
-            rootFlag: m.rootFlag || catalogMachine.rootFlag || 'HTB{root_pwn_verified}',
-            timeSpentSeconds: m.timeSpentSeconds > 0 ? m.timeSpentSeconds : 3600,
-            timeToUserSeconds: m.timeToUserSeconds || 1500,
-            timeToRootSeconds: m.timeToRootSeconds || 3600,
+            userFlag: m.userFlag || catalogMachine.userFlag || (catalogMachine.platform === 'THM' ? 'THM{flag_captured_daniel_dayan}' : 'HTB{user_pwn_verified}'),
+            rootFlag: m.rootFlag || catalogMachine.rootFlag || (catalogMachine.platform === 'THM' ? 'THM{system_pwned_daniel_dayan}' : 'HTB{root_pwn_verified}'),
+            timeSpentSeconds: m.timeSpentSeconds > 0 ? m.timeSpentSeconds : (catalogMachine.timeSpentSeconds || 3600),
+            timeToUserSeconds: m.timeToUserSeconds || catalogMachine.timeToUserSeconds || 1500,
+            timeToRootSeconds: m.timeToRootSeconds || catalogMachine.timeToRootSeconds || 3600,
           });
         } else if (catalogMachine.status === 'foothold') {
           map.set(catalogMachine.id, {

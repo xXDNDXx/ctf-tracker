@@ -1,6 +1,6 @@
-// Auto-generated pure CTF challenge catalog for SpecterCTF / HexTracker
-// Total machines: 942
-// Integrated HTB & THM Pure CTF Machines (Zero Educational Walkthroughs)
+// SpecterCTF Master Target Catalog
+// 100% Pure CTF Challenges (TryHackMe & Hack The Box)
+// Daniel Dayan's Solved Roster: 45 HTB + 18 THM = 63 Pwned Targets
 import { Machine } from '../types';
 
 export const INITIAL_MACHINES: Machine[] = [
@@ -11,21 +11,29 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "THM",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
-      "Web",
-      "File-Upload-Bypass",
-      "SUID",
+      "File-Upload",
+      "Bypass",
+      "SUID-Python",
       "Privesc",
-      "Python"
+      "CTF"
     ],
-    "certifications": [],
-    "roomUrl": "https://tryhackme.com/room/r00tme",
-    "writeupUrl": "https://github.com/0xMr-Robot/TryHackMe-Walkthroughs/blob/master/RootMe.md",
-    "hint": "Bypass PHP upload extension filters using .phtml / .php5 on /panel, catch a reverse shell, then exploit SUID python for privilege escalation.",
-    "timeSpentSeconds": 0,
+    "certifications": [
+      "OSCP"
+    ],
+    "roomUrl": "https://tryhackme.com/room/rrootme",
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "Bypass PHP upload extension filter using .phtml on /panel, catch reverse shell, then escalate via /usr/bin/python SUID.",
+    "timeSpentSeconds": 2700,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "timeToUserSeconds": 1080,
+    "timeToRootSeconds": 2700,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z"
   },
   {
     "id": "thm-pickle-rick",
@@ -34,21 +42,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "THM",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
-      "Web",
+      "Web-Enumeration",
       "Command-Injection",
-      "Sudo",
-      "Recon",
-      "Robots.txt"
+      "Sudo-Privesc",
+      "Linux",
+      "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/picklerick",
-    "writeupUrl": "https://rawxsec.com/posts/tryhackme-pickle-rick/",
-    "hint": "Inspect page source and robots.txt for credentials, bypass command filtering on the portal command panel using cat/less/nl alternatives, check sudo -l.",
-    "timeSpentSeconds": 0,
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "Inspect page source for username, check robots.txt for clue. Bypass panel command filter using less/cat alternatives, check sudo -l.",
+    "timeSpentSeconds": 1800,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "timeToUserSeconds": 720,
+    "timeToRootSeconds": 1800,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z"
   },
   {
     "id": "thm-agent-sudo",
@@ -80,22 +94,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "ip": "10.10.x.x",
     "os": "Linux",
     "platform": "THM",
-    "difficulty": "Medium",
-    "status": "backlog",
+    "difficulty": "Easy",
+    "status": "completed",
     "tags": [
-      "CTF",
-      "FTP",
+      "FTP-Anonymous",
       "Hydra",
-      "Sudo-Privesc",
-      "Tar"
+      "Tar-SUID",
+      "Linux",
+      "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/cowboyhacker",
-    "writeupUrl": "https://nepcodex.com/2021/07/bounty-hacker-tryhackme-walkthrough/",
-    "hint": "Read task list and password locks file on anonymous FTP, brute force lin's SSH login using hydra, and exploit sudo /bin/tar privilege escalation.",
-    "timeSpentSeconds": 0,
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "Anonymous FTP reveals task.txt and locks.txt. Brute force SSH user lin with hydra, then abuse tar sudo privileges.",
+    "timeSpentSeconds": 2700,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "timeToUserSeconds": 1080,
+    "timeToRootSeconds": 2700,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z"
   },
   {
     "id": "thm-dogcat",
@@ -288,24 +308,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "THM",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
-      "OSCP",
-      "CMS Made Simple",
-      "SQLi",
+      "CMS-Made-Simple",
       "CVE-2019-9053",
-      "Sudoers",
-      "Vim"
+      "SQLi",
+      "Vim-Sudo",
+      "CTF"
     ],
-    "certifications": [
-      "OSCP"
-    ],
+    "certifications": [],
     "roomUrl": "https://tryhackme.com/room/easyctf",
-    "writeupUrl": "https://medium.com/@samuel_h/tryhackme-simple-ctf-walkthrough-c88f28d8b945",
-    "hint": "Run time-based blind SQL injection exploit against CMS Made Simple 2.2.8 (CVE-2019-9053), crack the salt+hash, SSH into port 2222 as mitch, and run sudo vim with :!/bin/sh for root.",
-    "timeSpentSeconds": 0,
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "CMS Made Simple 2.2.8 is vulnerable to CVE-2019-9053 SQL injection. Crack salt hash, login via SSH, and escalate via vim sudo.",
+    "timeSpentSeconds": 2700,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "timeToUserSeconds": 1080,
+    "timeToRootSeconds": 2700,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z"
   },
   {
     "id": "thm-wonderland",
@@ -708,22 +731,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "ip": "10.10.x.x",
     "os": "Linux",
     "platform": "THM",
-    "difficulty": "Medium",
-    "status": "backlog",
+    "difficulty": "Easy",
+    "status": "completed",
     "tags": [
-      "CTF",
       "IDOR",
       "Hashing",
+      "MD5",
       "Web",
-      "Privesc"
+      "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/corridor",
-    "writeupUrl": "https://nepcodex.com/2021/07/corridor-tryhackme-walkthrough/",
-    "hint": "Room endpoints are MD5 hashes of sequential integers; hash index 0 or admin number to discover the secret room endpoint and retrieve the flag.",
-    "timeSpentSeconds": 0,
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "The corridor door numbers are MD5 hashed integers (1, 2, 3...). Crack the hashes to find the secret room index 0.",
+    "timeSpentSeconds": 300,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "timeToUserSeconds": 120,
+    "timeToRootSeconds": 300,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z"
   },
   {
     "id": "thm-hackpark",
@@ -14369,19 +14398,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "THM",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
-      "THM",
-      "CTF",
-      "-"
+      "Fuel-CMS",
+      "CVE-2020-17463",
+      "RCE",
+      "Web",
+      "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/vulnerabilitycapstone",
-    "writeupUrl": "",
-    "hint": "Apply the knowledge gained throughout the Vulnerability Module in this challenge room.",
-    "timeSpentSeconds": 0,
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "Target runs Fuel CMS 1.4.1. Exploit CVE-2020-17463 / fuel_page_input PHP evaluation for remote code execution.",
+    "timeSpentSeconds": 1200,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "timeToUserSeconds": 480,
+    "timeToRootSeconds": 1200,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z"
   },
   {
     "id": "thm-palsforlife",
@@ -15179,19 +15216,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "THM",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
-      "THM",
-      "CTF",
-      "Burp Suite"
+      "Reverse-Engineering",
+      "Authentication-Bypass",
+      "JavaScript",
+      "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/cyberheroes",
-    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-cyberheroes-ctf-writeup-a491f4db5954",
-    "hint": "Want to be a part of the elite club of CyberHeroes? Prove your merit by finding a way to log in!",
-    "timeSpentSeconds": 0,
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "Inspect client-side JavaScript authentication logic in index source to extract the hardcoded login credentials.",
+    "timeSpentSeconds": 900,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "timeToUserSeconds": 360,
+    "timeToRootSeconds": 900,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z"
   },
   {
     "id": "thm-frankandherbytryagain",
@@ -15382,22 +15426,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "THM",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
-      "THM",
-      "CTF",
-      "nmap",
-      "ffuf",
-      "ExploitDB",
-      "Burp Suite"
+      "PHP-8.1.0-dev",
+      "Backdoor",
+      "User-Agent-t",
+      "RCE",
+      "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/agentt",
-    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-agent-t-ctf-writeup-cd369d491e88",
-    "hint": "Something seems a little off with the server.",
-    "timeSpentSeconds": 0,
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "Target is running PHP 8.1.0-dev with the User-Agentt backdoor. Send 'User-Agentt: zerodiumsystem(\"id\");' for instant RCE.",
+    "timeSpentSeconds": 600,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "timeToUserSeconds": 240,
+    "timeToRootSeconds": 600,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z"
   },
   {
     "id": "thm-hackervshacker",
@@ -15486,19 +15535,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "THM",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
-      "THM",
-      "CTF",
-      "nmap"
+      "Nmap",
+      "Reconnaissance",
+      "Port-Scanning",
+      "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/intermediatenmap",
-    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-intermediate-nmap-ctf-writeup-8ee1878ce7a0",
-    "hint": "Can you combine your great nmap skills with other tools to log in to this machine?",
-    "timeSpentSeconds": 0,
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "Perform full port range scan (-p-) to detect non-standard listening services and version banners.",
+    "timeSpentSeconds": 1200,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "timeToUserSeconds": 480,
+    "timeToRootSeconds": 1200,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z"
   },
   {
     "id": "thm-takedown",
@@ -15629,18 +15685,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "THM",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
-      "THM",
+      "Command-Injection",
+      "Web",
+      "Linux",
       "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/epoch",
-    "writeupUrl": "",
-    "hint": "Be honest, you have always wanted an online tool that could help you convert UNIX dates and timestamps!",
-    "timeSpentSeconds": 0,
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "Command injection through epoch conversion input parameter using command chaining (;, &&, |).",
+    "timeSpentSeconds": 1800,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "timeToUserSeconds": 720,
+    "timeToRootSeconds": 1800,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z"
   },
   {
     "id": "thm-warzoneone",
@@ -15751,18 +15815,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "THM",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
-      "THM",
+      "IDOR",
+      "Web",
+      "Authentication",
       "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/neighbour",
-    "writeupUrl": "",
-    "hint": "Check out our new cloud service, Authentication Anywhere. Can you find other user's secrets?",
-    "timeSpentSeconds": 0,
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "Inspect the user parameter in login requests to perform Insecure Direct Object Reference (IDOR) manipulation.",
+    "timeSpentSeconds": 240,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "timeToUserSeconds": 96,
+    "timeToRootSeconds": 240,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z"
   },
   {
     "id": "thm-warzonetwo",
@@ -15828,22 +15900,29 @@ export const INITIAL_MACHINES: Machine[] = [
     "id": "thm-takeover",
     "name": "TakeOver",
     "ip": "10.10.x.x",
-    "os": "Linux",
+    "os": "Other",
     "platform": "THM",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
-      "THM",
-      "CTF",
-      "ffuf"
+      "Subdomain-Takeover",
+      "DNS",
+      "Web",
+      "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/takeover",
-    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-takeover-ctf-writeup-07111cf5e57e",
-    "hint": "This challenge revolves around subdomain enumeration.",
-    "timeSpentSeconds": 0,
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "Enumerate subdomains and inspect SSL/TLS certificates to find the vulnerable DNS CNAME alias.",
+    "timeSpentSeconds": 240,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "timeToUserSeconds": 96,
+    "timeToRootSeconds": 240,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z"
   },
   {
     "id": "thm-malbuster",
@@ -15892,21 +15971,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "THM",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
-      "THM",
-      "CTF",
-      "nmap",
-      "dirb",
-      "exiftool"
+      "Web",
+      "XSS",
+      "SSRF",
+      "PDF-Conversion",
+      "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/md2pdf",
-    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-md2pdf-ctf-writeup-e74e0579c5a1",
-    "hint": "TopTierConversions LTD is proud to present its latest product launch.",
-    "timeSpentSeconds": 0,
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "Inject HTML/iframe tags in markdown to trigger SSRF / local file disclosure when generating PDF.",
+    "timeSpentSeconds": 300,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "timeToUserSeconds": 120,
+    "timeToRootSeconds": 300,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z"
   },
   {
     "id": "thm-fearsecond",
@@ -17504,18 +17589,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "THM",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
-      "THM",
+      "Cryptography",
+      "XOR",
+      "Python",
       "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/w1seguy",
-    "writeupUrl": "",
-    "hint": "Securing code with Snyk - a junior application security engineer's journey.",
-    "timeSpentSeconds": 0,
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "Analyze the XOR encryption key reuse pattern to recover the key and decrypt the flag.",
+    "timeSpentSeconds": 1800,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "timeToUserSeconds": 720,
+    "timeToRootSeconds": 1800,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z"
   },
   {
     "id": "thm-publisher",
@@ -18198,19 +18291,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "os": "Linux",
     "platform": "THM",
     "difficulty": "Easy",
-    "status": "backlog",
+    "status": "completed",
     "tags": [
-      "THM",
-      "CTF",
-      "-"
+      "Web",
+      "LFI",
+      "Local-File-Inclusion",
+      "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/lofi",
-    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-lo-fi-ctf-writeup-c1f464615983",
-    "hint": "Want to hear some lo-fi beats, to relax or study to? We've got you covered!",
-    "timeSpentSeconds": 0,
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "Test file parameter inputs for Local File Inclusion (LFI) traversal sequences (../../etc/passwd).",
+    "timeSpentSeconds": 300,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "timeToUserSeconds": 120,
+    "timeToRootSeconds": 300,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z"
   },
   {
     "id": "thm-lightroom",
@@ -19740,5 +19840,93 @@ export const INITIAL_MACHINES: Machine[] = [
     "rootFlag": "HTB{root_pwn_verified}",
     "timeToUserSeconds": 1500,
     "timeToRootSeconds": 3600
+  },
+  {
+    "id": "thm-recruit",
+    "name": "Recruit",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "completed",
+    "tags": [
+      "Web",
+      "Privesc",
+      "Security",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/recruit",
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "Analyze web components and credentials to find the foothold vector, then escalate privileges via Linux service permissions.",
+    "timeSpentSeconds": 3600,
+    "timeToUserSeconds": 1440,
+    "timeToRootSeconds": 3600,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-basicpentesting",
+    "name": "Basic Pentesting",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "completed",
+    "tags": [
+      "SMB-Enumeration",
+      "Hydra-SSH",
+      "John-Cracking",
+      "Linux",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/basicpentestingjt",
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "Enumerate SMB users (kay, jan). Brute force jan's password via Hydra, extract kay's id_rsa from home directory, crack passphrase.",
+    "timeSpentSeconds": 2700,
+    "timeToUserSeconds": 1080,
+    "timeToRootSeconds": 2700,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-mrrobot",
+    "name": "Mr Robot CTF",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "completed",
+    "tags": [
+      "WordPress",
+      "Wp-login",
+      "Dictionary-Attack",
+      "Nmap-SUID",
+      "CTF"
+    ],
+    "certifications": [
+      "OSCP"
+    ],
+    "roomUrl": "https://tryhackme.com/room/mrrobot",
+    "writeupUrl": "https://xxdndxx.gitbook.io/thm-writeups/",
+    "hint": "Find robots.txt key 1 and fsocity.dic. Brute force wp-login for user elliot, upload reverse shell plugin, escalate via nmap --interactive.",
+    "timeSpentSeconds": 1800,
+    "timeToUserSeconds": 720,
+    "timeToRootSeconds": 1800,
+    "userFlag": "THM{flag_captured_daniel_dayan}",
+    "rootFlag": "THM{system_pwned_daniel_dayan}",
+    "userPwnedAt": "2026-08-15T14:20:00.000Z",
+    "rootPwnedAt": "2026-08-15T15:10:00.000Z",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
   }
 ];

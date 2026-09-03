@@ -167,15 +167,15 @@ export const UserMenu: React.FC = () => {
   if (!isAuthenticated || !user) {
     return (
       <div className="flex items-center gap-2 font-mono text-xs">
-        {/* Visible 1-Click Sync 45 Solves Button */}
+        {/* Visible 1-Click Sync All Solves Button */}
         <button
           onClick={handleForceSyncHtbSolves}
           className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl font-bold text-xs bg-cyber-amber/20 hover:bg-cyber-amber/30 text-cyber-amber border border-cyber-amber/60 hover:border-cyber-amber transition-all shadow-[0_0_12px_rgba(245,158,11,0.25)] group"
-          title="Force sync your 45 Hack The Box solves into completed column"
+          title="Force sync your 45 Hack The Box + 18 TryHackMe solves into completed column"
         >
           <Sparkles className="w-3.5 h-3.5 text-cyber-amber group-hover:scale-110 transition-transform" />
-          <span className="hidden sm:inline">⚡ SYNC 45 SOLVES</span>
-          <span className="sm:hidden">⚡ 45</span>
+          <span className="hidden sm:inline">⚡ SYNC 63 SOLVES (45 HTB + 18 THM)</span>
+          <span className="sm:hidden">⚡ 63</span>
         </button>
 
         {/* Operator Profile Badges (Daniel Dayan) */}
@@ -246,15 +246,15 @@ export const UserMenu: React.FC = () => {
     <div className="relative font-mono text-xs">
       {/* Header Button Group: Sync 45 Solves + 1-Click Save + Google Profile Badge */}
       <div className="flex items-center gap-1.5 bg-cyber-card/90 border border-cyber-border rounded-xl p-1 shadow-sm">
-        {/* Visible 1-Click Sync 45 Solves Button */}
+        {/* Visible 1-Click Sync All Solves Button */}
         <button
           onClick={handleForceSyncHtbSolves}
           className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-bold text-[11px] bg-cyber-amber/20 hover:bg-cyber-amber/30 text-cyber-amber border border-cyber-amber/60 hover:border-cyber-amber transition-all shadow-[0_0_10px_rgba(245,158,11,0.25)] group"
-          title="Force sync your 45 Hack The Box solves into completed column"
+          title="Force sync your 45 Hack The Box + 18 TryHackMe solves into completed column"
         >
           <Sparkles className="w-3.5 h-3.5 text-cyber-amber group-hover:scale-110 transition-transform" />
-          <span className="hidden sm:inline">⚡ SYNC 45 SOLVES</span>
-          <span className="sm:hidden">⚡ 45</span>
+          <span className="hidden sm:inline">⚡ SYNC 63 SOLVES (45 HTB + 18 THM)</span>
+          <span className="sm:hidden">⚡ 63</span>
         </button>
 
         {/* Instant 1-Click Quick Save Button */}
@@ -391,7 +391,7 @@ export const UserMenu: React.FC = () => {
             </div>
           </div>
 
-          {/* Force Sync 45 HTB Solves */}
+          {/* Force Sync 63 Solves (45 HTB + 18 THM) */}
           <button
             onClick={() => {
               const current = useCtfStore.getState().machines;
@@ -404,10 +404,10 @@ export const UserMenu: React.FC = () => {
               setTimeout(() => setJustSaved(false), 3000);
             }}
             className="w-full py-2 px-3 rounded-xl font-bold text-xs bg-cyber-amber/15 hover:bg-cyber-amber/25 text-cyber-amber border border-cyber-amber/40 hover:border-cyber-amber transition-all flex items-center justify-center gap-2"
-            title="Force reload all 45 HTB solved boxes into your active profile"
+            title="Force reload all 45 HTB + 18 THM solved targets into your active profile"
           >
             <Sparkles className="w-4 h-4 text-cyber-amber" />
-            <span>FORCE SYNC 45 HTB SOLVES</span>
+            <span>FORCE SYNC 63 SOLVES (45 HTB + 18 THM)</span>
           </button>
 
           {/* 1-Click Large Save Button */}

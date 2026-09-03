@@ -238,9 +238,9 @@ export const OperatorDossierModal: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
               <div className="p-3 rounded-xl bg-cyber-card/70 border border-cyber-border space-y-1">
-                <div className="text-cyber-emerald font-extrabold text-lg">45+ Solves</div>
-                <div className="text-white font-semibold">Hack The Box Catalog</div>
-                <div className="text-[10px] text-cyber-muted">Fully verified & cataloged machines in SpecterCTF.</div>
+                <div className="text-cyber-emerald font-extrabold text-lg">63 Pwns</div>
+                <div className="text-white font-semibold">45 HTB + 18 THM Solves</div>
+                <div className="text-[10px] text-cyber-muted">Verified pwned targets in active tracker roster.</div>
               </div>
 
               <div className="p-3 rounded-xl bg-cyber-card/70 border border-cyber-border space-y-1">
