@@ -179,14 +179,14 @@ export const UserMenu: React.FC = () => {
         </button>
 
         {/* Operator Profile Badges (Daniel Dayan) */}
-        <div className="hidden sm:flex items-center gap-1 border-r border-cyber-border pr-2">
+        <div className="hidden xl:flex items-center gap-1 border-r border-cyber-border pr-2">
           <button
             onClick={() => setOperatorModalOpen(true)}
             className="flex items-center gap-1 px-2 py-1 rounded-lg bg-cyber-emerald/15 hover:bg-cyber-emerald/25 border border-cyber-emerald/40 hover:border-cyber-emerald text-cyber-emerald hover:text-white transition-all text-[10px] font-bold"
             title="View Daniel Dayan's Operator Dossier & Portfolio"
           >
             <Globe className="w-3 h-3" />
-            <span className="hidden md:inline">PORTFOLIO</span>
+            <span>PORTFOLIO</span>
           </button>
           <a
             href="https://www.linkedin.com/in/daniel-dayan-a66322352/"
@@ -249,11 +249,12 @@ export const UserMenu: React.FC = () => {
         {/* Visible 1-Click Sync All Solves Button */}
         <button
           onClick={handleForceSyncHtbSolves}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-bold text-[11px] bg-cyber-amber/20 hover:bg-cyber-amber/30 text-cyber-amber border border-cyber-amber/60 hover:border-cyber-amber transition-all shadow-[0_0_10px_rgba(245,158,11,0.25)] group"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-bold text-[11px] bg-cyber-amber/20 hover:bg-cyber-amber/30 text-cyber-amber border border-cyber-amber/60 hover:border-cyber-amber transition-all shadow-[0_0_10px_rgba(245,158,11,0.25)] group flex-shrink-0"
           title="Force sync your 45 Hack The Box + 18 TryHackMe solves into completed column"
         >
-          <Sparkles className="w-3.5 h-3.5 text-cyber-amber group-hover:scale-110 transition-transform" />
-          <span className="hidden sm:inline">⚡ SYNC 63 SOLVES (45 HTB + 18 THM)</span>
+          <Sparkles className="w-3.5 h-3.5 text-cyber-amber group-hover:scale-110 transition-transform flex-shrink-0" />
+          <span className="hidden xl:inline">⚡ SYNC 63 SOLVES (45 HTB + 18 THM)</span>
+          <span className="hidden sm:inline xl:hidden">⚡ 63 PWNS</span>
           <span className="sm:hidden">⚡ 63</span>
         </button>
 

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
@@ -15,6 +15,8 @@ import {
   Key,
   FolderGit2,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
   Target,
   Zap,
   ArrowUpDown,
@@ -41,6 +43,8 @@ export const TrackerView: React.FC = () => {
     setViewMode,
     setReconAutomationModalOpen,
   } = useCtfStore();
+
+  const [tracksCollapsed, setTracksCollapsed] = useState(false);
 
   // Extract all unique tags across machines
   const allTags = useMemo(() => {
@@ -203,74 +207,109 @@ export const TrackerView: React.FC = () => {
   return (
     <div className="space-y-4 w-full">
       {/* 1. Curated Practice Tracks Carousel / Pathways */}
-      <div className="p-3 rounded-xl border border-cyber-border bg-cyber-card/90 shadow-md font-mono space-y-2">
+      <div className="p-2.5 sm:p-3 rounded-xl border border-cyber-border bg-cyber-card/90 shadow-md font-mono space-y-2">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <Target className="w-4 h-4 text-cyber-cyan" />
+            <Target className="w-4 h-4 text-cyber-cyan flex-shrink-0" />
             <span className="text-xs font-bold text-white uppercase tracking-wider">
               CURATED TACTICAL PATHWAYS & TRACKS
             </span>
           </div>
-          {filters.selectedTrack !== 'ALL' && (
+          <div className="flex items-center gap-2">
+            {filters.selectedTrack !== 'ALL' && (
+              <button
+                onClick={() => setFilters({ selectedTrack: 'ALL' })}
+                className="text-[10px] text-cyber-cyan hover:underline flex items-center gap-1"
+              >
+                <span>Clear Track</span>
+                <span>✕</span>
+              </button>
+            )}
             <button
-              onClick={() => setFilters({ selectedTrack: 'ALL' })}
-              className="text-[10px] text-cyber-cyan hover:underline flex items-center gap-1"
+              onClick={() => setTracksCollapsed(!tracksCollapsed)}
+              className="p-1 px-2 rounded-md bg-cyber-bg hover:bg-cyber-card border border-cyber-border text-cyber-muted hover:text-white transition-all flex items-center gap-1 text-[10px]"
+              title={tracksCollapsed ? 'Expand Pathways' : 'Collapse Pathways to save vertical space'}
             >
-              <span>Clear Track Selection</span>
-              <span>✕</span>
+              {tracksCollapsed ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}
+              <span>{tracksCollapsed ? 'Expand' : 'Collapse'}</span>
             </button>
-          )}
+          </div>
         </div>
 
-        {/* Tracks Horizontal Scroll */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
-          {PRACTICE_TRACKS.map((track) => {
-            const isSelected = filters.selectedTrack === track.id;
-            const stats = trackStats[track.id] || { total: 0, rooted: 0, percent: 0 };
+        {/* Tracks Horizontal Scroll or Compact View */}
+        {!tracksCollapsed ? (
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
+            {PRACTICE_TRACKS.map((track) => {
+              const isSelected = filters.selectedTrack === track.id;
+              const stats = trackStats[track.id] || { total: 0, rooted: 0, percent: 0 };
 
-            return (
-              <motion.button
-                key={track.id}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() =>
-                  setFilters({
-                    selectedTrack: isSelected ? 'ALL' : track.id,
-                  })
-                }
-                className={`p-2.5 rounded-lg border text-left flex-shrink-0 min-w-[210px] transition-all relative group overflow-hidden ${
-                  isSelected
-                    ? 'border-cyber-cyan bg-cyber-card shadow-glow-cyan/20 ring-1 ring-cyber-cyan/40'
-                    : 'border-cyber-border bg-cyber-bg hover:border-cyber-borderGlow'
-                }`}
-              >
-                <div className="flex items-center justify-between gap-2 mb-1">
-                  <span className={`text-[11px] font-bold truncate ${isSelected ? 'text-cyber-cyan' : 'text-white'}`}>
-                    {track.shortName}
-                  </span>
-                  <span className="text-[10px] px-1.5 py-0.2 rounded font-mono font-bold bg-cyber-card border border-cyber-border text-cyber-muted">
+              return (
+                <motion.button
+                  key={track.id}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() =>
+                    setFilters({
+                      selectedTrack: isSelected ? 'ALL' : track.id,
+                    })
+                  }
+                  className={`p-2.5 rounded-lg border text-left flex-shrink-0 min-w-[210px] transition-all relative group overflow-hidden ${
+                    isSelected
+                      ? 'border-cyber-cyan bg-cyber-card shadow-glow-cyan/20 ring-1 ring-cyber-cyan/40'
+                      : 'border-cyber-border bg-cyber-bg hover:border-cyber-borderGlow'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <span className={`text-[11px] font-bold truncate ${isSelected ? 'text-cyber-cyan' : 'text-white'}`}>
+                      {track.shortName}
+                    </span>
+                    <span className="text-[10px] px-1.5 py-0.2 rounded font-mono font-bold bg-cyber-card border border-cyber-border text-cyber-muted">
+                      {stats.rooted}/{stats.total}
+                    </span>
+                  </div>
+
+                  {/* Progress Mini Bar */}
+                  <div className="w-full bg-cyber-card h-1.5 rounded-full overflow-hidden border border-cyber-border/80">
+                    <motion.div
+                      className="h-full bg-gradient-to-r from-cyber-emerald to-cyber-cyan"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${stats.percent}%` }}
+                      transition={{ duration: 0.5 }}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between text-[9px] text-cyber-muted mt-1.5">
+                    <span className="truncate max-w-[130px]">{track.category.toUpperCase()}</span>
+                    <span className="font-mono text-cyber-emerald font-bold">{stats.percent}% PWN</span>
+                  </div>
+                </motion.button>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 overflow-x-auto pb-0.5 text-xs">
+            {PRACTICE_TRACKS.map((track) => {
+              const isSelected = filters.selectedTrack === track.id;
+              const stats = trackStats[track.id] || { total: 0, rooted: 0, percent: 0 };
+              return (
+                <button
+                  key={track.id}
+                  onClick={() => setFilters({ selectedTrack: isSelected ? 'ALL' : track.id })}
+                  className={`px-2.5 py-1 rounded-lg border text-left flex-shrink-0 transition-all flex items-center gap-2 text-[11px] ${
+                    isSelected
+                      ? 'border-cyber-cyan bg-cyber-bg text-cyber-cyan font-bold shadow-sm'
+                      : 'border-cyber-border/70 bg-cyber-bg/60 text-cyber-muted hover:text-white hover:border-cyber-border'
+                  }`}
+                >
+                  <span>{track.shortName}</span>
+                  <span className="text-[10px] text-cyber-emerald font-bold font-mono">
                     {stats.rooted}/{stats.total}
                   </span>
-                </div>
-
-                {/* Progress Mini Bar */}
-                <div className="w-full bg-cyber-card h-1.5 rounded-full overflow-hidden border border-cyber-border/80">
-                  <motion.div
-                    className="h-full bg-gradient-to-r from-cyber-emerald to-cyber-cyan"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${stats.percent}%` }}
-                    transition={{ duration: 0.5 }}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between text-[9px] text-cyber-muted mt-1.5">
-                  <span className="truncate max-w-[130px]">{track.category.toUpperCase()}</span>
-                  <span className="font-mono text-cyber-emerald font-bold">{stats.percent}% PWN</span>
-                </div>
-              </motion.button>
-            );
-          })}
-        </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* 2. Primary Filter, Search, and View Controls */}

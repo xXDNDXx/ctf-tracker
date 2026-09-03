@@ -172,7 +172,7 @@ export const Header: React.FC = () => {
                   setOperatorModalOpen(true);
                   if (soundEnabled) playCyberSound('click');
                 }}
-                className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyber-emerald/10 hover:bg-cyber-emerald/20 border border-cyber-emerald/40 hover:border-cyber-emerald text-cyber-emerald hover:text-white transition-all text-xs font-mono group ml-1"
+                className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyber-emerald/10 hover:bg-cyber-emerald/20 border border-cyber-emerald/40 hover:border-cyber-emerald text-cyber-emerald hover:text-white transition-all text-xs font-mono group ml-1"
                 title="View Creator Dossier & Portfolio (Daniel Dayan)"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-cyber-emerald animate-pulse" />
@@ -188,11 +188,11 @@ export const Header: React.FC = () => {
                   setOperatorModalOpen(true);
                   if (soundEnabled) playCyberSound('click');
                 }}
-                className="hidden md:flex lg:hidden items-center gap-1 px-2 py-1 rounded-lg bg-cyber-emerald/10 border border-cyber-emerald/40 text-cyber-emerald text-[10px] font-bold ml-1"
+                className="hidden md:flex xl:hidden items-center gap-1.5 px-2 py-1 rounded-lg bg-cyber-emerald/10 border border-cyber-emerald/40 text-cyber-emerald text-[10px] font-bold ml-1 hover:bg-cyber-emerald/20 transition-all"
                 title="View Creator Dossier & Portfolio (Daniel Dayan)"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-cyber-emerald" />
-                <span>PORTFOLIO</span>
+                <span className="text-white font-bold">Daniel Dayan</span>
               </button>
             </div>
 
@@ -235,19 +235,19 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Center: Global Quick Command Search (Ctrl+K) */}
-        <div className="hidden md:flex items-center flex-1 max-w-lg mx-4">
+        <div className="hidden md:flex items-center flex-1 max-w-xs xl:max-w-md mx-2 xl:mx-4">
           <button
             onClick={() => setCommandPaletteOpen(true)}
-            className="w-full flex items-center justify-between px-3.5 py-1.5 text-xs font-mono rounded-lg bg-cyber-card/80 border border-cyber-border text-cyber-muted hover:text-cyber-text hover:border-cyber-cyan/50 transition-all shadow-inner group"
+            className="w-full flex items-center justify-between px-3 py-1.5 text-xs font-mono rounded-lg bg-cyber-card/80 border border-cyber-border text-cyber-muted hover:text-cyber-text hover:border-cyber-cyan/50 transition-all shadow-inner group"
             title="Global Quick Search (Ctrl+K)"
           >
-            <div className="flex items-center gap-2">
-              <Search className="w-3.5 h-3.5 text-cyber-emerald group-hover:text-cyber-cyan transition-colors" />
-              <span className="text-[11px] text-cyber-muted group-hover:text-white transition-colors">
-                Search 400+ machines, cheats, tools...
+            <div className="flex items-center gap-2 truncate">
+              <Search className="w-3.5 h-3.5 text-cyber-emerald group-hover:text-cyber-cyan transition-colors flex-shrink-0" />
+              <span className="text-[11px] text-cyber-muted group-hover:text-white transition-colors truncate">
+                Search machines, cheats, tools...
               </span>
             </div>
-            <kbd className="px-1.5 py-0.5 rounded text-[10px] bg-cyber-bg border border-cyber-border text-cyber-cyan font-bold shadow-sm">
+            <kbd className="px-1.5 py-0.5 rounded text-[10px] bg-cyber-bg border border-cyber-border text-cyber-cyan font-bold shadow-sm flex-shrink-0 ml-1">
               Ctrl+K
             </kbd>
           </button>
@@ -505,8 +505,8 @@ export const Header: React.FC = () => {
           </button>
         </div>
 
-        {/* Center: Live Mission Telemetry Status (Eliminates dead space on wide screens) */}
-        <div className="hidden xl:flex items-center gap-2 px-3 py-1 rounded-lg bg-cyber-card/60 border border-cyber-border/70 text-[11px] text-cyber-muted font-mono flex-shrink-0">
+        {/* Center: Live Mission Telemetry Status (Only on wide screens to prevent overflow) */}
+        <div className="hidden 2xl:flex items-center gap-2 px-3 py-1 rounded-lg bg-cyber-card/60 border border-cyber-border/70 text-[11px] text-cyber-muted font-mono flex-shrink-0">
           <span className="flex items-center gap-1.5 text-cyber-emerald font-bold">
             <span className="w-1.5 h-1.5 rounded-full bg-cyber-emerald animate-pulse shadow-glow-emerald" />
             <span>MISSION TELEMETRY:</span>
@@ -519,39 +519,37 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Right: Live Variable Injection Hub (LHOST, LPORT, TARGET) */}
-        <div className="hidden lg:flex items-center gap-2 bg-cyber-card/80 border border-cyber-border/80 rounded-lg p-1 px-2.5 font-mono text-xs flex-shrink-0">
+        <div className="hidden sm:flex items-center gap-1.5 bg-cyber-card/80 border border-cyber-border/80 rounded-lg p-1 px-2 font-mono text-xs flex-shrink-0">
           <span className="text-[10px] uppercase font-semibold text-cyber-cyan tracking-wider flex items-center gap-1">
-            <Server className="w-3 h-3" /> PAYLOAD VARS:
+            <Server className="w-3 h-3" />
+            <span className="hidden xl:inline">PAYLOAD VARS:</span>
           </span>
 
           {/* LHOST */}
-          <div className={`flex items-center gap-1 bg-cyber-bg px-2 py-0.5 rounded border transition-all ${
+          <div className={`flex items-center gap-1 bg-cyber-bg px-1.5 py-0.5 rounded border transition-all ${
             copiedVar === 'lhost'
               ? 'border-cyber-emerald shadow-[0_0_10px_rgba(16,185,129,0.35)] bg-cyber-emerald/10'
               : 'border-cyber-border focus-within:border-cyber-cyan'
           }`}>
-            <span className="text-[10px] text-cyber-muted">LHOST:</span>
+            <span className="text-[10px] text-cyber-muted font-bold">L:</span>
             <input
               type="text"
               value={globalVars.lhost}
               onChange={(e) => setGlobalVars({ lhost: e.target.value })}
-              className="w-24 bg-transparent text-white font-mono text-xs focus:outline-none"
+              className="w-20 bg-transparent text-white font-mono text-[11px] focus:outline-none"
               placeholder="10.10.14.x"
             />
             <button
               onClick={() => handleCopyVar(globalVars.lhost, 'lhost')}
-              className={`p-1 rounded transition-all flex items-center gap-1 ${
+              className={`p-0.5 rounded transition-all flex items-center ${
                 copiedVar === 'lhost'
-                  ? 'bg-cyber-emerald text-black font-extrabold shadow-glow-emerald px-1.5 py-0.5 scale-105'
-                  : 'text-cyber-muted hover:text-cyber-cyan hover:bg-cyber-card'
+                  ? 'text-cyber-emerald'
+                  : 'text-cyber-muted hover:text-cyber-cyan'
               }`}
               title="Copy LHOST to clipboard"
             >
               {copiedVar === 'lhost' ? (
-                <>
-                  <Check className="w-3 h-3 stroke-[3]" />
-                  <span className="text-[9px] uppercase font-bold text-black">COPIED!</span>
-                </>
+                <Check className="w-3 h-3 stroke-[3] text-cyber-emerald" />
               ) : (
                 <Copy className="w-3 h-3" />
               )}
@@ -559,33 +557,30 @@ export const Header: React.FC = () => {
           </div>
 
           {/* LPORT */}
-          <div className={`flex items-center gap-1 bg-cyber-bg px-2 py-0.5 rounded border transition-all ${
+          <div className={`flex items-center gap-1 bg-cyber-bg px-1.5 py-0.5 rounded border transition-all ${
             copiedVar === 'lport'
               ? 'border-cyber-emerald shadow-[0_0_10px_rgba(16,185,129,0.35)] bg-cyber-emerald/10'
               : 'border-cyber-border focus-within:border-cyber-cyan'
           }`}>
-            <span className="text-[10px] text-cyber-muted">LPORT:</span>
+            <span className="text-[10px] text-cyber-muted font-bold">P:</span>
             <input
               type="text"
               value={globalVars.lport}
               onChange={(e) => setGlobalVars({ lport: e.target.value })}
-              className="w-12 bg-transparent text-white font-mono text-xs focus:outline-none"
+              className="w-10 bg-transparent text-white font-mono text-[11px] focus:outline-none"
               placeholder="4444"
             />
             <button
               onClick={() => handleCopyVar(globalVars.lport, 'lport')}
-              className={`p-1 rounded transition-all flex items-center gap-1 ${
+              className={`p-0.5 rounded transition-all flex items-center ${
                 copiedVar === 'lport'
-                  ? 'bg-cyber-emerald text-black font-extrabold shadow-glow-emerald px-1.5 py-0.5 scale-105'
-                  : 'text-cyber-muted hover:text-cyber-cyan hover:bg-cyber-card'
+                  ? 'text-cyber-emerald'
+                  : 'text-cyber-muted hover:text-cyber-cyan'
               }`}
               title="Copy LPORT to clipboard"
             >
               {copiedVar === 'lport' ? (
-                <>
-                  <Check className="w-3 h-3 stroke-[3]" />
-                  <span className="text-[9px] uppercase font-bold text-black">COPIED!</span>
-                </>
+                <Check className="w-3 h-3 stroke-[3] text-cyber-emerald" />
               ) : (
                 <Copy className="w-3 h-3" />
               )}
@@ -593,33 +588,30 @@ export const Header: React.FC = () => {
           </div>
 
           {/* TARGET_IP */}
-          <div className={`flex items-center gap-1 bg-cyber-bg px-2 py-0.5 rounded border transition-all ${
+          <div className={`flex items-center gap-1 bg-cyber-bg px-1.5 py-0.5 rounded border transition-all ${
             copiedVar === 'target'
               ? 'border-cyber-emerald shadow-[0_0_10px_rgba(16,185,129,0.35)] bg-cyber-emerald/10'
               : 'border-cyber-border focus-within:border-cyber-emerald'
           }`}>
-            <span className="text-[10px] text-cyber-muted">TARGET:</span>
+            <span className="text-[10px] text-cyber-muted font-bold">T:</span>
             <input
               type="text"
               value={globalVars.targetIp}
               onChange={(e) => setGlobalVars({ targetIp: e.target.value })}
-              className="w-24 bg-transparent text-cyber-emerald font-mono text-xs font-semibold focus:outline-none"
+              className="w-20 bg-transparent text-cyber-emerald font-mono text-[11px] font-semibold focus:outline-none"
               placeholder="10.10.10.x"
             />
             <button
               onClick={() => handleCopyVar(globalVars.targetIp, 'target')}
-              className={`p-1 rounded transition-all flex items-center gap-1 ${
+              className={`p-0.5 rounded transition-all flex items-center ${
                 copiedVar === 'target'
-                  ? 'bg-cyber-emerald text-black font-extrabold shadow-glow-emerald px-1.5 py-0.5 scale-105'
-                  : 'text-cyber-muted hover:text-cyber-emerald hover:bg-cyber-card'
+                  ? 'text-cyber-emerald'
+                  : 'text-cyber-muted hover:text-cyber-emerald'
               }`}
-              title="Copy TARGET IP to clipboard"
+              title="Copy Target IP to clipboard"
             >
               {copiedVar === 'target' ? (
-                <>
-                  <Check className="w-3 h-3 stroke-[3]" />
-                  <span className="text-[9px] uppercase font-bold text-black">COPIED!</span>
-                </>
+                <Check className="w-3 h-3 stroke-[3] text-cyber-emerald" />
               ) : (
                 <Copy className="w-3 h-3" />
               )}
