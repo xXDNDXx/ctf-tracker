@@ -62,8 +62,8 @@ console.log('✓ Mirrored all icon and favicon variants across root, dist, and d
 
 // 6. Update root index.html to dynamically load production assets on GitHub Pages
 const distAssets = fs.readdirSync(path.join(distDir, 'assets'));
-const indexJs = distAssets.find(f => f.startsWith('index-') && f.endsWith('.js'));
-const indexCss = distAssets.find(f => f.startsWith('index-') && f.endsWith('.css'));
+const indexJs = distAssets.find(f => (f === 'index.js' || (f.startsWith('index-') && f.endsWith('.js'))));
+const indexCss = distAssets.find(f => (f === 'index.css' || (f.startsWith('index-') && f.endsWith('.css'))));
 
 if (indexJs && indexCss) {
   let rootHtml = fs.readFileSync(path.join(rootDir, 'index.html'), 'utf-8');
