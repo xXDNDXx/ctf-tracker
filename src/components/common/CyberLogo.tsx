@@ -15,8 +15,8 @@ export const CyberLogo: React.FC<CyberLogoProps> = ({
   const containerSizeMap = {
     sm: 'w-8 h-8',
     md: 'w-11 h-11',
-    lg: 'w-13 h-13 sm:w-14 sm:h-14',
-    xl: 'w-18 h-18 sm:w-20 sm:h-20',
+    lg: 'w-[52px] h-[52px] sm:w-14 sm:h-14',
+    xl: 'w-[72px] h-[72px] sm:w-20 sm:h-20',
     '2xl': 'w-24 h-24 sm:w-28 sm:h-28',
   };
 
