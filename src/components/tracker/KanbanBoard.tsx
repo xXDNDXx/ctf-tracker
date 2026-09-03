@@ -79,6 +79,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ filteredMachines }) =>
     startTimer,
     soundEnabled,
     setReportMachineId,
+    filters,
   } = useCtfStore();
 
   const handleAdvance = (e: React.MouseEvent, m: Machine, nextStatus: PipelineStatus) => {
@@ -105,12 +106,28 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ filteredMachines }) =>
     if (soundEnabled) playCyberSound('timer');
   };
 
+  const visibleLanes = React.useMemo(() => {
+    if (!filters.hideEmptyLanes) return LANES;
+    const populated = LANES.filter((lane) => filteredMachines.some((m) => m.status === lane.id));
+    return populated.length > 0 ? populated : LANES;
+  }, [filters.hideEmptyLanes, filteredMachines]);
+
+  const gridColsClass = React.useMemo(() => {
+    const count = visibleLanes.length;
+    if (count === 1) return 'grid-cols-1';
+    if (count === 2) return 'grid-cols-1 md:grid-cols-2';
+    if (count === 3) return 'grid-cols-1 md:grid-cols-3';
+    if (count === 4) return 'grid-cols-1 md:grid-cols-2 xl:grid-cols-4';
+    return 'grid-cols-1 md:grid-cols-3 xl:grid-cols-5';
+  }, [visibleLanes.length]);
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-3.5 items-start font-mono pb-8">
-      {LANES.map((lane, laneIdx) => {
+    <div className={`grid ${gridColsClass} gap-3.5 items-start font-mono pb-8 transition-all`}>
+      {visibleLanes.map((lane) => {
         const laneMachines = filteredMachines.filter((m) => m.status === lane.id);
-        const prevLane = laneIdx > 0 ? LANES[laneIdx - 1].id : null;
-        const nextLane = laneIdx < LANES.length - 1 ? LANES[laneIdx + 1].id : null;
+        const fullLaneIdx = LANES.findIndex((l) => l.id === lane.id);
+        const prevLane = fullLaneIdx > 0 ? LANES[fullLaneIdx - 1].id : null;
+        const nextLane = fullLaneIdx < LANES.length - 1 ? LANES[fullLaneIdx + 1].id : null;
 
         return (
           <motion.div

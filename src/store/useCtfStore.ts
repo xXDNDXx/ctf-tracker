@@ -5,8 +5,10 @@ import { INITIAL_MACHINES } from '../data/machinesCatalog';
 import { INITIAL_CHEATSHEET } from '../data/cheatsheetsData';
 
 export type BoxVectorCategory = 'ALL' | 'Web' | 'Linux PrivEsc' | 'Windows PrivEsc' | 'Active Directory' | 'Binary / Pwn' | 'Network / SMB';
+export type SortOption = 'default' | 'difficulty' | 'name' | 'ip' | 'recent';
+export type SortDirection = 'asc' | 'desc';
 
-interface FilterState {
+export interface FilterState {
   searchQuery: string;
   selectedPlatform: Platform | 'ALL';
   selectedDifficulty: Difficulty | 'ALL';
@@ -15,6 +17,9 @@ interface FilterState {
   selectedCategory: BoxVectorCategory;
   selectedTrack: string | 'ALL';
   selectedTags: string[];
+  sortBy: SortOption;
+  sortDirection: SortDirection;
+  hideEmptyLanes: boolean;
 }
 
 export interface BrandTheme {
@@ -28,11 +33,27 @@ export interface BrandTheme {
 
 export const BRAND_THEMES: BrandTheme[] = [
   {
+    id: 'specter',
+    namePrefix: 'SPECTER',
+    nameSuffix: 'CTF',
+    suffixColor: 'text-cyber-cyan',
+    tagline: 'Tactical Cyber Operations Suite',
+    badge: 'v2.0',
+  },
+  {
     id: 'rootvector',
     namePrefix: 'ROOT',
     nameSuffix: 'VECTOR',
     suffixColor: 'text-cyber-emerald',
-    tagline: 'CTF & Lab Tracker',
+    tagline: 'CTF & Lab Operations Tracker',
+    badge: '',
+  },
+  {
+    id: 'hextracker',
+    namePrefix: 'HEX',
+    nameSuffix: 'TRACKER',
+    suffixColor: 'text-cyber-purple',
+    tagline: 'Tactical Pwn Tracker // v2.0',
     badge: '',
   },
   {
@@ -175,6 +196,9 @@ const DEFAULT_FILTERS: FilterState = {
   selectedCategory: 'ALL',
   selectedTrack: 'ALL',
   selectedTags: [],
+  sortBy: 'default',
+  sortDirection: 'asc',
+  hideEmptyLanes: false,
 };
 
 export const getProfileStorageKey = (profileId: string) => `specter_ctf_profile_${profileId || 'guest'}`;
@@ -288,7 +312,7 @@ export const useCtfStore = create<CtfStoreState>()(
       activitySessions: initialProfileData?.activitySessions || [],
       currentProfileId: initialProfileId,
 
-      appBrand: 'rootvector',
+      appBrand: (!initialProfileData?.appBrand || initialProfileData?.appBrand === 'rootvector') ? 'specter' : initialProfileData.appBrand,
       activeTab: 'tracker',
       viewMode: 'kanban',
       selectedMachineId: null,
@@ -819,6 +843,9 @@ export const useCtfStore = create<CtfStoreState>()(
       storage: createJSONStorage(() => localStorage),
       migrate: (persistedState: any) => {
         const state = persistedState || {};
+        if (!state.appBrand || state.appBrand === 'rootvector') {
+          state.appBrand = 'specter';
+        }
         return {
           ...state,
           machines: mergeMachinesWithCatalog(state.machines),
@@ -826,6 +853,9 @@ export const useCtfStore = create<CtfStoreState>()(
       },
       merge: (persistedState: any, currentState: CtfStoreState) => {
         const persisted = (persistedState as Partial<CtfStoreState>) || {};
+        if (!persisted.appBrand || persisted.appBrand === 'rootvector') {
+          persisted.appBrand = 'specter';
+        }
         return {
           ...currentState,
           ...persisted,
@@ -834,6 +864,7 @@ export const useCtfStore = create<CtfStoreState>()(
       },
       partialize: (state) => ({
         currentProfileId: state.currentProfileId,
+        appBrand: state.appBrand,
         machines: state.machines,
         activeTargetId: state.activeTargetId,
         globalVars: state.globalVars,

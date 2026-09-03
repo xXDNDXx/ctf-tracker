@@ -16,7 +16,10 @@ import {
   FolderGit2,
   ChevronRight,
   Target,
-  Zap
+  Zap,
+  ArrowUpDown,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { useCtfStore, BoxVectorCategory, mergeMachinesWithCatalog } from '../../store/useCtfStore';
 import { playCyberSound, triggerRootCelebration } from '../../utils/helpers';
@@ -66,9 +69,9 @@ export const TrackerView: React.FC = () => {
   // Deferred search query for 120 FPS typing responsiveness
   const deferredQuery = React.useDeferredValue(filters.searchQuery);
 
-  // Filter machines based on active filter state
+  // Filter and sort machines based on active filter state
   const filteredMachines = useMemo(() => {
-    return machines.filter((m) => {
+    const list = machines.filter((m) => {
       // Search query
       if (deferredQuery) {
         const q = deferredQuery.toLowerCase();
@@ -106,26 +109,17 @@ export const TrackerView: React.FC = () => {
       if (filters.selectedCategory && filters.selectedCategory !== 'ALL') {
         const cat = filters.selectedCategory;
         if (cat === 'Web') {
-          const webKeywords = [
-            'web', 'http', 'iis', 'apache', 'nginx', 'php', 'sqli', 'sql', 'ssti', 
-            'wordpress', 'drupal', 'joomla', 'tomcat', 'jenkins', 'nodejs', 'flask',
-            'api', 'graphql', 'lfi', 'rfi', 'deserialization', 'xss', 'command injection'
-          ];
-          const hasWebTag = m.tags.some(t => webKeywords.includes(t.toLowerCase()));
-          const hasWebPort = m.openPorts && (m.openPorts.includes(80) || m.openPorts.includes(443) || m.openPorts.includes(8080));
-          if (!hasWebTag && !hasWebPort) return false;
+          const webTags = ['web', 'sqli', 'xss', 'rce', 'lfi', 'ssti', 'csrf', 'idor', 'deserialization', 'upload', 'ssrf'];
+          if (!m.tags.some(t => webTags.includes(t.toLowerCase()))) return false;
         } else if (cat === 'Linux PrivEsc') {
-          if (m.os !== 'Linux') return false;
-          const privTags = ['suid', 'sudo', 'kernel', 'cron', 'capabilities', 'privesc', 'nfs', 'path'];
-          if (!m.tags.some(t => privTags.includes(t.toLowerCase()))) return false;
+          const lpeTags = ['sudo', 'cron', 'suid', 'kernel', 'wildcard', 'path hijack', 'capabilities', 'docker', 'lxd', 'privesc'];
+          if (m.os !== 'Linux' || !m.tags.some(t => lpeTags.includes(t.toLowerCase()))) return false;
         } else if (cat === 'Windows PrivEsc') {
-          if (m.os !== 'Windows' && m.os !== 'Active Directory') return false;
-          const winTags = ['potato', 'seimpersonate', 'unquoted', 'token', 'privesc', 'service', 'uac', 'dll', 'registry', 'sam', 'lsass'];
-          if (!m.tags.some(t => winTags.includes(t.toLowerCase()))) return false;
+          const wpeTags = ['token', 'impersonation', 'seimpersonate', 'potato', 'alwaysinstallelevated', 'unquoted', 'dll hijacking', 'uac', 'service'];
+          if (m.os !== 'Windows' || !m.tags.some(t => wpeTags.includes(t.toLowerCase()))) return false;
         } else if (cat === 'Active Directory') {
-          if (m.os !== 'Active Directory' && !m.tags.some(t => ['kerberos', 'ad', 'ldap', 'domain', 'bloodhound', 'active directory', 'gpo', 'adcs'].includes(t.toLowerCase()))) {
-            return false;
-          }
+          const adTags = ['active directory', 'kerberos', 'roasting', 'bloodhound', 'as-rep', 'kerberoast', 'gpo', 'ldap', 'ad'];
+          if (m.os !== 'Active Directory' && !m.tags.some(t => adTags.includes(t.toLowerCase()))) return false;
         } else if (cat === 'Binary / Pwn') {
           const bofTags = ['bof', 'buffer overflow', 'pwn', 'binary', 'overflow', 'rop', 'format string'];
           if (!m.tags.some(t => bofTags.includes(t.toLowerCase()))) return false;
@@ -148,6 +142,38 @@ export const TrackerView: React.FC = () => {
 
       return true;
     });
+
+    // Apply Sorting
+    if (filters.sortBy && filters.sortBy !== 'default') {
+      const difficultyWeights: Record<string, number> = {
+        'Very Easy': 1,
+        'Easy': 2,
+        'Medium': 3,
+        'Hard': 4,
+        'Insane': 5,
+      };
+
+      list.sort((a, b) => {
+        let cmp = 0;
+        if (filters.sortBy === 'difficulty') {
+          const wa = difficultyWeights[a.difficulty] || 0;
+          const wb = difficultyWeights[b.difficulty] || 0;
+          cmp = wa - wb;
+        } else if (filters.sortBy === 'name') {
+          cmp = a.name.localeCompare(b.name);
+        } else if (filters.sortBy === 'ip') {
+          cmp = a.ip.localeCompare(b.ip, undefined, { numeric: true });
+        } else if (filters.sortBy === 'recent') {
+          const dateA = a.rootPwnedAt || a.userPwnedAt || a.updatedAt || a.createdAt || '';
+          const dateB = b.rootPwnedAt || b.userPwnedAt || b.updatedAt || b.createdAt || '';
+          cmp = dateB.localeCompare(dateA);
+        }
+
+        return filters.sortDirection === 'desc' ? -cmp : cmp;
+      });
+    }
+
+    return list;
   }, [
     machines, 
     deferredQuery, 
@@ -157,7 +183,9 @@ export const TrackerView: React.FC = () => {
     filters.selectedCategory,
     filters.selectedTrack,
     filters.selectedCert, 
-    filters.selectedTags
+    filters.selectedTags,
+    filters.sortBy,
+    filters.sortDirection
   ]);
 
   const platformList: (Platform | 'ALL')[] = ['ALL', 'HTB', 'THM', 'VulnHub', 'ProLabs', 'Custom'];
@@ -306,22 +334,47 @@ export const TrackerView: React.FC = () => {
             })}
           </div>
 
-          {/* Direct 1-Click Sync 45 HTB Solves */}
-          <button
-            onClick={() => {
-              const current = useCtfStore.getState().machines;
-              const merged = mergeMachinesWithCatalog(current);
-              useCtfStore.setState({ machines: merged });
-              useCtfStore.getState().saveProfileData();
-              playCyberSound('root');
-              triggerRootCelebration();
-            }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyber-amber/20 text-cyber-amber border border-cyber-amber/50 hover:bg-cyber-amber hover:text-black font-bold text-xs transition-all shadow-[0_0_12px_rgba(245,158,11,0.25)] whitespace-nowrap group"
-            title="Force reload all 45 HTB solved targets into completed column"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-cyber-amber group-hover:scale-110 transition-transform" />
-            <span>⚡ Sync 45 HTB Solves</span>
-          </button>
+          {/* Sorting Controls */}
+          <div className="flex items-center gap-1.5 bg-cyber-bg px-2.5 py-1 rounded-lg border border-cyber-border text-xs">
+            <ArrowUpDown className="w-3.5 h-3.5 text-cyber-cyan" />
+            <span className="text-[10px] uppercase font-bold text-cyber-muted">Sort:</span>
+            <select
+              value={filters.sortBy || 'default'}
+              onChange={(e) => setFilters({ sortBy: e.target.value as any })}
+              className="bg-transparent text-white text-xs font-semibold focus:outline-none cursor-pointer"
+            >
+              <option value="default" className="bg-cyber-card text-white">Default Order</option>
+              <option value="difficulty" className="bg-cyber-card text-white">Difficulty (Easy → Hard)</option>
+              <option value="name" className="bg-cyber-card text-white">Target Name (A-Z)</option>
+              <option value="ip" className="bg-cyber-card text-white">IP Address</option>
+              <option value="recent" className="bg-cyber-card text-white">Recently Solved</option>
+            </select>
+            {filters.sortBy && filters.sortBy !== 'default' && (
+              <button
+                onClick={() => setFilters({ sortDirection: filters.sortDirection === 'asc' ? 'desc' : 'asc' })}
+                className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-cyber-card hover:bg-cyber-card/80 text-cyber-cyan border border-cyber-cyan/30"
+                title={`Sort ${filters.sortDirection === 'asc' ? 'Ascending' : 'Descending'} (Click to toggle)`}
+              >
+                {filters.sortDirection === 'asc' ? 'ASC ↑' : 'DESC ↓'}
+              </button>
+            )}
+          </div>
+
+          {/* Kanban Hide Empty Lanes Toggle */}
+          {viewMode === 'kanban' && (
+            <button
+              onClick={() => setFilters({ hideEmptyLanes: !filters.hideEmptyLanes })}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition-all whitespace-nowrap ${
+                filters.hideEmptyLanes
+                  ? 'bg-cyber-amber/15 text-cyber-amber border-cyber-amber/50 shadow-glow-amber/20'
+                  : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-white'
+              }`}
+              title="Toggle collapsing empty Kanban columns"
+            >
+              {filters.hideEmptyLanes ? <EyeOff className="w-3.5 h-3.5 text-cyber-amber" /> : <Eye className="w-3.5 h-3.5 text-cyber-muted" />}
+              <span>{filters.hideEmptyLanes ? 'Empty Lanes Hidden' : 'Hide Empty Lanes'}</span>
+            </button>
+          )}
 
           {/* Tactical Recon Automation Launcher */}
           <button

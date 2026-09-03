@@ -26,8 +26,8 @@ import { playCyberSound, formatSeconds, triggerRootCelebration, safeCopyToClipbo
 import { UserMenu } from '../auth/UserMenu';
 
 const BRAND_THEMES = [
+  { id: 'specter', namePrefix: 'SPECTER', nameSuffix: 'CTF', suffixColor: 'text-cyber-cyan', tagline: 'Tactical Cyber Operations Suite' },
   { id: 'rootvector', namePrefix: 'ROOT', nameSuffix: 'VECTOR', suffixColor: 'text-cyber-emerald', tagline: 'CTF & Lab Operations Tracker' },
-  { id: 'specter', namePrefix: 'SPECTER', nameSuffix: 'CTF', suffixColor: 'text-cyber-cyan', tagline: 'Offensive Cyber Command Suite' },
   { id: 'hextracker', namePrefix: 'HEX', nameSuffix: 'TRACKER', suffixColor: 'text-cyber-purple', tagline: 'Tactical Pwn Tracker // v2.0' },
   { id: 'zeroday', namePrefix: '0DAY', nameSuffix: 'LOGS', suffixColor: 'text-cyber-crimson', tagline: 'Red Team Attack Lifecycle Tracker' },
 ];

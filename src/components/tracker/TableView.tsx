@@ -40,8 +40,10 @@ export const TableView: React.FC<TableViewProps> = ({ filteredMachines }) => {
 
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortAsc, setSortAsc] = useState(true);
+  const [customColumnSorted, setCustomColumnSorted] = useState(false);
 
   const handleSort = (field: SortField) => {
+    setCustomColumnSorted(true);
     if (sortField === field) {
       setSortAsc(!sortAsc);
     } else {
@@ -51,6 +53,9 @@ export const TableView: React.FC<TableViewProps> = ({ filteredMachines }) => {
   };
 
   const sortedMachines = useMemo(() => {
+    if (!customColumnSorted) {
+      return filteredMachines;
+    }
     const list = [...filteredMachines];
     list.sort((a, b) => {
       let valA = a[sortField];
@@ -64,7 +69,7 @@ export const TableView: React.FC<TableViewProps> = ({ filteredMachines }) => {
       return 0;
     });
     return list;
-  }, [filteredMachines, sortField, sortAsc]);
+  }, [filteredMachines, sortField, sortAsc, customColumnSorted]);
 
   const [visibleRows, setVisibleRows] = useState(50);
 
