@@ -59,4 +59,32 @@ iconFiles.forEach(file => {
   }
 });
 console.log('✓ Mirrored all icon and favicon variants across root, dist, and docs');
+
+// 6. Guarantee root index.html has the Universal GitHub Pages Resolver
+const rootIndex = path.join(rootDir, 'index.html');
+if (fs.existsSync(rootIndex)) {
+  let rootHtml = fs.readFileSync(rootIndex, 'utf8');
+  const resolverMarker = '<!-- Universal GitHub Pages Production Bundle Resolver -->';
+  if (!rootHtml.includes(resolverMarker)) {
+    const resolverSnippet = `    ${resolverMarker}
+    <script>
+      (function() {
+        if (window.location.hostname.includes('github.io')) {
+          if (!window.location.pathname.includes('/docs/')) {
+            var p = window.location.pathname;
+            if (!p.endsWith('/')) p += '/';
+            window.location.replace(p + 'docs/' + window.location.search + window.location.hash);
+          }
+        }
+      })();
+    </script>
+    <noscript>
+      <meta http-equiv="refresh" content="0; url=./docs/" />
+    </noscript>\n`;
+    rootHtml = rootHtml.replace('<meta charset="UTF-8" />\n', '<meta charset="UTF-8" />\n' + resolverSnippet);
+    fs.writeFileSync(rootIndex, rootHtml, 'utf8');
+    console.log('✓ Injected Universal GitHub Pages Resolver into root index.html');
+  }
+}
+
 console.log('✓ Post-build GitHub Pages deployment preparation complete.');
