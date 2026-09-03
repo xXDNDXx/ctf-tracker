@@ -89,6 +89,17 @@ export const MachineDetailModal: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedMachineId, setSelectedMachineId]);
 
+  // Prevent background body scroll when modal is open
+  useEffect(() => {
+    if (selectedMachineId) {
+      const orig = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = orig;
+      };
+    }
+  }, [selectedMachineId]);
+
   if (!selectedMachineId || !machine) return null;
 
   const handleCopy = async (text: string, type: 'user' | 'root') => {
@@ -134,17 +145,6 @@ export const MachineDetailModal: React.FC = () => {
     setSelectedMachineId(null);
     setActiveTab('writeup');
   };
-
-  // Prevent background body scroll when modal is open
-  useEffect(() => {
-    if (selectedMachineId) {
-      const orig = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
-      return () => {
-        document.body.style.overflow = orig;
-      };
-    }
-  }, [selectedMachineId]);
 
   const activeBrand = BRAND_THEMES.find((b) => b.id === appBrand) || BRAND_THEMES[0];
 
