@@ -689,15 +689,7 @@ export const useCtfStore = create<CtfStoreState>()(
       tickTimer: () => {
         set((state) => {
           if (!state.isTimerRunning || !state.activeTargetId) return {};
-          const nextSecs = state.activeTimerSeconds + 1;
-          // Periodically sync to machines array every 10 seconds for persistence without 1Hz re-render storm
-          if (nextSecs % 10 === 0) {
-            const updated = state.machines.map((m) =>
-              m.id === state.activeTargetId ? { ...m, timeSpentSeconds: nextSecs } : m
-            );
-            return { activeTimerSeconds: nextSecs, machines: updated };
-          }
-          return { activeTimerSeconds: nextSecs };
+          return { activeTimerSeconds: state.activeTimerSeconds + 1 };
         });
       },
 
@@ -746,10 +738,16 @@ export const useCtfStore = create<CtfStoreState>()(
 
       exportBackup: () => {
         const state = get();
+        let exportMachines = state.machines;
+        if (state.activeTargetId && state.activeTimerSeconds > 0) {
+          exportMachines = state.machines.map((m) =>
+            m.id === state.activeTargetId ? { ...m, timeSpentSeconds: state.activeTimerSeconds } : m
+          );
+        }
         const exportData = {
           version: '2.0.0',
           exportedAt: new Date().toISOString(),
-          machines: state.machines,
+          machines: exportMachines,
           globalVars: state.globalVars,
           cheatsheets: state.cheatsheets,
           activitySessions: state.activitySessions,
@@ -827,14 +825,21 @@ export const useCtfStore = create<CtfStoreState>()(
       },
 
       saveProfileData: (profileId?: string) => {
-        const targetId = profileId || get().currentProfileId || 'guest';
+        const state = get();
+        const targetId = profileId || state.currentProfileId || 'guest';
         const targetKey = getProfileStorageKey(targetId);
+        let persistedMachines = state.machines;
+        if (state.activeTargetId && state.activeTimerSeconds > 0) {
+          persistedMachines = state.machines.map((m) =>
+            m.id === state.activeTargetId ? { ...m, timeSpentSeconds: state.activeTimerSeconds } : m
+          );
+        }
         const payload = {
-          machines: get().machines,
-          activeTargetId: get().activeTargetId,
-          globalVars: get().globalVars,
-          cheatsheets: get().cheatsheets,
-          activitySessions: get().activitySessions,
+          machines: persistedMachines,
+          activeTargetId: state.activeTargetId,
+          globalVars: state.globalVars,
+          cheatsheets: state.cheatsheets,
+          activitySessions: state.activitySessions,
         };
         try {
           localStorage.setItem(targetKey, JSON.stringify(payload));
@@ -920,8 +925,15 @@ const flushProfileSave = () => {
   if (!state.currentProfileId) return;
 
   const targetKey = getProfileStorageKey(state.currentProfileId);
+  let persistedMachines = state.machines;
+  if (state.activeTargetId && state.activeTimerSeconds > 0) {
+    persistedMachines = state.machines.map((m) =>
+      m.id === state.activeTargetId ? { ...m, timeSpentSeconds: state.activeTimerSeconds } : m
+    );
+  }
+
   const payload = {
-    machines: state.machines,
+    machines: persistedMachines,
     activeTargetId: state.activeTargetId,
     globalVars: state.globalVars,
     cheatsheets: state.cheatsheets,

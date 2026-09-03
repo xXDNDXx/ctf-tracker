@@ -24,16 +24,42 @@ import { PentestReportModal } from './components/writeup/PentestReportModal';
 import { OperatorDossierModal } from './components/common/OperatorDossierModal';
 import { useCtfStore, mergeMachinesWithCatalog } from './store/useCtfStore';
 
+const ParallaxBackdrop: React.FC = () => {
+  const { scrollProgress } = useWorkspaceScroll();
+  return (
+    <div 
+      className="absolute inset-0 pointer-events-none opacity-[0.04] will-change-transform transform-gpu"
+      style={{
+        backgroundImage: `linear-gradient(#06B6D4 1px, transparent 1px), linear-gradient(90deg, #06B6D4 1px, transparent 1px)`,
+        backgroundSize: '36px 36px',
+        transform: `translate3d(0, ${Math.round(scrollProgress * -60)}px, 0)`,
+      }}
+    />
+  );
+};
+
+const TimerController: React.FC = () => {
+  const isTimerRunning = useCtfStore((s) => s.isTimerRunning);
+  const tickTimer = useCtfStore((s) => s.tickTimer);
+
+  useEffect(() => {
+    if (!isTimerRunning) return;
+    const interval = setInterval(() => {
+      tickTimer();
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isTimerRunning, tickTimer]);
+
+  return null;
+};
+
 const MainAppContent: React.FC = () => {
-  const { setScrollElement, scrollProgress } = useWorkspaceScroll();
+  const { setScrollElement } = useWorkspaceScroll();
   const location = useLocation();
   const setActiveTab = useCtfStore((s) => s.setActiveTab);
-  const machines = useCtfStore((s) => s.machines);
   const reportMachineId = useCtfStore((s) => s.reportMachineId);
   const setReportMachineId = useCtfStore((s) => s.setReportMachineId);
   const uiScale = useCtfStore((s) => s.uiScale || 'normal');
-
-  const reportMachine = reportMachineId ? machines.find((m) => m.id === reportMachineId) || null : null;
 
   // Handle global UI scale (Normal: 100%, Large: 110%, Huge: 122%)
   useEffect(() => {
@@ -101,9 +127,12 @@ const MainAppContent: React.FC = () => {
       {/* Deploy Target Modal */}
       <NewMachineModal />
 
+      {/* Background Timer Controller (Zero-Lag 1Hz Clock Isolation) */}
+      <TimerController />
+
       {/* Executive Pentest Pre-Report Modal */}
       <PentestReportModal
-        machine={reportMachine}
+        machineId={reportMachineId}
         isOpen={Boolean(reportMachineId)}
         onClose={() => setReportMachineId(null)}
       />
@@ -121,15 +150,8 @@ const MainAppContent: React.FC = () => {
 
         {/* Dynamic Main Stage View with Cyber Grid Backdrop */}
         <main ref={setScrollElement} className="flex-1 overflow-y-auto p-3 pb-24 sm:p-4 md:p-6 md:pb-6 relative bg-cyber-bg">
-          {/* Subtle Cyber Grid Background with Scroll Parallax Drift */}
-          <div 
-            className="absolute inset-0 pointer-events-none opacity-[0.04] transition-transform duration-75"
-            style={{
-              backgroundImage: `linear-gradient(#06B6D4 1px, transparent 1px), linear-gradient(90deg, #06B6D4 1px, transparent 1px)`,
-              backgroundSize: '36px 36px',
-              transform: `translateY(${Math.round(scrollProgress * -60)}px)`,
-            }}
-          />
+          {/* Isolated Parallax Backdrop (Zero Root Re-Renders on Scroll) */}
+          <ParallaxBackdrop />
 
           <AnimatePresence mode="wait">
             <motion.div

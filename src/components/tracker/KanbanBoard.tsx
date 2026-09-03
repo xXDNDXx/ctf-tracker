@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Machine, PipelineStatus } from '../../types';
 import { useCtfStore } from '../../store/useCtfStore';
+import { useShallow } from 'zustand/react/shallow';
 import { formatDurationHuman, playCyberSound, triggerRootCelebration } from '../../utils/helpers';
 import { PlatformBadge } from '../common/PlatformBadge';
 import { OsBadge } from '../common/OsBadge';
@@ -72,6 +73,174 @@ const LANES: LaneConfig[] = [
   },
 ];
 
+interface KanbanCardProps {
+  machine: Machine;
+  isActiveTarget: boolean;
+  onSelect: (id: string) => void;
+  onSetTarget: (e: React.MouseEvent, id: string) => void;
+  onAdvance: (e: React.MouseEvent, m: Machine, nextStatus: PipelineStatus) => void;
+  onRetreat: (e: React.MouseEvent, m: Machine, prevStatus: PipelineStatus) => void;
+  onOpenReport: (id: string) => void;
+  prevLane?: PipelineStatus;
+  nextLane?: PipelineStatus;
+}
+
+const KanbanCard = React.memo<KanbanCardProps>(({
+  machine: m,
+  isActiveTarget,
+  onSelect,
+  onSetTarget,
+  onAdvance,
+  onRetreat,
+  onOpenReport,
+  prevLane,
+  nextLane,
+}) => {
+  const hasUser = Boolean(m.userPwnedAt || m.userFlag);
+  const hasRoot = Boolean(m.rootPwnedAt || m.rootFlag);
+
+  return (
+    <div
+      onClick={() => onSelect(m.id)}
+      style={{ contentVisibility: 'auto', containIntrinsicSize: '0 160px' }}
+      className={`group relative p-3 rounded-lg border bg-cyber-card hover:bg-cyber-cardHover transition-all duration-150 hover:-translate-y-0.5 cursor-pointer shadow-sm transform-gpu will-change-transform ${
+        isActiveTarget
+          ? 'border-cyber-emerald shadow-glow-emerald/30 ring-1 ring-cyber-emerald/40'
+          : 'border-cyber-border hover:border-cyber-cyan/50 hover:shadow-glow-cyan/20'
+      }`}
+    >
+      {/* Top Badges */}
+      <div className="flex items-center justify-between gap-1.5 mb-2">
+        <PlatformBadge platform={m.platform} size="sm" />
+
+        <div className="flex items-center gap-1.5">
+          <OsBadge os={m.os} size="sm" />
+          <span
+            className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider ${
+              m.difficulty === 'Easy' ? 'bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30' :
+              m.difficulty === 'Medium' ? 'bg-cyber-amber/10 text-cyber-amber border border-cyber-amber/30' :
+              m.difficulty === 'Hard' ? 'bg-cyber-crimson/10 text-cyber-crimson border border-cyber-crimson/30' :
+              'bg-purple-950/40 text-purple-400 border border-purple-800/50'
+            }`}
+          >
+            {m.difficulty}
+          </span>
+        </div>
+      </div>
+
+      {/* Machine Name & IP */}
+      <div className="flex items-start justify-between gap-1.5">
+        <div>
+          <div className="font-bold text-white text-base group-hover:text-cyber-cyan transition-colors leading-snug">
+            {m.name}
+          </div>
+          <EditableIpBadge machineId={m.id} initialIp={m.ip} size="xs" className="mt-0.5" />
+        </div>
+
+        {/* Active Target Engage Button */}
+        <button
+          onClick={(e) => onSetTarget(e, m.id)}
+          className={`p-1.5 rounded transition-all hover:scale-110 active:scale-95 ${
+            isActiveTarget
+              ? 'text-cyber-emerald bg-cyber-emerald/10 border border-cyber-emerald/40 shadow-glow-emerald/20'
+              : 'text-cyber-muted hover:text-white bg-cyber-bg hover:bg-cyber-card border border-cyber-border'
+          }`}
+          title={isActiveTarget ? 'Currently Engaged' : 'Engage Target & Start Timer'}
+        >
+          <Crosshair className={`w-4 h-4 ${isActiveTarget ? 'animate-spin-slow' : ''}`} />
+        </button>
+      </div>
+
+      {/* Flags & Time Spent Pill */}
+      <div className="flex items-center justify-between gap-2 mt-2.5 pt-2.5 border-t border-cyber-border/70 text-xs">
+        <div className="flex items-center gap-1.5">
+          <span
+            className={`flex items-center gap-1 px-2 py-0.5 rounded border text-[11px] font-bold ${
+              hasUser
+                ? 'bg-cyber-cyan/10 border-cyber-cyan/40 text-cyber-cyan'
+                : 'bg-cyber-bg border-cyber-border/60 text-cyber-muted'
+            }`}
+            title={hasUser ? 'User Flag Captured' : 'User Flag Pending'}
+          >
+            <Flag className="w-3 h-3" /> U
+          </span>
+          <span
+            className={`flex items-center gap-1 px-2 py-0.5 rounded border text-[11px] font-bold ${
+              hasRoot
+                ? 'bg-cyber-emerald/10 border-cyber-emerald/40 text-cyber-emerald'
+                : 'bg-cyber-bg border-cyber-border/60 text-cyber-muted'
+            }`}
+            title={hasRoot ? 'Root Flag Captured' : 'Root Flag Pending'}
+          >
+            <Flag className="w-3 h-3" /> R
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2 text-cyber-muted">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenReport(m.id);
+            }}
+            className="p-1 rounded bg-cyber-bg hover:bg-purple-950/60 border border-cyber-border hover:border-purple-600 text-cyber-muted hover:text-purple-300 transition-colors"
+            title="Open Pentest Pre-Report"
+          >
+            <FileText className="w-3 h-3" />
+          </button>
+          <div className="flex items-center gap-1">
+            <Clock className="w-3 h-3" />
+            <span>{formatDurationHuman(m.timeSpentSeconds)}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Certifications */}
+      {m.certifications.length > 0 && (
+        <div className="flex items-center gap-1 mt-2">
+          {m.certifications.map((cert) => (
+            <span
+              key={cert}
+              className="text-[9px] px-1.5 py-0.2 rounded bg-cyber-purple/10 border border-cyber-purple/30 text-cyber-purple font-bold"
+            >
+              {cert}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Quick Move Across Lanes Action Footer */}
+      <div className="flex items-center justify-between mt-2.5 pt-1.5 border-t border-dashed border-cyber-border/60">
+        {prevLane ? (
+          <button
+            onClick={(e) => onRetreat(e, m, prevLane)}
+            className="flex items-center gap-0.5 text-[10px] text-cyber-muted hover:text-white hover:-translate-x-0.5 transition-all"
+            title="Move back"
+          >
+            <ChevronLeft className="w-3.5 h-3.5" /> Back
+          </button>
+        ) : <div />}
+
+        {nextLane ? (
+          <button
+            onClick={(e) => onAdvance(e, m, nextLane)}
+            className="flex items-center gap-0.5 text-[10px] text-cyber-cyan hover:underline hover:translate-x-0.5 transition-all font-semibold ml-auto"
+            title="Advance stage"
+          >
+            Advance <ChevronRight className="w-3.5 h-3.5" />
+          </button>
+        ) : <div />}
+      </div>
+    </div>
+  );
+}, (prev, next) => {
+  return (
+    prev.machine === next.machine &&
+    prev.isActiveTarget === next.isActiveTarget &&
+    prev.prevLane === next.prevLane &&
+    prev.nextLane === next.nextLane
+  );
+});
+
 export const KanbanBoard: React.FC<KanbanBoardProps> = ({ filteredMachines }) => {
   const {
     setSelectedMachineId,
@@ -81,17 +250,23 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ filteredMachines }) =>
     startTimer,
     soundEnabled,
     setReportMachineId,
-    filters,
-  } = useCtfStore();
+    hideEmptyLanes,
+  } = useCtfStore(
+    useShallow((s) => ({
+      setSelectedMachineId: s.setSelectedMachineId,
+      updateMachineStatus: s.updateMachineStatus,
+      activeTargetId: s.activeTargetId,
+      setActiveTarget: s.setActiveTarget,
+      startTimer: s.startTimer,
+      soundEnabled: s.soundEnabled,
+      setReportMachineId: s.setReportMachineId,
+      hideEmptyLanes: s.filters.hideEmptyLanes,
+    }))
+  );
 
   const [laneLimits, setLaneLimits] = React.useState<Record<string, number>>({});
 
-  // Reset limits when filters change
-  React.useEffect(() => {
-    setLaneLimits({});
-  }, [filters.searchQuery, filters.selectedPlatform, filters.selectedDifficulty, filters.selectedOs, filters.selectedTrack]);
-
-  const handleAdvance = (e: React.MouseEvent, m: Machine, nextStatus: PipelineStatus) => {
+  const handleAdvance = React.useCallback((e: React.MouseEvent, m: Machine, nextStatus: PipelineStatus) => {
     e.stopPropagation();
     updateMachineStatus(m.id, nextStatus);
     if (nextStatus === 'root' || nextStatus === 'completed') {
@@ -100,26 +275,26 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ filteredMachines }) =>
     } else {
       if (soundEnabled) playCyberSound('toggle');
     }
-  };
+  }, [updateMachineStatus, soundEnabled]);
 
-  const handleRetreat = (e: React.MouseEvent, m: Machine, prevStatus: PipelineStatus) => {
+  const handleRetreat = React.useCallback((e: React.MouseEvent, m: Machine, prevStatus: PipelineStatus) => {
     e.stopPropagation();
     updateMachineStatus(m.id, prevStatus);
     if (soundEnabled) playCyberSound('toggle');
-  };
+  }, [updateMachineStatus, soundEnabled]);
 
-  const handleSetTarget = (e: React.MouseEvent, machineId: string) => {
+  const handleSetTarget = React.useCallback((e: React.MouseEvent, machineId: string) => {
     e.stopPropagation();
     setActiveTarget(machineId);
     startTimer();
     if (soundEnabled) playCyberSound('timer');
-  };
+  }, [setActiveTarget, startTimer, soundEnabled]);
 
   const visibleLanes = React.useMemo(() => {
-    if (!filters.hideEmptyLanes) return LANES;
+    if (!hideEmptyLanes) return LANES;
     const populated = LANES.filter((lane) => filteredMachines.some((m) => m.status === lane.id));
     return populated.length > 0 ? populated : LANES;
-  }, [filters.hideEmptyLanes, filteredMachines]);
+  }, [hideEmptyLanes, filteredMachines]);
 
   const gridColsClass = React.useMemo(() => {
     const count = visibleLanes.length;
@@ -188,141 +363,19 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ filteredMachines }) =>
             >
               {displayedMachines.map((m) => {
                 const isActiveTarget = activeTargetId === m.id;
-                const hasUser = Boolean(m.userPwnedAt || m.userFlag);
-                const hasRoot = Boolean(m.rootPwnedAt || m.rootFlag);
-
                 return (
-                  <div
+                  <KanbanCard
                     key={m.id}
-                    onClick={() => setSelectedMachineId(m.id)}
-                    className={`group relative p-3 rounded-lg border bg-cyber-card hover:bg-cyber-cardHover transition-all duration-150 hover:-translate-y-0.5 cursor-pointer shadow-sm ${
-                      isActiveTarget
-                        ? 'border-cyber-emerald shadow-glow-emerald/30 ring-1 ring-cyber-emerald/40'
-                        : 'border-cyber-border hover:border-cyber-cyan/50 hover:shadow-glow-cyan/20'
-                    }`}
-                  >
-                    {/* Top Badges */}
-                    <div className="flex items-center justify-between gap-1.5 mb-2">
-                      <PlatformBadge platform={m.platform} size="sm" />
-
-                      <div className="flex items-center gap-1.5">
-                        <OsBadge os={m.os} size="sm" />
-                        <span
-                          className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider ${
-                            m.difficulty === 'Easy' ? 'bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30' :
-                            m.difficulty === 'Medium' ? 'bg-cyber-amber/10 text-cyber-amber border border-cyber-amber/30' :
-                            m.difficulty === 'Hard' ? 'bg-cyber-crimson/10 text-cyber-crimson border border-cyber-crimson/30' :
-                            'bg-purple-950/40 text-purple-400 border border-purple-800/50'
-                          }`}
-                        >
-                          {m.difficulty}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Machine Name & IP */}
-                    <div className="flex items-start justify-between gap-1.5">
-                      <div>
-                        <div className="font-bold text-white text-base group-hover:text-cyber-cyan transition-colors leading-snug">
-                          {m.name}
-                        </div>
-                        <EditableIpBadge machineId={m.id} initialIp={m.ip} size="xs" className="mt-0.5" />
-                      </div>
-
-                      {/* Active Target Engage Button */}
-                      <button
-                        onClick={(e) => handleSetTarget(e, m.id)}
-                        className={`p-1.5 rounded transition-all hover:scale-110 active:scale-95 ${
-                          isActiveTarget
-                            ? 'text-cyber-emerald bg-cyber-emerald/10 border border-cyber-emerald/40 shadow-glow-emerald/20'
-                            : 'text-cyber-muted hover:text-white bg-cyber-bg hover:bg-cyber-card border border-cyber-border'
-                        }`}
-                        title={isActiveTarget ? 'Currently Engaged' : 'Engage Target & Start Timer'}
-                      >
-                        <Crosshair className={`w-4 h-4 ${isActiveTarget ? 'animate-spin-slow' : ''}`} />
-                      </button>
-                    </div>
-
-                    {/* Flags & Time Spent Pill */}
-                    <div className="flex items-center justify-between gap-2 mt-2.5 pt-2.5 border-t border-cyber-border/70 text-xs">
-                      <div className="flex items-center gap-1.5">
-                        <span
-                          className={`flex items-center gap-1 px-2 py-0.5 rounded border text-[11px] font-bold ${
-                            hasUser
-                              ? 'bg-cyber-cyan/10 border-cyber-cyan/40 text-cyber-cyan'
-                              : 'bg-cyber-bg border-cyber-border/60 text-cyber-muted'
-                          }`}
-                          title={hasUser ? 'User Flag Captured' : 'User Flag Pending'}
-                        >
-                          <Flag className="w-3 h-3" /> U
-                        </span>
-                        <span
-                          className={`flex items-center gap-1 px-2 py-0.5 rounded border text-[11px] font-bold ${
-                            hasRoot
-                              ? 'bg-cyber-emerald/10 border-cyber-emerald/40 text-cyber-emerald'
-                              : 'bg-cyber-bg border-cyber-border/60 text-cyber-muted'
-                          }`}
-                          title={hasRoot ? 'Root Flag Captured' : 'Root Flag Pending'}
-                        >
-                          <Flag className="w-3 h-3" /> R
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-2 text-cyber-muted">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setReportMachineId(m.id);
-                          }}
-                          className="p-1 rounded bg-cyber-bg hover:bg-purple-950/60 border border-cyber-border hover:border-purple-600 text-cyber-muted hover:text-purple-300 transition-colors"
-                          title="Open Pentest Pre-Report"
-                        >
-                          <FileText className="w-3 h-3" />
-                        </button>
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          <span>{formatDurationHuman(m.timeSpentSeconds)}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Certifications */}
-                    {m.certifications.length > 0 && (
-                      <div className="flex items-center gap-1 mt-2">
-                        {m.certifications.map((cert) => (
-                          <span
-                            key={cert}
-                            className="text-[9px] px-1.5 py-0.2 rounded bg-cyber-purple/10 border border-cyber-purple/30 text-cyber-purple font-bold"
-                          >
-                            {cert}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Quick Move Across Lanes Action Footer */}
-                    <div className="flex items-center justify-between mt-2.5 pt-1.5 border-t border-dashed border-cyber-border/60">
-                      {prevLane ? (
-                        <button
-                          onClick={(e) => handleRetreat(e, m, prevLane)}
-                          className="flex items-center gap-0.5 text-[10px] text-cyber-muted hover:text-white hover:-translate-x-0.5 transition-all"
-                          title="Move back"
-                        >
-                          <ChevronLeft className="w-3.5 h-3.5" /> Back
-                        </button>
-                      ) : <div />}
-
-                      {nextLane ? (
-                        <button
-                          onClick={(e) => handleAdvance(e, m, nextLane)}
-                          className="flex items-center gap-0.5 text-[10px] text-cyber-cyan hover:underline hover:translate-x-0.5 transition-all font-semibold ml-auto"
-                          title="Advance stage"
-                        >
-                          Advance <ChevronRight className="w-3.5 h-3.5" />
-                        </button>
-                      ) : <div />}
-                    </div>
-                  </div>
+                    machine={m}
+                    isActiveTarget={isActiveTarget}
+                    prevLane={prevLane ?? undefined}
+                    nextLane={nextLane ?? undefined}
+                    onSelect={setSelectedMachineId}
+                    onSetTarget={handleSetTarget}
+                    onAdvance={handleAdvance}
+                    onRetreat={handleRetreat}
+                    onOpenReport={setReportMachineId}
+                  />
                 );
               })}
 

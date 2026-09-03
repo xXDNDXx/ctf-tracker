@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
 import { useCtfStore } from '../../store/useCtfStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import { 
@@ -13,12 +14,14 @@ import {
   Play, 
   Pause, 
   RotateCcw, 
+  Terminal, 
   Copy, 
   Check, 
-  Zap, 
-  Flag,
-  Server,
-  Sparkles,
+  Crosshair, 
+  Flag, 
+  Server, 
+  Sparkles, 
+  Zap,
   ZoomIn
 } from 'lucide-react';
 import { CyberLogo } from '../common/CyberLogo';
@@ -34,17 +37,88 @@ const BRAND_THEMES = [
   { id: 'zeroday', namePrefix: '0DAY', nameSuffix: 'LOGS', suffixColor: 'text-cyber-crimson', tagline: 'Red Team Attack Lifecycle Tracker' },
 ];
 
+const MissionStopwatchDisplay: React.FC = () => {
+  const activeTimerSeconds = useCtfStore((s) => s.activeTimerSeconds);
+  return (
+    <span className="text-[10px] text-cyber-emerald font-bold px-1 py-0.2 rounded bg-cyber-bg border border-cyber-emerald/30 font-mono">
+      {formatSeconds(activeTimerSeconds)}
+    </span>
+  );
+};
+
+const TargetSelectorDropdown: React.FC<{
+  onClose: () => void;
+  onSelect: (id: string) => void;
+  soundEnabled: boolean;
+}> = ({ onClose, onSelect, soundEnabled }) => {
+  const machines = useCtfStore((s) => s.machines);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filtered = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return machines.slice(0, 10);
+    return machines
+      .filter((m) => m.name.toLowerCase().includes(term) || m.ip.includes(term))
+      .slice(0, 10);
+  }, [machines, searchTerm]);
+
+  return (
+    <div 
+      className="absolute left-0 top-full mt-2 w-72 p-2 rounded-xl bg-cyber-card border border-cyber-border shadow-2xl z-50 font-mono text-xs space-y-1.5 backdrop-blur-md"
+      onMouseLeave={onClose}
+    >
+      <div className="text-[10px] text-cyber-muted uppercase px-1 font-bold flex items-center justify-between">
+        <span>ENGAGE MACHINE</span>
+        <span className="text-cyber-cyan">{machines.length} TARGETS</span>
+      </div>
+      <input
+        type="text"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Type box name or IP..."
+        className="w-full px-2.5 py-1.5 rounded bg-cyber-bg border border-cyber-border text-xs text-white placeholder-cyber-muted focus:outline-none focus:border-cyber-emerald"
+        autoFocus
+      />
+      <div className="max-h-56 overflow-y-auto space-y-1 scrollbar-thin">
+        {filtered.map((m) => (
+          <button
+            key={m.id}
+            onClick={() => {
+              onSelect(m.id);
+              onClose();
+              if (soundEnabled) playCyberSound('toggle');
+            }}
+            className="w-full p-1.5 rounded hover:bg-cyber-bg flex items-center justify-between text-left transition-colors text-xs"
+          >
+            <div className="flex items-center gap-1.5 truncate">
+              <PlatformIcon platform={m.platform} className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="font-bold text-white truncate">{m.name}</span>
+              <span className="text-[10px] text-cyber-muted">{m.ip}</span>
+            </div>
+            <span className={`text-[9px] px-1 py-0.2 rounded font-bold ${
+              m.status === 'root' || m.status === 'completed' ? 'text-cyber-emerald' :
+              m.status === 'foothold' ? 'text-cyber-amber' : 'text-cyber-muted'
+            }`}>
+              {m.status.toUpperCase()}
+            </span>
+          </button>
+        ))}
+        {filtered.length === 0 && (
+          <div className="text-center py-2 text-cyber-muted text-[10px]">No targets matching query</div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export const Header: React.FC = () => {
   const {
-    machines,
     activeTargetId,
     setActiveTarget,
-    activeTimerSeconds,
     isTimerRunning,
     startTimer,
     pauseTimer,
     resetTimer,
-    tickTimer,
     crtOverlay,
     toggleCrtOverlay,
     soundEnabled,
@@ -61,17 +135,44 @@ export const Header: React.FC = () => {
     setOperatorModalOpen,
     uiScale,
     cycleUiScale,
-  } = useCtfStore();
+  } = useCtfStore(
+    useShallow((s) => ({
+      activeTargetId: s.activeTargetId,
+      setActiveTarget: s.setActiveTarget,
+      isTimerRunning: s.isTimerRunning,
+      startTimer: s.startTimer,
+      pauseTimer: s.pauseTimer,
+      resetTimer: s.resetTimer,
+      crtOverlay: s.crtOverlay,
+      toggleCrtOverlay: s.toggleCrtOverlay,
+      soundEnabled: s.soundEnabled,
+      toggleSound: s.toggleSound,
+      globalVars: s.globalVars,
+      setGlobalVars: s.setGlobalVars,
+      appBrand: s.appBrand,
+      setAppBrand: s.setAppBrand,
+      updateMachine: s.updateMachine,
+      setCommandPaletteOpen: s.setCommandPaletteOpen,
+      setNewMachineModalOpen: s.setNewMachineModalOpen,
+      setBackupModalOpen: s.setBackupModalOpen,
+      setReconAutomationModalOpen: s.setReconAutomationModalOpen,
+      setOperatorModalOpen: s.setOperatorModalOpen,
+      uiScale: s.uiScale,
+      cycleUiScale: s.cycleUiScale,
+    }))
+  );
+
+  const activeMachine = useCtfStore((s) => 
+    s.activeTargetId ? s.machines.find((m) => m.id === s.activeTargetId) || null : null
+  );
 
   const { user } = useAuthStore();
 
   const [brandDropdownOpen, setBrandDropdownOpen] = useState(false);
   const [targetSelectorOpen, setTargetSelectorOpen] = useState(false);
-  const [targetSearchTerm, setTargetSearchTerm] = useState('');
   const [copiedTargetIp, setCopiedTargetIp] = useState(false);
   const [copiedVar, setCopiedVar] = useState<'lhost' | 'lport' | 'target' | null>(null);
 
-  const activeMachine = machines.find((m) => m.id === activeTargetId);
   const activeBrand = BRAND_THEMES.find((b) => b.id === (appBrand === 'rootvector' || !appBrand ? 'specter' : appBrand)) || BRAND_THEMES[0];
 
   useEffect(() => {
@@ -109,19 +210,6 @@ export const Header: React.FC = () => {
     if (soundEnabled) playCyberSound('copy');
     setTimeout(() => setCopiedTargetIp(false), 2000);
   };
-
-  // Timer ticker interval
-  useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
-    if (isTimerRunning) {
-      interval = setInterval(() => {
-        tickTimer();
-      }, 1000);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isTimerRunning, tickTimer]);
 
   const handleCopyVar = async (val: string, field: 'lhost' | 'lport' | 'target') => {
     if (!val) return;
@@ -374,9 +462,7 @@ export const Header: React.FC = () => {
 
               {/* Mission Stopwatch */}
               <div className="flex items-center gap-1 border-l border-cyber-border pl-1.5">
-                <span className="text-[10px] text-cyber-emerald font-bold px-1 py-0.2 rounded bg-cyber-bg border border-cyber-emerald/30">
-                  {formatSeconds(activeTimerSeconds)}
-                </span>
+                <MissionStopwatchDisplay />
                 {isTimerRunning ? (
                   <button
                     onClick={() => {
@@ -434,52 +520,11 @@ export const Header: React.FC = () => {
 
               {/* Target Selector Dropdown */}
               {targetSelectorOpen && (
-                <div 
-                  className="absolute left-0 top-full mt-2 w-72 p-2 rounded-xl bg-cyber-card border border-cyber-border shadow-2xl z-50 font-mono text-xs space-y-1.5 backdrop-blur-md"
-                  onMouseLeave={() => setTargetSelectorOpen(false)}
-                >
-                  <div className="text-[10px] text-cyber-muted uppercase px-1 font-bold flex items-center justify-between">
-                    <span>ENGAGE MACHINE</span>
-                    <span className="text-cyber-cyan">{machines.length} TARGETS</span>
-                  </div>
-                  <input
-                    type="text"
-                    value={targetSearchTerm}
-                    onChange={(e) => setTargetSearchTerm(e.target.value)}
-                    placeholder="Type box name or IP..."
-                    className="w-full px-2.5 py-1.5 rounded bg-cyber-bg border border-cyber-border text-xs text-white placeholder-cyber-muted focus:outline-none focus:border-cyber-emerald"
-                    autoFocus
-                  />
-                  <div className="max-h-56 overflow-y-auto space-y-1 scrollbar-thin">
-                    {machines
-                      .filter(m => !targetSearchTerm || m.name.toLowerCase().includes(targetSearchTerm.toLowerCase()) || m.ip.includes(targetSearchTerm))
-                      .slice(0, 10)
-                      .map(m => (
-                        <button
-                          key={m.id}
-                          onClick={() => {
-                            setActiveTarget(m.id);
-                            setTargetSelectorOpen(false);
-                            setTargetSearchTerm('');
-                            if (soundEnabled) playCyberSound('toggle');
-                          }}
-                          className="w-full p-1.5 rounded hover:bg-cyber-bg flex items-center justify-between text-left transition-colors text-xs"
-                        >
-                          <div className="flex items-center gap-1.5 truncate">
-                            <PlatformIcon platform={m.platform} className="w-3.5 h-3.5 flex-shrink-0" />
-                            <span className="font-bold text-white truncate">{m.name}</span>
-                            <span className="text-[10px] text-cyber-muted">{m.ip}</span>
-                          </div>
-                          <span className={`text-[9px] px-1 py-0.2 rounded font-bold ${
-                            m.status === 'root' || m.status === 'completed' ? 'text-cyber-emerald' :
-                            m.status === 'foothold' ? 'text-cyber-amber' : 'text-cyber-muted'
-                          }`}>
-                            {m.status.toUpperCase()}
-                          </span>
-                        </button>
-                      ))}
-                  </div>
-                </div>
+                <TargetSelectorDropdown
+                  onClose={() => setTargetSelectorOpen(false)}
+                  onSelect={setActiveTarget}
+                  soundEnabled={soundEnabled}
+                />
               )}
             </div>
           )}

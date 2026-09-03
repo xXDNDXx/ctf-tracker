@@ -24,6 +24,7 @@ import {
   EyeOff
 } from 'lucide-react';
 import { useCtfStore, BoxVectorCategory, mergeMachinesWithCatalog } from '../../store/useCtfStore';
+import { useShallow } from 'zustand/react/shallow';
 import { playCyberSound, triggerRootCelebration } from '../../utils/helpers';
 import { Platform, Difficulty, OperatingSystem } from '../../types';
 import { KanbanBoard } from './KanbanBoard';
@@ -42,7 +43,17 @@ export const TrackerView: React.FC = () => {
     viewMode,
     setViewMode,
     setReconAutomationModalOpen,
-  } = useCtfStore();
+  } = useCtfStore(
+    useShallow((s) => ({
+      machines: s.machines,
+      filters: s.filters,
+      setFilters: s.setFilters,
+      resetFilters: s.resetFilters,
+      viewMode: s.viewMode,
+      setViewMode: s.setViewMode,
+      setReconAutomationModalOpen: s.setReconAutomationModalOpen,
+    }))
+  );
 
   const [tracksCollapsed, setTracksCollapsed] = useState<boolean>(() => {
     try {
@@ -88,19 +99,19 @@ export const TrackerView: React.FC = () => {
     return stats;
   }, [machines]);
 
-  // Deferred search query for 120 FPS typing responsiveness
-  const deferredQuery = React.useDeferredValue(filters.searchQuery);
+  // Deferred filter state for 120 FPS typing responsiveness
+  const deferredFilters = React.useDeferredValue(filters);
 
   // Filter and sort machines based on active filter state
   const filteredMachines = useMemo(() => {
-    const q = deferredQuery ? deferredQuery.trim().toLowerCase() : '';
-    const platformFilter = filters.selectedPlatform;
-    const diffFilter = filters.selectedDifficulty;
-    const osFilter = filters.selectedOs;
-    const trackFilter = filters.selectedTrack;
-    const catFilter = filters.selectedCategory;
-    const certFilter = filters.selectedCert;
-    const hasTags = filters.selectedTags.length > 0;
+    const q = deferredFilters.searchQuery ? deferredFilters.searchQuery.trim().toLowerCase() : '';
+    const platformFilter = deferredFilters.selectedPlatform;
+    const diffFilter = deferredFilters.selectedDifficulty;
+    const osFilter = deferredFilters.selectedOs;
+    const trackFilter = deferredFilters.selectedTrack;
+    const catFilter = deferredFilters.selectedCategory;
+    const certFilter = deferredFilters.selectedCert;
+    const hasTags = deferredFilters.selectedTags.length > 0;
     const selectedTrack = (trackFilter && trackFilter !== 'ALL') ? PRACTICE_TRACKS.find(t => t.id === trackFilter) : null;
 
     const list = machines.filter((m) => {
@@ -147,7 +158,7 @@ export const TrackerView: React.FC = () => {
 
       // 5. Selected Tags
       if (hasTags) {
-        const hasAllTags = filters.selectedTags.every((t) => m.tags.includes(t));
+        const hasAllTags = deferredFilters.selectedTags.every((t) => m.tags.includes(t));
         if (!hasAllTags) return false;
       }
 
@@ -155,7 +166,7 @@ export const TrackerView: React.FC = () => {
     });
 
     // Apply Sorting
-    if (filters.sortBy && filters.sortBy !== 'default') {
+    if (deferredFilters.sortBy && deferredFilters.sortBy !== 'default') {
       const difficultyWeights: Record<string, number> = {
         'Very Easy': 1,
         'Easy': 2,
@@ -166,38 +177,26 @@ export const TrackerView: React.FC = () => {
 
       list.sort((a, b) => {
         let cmp = 0;
-        if (filters.sortBy === 'difficulty') {
+        if (deferredFilters.sortBy === 'difficulty') {
           const wa = difficultyWeights[a.difficulty] || 0;
           const wb = difficultyWeights[b.difficulty] || 0;
           cmp = wa - wb;
-        } else if (filters.sortBy === 'name') {
+        } else if (deferredFilters.sortBy === 'name') {
           cmp = a.name.localeCompare(b.name);
-        } else if (filters.sortBy === 'ip') {
+        } else if (deferredFilters.sortBy === 'ip') {
           cmp = a.ip.localeCompare(b.ip, undefined, { numeric: true });
-        } else if (filters.sortBy === 'recent') {
+        } else if (deferredFilters.sortBy === 'recent') {
           const dateA = a.rootPwnedAt || a.userPwnedAt || a.updatedAt || a.createdAt || '';
           const dateB = b.rootPwnedAt || b.userPwnedAt || b.updatedAt || b.createdAt || '';
           cmp = dateB.localeCompare(dateA);
         }
 
-        return filters.sortDirection === 'desc' ? -cmp : cmp;
+        return deferredFilters.sortDirection === 'desc' ? -cmp : cmp;
       });
     }
 
     return list;
-  }, [
-    machines, 
-    deferredQuery, 
-    filters.selectedPlatform, 
-    filters.selectedDifficulty, 
-    filters.selectedOs,
-    filters.selectedCategory,
-    filters.selectedTrack,
-    filters.selectedCert, 
-    filters.selectedTags,
-    filters.sortBy,
-    filters.sortDirection
-  ]);
+  }, [machines, deferredFilters]);
 
   const platformList: (Platform | 'ALL')[] = ['ALL', 'HTB', 'THM', 'VulnHub', 'ProLabs', 'Custom'];
   const difficultyList: (Difficulty | 'ALL')[] = ['ALL', 'Very Easy', 'Easy', 'Medium', 'Hard', 'Insane'];
