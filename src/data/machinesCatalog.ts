@@ -1,6 +1,6 @@
-// Auto-generated catalog for SpecterCTF / HexTracker
-// Total machines: 526
-// Integrated HTB & THM Curated Roster
+// Auto-generated mega catalog for SpecterCTF / HexTracker
+// Total machines: 1530
+// Integrated HTB & THM Complete Rosters
 import { Machine } from '../types';
 
 export const INITIAL_MACHINES: Machine[] = [
@@ -8127,7 +8127,10 @@ export const INITIAL_MACHINES: Machine[] = [
       "Rejetto HFS",
       "CVE-2014-6287",
       "Unquoted Service Path",
-      "PowerUp"
+      "PowerUp",
+      "THM",
+      "Walkthrough",
+      "nmap"
     ],
     "certifications": [
       "OSCP"
@@ -8153,7 +8156,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "PowerShell",
       "Token Impersonation",
       "SeImpersonatePrivilege",
-      "PrintSpoofer"
+      "PrintSpoofer",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "OSCP"
@@ -8178,7 +8183,10 @@ export const INITIAL_MACHINES: Machine[] = [
       "Icecast",
       "CVE-2004-1561",
       "Mimikatz",
-      "Windows Privesc"
+      "Windows Privesc",
+      "THM",
+      "Walkthrough",
+      "nmap"
     ],
     "certifications": [
       "OSCP"
@@ -8201,13 +8209,17 @@ export const INITIAL_MACHINES: Machine[] = [
     "tags": [
       "osCommerce-RCE",
       "AutoLogon-Creds",
-      "2020"
+      "2020",
+      "THM",
+      "CTF",
+      "-"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/blueprint",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "hint": "Hack into this Windows machine and escalate your privileges to Administrator."
   },
   {
     "id": "thm-vulnversity",
@@ -8223,7 +8235,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "Burp Suite",
       "SUID",
       "systemctl",
-      "Classic Pentesting"
+      "Classic Pentesting",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "OSCP"
@@ -8249,7 +8263,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "ProFTPD",
       "SUID",
       "PATH Hijacking",
-      "Classic Pentesting"
+      "Classic Pentesting",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "OSCP"
@@ -8272,13 +8288,16 @@ export const INITIAL_MACHINES: Machine[] = [
     "tags": [
       "WordPress-CVE-2019-8942",
       "Overlayfs",
-      "2021"
+      "2021",
+      "THM",
+      "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/blog",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "hint": "Billy Joel made a Wordpress blog!"
   },
   {
     "id": "thm-ignite",
@@ -8293,7 +8312,10 @@ export const INITIAL_MACHINES: Machine[] = [
       "Fuel CMS",
       "CVE-2018-16763",
       "RCE",
-      "Classic Pentesting"
+      "Classic Pentesting",
+      "THM",
+      "CTF",
+      "-"
     ],
     "certifications": [
       "OSCP"
@@ -8317,13 +8339,18 @@ export const INITIAL_MACHINES: Machine[] = [
       "WordPress-Theme-Editor",
       "Crypt3",
       "Nmap-SUID",
-      "2020"
+      "2020",
+      "THM",
+      "Walkthrough",
+      "-"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/mrrobot",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-mr-robot-ctf-writeup-f1fa708233a1",
+    "hint": "Based on the Mr. Robot show, can you root this box?"
   },
   {
     "id": "thm-overpass",
@@ -8336,13 +8363,17 @@ export const INITIAL_MACHINES: Machine[] = [
     "tags": [
       "Custom-Pass-Manager",
       "Cron-Job-Hijack",
-      "2020"
+      "2020",
+      "THM",
+      "CTF",
+      "-"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/overpass",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "hint": "What happens when some broke CompSci students make a password manager?"
   },
   {
     "id": "thm-daily-bugle",
@@ -8358,7 +8389,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "SQLi",
       "CVE-2019-8942",
       "Yum Sudoers",
-      "GTFOBins"
+      "GTFOBins",
+      "THM",
+      "CTF"
     ],
     "certifications": [
       "OSCP"
@@ -8382,13 +8415,17 @@ export const INITIAL_MACHINES: Machine[] = [
       "PCAP-Forensics",
       "Backdoor",
       "CVE-2021-3156",
-      "2021"
+      "2021",
+      "THM",
+      "Walkthrough",
+      "Wireshark"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/overpass2hacked",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "hint": "Overpass has been hacked! Can you analyse the attacker's actions and hack back in?"
   },
   {
     "id": "thm-overpass-3-hosting",
@@ -8402,13 +8439,16 @@ export const INITIAL_MACHINES: Machine[] = [
       "FTP",
       "NFS-no-root-squash",
       "GPG",
-      "2021"
+      "2021",
+      "THM",
+      "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/overpass3hosting",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "hint": "You know them, you love them, your favourite group of broke computer science students have another business venture! Show them that they probably should hire someone for security..."
   },
   {
     "id": "thm-thompson",
@@ -8421,13 +8461,20 @@ export const INITIAL_MACHINES: Machine[] = [
     "tags": [
       "Tomcat-Weak-Creds",
       "WAR-Deploy",
-      "2020"
+      "2020",
+      "THM",
+      "CTF",
+      "nmap",
+      "gobuster",
+      "Metasploit"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/thompson",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-thompson-ctf-writeup-en-draft-624958e17260",
+    "hint": "boot2root machine for FIT and bsides guatemala CTF"
   },
   {
     "id": "thm-gamingserver",
@@ -8440,13 +8487,20 @@ export const INITIAL_MACHINES: Machine[] = [
     "tags": [
       "LFI-Dict",
       "SSH-Key-Crack",
-      "2020"
+      "2020",
+      "THM",
+      "CTF",
+      "nmap",
+      "hydra",
+      "gobuster"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/gamingserver",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-gamingserver-ctf-writeup-7b48ea4e3c9e",
+    "hint": "An Easy Boot2Root box for beginners"
   },
   {
     "id": "thm-skynet",
@@ -8462,7 +8516,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "SquirrelMail",
       "Cuppa CMS",
       "LFI",
-      "Tar Wildcard Privesc"
+      "Tar Wildcard Privesc",
+      "THM",
+      "CTF"
     ],
     "certifications": [
       "OSCP"
@@ -8488,7 +8544,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "IIS",
       "WebShell",
       "PrintSpoofer",
-      "SeImpersonatePrivilege"
+      "SeImpersonatePrivilege",
+      "THM",
+      "CTF"
     ],
     "certifications": [
       "OSCP"
@@ -8512,13 +8570,16 @@ export const INITIAL_MACHINES: Machine[] = [
       "SQLi",
       "XSS-Cookie-Steal",
       "Docker-Group",
-      "2021"
+      "2021",
+      "THM",
+      "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/marketplace",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "hint": "Can you take over The Marketplace's infrastructure?"
   },
   {
     "id": "thm-brainpan-1",
@@ -8534,7 +8595,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "Binary Exploitation",
       "Wine",
       "Sudoers",
-      "Linux Privesc"
+      "Linux Privesc",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "OSCP"
@@ -8558,13 +8621,17 @@ export const INITIAL_MACHINES: Machine[] = [
       "Anonymous-FTP",
       "Web-Upload",
       "PCAP-Creds",
-      "2021"
+      "2021",
+      "THM",
+      "CTF",
+      "-"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/startup",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "hint": "Abuse traditional vulnerabilities via untraditional means."
   },
   {
     "id": "thm-basic-pentesting",
@@ -8578,13 +8645,17 @@ export const INITIAL_MACHINES: Machine[] = [
       "Brute-Force",
       "John",
       "Hash-Identifier",
-      "2020"
+      "2020",
+      "THM",
+      "Walkthrough",
+      "-"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/basicpentestingju",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "hint": "This is a machine that allows you to practise web app hacking and privilege escalation"
   },
   {
     "id": "thm-post-exploitation-basics",
@@ -8598,13 +8669,18 @@ export const INITIAL_MACHINES: Machine[] = [
       "Meterpreter",
       "Hashdump",
       "Mimikatz",
-      "2020"
+      "2020",
+      "THM",
+      "Walkthrough",
+      "powerview",
+      "mimikatz"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/postexploitation",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "hint": "Learn the basics of post-exploitation and maintaining access with mimikatz, bloodhound, powerview and msfvenom"
   },
   {
     "id": "thm-metasploit-introduction",
@@ -8617,13 +8693,17 @@ export const INITIAL_MACHINES: Machine[] = [
     "tags": [
       "MSF-Basics",
       "ms17-010",
-      "2020"
+      "2020",
+      "THM",
+      "Walkthrough",
+      "Metasploit"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/metasploitintro",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "hint": "An introduction to the main components of the Metasploit Framework."
   },
   {
     "id": "thm-introductory-networking",
@@ -8637,13 +8717,17 @@ export const INITIAL_MACHINES: Machine[] = [
       "OSI-Model",
       "TCP-UDP",
       "Nmap-Theory",
-      "2020"
+      "2020",
+      "THM",
+      "Walkthrough",
+      "-"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/introductorynetworking",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "hint": "An introduction to networking theory and basic networking tools"
   },
   {
     "id": "thm-passive-reconnaissance",
@@ -8657,13 +8741,18 @@ export const INITIAL_MACHINES: Machine[] = [
       "OSINT",
       "Whois",
       "DNS-Records",
-      "2021"
+      "2021",
+      "THM",
+      "Walkthrough",
+      "whois",
+      "nslookup"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/passivereconnaissance",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "hint": "Learn about the essential tools for passive reconnaissance, such as whois, nslookup, and dig."
   },
   {
     "id": "thm-active-reconnaissance",
@@ -8677,13 +8766,18 @@ export const INITIAL_MACHINES: Machine[] = [
       "Ping-Traceroute",
       "TCP-SYN",
       "Scanning",
-      "2021"
+      "2021",
+      "THM",
+      "Walkthrough",
+      "traceroute",
+      "netcat"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/activereconnaissance",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "hint": "Learn how to use simple tools such as traceroute, ping, telnet, and a web browser to gather information."
   },
   {
     "id": "thm-content-discovery",
@@ -8697,13 +8791,18 @@ export const INITIAL_MACHINES: Machine[] = [
       "Dirbust",
       "Wfuzz",
       "Robots-Sitemaps",
-      "2021"
+      "2021",
+      "THM",
+      "Walkthrough",
+      "dirb",
+      "gobuster"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/contentdiscovery",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "hint": "Learn the various ways of discovering hidden or private content on a webserver that could lead to new vulnerabilities."
   },
   {
     "id": "thm-hydra",
@@ -8716,13 +8815,17 @@ export const INITIAL_MACHINES: Machine[] = [
     "tags": [
       "Brute-Force-FTP",
       "POST-Forms",
-      "2021"
+      "2021",
+      "THM",
+      "Walkthrough",
+      "Hydra"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/hydra",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "hint": "Learn about and use Hydra, a fast network logon cracker, to bruteforce and obtain a website's credentials."
   },
   {
     "id": "thm-biohazard",
@@ -8736,13 +8839,16 @@ export const INITIAL_MACHINES: Machine[] = [
       "Puzzle-Room",
       "Base64",
       "Stego",
-      "2020"
+      "2020",
+      "THM",
+      "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/biohazard",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "hint": "A CTF room based on the old-time survival horror game, Resident Evil. Can you survive until the end?"
   },
   {
     "id": "thm-wgel-ctf",
@@ -8755,13 +8861,16 @@ export const INITIAL_MACHINES: Machine[] = [
     "tags": [
       "Sitemap-SSH-Key",
       "Wget-SUID",
-      "2020"
+      "2020",
+      "THM",
+      "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/wgelctf",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "hint": "Can you exfiltrate the root flag?"
   },
   {
     "id": "thm-the-cod-caper",
@@ -8777,7 +8886,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "Command Injection",
       "Buffer Overflow",
       "PWN",
-      "ASLR Bypass"
+      "ASLR Bypass",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "OSCP"
@@ -8801,13 +8912,19 @@ export const INITIAL_MACHINES: Machine[] = [
       "Mr-Robot-Themed",
       "Web",
       "LFI",
-      "2023"
+      "2023",
+      "THM",
+      "CTF",
+      "nmap",
+      "gobuster"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/whiterose",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-whiterose-ctf-writeup-2ec3281bb024",
+    "hint": "Yet another Mr. Robot themed challenge."
   },
   {
     "id": "vulnhub-kioptrix-1",
@@ -9269,7 +9386,10 @@ export const INITIAL_MACHINES: Machine[] = [
       "File-Upload-Bypass",
       "SUID",
       "Privesc",
-      "Python"
+      "Python",
+      "THM",
+      "CTF",
+      "-"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/r00tme",
@@ -9292,7 +9412,10 @@ export const INITIAL_MACHINES: Machine[] = [
       "Command-Injection",
       "Sudo",
       "Recon",
-      "Robots.txt"
+      "Robots.txt",
+      "THM",
+      "CTF",
+      "-"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/picklerick",
@@ -9316,7 +9439,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "Steganography",
       "Brute-Force",
       "CVE-2019-14287",
-      "Privesc"
+      "Privesc",
+      "THM",
+      "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/agentsudo",
@@ -9342,11 +9467,7 @@ export const INITIAL_MACHINES: Machine[] = [
       "Tar",
       "Anonymous-FTP",
       "Tar-Wildcard",
-      "Privesc",
-      "OSCP",
-      "Anonymous FTP",
-      "SSH Brute Force",
-      "Tar Sudoers"
+      "Privesc"
     ],
     "certifications": [
       "OSCP"
@@ -9373,7 +9494,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "Docker-Escape",
       "Privesc",
       "Web",
-      "PHP-Wrapper"
+      "PHP-Wrapper",
+      "THM"
     ],
     "certifications": [
       "OSCP"
@@ -9399,7 +9521,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "SSH-Tunneling",
       "Webmin",
       "Privesc",
-      "SQLMap"
+      "SQLMap",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "OSCP"
@@ -9451,7 +9575,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "Umbraco-CMS",
       "RDP",
       "OSINT",
-      "Privesc"
+      "Privesc",
+      "THM",
+      "CTF"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/anthem",
@@ -9477,9 +9603,7 @@ export const INITIAL_MACHINES: Machine[] = [
       "Privesc",
       "IIS",
       "WordPress",
-      "OSCP",
-      "UAC Bypass",
-      "Classic Pentesting"
+      "OSCP"
     ],
     "certifications": [
       "OSCP"
@@ -9558,7 +9682,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "Java-Deserialization",
       "CVE-2017-12149",
       "SUID",
-      "Privesc"
+      "Privesc",
+      "THM",
+      "CTF"
     ],
     "certifications": [
       "OSCP"
@@ -9586,8 +9712,7 @@ export const INITIAL_MACHINES: Machine[] = [
       "Sudoers",
       "Vim",
       "CMS-Made-Simple",
-      "Sudo-Vim",
-      "Privesc"
+      "Sudo-Vim"
     ],
     "certifications": [
       "OSCP"
@@ -9615,8 +9740,7 @@ export const INITIAL_MACHINES: Machine[] = [
       "Capabilities",
       "Web",
       "Directory-Traversal",
-      "Python-Library-Hijacking",
-      "Linux-Capabilities"
+      "Python-Library-Hijacking"
     ],
     "certifications": [
       "OSCP"
@@ -9644,9 +9768,7 @@ export const INITIAL_MACHINES: Machine[] = [
       "Privesc",
       "RCE",
       "SUID-Find",
-      "OSCP",
-      "find SUID",
-      "Classic Pentesting"
+      "OSCP"
     ],
     "certifications": [
       "OSCP"
@@ -9674,10 +9796,7 @@ export const INITIAL_MACHINES: Machine[] = [
       "Privesc",
       "Anonymous-FTP",
       "Sudo-Privesc",
-      "OSCP",
-      "Anonymous FTP",
-      "Sudoers",
-      "Less"
+      "OSCP"
     ],
     "certifications": [
       "OSCP"
@@ -9705,8 +9824,7 @@ export const INITIAL_MACHINES: Machine[] = [
       "Privesc",
       "Anonymous-FTP",
       "SMB",
-      "Cronjob-Hijack",
-      "SUID-Privesc"
+      "Cronjob-Hijack"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/anonymous",
@@ -9732,8 +9850,7 @@ export const INITIAL_MACHINES: Machine[] = [
       "Perl Script",
       "SweetRice-CMS",
       "MySQL-Backup",
-      "Arbitrary-File-Upload",
-      "Sudo-Privesc"
+      "Arbitrary-File-Upload"
     ],
     "certifications": [
       "OSCP"
@@ -9760,7 +9877,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "Docker",
       "Privesc",
       "Command-Injection",
-      "Docker-Group"
+      "Docker-Group",
+      "THM"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/ultratech1",
@@ -9783,7 +9901,10 @@ export const INITIAL_MACHINES: Machine[] = [
       "Werkzeug-Console",
       "PIN-Exploit",
       "SUID-Binary",
-      "Privesc"
+      "Privesc",
+      "THM",
+      "CTF",
+      "-"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/bookstore",
@@ -9809,8 +9930,7 @@ export const INITIAL_MACHINES: Machine[] = [
       "Path-Hijacking",
       "Apache-Log-Poisoning",
       "Cronjob",
-      "PATH-Hijacking",
-      "Privesc"
+      "PATH-Hijacking"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/archangel",
@@ -9864,11 +9984,7 @@ export const INITIAL_MACHINES: Machine[] = [
       "Secretsdump",
       "Active-Directory",
       "AS-REP-Roasting",
-      "Kerbrute",
-      "Active Directory",
-      "BloodHound",
-      "AS-REP Roasting",
-      "Impacket"
+      "Kerbrute"
     ],
     "certifications": [
       "OSCP",
@@ -9897,11 +10013,7 @@ export const INITIAL_MACHINES: Machine[] = [
       "x86",
       "Immunity-Debugger",
       "Mona",
-      "OSCP",
-      "Buffer Overflow",
-      "Windows Privesc",
-      "Classic Pentesting",
-      "Immunity Debugger"
+      "OSCP"
     ],
     "certifications": [
       "OSCP"
@@ -9929,10 +10041,7 @@ export const INITIAL_MACHINES: Machine[] = [
       "Immunity Debugger",
       "Binary Exploitation",
       "Buffer-Overflow",
-      "Oscp-Prep",
-      "Immunity-Debugger",
-      "Mona",
-      "Exploit-Development"
+      "Oscp-Prep"
     ],
     "certifications": [
       "OSCP"
@@ -9983,8 +10092,7 @@ export const INITIAL_MACHINES: Machine[] = [
       "Classic Pentesting",
       "Borg-Backup",
       "Hash-Cracking",
-      "Sudo-Privesc",
-      "Bash-Script"
+      "Sudo-Privesc"
     ],
     "certifications": [
       "OSCP"
@@ -10009,7 +10117,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "PostgreSQL",
       "Metasploit",
       "Privesc",
-      "Credential-Dumping"
+      "Credential-Dumping",
+      "THM"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/poster",
@@ -10031,7 +10140,10 @@ export const INITIAL_MACHINES: Machine[] = [
       "Steganography",
       "Gobuster",
       "FTP",
-      "Sudo-Privesc"
+      "Sudo-Privesc",
+      "THM",
+      "CTF",
+      "wfuzz"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/lianyu",
@@ -10056,7 +10168,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "Cron",
       "Privesc",
       "Python-Input-Exploit",
-      "Cronjob"
+      "Cronjob",
+      "THM"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/develpy",
@@ -10081,7 +10194,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "Web",
       "Privesc",
       "Hash-Prediction",
-      "MD5"
+      "MD5",
+      "THM"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/corridor",
@@ -10107,8 +10221,7 @@ export const INITIAL_MACHINES: Machine[] = [
       "Privesc",
       "BlogEngine.NET",
       "Unquoted-Service-Path",
-      "OSCP",
-      "Weak Service Permissions"
+      "OSCP"
     ],
     "certifications": [
       "OSCP"
@@ -10188,7 +10301,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "SQLi",
       "Privilege Escalation",
       "Kerberos",
-      "BloodHound"
+      "BloodHound",
+      "THM",
+      "CTF"
     ],
     "certifications": [
       "CRTO",
@@ -10293,7 +10408,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "Redis",
       "GPP-Passwords",
       "Kerberoast",
-      "BloodHound"
+      "BloodHound",
+      "THM",
+      "CTF"
     ],
     "certifications": [
       "CRTO",
@@ -10322,9 +10439,7 @@ export const INITIAL_MACHINES: Machine[] = [
       "GPO",
       "Active Directory",
       "Kerberoast",
-      "AS-REP Roasting",
-      "SMB",
-      "Hashcat"
+      "AS-REP Roasting"
     ],
     "certifications": [
       "CRTO",
@@ -10350,7 +10465,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "AlwaysInstallElevated",
       "Unquoted Service Path",
       "Registry",
-      "Token Impersonation"
+      "Token Impersonation",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "OSCP"
@@ -10376,7 +10493,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "Kerberoasting",
       "Silver Ticket",
       "Golden Ticket",
-      "Active Directory"
+      "Active Directory",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "CRTO"
@@ -10402,7 +10521,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "Forests",
       "Trusts",
       "GPO",
-      "LDAP"
+      "LDAP",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "CRTO"
@@ -10480,7 +10601,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "Kerberoasting",
       "ASREPRoasting",
       "Pass-the-Hash",
-      "Secretsdump"
+      "Secretsdump",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "CRTO",
@@ -10508,7 +10631,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "WMI",
       "WinRM",
       "Chisel",
-      "PsExec"
+      "PsExec",
+      "THM"
     ],
     "certifications": [
       "CRTO"
@@ -10560,7 +10684,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "Certipy",
       "Certificates",
       "SAN",
-      "Domain Admin"
+      "Domain Admin",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "CRTO"
@@ -10586,7 +10712,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "LAPS",
       "Tier Model",
       "SMB Signing",
-      "Kerberos Armor"
+      "Kerberos Armor",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "CRTO"
@@ -10639,7 +10767,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "Scheduled Tasks",
       "Services",
       "Backdoors",
-      "Red Team"
+      "Red Team",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "CRTO",
@@ -10666,7 +10796,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "UAC Bypass",
       "Service Exploitation",
       "DLL Hijacking",
-      "Tokens"
+      "Tokens",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "OSCP"
@@ -10691,7 +10823,10 @@ export const INITIAL_MACHINES: Machine[] = [
       "Methodology",
       "OPSEC",
       "Engagements",
-      "Threat Emulation"
+      "Threat Emulation",
+      "THM",
+      "Walkthrough",
+      "-"
     ],
     "certifications": [
       "CRTO"
@@ -10717,7 +10852,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "Shellcode",
       "AMSI",
       "Encryption",
-      "Process Injection"
+      "Process Injection",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "CRTO"
@@ -10743,7 +10880,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "Certutil",
       "MSHTA",
       "Rundll32",
-      "Red Team"
+      "Red Team",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "CRTO",
@@ -10769,7 +10908,10 @@ export const INITIAL_MACHINES: Machine[] = [
       "Rules of Engagement",
       "OPSEC",
       "Threat Intelligence",
-      "TTPs"
+      "TTPs",
+      "THM",
+      "Walkthrough",
+      "-"
     ],
     "certifications": [
       "CRTO"
@@ -10821,7 +10963,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "Sysmon",
       "Log Clearing",
       "Wevtutil",
-      "Red Team"
+      "Red Team",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "OSCP"
@@ -10873,7 +11017,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "Tier 0",
       "Tier 1",
       "PAW",
-      "Hardening"
+      "Hardening",
+      "THM",
+      "Walkthrough"
     ],
     "certifications": [
       "CRTO"
@@ -10901,8 +11047,7 @@ export const INITIAL_MACHINES: Machine[] = [
       "Privesc",
       "OSCP",
       "Buffer Overflow",
-      "Reverse Engineering",
-      "Immunity Debugger"
+      "Reverse Engineering"
     ],
     "certifications": [
       "OSCP"
@@ -10927,7 +11072,10 @@ export const INITIAL_MACHINES: Machine[] = [
       "EternalBlue",
       "MS17-010",
       "SMB",
-      "Classic Pentesting"
+      "Classic Pentesting",
+      "THM",
+      "Walkthrough",
+      "nmap"
     ],
     "certifications": [
       "OSCP"
@@ -10953,7 +11101,9 @@ export const INITIAL_MACHINES: Machine[] = [
       "CVE-2020-1938",
       "Apache Tomcat",
       "AJP",
-      "GPG Crack"
+      "GPG Crack",
+      "THM",
+      "CTF"
     ],
     "certifications": [
       "OSCP"
@@ -10978,7 +11128,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "Web",
       "Command-Injection",
       "Port-Forwarding",
-      "Privesc"
+      "Privesc",
+      "THM"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/yearofthefox",
@@ -11001,7 +11152,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "BurpSuite",
       "Steganography",
       "Sudo-CVE",
-      "Privesc"
+      "Privesc",
+      "THM"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/yearoftherabbit",
@@ -11024,7 +11176,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "SQLi",
       "Gitea",
       "Command-Injection",
-      "Privesc"
+      "Privesc",
+      "THM"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/yearofthedog",
@@ -11047,7 +11200,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "Web",
       "Brute-Force",
       "Capabilities",
-      "Privesc"
+      "Privesc",
+      "THM"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/yearofthepig",
@@ -11069,7 +11223,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "CTF",
       "Serialization",
       "PHP-Object-Injection",
-      "Privesc"
+      "Privesc",
+      "THM"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/stuxctf",
@@ -11092,7 +11247,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "LFI",
       "Bash-Scripting",
       "Privesc",
-      "Wildcards"
+      "Wildcards",
+      "THM"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/team",
@@ -11114,7 +11270,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "CTF",
       "Git",
       "Information-Disclosure",
-      "Source-Code-Analysis"
+      "Source-Code-Analysis",
+      "THM"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/githappens",
@@ -11137,7 +11294,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "LFI",
       "FTP",
       "Cron",
-      "Sudo-Privesc"
+      "Sudo-Privesc",
+      "THM"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/watcher",
@@ -11160,7 +11318,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "Reverse-Engineering",
       "GDB",
       "Radare2",
-      "Binary-Analysis"
+      "Binary-Analysis",
+      "THM"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/reverselfiles",
@@ -11206,7 +11365,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "SMB",
       "Redis",
       "TeamCity",
-      "Tunneling"
+      "Tunneling",
+      "THM"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/vulnnetinternal",
@@ -11229,7 +11389,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "Tomcat",
       "AJP-Ghostcat",
       "JAR-Reverse",
-      "Privesc"
+      "Privesc",
+      "THM"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/vulnnetdotjar",
@@ -11252,7 +11413,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "Git",
       "HMAC",
       "GPG",
-      "Privesc"
+      "Privesc",
+      "THM"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/harder",
@@ -11275,7 +11437,8 @@ export const INITIAL_MACHINES: Machine[] = [
       "Pivoting",
       "API",
       "Docker",
-      "Privesc"
+      "Privesc",
+      "THM"
     ],
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/borderlands",
@@ -12731,6 +12894,20514 @@ export const INITIAL_MACHINES: Machine[] = [
     "hint": "Intermediate AD lab covering lateral movement, LAPS password retrieval, GPO modification abuse, and DCSync via DS-Replication-Get-Changes.",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-crackthehash",
+    "name": "Crack the hash",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "hashcat"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/crackthehash",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-crack-the-hash-ctf-writeup-00a0fe1eb361",
+    "hint": "Cracking hashes challenges",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-goldeneye",
+    "name": "GoldenEye",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/goldeneye",
+    "writeupUrl": "",
+    "hint": "Bond, James Bond. A guided CTF.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-jurassicpark",
+    "name": "Jurassic Park",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/jurassicpark",
+    "writeupUrl": "",
+    "hint": "A Jurassic Park CTF",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-heartbleed",
+    "name": "HeartBleed",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/heartbleed",
+    "writeupUrl": "",
+    "hint": "SSL issues are still lurking in the wild! Can you exploit this web servers OpenSSL?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-investigatingwindows",
+    "name": "Investigating Windows",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/investigatingwindows",
+    "writeupUrl": "",
+    "hint": "A windows machine has been hacked, its your job to go investigate this windows machine and find clues to what the hacker might have done.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-toolsrus",
+    "name": "ToolsRus",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "dirbuster",
+      "Hydra",
+      "Nmap",
+      "Nikto"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/toolsrus",
+    "writeupUrl": "",
+    "hint": "Practise using tools such as dirbuster, hydra, nmap, nikto and metasploit",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ohsint",
+    "name": "OhSINT",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ohsint",
+    "writeupUrl": "",
+    "hint": "Are you able to use open source intelligence to solve this challenge?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-forensics",
+    "name": "Forensics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/forensics",
+    "writeupUrl": "",
+    "hint": "This is a memory dump of compromised system, do some forensics kung-fu to explore the inside.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-c4ptur3th3fl4g",
+    "name": "c4ptur3-th3-fl4g",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/c4ptur3th3fl4g",
+    "writeupUrl": "",
+    "hint": "A beginner level CTF challenge",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-peakhill",
+    "name": "Peak Hill",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/peakhill",
+    "writeupUrl": "",
+    "hint": "Exercises in Python library abuse and some exploitation techniques",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-bsidesgtanonforce",
+    "name": "Anonforce",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "nmap",
+      "John The Ripper"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/bsidesgtanonforce",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-anonforce-ctf-writeup-428bd3254136",
+    "hint": "boot2root machine for FIT and bsides guatemala CTF",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-bsidesgtlibrary",
+    "name": "Library",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "nmap",
+      "gobuster",
+      "hydra"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/bsidesgtlibrary",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-library-ctf-writeup-0be466e42e19",
+    "hint": "boot2root machine for FIT and bsides guatemala CTF",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-bsidesgtdav",
+    "name": "Dav",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "nmap",
+      "gobuster"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/bsidesgtdav",
+    "writeupUrl": "https://medium.com/t%C3%BCrk%C3%A7e-i%CC%87%C3%A7erikler/tryhackme-dav-ctf-writeup-rehberi-1a58735b9ac8",
+    "hint": "boot2root machine for FIT and bsides guatemala CTF",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-bof1",
+    "name": "Buffer Overflows",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "pwn",
+      "Metasploit"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/bof1",
+    "writeupUrl": "",
+    "hint": "Learn how to get started with basic Buffer Overflows!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-breakit",
+    "name": "Break it",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/breakit",
+    "writeupUrl": "",
+    "hint": "Can you break the code?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-adventuretime",
+    "name": "Adventure Time",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/adventuretime",
+    "writeupUrl": "",
+    "hint": "A CTF based challenge to get your blood pumping...",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-scripting",
+    "name": "Scripting",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/scripting",
+    "writeupUrl": "",
+    "hint": "Learn basic scripting by solving some challenges!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-bebop",
+    "name": "Bebop",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/bebop",
+    "writeupUrl": "",
+    "hint": "Who thought making a flying shell was a good idea?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-jokerctf",
+    "name": "HA Joker CTF",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "nmap"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/jokerctf",
+    "writeupUrl": "",
+    "hint": "Batman hits Joker.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-toolboxvim",
+    "name": "Toolbox: Vim",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/toolboxvim",
+    "writeupUrl": "",
+    "hint": "Learn vim, a universal text editor that can be incredibly powerful when used properly. From basic text editing to editing of binary files, Vim can be an important arsenal in a security toolkit.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ninjaskills",
+    "name": "Ninja Skills",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ninjaskills",
+    "writeupUrl": "",
+    "hint": "Practise your Linux skills and complete the challenges.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-basicmalwarere",
+    "name": "Basic Malware RE",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/basicmalwarere",
+    "writeupUrl": "",
+    "hint": "This room aims towards helping everyone learn about the basics of \"Malware Reverse Engineering\".",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hc0nchristmasctf",
+    "name": "hc0n Christmas CTF",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hc0nchristmasctf",
+    "writeupUrl": "",
+    "hint": "hackt the planet",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ctfcollectionvol1",
+    "name": "CTF collection Vol.1",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ctfcollectionvol1",
+    "writeupUrl": "",
+    "hint": "Sharpening up your CTF skill with the collection. The first volume is designed for beginner.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ctfcollectionvol2",
+    "name": "CTF collection Vol.2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ctfcollectionvol2",
+    "writeupUrl": "",
+    "hint": "Sharpening up your CTF skill with the collection. The second volume is about web-based CTF.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-madness",
+    "name": "Madness",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/madness",
+    "writeupUrl": "",
+    "hint": "Will you be consumed by Madness?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-25daysofchristmas",
+    "name": "Advent of Cyber 1 [2019]",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/25daysofchristmas",
+    "writeupUrl": "",
+    "hint": "Get started with Cyber Security in 25 Days - Learn the basics by doing a new, beginner friendly security challenge every day leading up to Christmas.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-avengers",
+    "name": "Avengers Blog",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "nmap",
+      "gobuster"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/avengers",
+    "writeupUrl": "",
+    "hint": "Learn to hack into Tony Stark's machine! You will enumerate the machine, bypass a login portal via SQL injection and gain root access by command injection.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dvwa",
+    "name": "DVWA",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dvwa",
+    "writeupUrl": "",
+    "hint": "Basic room for testing exploits against the Damn Vulnerable Web Application box",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-rptmux",
+    "name": "tmux",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "tmux"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/rptmux",
+    "writeupUrl": "",
+    "hint": "Learn to use tmux, one of the most powerful multi-tasking tools on linux!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-webgoat",
+    "name": "WebGOAT",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/webgoat",
+    "writeupUrl": "",
+    "hint": "Simple testing room for beating on WebGOAT",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-wifihacking101",
+    "name": "Wifi Hacking 101",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "airmon-ng"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/wifihacking101",
+    "writeupUrl": "",
+    "hint": "Learn to attack WPA(2) networks! Ideally you'll want a smartphone with you for this, preferably one that supports hosting wifi hotspots so you can follow along.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-binex",
+    "name": "Binex",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/binex",
+    "writeupUrl": "",
+    "hint": "Escalate your privileges by exploiting vulnerable binaries.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-openvpn",
+    "name": "OpenVPN",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/openvpn",
+    "writeupUrl": "",
+    "hint": "A guide to connecting to our network using OpenVPN.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-torforbeginners",
+    "name": "Tor",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Tor",
+      "proxychains"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/torforbeginners",
+    "writeupUrl": "",
+    "hint": "A beginner orienteered guide on using the Tor network",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-jack",
+    "name": "Jack",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/jack",
+    "writeupUrl": "",
+    "hint": "Compromise a web server running Wordpress, obtain a low privileged user and escalate your privileges to root using a Python module.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-shodan",
+    "name": "Shodan.io",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "shodan.io"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/shodan",
+    "writeupUrl": "",
+    "hint": "Learn about Shodan.io and how to use it for devices enumeration - is your coffee machine publicly accessible?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-geolocatingimages",
+    "name": "Geolocating Images",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/geolocatingimages",
+    "writeupUrl": "",
+    "hint": "Room to understand how to geolocate images",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-jupyter101",
+    "name": "Jupyter 101",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/jupyter101",
+    "writeupUrl": "",
+    "hint": "A friendly introduction into using the Jupyter Notebook environment. Learn to process and visualise data!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sudovulnsbof",
+    "name": "Sudo Buffer Overflow",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sudovulnsbof",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-sudo-buffer-overflow-walkthrough-writeup-65b84fd5c5ef",
+    "hint": "A tutorial room exploring CVE-2019-18634 in the Unix Sudo Program. Room Two in the SudoVulns Series",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sudovulnsbypass",
+    "name": "Sudo Security Bypass",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sudovulnsbypass",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-sudo-security-bypass-walkthrough-writeup-248a51ae3d97",
+    "hint": "A tutorial room exploring CVE-2019-14287 in the Unix Sudo Program. Room One in the SudoVulns Series",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-rppsempire",
+    "name": "Empire",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Empire"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/rppsempire",
+    "writeupUrl": "",
+    "hint": "Learn how to use Empire and it's GUI Starkiller, a powerful post-exploitation C2 framework.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-kali",
+    "name": "Kali Machine",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/kali",
+    "writeupUrl": "",
+    "hint": "Access your own Kali Machine",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cmess",
+    "name": "CMesS",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cmess",
+    "writeupUrl": "",
+    "hint": "Can you root this Gila CMS box?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-phishinghiddeneye",
+    "name": "Phishing: HiddenEye",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "HiddenEye"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/phishinghiddeneye",
+    "writeupUrl": "",
+    "hint": "A simple guide on how to use a tool known as HiddenEye developed by ANONUD4Y. This tool helps you create a phishing page for different sites such as Gmail, Snapchat, Paypal and more. Including understanding the difference between legit and fake site.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hackernote",
+    "name": "hackerNote",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hackernote",
+    "writeupUrl": "",
+    "hint": "A custom webapp, introducing username enumeration, custom wordlists and a basic privilege escalation exploit.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cherryblossom",
+    "name": "CherryBlossom",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "nmap",
+      "smbclient",
+      "base64",
+      "binwalk"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cherryblossom",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-cherryblossom-ctf-writeup-5270623a9946",
+    "hint": "Boot-to-root with emphasis on crypto and password cracking.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-willow",
+    "name": "Willow",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/willow",
+    "writeupUrl": "",
+    "hint": "What lies under the Willow Tree?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-nonamectf",
+    "name": "NoNameCTF",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/nonamectf",
+    "writeupUrl": "",
+    "hint": "Buffer overflow, server-side template injection and more...",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsbase",
+    "name": "Windows Base",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsbase",
+    "writeupUrl": "",
+    "hint": "A windows machine with SysInternals, Cain, BurpSuite, Wireshark, OWASP ZAP and other security tools on.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cct2019",
+    "name": "CCT2019",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cct2019",
+    "writeupUrl": "",
+    "hint": "Legacy challenges from the US Navy Cyber Competition Team 2019 Assessment sponsored by US TENTH Fleet",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-commonlinuxprivesc",
+    "name": "Common Linux Privesc",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/commonlinuxprivesc",
+    "writeupUrl": "",
+    "hint": "A room explaining common Linux privilege escalation",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-malmalintroductory",
+    "name": "MAL: Malware Introductory",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "PEiD",
+      "IDA",
+      "strings",
+      "PE Explorer"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/malmalintroductory",
+    "writeupUrl": "",
+    "hint": "The start of a series of rooms covering Malware Analysis...",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-rfirmware",
+    "name": "Dumping Router Firmware",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/rfirmware",
+    "writeupUrl": "",
+    "hint": "Have you ever been curious about how your router works? What OS it runs? What makes it tick?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-jackofalltrades",
+    "name": "Jack-of-All-Trades",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/jackofalltrades",
+    "writeupUrl": "",
+    "hint": "Boot-to-root originally designed for Securi-Tay 2020",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-googledorking",
+    "name": "Google Dorking",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/googledorking",
+    "writeupUrl": "",
+    "hint": "Explaining how Search Engines work and leveraging them into finding hidden content!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtoresearch",
+    "name": "Introductory Researching",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtoresearch",
+    "writeupUrl": "",
+    "hint": "A brief introduction to research skills for pentesting.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-malremnuxv2",
+    "name": "MAL: REMnux - The Redux",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "peepdf",
+      "vmonkey",
+      "Volatility"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/malremnuxv2",
+    "writeupUrl": "",
+    "hint": "A revitalised, hands-on showcase involving analysing malicious macro's, PDF's and Memory forensics of a victim of Jigsaw Ransomware; all done using the Linux-based REMnux toolset apart of my Malware Analysis series",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ctf",
+    "name": "Fowsniff CTF",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "nmap",
+      "Metasploit"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ctf",
+    "writeupUrl": "",
+    "hint": "Hack this machine and get the flag. There are lots of hints along the way and is perfect for beginners!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-malstrings",
+    "name": "MAL: Strings",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Strings"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/malstrings",
+    "writeupUrl": "",
+    "hint": "Investigating \"strings\" within an application and why these values are important!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-nax",
+    "name": "Nax",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/nax",
+    "writeupUrl": "",
+    "hint": "Identify the critical security flaw in the most powerful and trusted network monitoring software on the market, that allows an user authenticated execute remote code execution.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-learnowaspzap",
+    "name": "Introduction to OWASP ZAP",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "ZAP"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/learnowaspzap",
+    "writeupUrl": "",
+    "hint": "Learn how to use OWASP ZAP from the ground up. An alternative to BurpSuite.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-powershell",
+    "name": "Hacking with PowerShell",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Powershell"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/powershell",
+    "writeupUrl": "",
+    "hint": "Learn the basics of PowerShell and PowerShell Scripting",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cicada3301vol1",
+    "name": "Cicada-3301 Vol:1",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cicada3301vol1",
+    "writeupUrl": "",
+    "hint": "A basic steganography and cryptography challenge room based on the Cicada 3301 challenges",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tonythetiger",
+    "name": "Tony the Tiger",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "nmap"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tonythetiger",
+    "writeupUrl": "",
+    "hint": "Learn how to use a Java Serialisation attack in this boot-to-root",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-convertmyvideo",
+    "name": "ConvertMyVideo",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/convertmyvideo",
+    "writeupUrl": "",
+    "hint": "My Script to convert videos to MP3 is super secure",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ironcorp",
+    "name": "Iron Corp",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ironcorp",
+    "writeupUrl": "",
+    "hint": "Can you get access to Iron Corp's system?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-networkservices",
+    "name": "Network Services",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "nmap",
+      "smbclient",
+      "tcpdump",
+      "Metasploit"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/networkservices",
+    "writeupUrl": "",
+    "hint": "Learn about, then enumerate and exploit a variety of network services and misconfigurations.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-racetrackbank",
+    "name": "Racetrack Bank",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/racetrackbank",
+    "writeupUrl": "",
+    "hint": "It's time for another heist.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-kothfoodctf",
+    "name": "KoTH Food CTF",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/kothfoodctf",
+    "writeupUrl": "",
+    "hint": "Practice Food KoTH alone, to get familiar with KoTH!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-theimpossiblechallenge",
+    "name": "The Impossible Challenge",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/theimpossiblechallenge",
+    "writeupUrl": "",
+    "hint": "Hmm",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-jvmreverseengineering",
+    "name": "JVM Reverse Engineering",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/jvmreverseengineering",
+    "writeupUrl": "",
+    "hint": "Learn Reverse Engineering for Java Virtual Machine bytecode",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-corp",
+    "name": "Corp",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "hashcat",
+      "PowerUp1.ps1"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/corp",
+    "writeupUrl": "",
+    "hint": "Bypass Windows Applocker and escalate your privileges. You will learn about kerberoasting, evading AV, bypassing applocker and escalating your privileges on a Windows system.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-django",
+    "name": "Introduction to Django",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "nmap"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/django",
+    "writeupUrl": "",
+    "hint": "How it works and why should I learn it?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-eritsecurusi",
+    "name": "Erit Securus I",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "nmap"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/eritsecurusi",
+    "writeupUrl": "",
+    "hint": "Learn to exploit the BoltCMS software by researching exploit-db.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-pythonplayground",
+    "name": "Python Playground",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/pythonplayground",
+    "writeupUrl": "",
+    "hint": "Be creative!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-mindgames",
+    "name": "Mindgames",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/mindgames",
+    "writeupUrl": "",
+    "hint": "Just a terrible idea...",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tutorial",
+    "name": "Tutorial",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tutorial",
+    "writeupUrl": "",
+    "hint": "Learn how to use a TryHackMe room to start your upskilling in cyber security.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hello",
+    "name": "Welcome",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hello",
+    "writeupUrl": "",
+    "hint": "Learn how to use a TryHackMe room to start your upskilling in cyber security.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-carpediem1",
+    "name": "Carpe Diem 1",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/carpediem1",
+    "writeupUrl": "",
+    "hint": "Recover your clients encrypted files before the ransomware timer runs out!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tempusfugitdurius",
+    "name": "Tempus Fugit Durius",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tempusfugitdurius",
+    "writeupUrl": "",
+    "hint": "The latin word Durius means \"harder\"",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-breakoutthecage1",
+    "name": "Break Out The Cage",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/breakoutthecage1",
+    "writeupUrl": "",
+    "hint": "Help Cage bring back his acting career and investigate the nefarious goings on of his agent!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-haskhell",
+    "name": "HaskHell",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/haskhell",
+    "writeupUrl": "",
+    "hint": "Teach your CS professor that his PhD isn't in security.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-kothhackers",
+    "name": "KoTH Hackers",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/kothhackers",
+    "writeupUrl": "",
+    "hint": "The Hackers KoTH box, to allow you to practice alone!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxprivescarena",
+    "name": "Linux PrivEsc Arena",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "linux-exploit-suggester",
+      "unshadow",
+      "hashcat",
+      "johnThe Ripper"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxprivescarena",
+    "writeupUrl": "",
+    "hint": "Students will learn how to escalate privileges using a very vulnerable Linux VM. SSH is open. Your credentials are TCM:Hacker123",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hashingcrypto101",
+    "name": "Hashing - Crypto 101",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "base64"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hashingcrypto101",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-hashing-crypto-101-ctf-writeup-02fa0d08962f",
+    "hint": "An introduction to Hashing, as part of a series on crypto",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-davesblog",
+    "name": "Dave's Blog",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/davesblog",
+    "writeupUrl": "",
+    "hint": "My friend Dave made his own blog!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-rpnessusredux",
+    "name": "Nessus",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Nessus"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/rpnessusredux",
+    "writeupUrl": "",
+    "hint": "Learn how to set up and use Nessus, a popular vulnerability scanner.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ra",
+    "name": "Ra",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ra",
+    "writeupUrl": "",
+    "hint": "You have found WindCorp's internal network and their Domain Controller. Can you pwn their network?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-source",
+    "name": "Source",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/source",
+    "writeupUrl": "",
+    "hint": "Exploit a recent vulnerability and hack Webmin, a web-based system configuration tool.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-attackerkb",
+    "name": "AttackerKB",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "AttackerKB",
+      "AKB Explorer"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/attackerkb",
+    "writeupUrl": "",
+    "hint": "Learn how to leverage AttackerKB and learn about exploits in your workflow!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-owasptop10",
+    "name": "OWASP Top 10",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/owasptop10",
+    "writeupUrl": "",
+    "hint": "Learn about and exploit each of the OWASP Top 10 vulnerabilities; the 10 most critical web security risks.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-set",
+    "name": "Set",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/set",
+    "writeupUrl": "",
+    "hint": "Once again you find yourself on the internal network of the Windcorp Corporation.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-smaggrotto",
+    "name": "Smag Grotto",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/smaggrotto",
+    "writeupUrl": "",
+    "hint": "Follow the yellow brick road.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-recovery",
+    "name": "Recovery",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/recovery",
+    "writeupUrl": "",
+    "hint": "Not your conventional CTF",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-easypeasyctf",
+    "name": "Easy Peasy",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/easypeasyctf",
+    "writeupUrl": "",
+    "hint": "Practice using tools such as Nmap and GoBuster to locate a hidden directory to get initial access to a vulnerable machine. Then escalate your privileges through a vulnerable cronjob.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-malresearching",
+    "name": "MAL: Researching",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/malresearching",
+    "writeupUrl": "",
+    "hint": "Understanding checksums, how to generate them and their use throughout malware analysis with online sandboxing & reporting services",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-iotintro",
+    "name": "Intro to IoT Pentesting",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "binwalk",
+      "firmware analysis toolkit",
+      "Burp Suite"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/iotintro",
+    "writeupUrl": "",
+    "hint": "A beginner friendly walkthrough for internet of things (IoT) pentesting.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ra2",
+    "name": "Ra 2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ra2",
+    "writeupUrl": "",
+    "hint": "Just when they thought their hashes were safe... Ra 2 - The sequel!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-pokemon",
+    "name": "Gotta Catch'em All!",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/pokemon",
+    "writeupUrl": "",
+    "hint": "This room is based on the original Pokemon series. Can you obtain all the Pokemon in this room?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-bolt",
+    "name": "Bolt",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Metasploit"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/bolt",
+    "writeupUrl": "",
+    "hint": "A hero is unleashed",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-anonymousplayground",
+    "name": "Anonymous Playground",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/anonymousplayground",
+    "writeupUrl": "",
+    "hint": "Want to become part of Anonymous? They have a challenge for you. Can you get the flags and become an operative?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-lookingglass",
+    "name": "Looking Glass",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/lookingglass",
+    "writeupUrl": "",
+    "hint": "Step through the looking glass. A sequel to the Wonderland challenge room.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-spring",
+    "name": "Spring",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/spring",
+    "writeupUrl": "",
+    "hint": "Can you hack your way in to a Hello World application?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-owaspjuiceshop",
+    "name": "OWASP Juice Shop",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/owaspjuiceshop",
+    "writeupUrl": "",
+    "hint": "This room uses the Juice Shop vulnerable web application to learn how to identify and exploit common web application vulnerabilities.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-kiba",
+    "name": "kiba",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/kiba",
+    "writeupUrl": "",
+    "hint": "Identify the critical security flaw in the data visualization dashboard, that allows execute remote code execution.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-theseus",
+    "name": "Theseus",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/theseus",
+    "writeupUrl": "",
+    "hint": "The first installment of the SuitGuy series of very hard challenges.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-uploadvulns",
+    "name": "Upload Vulnerabilities",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/uploadvulns",
+    "writeupUrl": "",
+    "hint": "Tutorial room exploring some basic file-upload vulnerabilities in websites",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-wwbuddy",
+    "name": "WWBuddy",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/wwbuddy",
+    "writeupUrl": "",
+    "hint": "Exploit this website still in development and root the room.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-theblobblog",
+    "name": "The Blob Blog",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/theblobblog",
+    "writeupUrl": "",
+    "hint": "Successfully hack into bobloblaw's computer",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-encryptioncrypto101",
+    "name": "Encryption - Crypto 101",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/encryptioncrypto101",
+    "writeupUrl": "",
+    "hint": "An introduction to encryption, as part of a series on crypto",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-androidhacking101",
+    "name": "Android Hacking 101",
+    "ip": "10.10.x.x",
+    "os": "Android",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/androidhacking101",
+    "writeupUrl": "",
+    "hint": "Android Mobile Application Penetration Testing",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ghizerctf",
+    "name": "Ghizer",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ghizerctf",
+    "writeupUrl": "",
+    "hint": "lucrecia has installed multiple web applications on the server.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-networkservices2",
+    "name": "Network Services 2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "hydra"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/networkservices2",
+    "writeupUrl": "",
+    "hint": "Enumerating and Exploiting More Common Network Services & Misconfigurations",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-rust",
+    "name": "Learn Rust",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/rust",
+    "writeupUrl": "",
+    "hint": "Learn Rust for someone who knows programming but doesn't know low level programming",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-forbusinessreasons",
+    "name": "For Business Reasons",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/forbusinessreasons",
+    "writeupUrl": "",
+    "hint": "In your network scan, you found an unknown VM....",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ctfonepiece65",
+    "name": "One Piece",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ctfonepiece65",
+    "writeupUrl": "",
+    "hint": "A CTF room based on the wonderful manga One Piece. Can you become the Pirate King?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-iosforensics",
+    "name": "iOS Forensics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "HdX"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/iosforensics",
+    "writeupUrl": "",
+    "hint": "Learn about the data acquisition techniques and tools used in iOS device digital forensics!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tmuxremux",
+    "name": "REmux The Tmux",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tmuxremux",
+    "writeupUrl": "",
+    "hint": "Updated, how to use tmux guide. Defaults and customize your workflow.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-aster",
+    "name": "Aster",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/aster",
+    "writeupUrl": "",
+    "hint": "Hack my server dedicated for building communications applications.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-startingoutincybersec",
+    "name": "Starting Out In Cyber Sec",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/startingoutincybersec",
+    "writeupUrl": "",
+    "hint": "Learn about the different career paths in Cyber Security and how TryHackMe can help!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-gettingstarted",
+    "name": "Getting Started",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/gettingstarted",
+    "writeupUrl": "",
+    "hint": "Get started with TryHackMe by hacking a fake social media website!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-mnemonic",
+    "name": "Mnemonic",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/mnemonic",
+    "writeupUrl": "",
+    "hint": "I hope you have fun.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-printerhacking101",
+    "name": "Printer Hacking 101",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "PRET"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/printerhacking101",
+    "writeupUrl": "",
+    "hint": "Learn about (and get hands on with) printer hacking and understand the basics of IPP.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-motunui",
+    "name": "Motunui",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/motunui",
+    "writeupUrl": "",
+    "hint": "Hack the island of Motunui.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-res-2",
+    "name": "Walkthrough",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "Walkthrough",
+      "linPEAS"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/res",
+    "writeupUrl": "",
+    "hint": "Discover the forensic artefacts present within iOS.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-historyofmalware",
+    "name": "History of Malware",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/historyofmalware",
+    "writeupUrl": "",
+    "hint": "Join this room to learn about the first forms of malware and how they turned into the malicious code we see today.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-toc2",
+    "name": "toc2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/toc2",
+    "writeupUrl": "",
+    "hint": "It's a setup... Can you get the flags in time?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-zer0logon",
+    "name": "Zero Logon",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/zer0logon",
+    "writeupUrl": "",
+    "hint": "It's a setup... Can you get the flags in time?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-psychobreak",
+    "name": "Psycho Break",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/psychobreak",
+    "writeupUrl": "",
+    "hint": "Learn about and exploit the ZeroLogon vulnerability that allows an attacker to go from Zero to Domain Admin without any valid credentials.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-revenge",
+    "name": "Revenge",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/revenge",
+    "writeupUrl": "",
+    "hint": "You've been hired by Billy Joel to get revenge on Ducky Inc...the company that fired him. Can you break into the server and complete your mission?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-csp",
+    "name": "Content Security Policy",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/csp",
+    "writeupUrl": "",
+    "hint": "In this room you'll learn what CSP is, what it's used for and how to recognize vulnerabilities in a CSP header.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-misguidedghosts",
+    "name": "Misguided Ghosts",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/misguidedghosts",
+    "writeupUrl": "",
+    "hint": "Collaboration between Jake and Blob!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-0day",
+    "name": "0day",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/0day",
+    "writeupUrl": "",
+    "hint": "Exploit Ubuntu, like a Turtle in a Hurricane",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-physicalsecurityintro",
+    "name": "Physical Security Intro",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/physicalsecurityintro",
+    "writeupUrl": "",
+    "hint": "This room is an introduction to physical security methods to bypass locks, doors and other physical barriers.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-intropocscripting",
+    "name": "Intro PoC Scripting",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "searchsploit",
+      "Metasploit"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/intropocscripting",
+    "writeupUrl": "",
+    "hint": "Undiscovered",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtoshells",
+    "name": "What the Shell?",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Metasploit"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtoshells",
+    "writeupUrl": "",
+    "hint": "Intro PoC Scripting",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-nerdherd",
+    "name": "NerdHerd",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/nerdherd",
+    "writeupUrl": "",
+    "hint": "An introduction to sending and receiving (reverse/bind) shells when exploiting target machines.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-nislinuxone",
+    "name": "NIS - Linux Part I",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/nislinuxone",
+    "writeupUrl": "",
+    "hint": "Hack your way into this easy/medium level legendary TV series \"Chuck\" themed box!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-wireshark",
+    "name": "Wireshark 101",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Wireshark"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/wireshark",
+    "writeupUrl": "",
+    "hint": "Learn the basics of Wireshark and how to analyze various protocols and PCAPs",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-theserverfromhell",
+    "name": "The Server From Hell",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/theserverfromhell",
+    "writeupUrl": "",
+    "hint": "Face a server that feels as if it was configured and deployed by Satan himself. Can you escalate to root?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dllhijacking",
+    "name": "DLL HIJACKING",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dllhijacking",
+    "writeupUrl": "",
+    "hint": "DLL HIJACKING with Invoke-PrintDemon",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-javascriptbasics",
+    "name": "JavaScript Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/javascriptbasics",
+    "writeupUrl": "",
+    "hint": "Learn JavaScript, the high-level, multi-paradigm language of the web.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-bruteit",
+    "name": "Brute It",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/bruteit",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-brute-it-ctf-writeup-ba8ee8522730",
+    "hint": "Learn how to brute, hash cracking and escalate privileges in this box!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-mitre",
+    "name": "MITRE",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/mitre",
+    "writeupUrl": "",
+    "hint": "Linux: Local Enumeration",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-yearoftheowl",
+    "name": "Year of the Owl",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/yearoftheowl",
+    "writeupUrl": "",
+    "hint": "MITRE",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-attackingics1",
+    "name": "Attacking ICS Plant #1",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/attackingics1",
+    "writeupUrl": "",
+    "hint": "The foolish owl sits on his throne...",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-inacave",
+    "name": "You're in a cave",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/inacave",
+    "writeupUrl": "",
+    "hint": "Learn how to discover and attack ICS plants using modbus protocol (Modicon / Schneider Electric).",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-osiris",
+    "name": "Osiris",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/osiris",
+    "writeupUrl": "",
+    "hint": "Can you Quack it?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-envizon",
+    "name": "envizon",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/envizon",
+    "writeupUrl": "",
+    "hint": "Attacking the pentesters",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hardeningbasicspart1",
+    "name": "Hardening Basics Part 1",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hardeningbasicspart1",
+    "writeupUrl": "",
+    "hint": "Learn how to harden an Ubuntu Server! Covers a wide range of topics (Part 1)",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hardeningbasicspart2",
+    "name": "Hardening Basics Part 2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hardeningbasicspart2",
+    "writeupUrl": "",
+    "hint": "Continue learning about hardening",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dockerrodeo",
+    "name": "The Docker Rodeo",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dockerrodeo",
+    "writeupUrl": "",
+    "hint": "Learn a wide variety of Docker vulnerabilities in this guided showcase.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-chillhack",
+    "name": "Chill Hack",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/chillhack",
+    "writeupUrl": "",
+    "hint": "-",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-yara",
+    "name": "Yara",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/yara",
+    "writeupUrl": "",
+    "hint": "Learn the applications and language that is Yara for everything threat intelligence, forensics, and threat hunting!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-furthernmap",
+    "name": "Nmap",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "nmap"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/furthernmap",
+    "writeupUrl": "",
+    "hint": "An in depth look at scanning with Nmap, a powerful network scanning tool.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-catregex",
+    "name": "Regular expressions",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/catregex",
+    "writeupUrl": "",
+    "hint": "Learn and practise using regular expressions",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-unbakedpie",
+    "name": "Unbaked Pie",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/unbakedpie",
+    "writeupUrl": "",
+    "hint": "Don't over-baked your pie!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-allinonemj",
+    "name": "All in One",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/allinonemj",
+    "writeupUrl": "",
+    "hint": "This is a fun box where you will get to exploit the system in several ways. Few intended and unintended paths to getting user and root access.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxstrengthtraining",
+    "name": "Linux Strength Training",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "John The Ripper",
+      "haiti",
+      "hash-identifier",
+      "gpg"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxstrengthtraining",
+    "writeupUrl": "",
+    "hint": "Guided room for beginners to learn/reinforce linux command line skills",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-searchlightosint",
+    "name": "Searchlight - IMINT",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/searchlightosint",
+    "writeupUrl": "",
+    "hint": "OSINT challenges in the imagery intelligence category",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-learncyberin25days",
+    "name": "25 Days of Cyber Security",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/learncyberin25days",
+    "writeupUrl": "",
+    "hint": "Get started with Cyber Security in 25 Days - Learn the basics by doing a new, beginner friendly security challenge every day.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-adventofcyber2",
+    "name": "Advent of Cyber 2 [2020]",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/adventofcyber2",
+    "writeupUrl": "",
+    "hint": "Get started with Cyber Security in 25 Days - Learn the basics by doing a new, beginner friendly security challenge every day leading up to Christmas.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-owaspmutillidae",
+    "name": "OWASP Mutillidae II",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/owaspmutillidae",
+    "writeupUrl": "",
+    "hint": "Mutillidae II is a free, open source, deliberately vulnerable web-application providing a target for web-security enthusiast.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-howtousetryhackme",
+    "name": "How to use TryHackMe",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/howtousetryhackme",
+    "writeupUrl": "",
+    "hint": "Start and access your first machine!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-flask",
+    "name": "Introduction to Flask",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/flask",
+    "writeupUrl": "",
+    "hint": "How it works and how can I exploit it?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-colddboxeasy",
+    "name": "ColddBox: Easy",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/colddboxeasy",
+    "writeupUrl": "",
+    "hint": "An easy level machine with multiple ways to escalate privileges. By Hixec.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-enterprize",
+    "name": "EnterPrize",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/enterprize",
+    "writeupUrl": "",
+    "hint": "Can you hack your way in?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-rustscan",
+    "name": "RustScan",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "RustScan"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/rustscan",
+    "writeupUrl": "",
+    "hint": "Learn how to use RustScan.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hackermethodology",
+    "name": "The Hacker Methodology",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "who.is",
+      "PeopleFinder.com",
+      "sublist3r",
+      "hunter.io"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hackermethodology",
+    "writeupUrl": "",
+    "hint": "Introduction to the Hacker Methodology",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-crackthehashlevel2",
+    "name": "Crack The Hash Level 2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/crackthehashlevel2",
+    "writeupUrl": "",
+    "hint": "Advanced cracking hashes challenges and wordlist generation",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-battery",
+    "name": "battery",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/battery",
+    "writeupUrl": "",
+    "hint": "CTF designed by CTF lover for CTF lovers",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-chocolatefactory",
+    "name": "Chocolate Factory",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/chocolatefactory",
+    "writeupUrl": "",
+    "hint": "A Charlie And The Chocolate Factory themed room, revisit Willy Wonka's chocolate factory!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-btwindowsinternals",
+    "name": "Core Windows Processes",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/btwindowsinternals",
+    "writeupUrl": "",
+    "hint": "Explore the core processes within a Windows operating system and understand what normal behaviour is. This foundational knowledge will help you identify malicious processes running on an endpoint!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-johntheripper0",
+    "name": "John The Ripper",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "John The Ripper"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/johntheripper0",
+    "writeupUrl": "",
+    "hint": "Learn how to use John the Ripper - An extremely powerful and adaptable hash cracking tool",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-johntheripperbasics",
+    "name": "John the Ripper: The Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/johntheripperbasics",
+    "writeupUrl": "",
+    "hint": "Learn how to use John the Ripper, a powerful and adaptable hash-cracking tool.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sysmon",
+    "name": "Sysmon",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sysmon",
+    "writeupUrl": "",
+    "hint": "Learn how to utilize Sysmon to monitor and log your endpoints and environments.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sustah",
+    "name": "Sustah",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sustah",
+    "writeupUrl": "",
+    "hint": "Play a game to gain access to a vulnerable CMS. Can you beat the odds?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-btsysinternalssg",
+    "name": "Sysinternals",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/btsysinternalssg",
+    "writeupUrl": "",
+    "hint": "Learn to use the Sysinternals tools to analyze Windows systems or applications.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sqlilab",
+    "name": "SQL Injection Lab",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "sqlmap"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sqlilab",
+    "writeupUrl": "",
+    "hint": "Understand how SQL injection attacks work and how to exploit this vulnerability.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxagency",
+    "name": "Linux Agency",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxagency",
+    "writeupUrl": "",
+    "hint": "This Room will help you to sharpen your Linux Skills and help you to learn basic privilege escalation in a HITMAN theme. So, pack your briefcase and grab your SilverBallers as its gonna be a tough ride.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-nahamstore",
+    "name": "NahamStore",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/nahamstore",
+    "writeupUrl": "",
+    "hint": "In this room you will learn the basics of bug bounty hunting and web application hacking",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-keldagrim",
+    "name": "Keldagrim",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/keldagrim",
+    "writeupUrl": "",
+    "hint": "The dwarves are hiding their gold!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-madeyescastle",
+    "name": "Madeye's Castle",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/madeyescastle",
+    "writeupUrl": "",
+    "hint": "A boot2root box that is modified from a box used in CuCTF by the team at Runcode.ninja",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cyberweek2021",
+    "name": "Cyber Scotland 2021",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Social Engineering Toolkit",
+      "wpscan",
+      "CeWL"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cyberweek2021",
+    "writeupUrl": "",
+    "hint": "Follow along tutorials for Scottish Cyberweek Demos",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sudovulnssamedit",
+    "name": "Baron Samedit",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sudovulnssamedit",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-baron-samedit-walkthrough-writeup-7d0f228d5d0a",
+    "hint": "A tutorial room exploring CVE-2021-3156 in the Unix Sudo Program. Room Three in the SudoVulns Series",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-bashscripting",
+    "name": "Bash Scripting",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/bashscripting",
+    "writeupUrl": "",
+    "hint": "A Walkthrough room to teach you the basics of bash scripting",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-classicpasswd",
+    "name": "Classic Passwd",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/classicpasswd",
+    "writeupUrl": "",
+    "hint": "Practice your skills in reversing and get the flag bypassing the login",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxmodules",
+    "name": "Linux Modules",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxmodules",
+    "writeupUrl": "",
+    "hint": "Learn linux modules in a fun way",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-enpass",
+    "name": "En-pass",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/enpass",
+    "writeupUrl": "",
+    "hint": "Get what you can't.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-investigatingwindows3",
+    "name": "Investigating Windows 3.x",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/investigatingwindows3",
+    "writeupUrl": "",
+    "hint": "Find the artifacts resident on the endpoint and sift through captured data to determine what type attack occurred on the endpoint.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-investigatingwindows2",
+    "name": "Investigating Windows 2.0",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/investigatingwindows2",
+    "writeupUrl": "",
+    "hint": "In the previous challenge you performed a brief analysis. Within this challenge, you will take a deeper dive into the attack.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-inferno",
+    "name": "Inferno",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/inferno",
+    "writeupUrl": "",
+    "hint": "Real Life machine + CTF. The machine is designed to be real-life (maybe not?) and is perfect for newbies starting out in penetration testing",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-thegreatescape",
+    "name": "The Great Escape",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/thegreatescape",
+    "writeupUrl": "",
+    "hint": "Our devs have created an awesome new site. Can you break out of the sandbox?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-iso27001",
+    "name": "ISO27001",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/iso27001",
+    "writeupUrl": "",
+    "hint": "Introduction to ISO/ISO27001",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-webosint",
+    "name": "WebOSINT",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/webosint",
+    "writeupUrl": "",
+    "hint": "Conducting basic open source intelligence research on a website",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-magician",
+    "name": "magician",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/magician",
+    "writeupUrl": "",
+    "hint": "This magical website lets you convert image file formats",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cryptographyfordummies",
+    "name": "Cryptography for Dummies",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cryptographyfordummies",
+    "writeupUrl": "",
+    "hint": "Become familiar with cryptography",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-lunizzctfnd",
+    "name": "Lunizz CTF",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/lunizzctfnd",
+    "writeupUrl": "",
+    "hint": "Lunizz CTF",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-reloaded",
+    "name": "REloaded",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/reloaded",
+    "writeupUrl": "",
+    "hint": "This room is dedicated for the RE challenges, each challenge has unique concepts divided in each binaries. As if now only phase 1 is added will decide about phase 2 on response. Developed by WhiteHeart and tested by IslaMukheef",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-jpgchat",
+    "name": "JPGChat",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/jpgchat",
+    "writeupUrl": "",
+    "hint": "Exploiting poorly made custom chatting service written in a certain language...",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxbackdoors",
+    "name": "Linux Backdoors",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxbackdoors",
+    "writeupUrl": "",
+    "hint": "Learn all the different techniques used to backdoor a linux machine!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-wekorra",
+    "name": "Wekor",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/wekorra",
+    "writeupUrl": "",
+    "hint": "CTF challenge involving Sqli , WordPress , vhost enumeration and recognizing internal services ;)",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dnsmanipulation",
+    "name": "DNS Manipulation",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dnsmanipulation",
+    "writeupUrl": "",
+    "hint": "Manipulating DNS queries to our advantage",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-broker",
+    "name": "broker",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/broker",
+    "writeupUrl": "",
+    "hint": "Paul and Max use a rather unconventional way to chat. They do not seem to know that eavesdropping is possible though...",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-badbyte",
+    "name": "Badbyte",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "nmap",
+      "John The Ripper"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/badbyte",
+    "writeupUrl": "",
+    "hint": "Infiltrate BadByte and help us to take over root.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-h4cked",
+    "name": "h4cked",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/h4cked",
+    "writeupUrl": "",
+    "hint": "Find out what happened by analysing a .pcap file and hack your way back into the machine",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tokyoghoul666",
+    "name": "Tokyo Ghoul",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tokyoghoul666",
+    "writeupUrl": "",
+    "hint": "Help kaneki escape jason room",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-openvas",
+    "name": "OpenVAS",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Openvas"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/openvas",
+    "writeupUrl": "",
+    "hint": "Learn the basics of threat and vulnerability management using Open Vulnerability Assessment Scanning",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-vulnnet1",
+    "name": "VulnNet",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/vulnnet1",
+    "writeupUrl": "",
+    "hint": "Can you take advantage of the misconfigurations made by VulnNet Entertainment?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-attackingics2",
+    "name": "Attacking ICS Plant #2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/attackingics2",
+    "writeupUrl": "",
+    "hint": "Discover and attack ICS plants using modbus protocol (Modicon / Schneider Electric).",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-somesint",
+    "name": "KaffeeSec - SoMeSINT",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/somesint",
+    "writeupUrl": "",
+    "hint": "An intro to SOCMINT (Social Media Intelligence/Investigation) techniques and tooling. Use your awesome OSINT skills to perform an online investigation of a mysterious husband!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-pylonzf",
+    "name": "pyLon",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/pylonzf",
+    "writeupUrl": "",
+    "hint": "Can you penetrate the defenses and become root?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-vulnnetnode",
+    "name": "VulnNet: Node",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/vulnnetnode",
+    "writeupUrl": "",
+    "hint": "After the previous breach, VulnNet Entertainment states it won't happen again. Can you prove they're wrong?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-safezone",
+    "name": "SafeZone",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/safezone",
+    "writeupUrl": "",
+    "hint": "CTF Designed by CTF lover for CTF lovers",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-howwebsiteswork",
+    "name": "How Websites Work",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/howwebsiteswork",
+    "writeupUrl": "",
+    "hint": "To exploit a website, you first need to know how they are created.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-debug",
+    "name": "Debug",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/debug",
+    "writeupUrl": "",
+    "hint": "Linux Machine CTF! You'll learn about enumeration, finding hidden password files and how to exploit php deserialization!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-glitch",
+    "name": "GLITCH",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/glitch",
+    "writeupUrl": "",
+    "hint": "Challenge showcasing a web app and simple privilege escalation. Can you find the glitch?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-memoryforensics",
+    "name": "Memory Forensics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/memoryforensics",
+    "writeupUrl": "",
+    "hint": "Perform memory forensics to find the flags",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-vulnnetdotpy",
+    "name": "VulnNet: dotpy",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/vulnnetdotpy",
+    "writeupUrl": "",
+    "hint": "VulnNet Entertainment is back with their brand new website... and stronger?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-allsignspoint2pwnage",
+    "name": "AllSignsPoint2Pwnage",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/allsignspoint2pwnage",
+    "writeupUrl": "",
+    "hint": "A room that contains a rushed Windows based Digital Sign system. Can you breach it?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sakura",
+    "name": "Sakura Room",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sakura",
+    "writeupUrl": "",
+    "hint": "Use a variety of OSINT techniques to solve this room created by the OSINT Dojo.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-learnssti",
+    "name": "SSTI",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/learnssti",
+    "writeupUrl": "",
+    "hint": "Learn what Server Side Template Injection is and how to exploit it!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cooctusadventures",
+    "name": "Cooctus Stories",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cooctusadventures",
+    "writeupUrl": "",
+    "hint": "This room is about the Cooctus Clan",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-webenumerationv2",
+    "name": "Web Enumeration",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "gobuster",
+      "wpscan",
+      "nikto"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/webenumerationv2",
+    "writeupUrl": "",
+    "hint": "Learn the methodology of enumerating websites by using tools such as Gobuster, Nikto and WPScan",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-adana",
+    "name": "Different CTF",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/adana",
+    "writeupUrl": "",
+    "hint": "interesting room, you can shoot the sun",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-m4tr1xexitdenied",
+    "name": "M4tr1x: Exit Denied",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/m4tr1xexitdenied",
+    "writeupUrl": "",
+    "hint": "Free your mind. Exit from the M4tr1x...",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-yearofthejellyfish",
+    "name": "Year of the Jellyfish",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/yearofthejellyfish",
+    "writeupUrl": "",
+    "hint": "Some boxes sting...",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-overlayfs",
+    "name": "OverlayFS - CVE-2021-3493",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/overlayfs",
+    "writeupUrl": "",
+    "hint": "Exploit a 2021 Kernel vulnerability in Ubuntu to become root almost instantly!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-unstabletwin",
+    "name": "Unstable Twin",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/unstabletwin",
+    "writeupUrl": "",
+    "hint": "A Services based room, extracting information from HTTP Services and finding the hidden messages.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tshark",
+    "name": "TShark",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tshark",
+    "writeupUrl": "",
+    "hint": "Learn how to use TShark to accelerate your pcap analysis!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-binaryheaven",
+    "name": "Binary Heaven",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/binaryheaven",
+    "writeupUrl": "",
+    "hint": "Let us enjoy the heaven of binaries",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dnsindetail",
+    "name": "DNS in detail",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dnsindetail",
+    "writeupUrl": "",
+    "hint": "Learn how DNS works and how it helps you access internet services.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-puttingitalltogether",
+    "name": "Putting it all together",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/puttingitalltogether",
+    "writeupUrl": "",
+    "hint": "Learn how all the individual components of the web work together to bring you access to your favourite web sites.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-httpindetail",
+    "name": "HTTP in Detail",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/httpindetail",
+    "writeupUrl": "",
+    "hint": "Learn about how you request content from a web server using the HTTP protocol",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-redstoneonecarat",
+    "name": "Red Stone One Carat",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/redstoneonecarat",
+    "writeupUrl": "",
+    "hint": "First room of the Red Stone series. Hack ruby using ruby.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-btautopsye0",
+    "name": "Autopsy",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Autopsy"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/btautopsye0",
+    "writeupUrl": "",
+    "hint": "Learn how to use Autopsy to investigate artefacts from a disk image. Use your knowledge to investigate an employee who is being accused of leaking private company data.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sqhell",
+    "name": "SQHell",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sqhell",
+    "writeupUrl": "",
+    "hint": "Try and find all the flags in the SQL Injections",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-splunk2gcd5",
+    "name": "Splunk 2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/splunk2gcd5",
+    "writeupUrl": "",
+    "hint": "Part of the Blue Primer series. This room is based on version 2 of the Boss of the SOC (BOTS) competition by Splunk.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxfundamentalspart1",
+    "name": "Linux Fundamentals Part 1",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxfundamentalspart1",
+    "writeupUrl": "",
+    "hint": "Embark on the journey of learning the fundamentals of Linux. Learn to run some of the first essential commands on an interactive terminal.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxfundamentalspart2",
+    "name": "Linux Fundamentals Part 2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxfundamentalspart2",
+    "writeupUrl": "",
+    "hint": "Continue your learning Linux journey with part two. You will be learning how to log in to a Linux machine using SSH, how to advance your commands, file system interaction.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxfundamentalspart3",
+    "name": "Linux Fundamentals Part 3",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxfundamentalspart3",
+    "writeupUrl": "",
+    "hint": "Power-up your Linux skills and get hands-on with some common utilities that you are likely to use day-to-day!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-autopsy2ze0",
+    "name": "Disk Analysis & Autopsy",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/autopsy2ze0",
+    "writeupUrl": "",
+    "hint": "Ready for a challenge? Use Autopsy to investigate artifacts from a disk image.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-beginnerpathintro",
+    "name": "Learning Cyber Security",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/beginnerpathintro",
+    "writeupUrl": "",
+    "hint": "Get a short introduction to a few of the security topics you'll be learning about.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxserverforensics",
+    "name": "Linux Server Forensics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxserverforensics",
+    "writeupUrl": "",
+    "hint": "Learn about digital forensics artefacts found on Linux servers by analysing a compromised server",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-catpictures",
+    "name": "Cat Pictures",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/catpictures",
+    "writeupUrl": "",
+    "hint": "I made a forum where you can post cute cat pictures!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-thatstheticket",
+    "name": "That's The Ticket",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/thatstheticket",
+    "writeupUrl": "",
+    "hint": "IT Support are going to have a bad day, can you get into the admin account?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-mustacchio",
+    "name": "Mustacchio",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/mustacchio",
+    "writeupUrl": "",
+    "hint": "Easy boot2root Machine",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-fusioncorp",
+    "name": "Fusion Corp",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/fusioncorp",
+    "writeupUrl": "",
+    "hint": "Fusion Corp said they got everything patched... did they?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-juicydetails",
+    "name": "Juicy Details",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/juicydetails",
+    "writeupUrl": "",
+    "hint": "A popular juice shop has been breached! Analyze the logs to see what had happened...",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsfundamentals1xbx",
+    "name": "Windows Fundamentals 1",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsfundamentals1xbx",
+    "writeupUrl": "",
+    "hint": "In part 1 of the Windows Fundamentals module, we'll start our journey learning about the Windows desktop, the NTFS file system, UAC, the Control Panel, and more..",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsfundamentals2x0x",
+    "name": "Windows Fundamentals 2",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsfundamentals2x0x",
+    "writeupUrl": "",
+    "hint": "In part 2 of the Windows Fundamentals module, discover more about System Configuration, UAC Settings, Resource Monitoring, the Windows Registry and more..",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-polkit",
+    "name": "Polkit: CVE-2021-3560",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/polkit",
+    "writeupUrl": "",
+    "hint": "Walkthrough room for CVE-2021-3560",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-couch",
+    "name": "Couch",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/couch",
+    "writeupUrl": "",
+    "hint": "Hack into a vulnerable database server that collects and stores data in JSON-based document formats, in this semi-guided challenge.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-extendingyournetwork",
+    "name": "Extending Your Network",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/extendingyournetwork",
+    "writeupUrl": "",
+    "hint": "Learn about some of the technologies used to extend networks out onto the Internet and the motivations for this.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtolan",
+    "name": "Intro to LAN",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtolan",
+    "writeupUrl": "",
+    "hint": "Learn about some of the technologies and designs that power private networks",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-packetsframes",
+    "name": "Packets & Frames",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/packetsframes",
+    "writeupUrl": "",
+    "hint": "Understand how data is divided into smaller pieces and transmitted across a network to another device",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-osimodelzi",
+    "name": "OSI Model",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/osimodelzi",
+    "writeupUrl": "",
+    "hint": "Learn about the fundamental networking framework that determines the various stages in which data is handled across a network",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-whatisnetworking",
+    "name": "What is Networking?",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/whatisnetworking",
+    "writeupUrl": "",
+    "hint": "Begin learning the fundamentals of computer networking in this bite-sized and interactive module.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-gitandcrumpets",
+    "name": "Git and Crumpets",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/gitandcrumpets",
+    "writeupUrl": "",
+    "hint": "Our devs have been clamoring for some centralized version control, so the admin came through. Rumour has it that they included a few countermeasures...",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-splunk3zs",
+    "name": "Splunk 3",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/splunk3zs",
+    "writeupUrl": "",
+    "hint": "Part of the Blue Primer series. This room is based on version 3 of the Boss of the SOC (BOTS) competition by Splunk.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-coldvvars",
+    "name": "Cold VVars",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/coldvvars",
+    "writeupUrl": "",
+    "hint": "Part of Incognito CTF",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsfundamentals3xzx",
+    "name": "Windows Fundamentals 3",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsfundamentals3xzx",
+    "writeupUrl": "",
+    "hint": "In part 3 of the Windows Fundamentals module, learn about the built-in Microsoft tools that help keep the device secure, such as Windows Updates, Windows Security, BitLocker, and more...",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tickets1",
+    "name": "Learn and win prizes",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tickets1",
+    "writeupUrl": "",
+    "hint": "Complete rooms, win tickets. Get 3 of the same tickets and win a prize.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ffuf",
+    "name": "ffuf",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "ffuf"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ffuf",
+    "writeupUrl": "",
+    "hint": "Enumeration, fuzzing, and directory brute forcing using ffuf",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxfunctionhooking",
+    "name": "Linux Function Hooking",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxfunctionhooking",
+    "writeupUrl": "",
+    "hint": "Learn about function hooking in Linux and have fun hooking functions",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-raz0rblack",
+    "name": "RazorBlack",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/raz0rblack",
+    "writeupUrl": "",
+    "hint": "These guys call themselves hackers. Can you show them who's the boss ??",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-metamorphosis",
+    "name": "Metamorphosis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/metamorphosis",
+    "writeupUrl": "",
+    "hint": "Part of Incognito CTF",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-rocket",
+    "name": "Rocket",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/rocket",
+    "writeupUrl": "",
+    "hint": "Get ready for blast off!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sweettoothinc",
+    "name": "Sweettooth Inc.",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sweettoothinc",
+    "writeupUrl": "",
+    "hint": "Sweettooth Inc. needs your help to find out how secure their system is!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cmspit",
+    "name": "CMSpit",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cmspit",
+    "writeupUrl": "",
+    "hint": "This is a machine that allows you to practise web app hacking and privilege escalation using recent vulnerabilities.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-mma",
+    "name": "Mobile Malware Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/mma",
+    "writeupUrl": "",
+    "hint": "Learn and practice mobile malware analysis.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-powershellforpentesters",
+    "name": "PowerShell for Pentesters",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/powershellforpentesters",
+    "writeupUrl": "",
+    "hint": "This room covers the principle uses of PowerShell in Penetration Tests. Interacting with files, scanning the network and system enumeration are covered.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-pythonforcybersecurity",
+    "name": "Python for Pentesters",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/pythonforcybersecurity",
+    "writeupUrl": "",
+    "hint": "Python is probably the most widely used and most convenient scripting language in cybersecurity. This room covers real examples of Python scripts including hash cracking, key logging, enumeration and scanning.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-pythonbasics",
+    "name": "Python Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/pythonbasics",
+    "writeupUrl": "",
+    "hint": "Using a web-based code editor, learn the basics of Python and put your knowledge into practice by eventually coding a short Bitcoin investment project.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-superspamr",
+    "name": "Super-Spam",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/superspamr",
+    "writeupUrl": "",
+    "hint": "Defeat the evil Super-Spam, and save the day!!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-chronicle",
+    "name": "Chronicle",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/chronicle",
+    "writeupUrl": "",
+    "hint": "Part of Incognito CTF",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-walkinganapplication",
+    "name": "Walking An Application",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/walkinganapplication",
+    "writeupUrl": "",
+    "hint": "Manually review a web application for security issues using only your browsers developer tools. Hacking with just your browser, no tools or scripts.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-gamebuzz",
+    "name": "GameBuzz",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/gamebuzz",
+    "writeupUrl": "",
+    "hint": "Part of Incognito CTF",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-crocccrew",
+    "name": "Crocc Crew",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/crocccrew",
+    "writeupUrl": "",
+    "hint": "Crocc Crew has created a backdoor on a Cooctus Corp Domain Controller. We're calling in the experts to find the real back door!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-authenticationbypass",
+    "name": "Authentication Bypass",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "fuff"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/authenticationbypass",
+    "writeupUrl": "",
+    "hint": "Learn how to defeat logins and other authentication mechanisms to allow you access to unpermitted areas.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-uranium",
+    "name": "Uranium CTF",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/uranium",
+    "writeupUrl": "",
+    "hint": "Uranium CTF",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtopwntools",
+    "name": "Intro To Pwntools",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Pwntools",
+      "pwndbg",
+      "checksec",
+      "cyclic"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtopwntools",
+    "writeupUrl": "",
+    "hint": "An introductory room for the binary exploit toolkit Pwntools.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ssrfqi",
+    "name": "Intro to SSRF",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ssrfqi",
+    "writeupUrl": "",
+    "hint": "Learn how to exploit Server-Side Request Forgery (SSRF) vulnerabilities, allowing you to access internal server resources.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-wordpresscve202129447",
+    "name": "Wordpress: CVE-2021-29447",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/wordpresscve202129447",
+    "writeupUrl": "",
+    "hint": "Vulnerability allow a authenticated user whith low privilages upload a malicious WAV file that could lead to remote arbitrary file disclosure and server-side request forgery (SSRF).",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dunklematerieptxc9",
+    "name": "Dunkle Materie",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dunklematerieptxc9",
+    "writeupUrl": "",
+    "hint": "Investigate the ransomware attack using ProcDOT.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-win64assembly",
+    "name": "Windows x64 Assembly",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/win64assembly",
+    "writeupUrl": "",
+    "hint": "Introduction to x64 Assembly on Windows.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-subdomainenumeration",
+    "name": "Subdomain Enumeration",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "crt.sh",
+      "DNSRecon",
+      "Sublist3r"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/subdomainenumeration",
+    "writeupUrl": "",
+    "hint": "Learn the various ways of discovering subdomains to expand your attack surface of a target.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-fortress",
+    "name": "Fortress",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/fortress",
+    "writeupUrl": "",
+    "hint": "Hack this machine and reclaim the fortress from the Evil Overlord!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-principlesofsecurity",
+    "name": "Principles of Security",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/principlesofsecurity",
+    "writeupUrl": "",
+    "hint": "Learn the principles of information security that secures data and protects systems from abuse",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-pentestingfundamentals",
+    "name": "Pentesting Fundamentals",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/pentestingfundamentals",
+    "writeupUrl": "",
+    "hint": "Learn the important ethics and methodologies behind every pentest.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hipflask",
+    "name": "Hip Flask",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hipflask",
+    "writeupUrl": "",
+    "hint": "An in-depth walkthrough covering pentest methodology against a vulnerable server",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-bypassdisablefunctions",
+    "name": "Bypass Disable Functions",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "Chankro"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/bypassdisablefunctions",
+    "writeupUrl": "",
+    "hint": "Practice bypassing disabled dangerous features that run operating system commands or start processes.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-burpsuitebasicsold",
+    "name": "Burp Suite: The Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Burp Suite"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/burpsuitebasicsold",
+    "writeupUrl": "",
+    "hint": "An introduction to using Burp Suite for web application pentesting.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-empline",
+    "name": "Empline",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/empline",
+    "writeupUrl": "",
+    "hint": "Are you good enough to apply for this job?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-vulnerabilities101",
+    "name": "Vulnerabilities 101",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/vulnerabilities101",
+    "writeupUrl": "",
+    "hint": "Understand the flaws of an application and apply your researching skills on some vulnerability databases.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-exploitingavulnerabilityv2",
+    "name": "Exploit Vulnerabilities",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "rapid7",
+      "Searchsploit"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/exploitingavulnerabilityv2",
+    "writeupUrl": "",
+    "hint": "Learn about some of the tools, techniques and resources to exploit vulnerabilities",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-vulnerabilitycapstone",
+    "name": "Vulnerability Capstone",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/vulnerabilitycapstone",
+    "writeupUrl": "",
+    "hint": "Apply the knowledge gained throughout the Vulnerability Module in this challenge room.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-metasploitexploitation",
+    "name": "Metasploit: Exploitation",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Metasploit"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/metasploitexploitation",
+    "writeupUrl": "",
+    "hint": "Using Metasploit for scanning, vulnerability assessment and exploitation.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-meterpreter",
+    "name": "Metasploit: Meterpreter",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Metasploit"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/meterpreter",
+    "writeupUrl": "",
+    "hint": "Take a deep dive into Meterpreter, and see how in-memory payloads can be used for post-exploitation.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-palsforlife",
+    "name": "PalsForLife",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/palsforlife",
+    "writeupUrl": "",
+    "hint": "Abuse a misconfigured Kubernetes cluster",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-atlas",
+    "name": "Atlas",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Mimikatz"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/atlas",
+    "writeupUrl": "",
+    "hint": "Hack the Atlas server in this beginner room covering Windows attack methodology!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-lockdown",
+    "name": "Lockdown",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/lockdown",
+    "writeupUrl": "",
+    "hint": "Stay at 127.0.0.1. Wear a 255.255.255.0.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-oscommandinjection",
+    "name": "Command Injection",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/oscommandinjection",
+    "writeupUrl": "",
+    "hint": "Learn about a vulnerability allowing you to execute commands through a vulnerable app, and its remediations.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-idor",
+    "name": "IDOR",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/idor",
+    "writeupUrl": "",
+    "hint": "Learn how to find and exploit IDOR vulnerabilities in a web application giving you access to data that you shouldn't have.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-xss",
+    "name": "Intro to Cross-site Scripting",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/xss",
+    "writeupUrl": "",
+    "hint": "Learn how to detect and exploit XSS vulnerabilities, giving you control of other visitor's browsers.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-fileinc",
+    "name": "File Inclusion",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/fileinc",
+    "writeupUrl": "",
+    "hint": "This room introduces file inclusion vulnerabilities, including Local File Inclusion (LFI), Remote File Inclusion (RFI), and directory traversal.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sqlinjectionlm",
+    "name": "SQL Injection",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sqlinjectionlm",
+    "writeupUrl": "",
+    "hint": "Learn how to detect and exploit SQL Injection vulnerabilities",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introductiontohoneypots",
+    "name": "Introduction To Honeypots",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introductiontohoneypots",
+    "writeupUrl": "",
+    "hint": "A guided room covering the deployment of honeypots and analysis of botnet activities",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-mastermindsxlq",
+    "name": "Masterminds",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "Brim"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/mastermindsxlq",
+    "writeupUrl": "",
+    "hint": "Practice analyzing malicious traffic using Brim.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-jason",
+    "name": "Jax sucks alot.............",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/jason",
+    "writeupUrl": "",
+    "hint": "In JavaScript everything is a terrible mistake.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-nmap01",
+    "name": "Nmap Live Host Discovery",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "nmap"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/nmap01",
+    "writeupUrl": "",
+    "hint": "Learn how to use Nmap to discover live hosts using ARP scan, ICMP scan, and TCP/UDP ping scan.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-protocolsandservers2",
+    "name": "Protocols and Servers 2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "hydra",
+      "tcpdump",
+      "Wireshark"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/protocolsandservers2",
+    "writeupUrl": "",
+    "hint": "Learn about attacks against passwords and cleartext traffic; explore options for mitigation via SSH and SSL/TLS.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-nmap04",
+    "name": "Nmap Post Port Scans",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "nmap"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/nmap04",
+    "writeupUrl": "",
+    "hint": "Learn how to leverage Nmap for service and OS detection, use Nmap Scripting Engine (NSE), and save the results.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-nmap03",
+    "name": "Nmap Advanced Port Scans",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "nmap"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/nmap03",
+    "writeupUrl": "",
+    "hint": "Learn advanced techniques such as null, FIN, Xmas, and idle (zombie) scans, spoofing, in addition to FW and IDS evasion.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-nmap02",
+    "name": "Nmap Basic Port Scans",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "nmap"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/nmap02",
+    "writeupUrl": "",
+    "hint": "Learn in-depth how nmap TCP connect scan, TCP SYN port scan, and UDP port scan work.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-protocolsandservers",
+    "name": "Protocols and Servers",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/protocolsandservers",
+    "writeupUrl": "",
+    "hint": "Learn about common protocols such as HTTP, FTP, POP3, SMTP and IMAP, along with related insecurities.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-netsecchallenge",
+    "name": "Net Sec Challenge",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "Nmap",
+      "hydra"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/netsecchallenge",
+    "writeupUrl": "",
+    "hint": "Practice the skills you have learned in the Network Security module.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-btredlinejoxr3d",
+    "name": "Redline",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Volatility",
+      "Redline"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/btredlinejoxr3d",
+    "writeupUrl": "",
+    "hint": "Learn how to use Redline to perform memory analysis and to scan for IOCs on an endpoint.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ide",
+    "name": "IDE",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "nmap",
+      "searchsploit",
+      "linPEAS"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ide",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-ide-ctf-writeup-c9ffbacc5f63",
+    "hint": "An easy box to polish your enumeration skills!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linprivesc",
+    "name": "Linux Privilege Escalation",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linprivesc",
+    "writeupUrl": "",
+    "hint": "Learn the fundamentals of Linux privilege escalation. From enumeration to exploitation, get hands-on with over 8 different privilege escalation techniques.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cve202141773",
+    "name": "CVE-2021-41773/42013",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cve202141773",
+    "writeupUrl": "",
+    "hint": "A small explanation of an Apache path traversal bug and an incomplete fix",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-zeno",
+    "name": "Zeno",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/zeno",
+    "writeupUrl": "",
+    "hint": "Do you have the same patience as the great stoic philosopher Zeno? Try it out!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-temple",
+    "name": "Temple",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/temple",
+    "writeupUrl": "",
+    "hint": "Can you gain access to the temple?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-frankandherby",
+    "name": "Frank & Herby make an app",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/frankandherby",
+    "writeupUrl": "",
+    "hint": "Learn how the misconfiguration of containers can lead to opportunities for some and disasters for others.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-labyrinth8llv",
+    "name": "Minotaur's Labyrinth",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/labyrinth8llv",
+    "writeupUrl": "",
+    "hint": "The Minotaur threw a fit and captured some people in the Labyrinth. Are you able to help Daedalus free them?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-phishingyl",
+    "name": "Phishing",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "GoPhish"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/phishingyl",
+    "writeupUrl": "",
+    "hint": "Learn what phishing is and why it's important to a red team engagement. You will set up phishing infrastructure, write a convincing phishing email and try to trick your target into opening your email in a real-world simulation.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-squidgameroom",
+    "name": "Squid Game",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/squidgameroom",
+    "writeupUrl": "",
+    "hint": "\uc624\uc9d5\uc5b4 \uac8c\uc784",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-containme1",
+    "name": "ContainMe",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/containme1",
+    "writeupUrl": "",
+    "hint": "Where am I ? Catch me",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-passwordattacks",
+    "name": "Password Attacks",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/passwordattacks",
+    "writeupUrl": "",
+    "hint": "This room introduces the fundamental techniques to perform a successful password attack against various services and scenarios.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dejavu",
+    "name": "Deja Vu",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "nmap",
+      "BurpSuite",
+      "gobuster",
+      "Searchsploit"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dejavu",
+    "writeupUrl": "",
+    "hint": "Exploit a recent code injection vulnerability to take over a website full of cute dog pictures!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-revilcorp",
+    "name": "REvil Corp",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/revilcorp",
+    "writeupUrl": "",
+    "hint": "You are involved in an incident response engagement and need to analyze an infected host using Redline.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cybercrafted",
+    "name": "CyberCrafted",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cybercrafted",
+    "writeupUrl": "",
+    "hint": "Pwn this pay-to-win Minecraft server!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-opsec",
+    "name": "Red Team OPSEC",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/opsec",
+    "writeupUrl": "",
+    "hint": "Learn how to apply Operations Security (OPSEC) process for Red Teams.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsreversingintro",
+    "name": "Windows Reversing Intro",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsreversingintro",
+    "writeupUrl": "",
+    "hint": "Introduction to reverse engineering x64 Windows software.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-c2carnage",
+    "name": "Carnage",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/c2carnage",
+    "writeupUrl": "",
+    "hint": "Apply your analytical skills to analyze the malicious network traffic using Wireshark.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-road",
+    "name": "Road",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/road",
+    "writeupUrl": "",
+    "hint": "Inspired by a real-world pentesting engagement",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-weaponization",
+    "name": "Weaponization",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Metasploit"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/weaponization",
+    "writeupUrl": "",
+    "hint": "Understand and explore common red teaming weaponization techniques. You will learn to build custom payloads using common methods seen in the industry to get initial access.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-redteamrecon",
+    "name": "Red Team Recon",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "whois",
+      "nslookup",
+      "dig",
+      "DNSDumpster"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/redteamrecon",
+    "writeupUrl": "",
+    "hint": "Learn how to use DNS, advanced searching, Recon-ng, and Maltego to collect information about your target.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-adventofcyber3",
+    "name": "Advent of Cyber 3 (2021)",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/adventofcyber3",
+    "writeupUrl": "",
+    "hint": "Get started with Cyber Security in 25 Days - Learn the basics by doing a new, beginner friendly security challenge every day leading up to Christmas.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-phishingemails5fgjlzxc",
+    "name": "The Greenholt Phish",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/phishingemails5fgjlzxc",
+    "writeupUrl": "",
+    "hint": "Use the knowledge attained to analyze a malicious email.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-phishingemails4gkxh",
+    "name": "Phishing Prevention",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/phishingemails4gkxh",
+    "writeupUrl": "",
+    "hint": "Learn how to defend against phishing emails.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-phishingemails3tryoe",
+    "name": "Phishing Analysis Tools",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "PhishTool"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/phishingemails3tryoe",
+    "writeupUrl": "",
+    "hint": "Learn the tools used to aid an analyst to investigate suspicious emails.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-phishingemails2rytmuv",
+    "name": "Phishing Emails in Action",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/phishingemails2rytmuv",
+    "writeupUrl": "",
+    "hint": "Learn the different indicators of phishing attempts by examining actual phishing emails.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-shaker",
+    "name": "Shaker",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/shaker",
+    "writeupUrl": "",
+    "hint": "One of our devs has been experimenting with webservers and wants to see if his security is up to snuff. Rumour has it he updated all his dependencies, but did something fall through the cracks?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-phishingemails1tryoe",
+    "name": "Phishing Analysis Fundamentals",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/phishingemails1tryoe",
+    "writeupUrl": "",
+    "hint": "Learn all the components that make up an email.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-contiransomwarehgh",
+    "name": "Conti",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/contiransomwarehgh",
+    "writeupUrl": "",
+    "hint": "An Exchange server was compromised with ransomware. Use Splunk to investigate how the attackers compromised the server.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-redteamthreatintel",
+    "name": "Red Team Threat Intel",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/redteamthreatintel",
+    "writeupUrl": "",
+    "hint": "Apply threat intelligence to red team engagements and adversary emulation.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hamlet",
+    "name": "Hamlet",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hamlet",
+    "writeupUrl": "",
+    "hint": "A Shakespeare/Hamlet-inspired room in which you will explore an uncommon web application used in linguistic/NLP research.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsforensics1",
+    "name": "Windows Forensics 1",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "KAPE",
+      "Autopsy",
+      "FTK Imager",
+      "Registry Viewer"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsforensics1",
+    "writeupUrl": "",
+    "hint": "Introduction to Windows Registry Forensics",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-androidmalwareanalysis",
+    "name": "Android Malware Analysis",
+    "ip": "10.10.x.x",
+    "os": "Android",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/androidmalwareanalysis",
+    "writeupUrl": "",
+    "hint": "Android malware analysis with Pithus (static and hunting)",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sqlmap",
+    "name": "SQLMAP",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "sqlmap"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sqlmap",
+    "writeupUrl": "",
+    "hint": "Learn about and use Sqlmap to exploit the web application",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-plottedemr",
+    "name": "Plotted-EMR",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/plottedemr",
+    "writeupUrl": "",
+    "hint": "Everything here is plotted!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-lumberjackturtle",
+    "name": "Lumberjack Turtle",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/lumberjackturtle",
+    "writeupUrl": "",
+    "hint": "No logs, no crime... so says the lumberjack.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-commonattacks",
+    "name": "Common Attacks",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/commonattacks",
+    "writeupUrl": "",
+    "hint": "With practical exercises see how common attacks occur, and improve your cyber hygiene to stay safer online.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ret2libc",
+    "name": "ret2libc",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ret2libc",
+    "writeupUrl": "",
+    "hint": "This room teaches basic return-oriented programming (ROP), exploitation of binaries and an ASLR bypass.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-securityawarenessintro",
+    "name": "Security Awareness",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/securityawarenessintro",
+    "writeupUrl": "",
+    "hint": "An introduction to security awareness; why its important, the impact of being attacked, different threat actors and basic account security.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-thelayoftheland",
+    "name": "The Lay of the Land",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/thelayoftheland",
+    "writeupUrl": "",
+    "hint": "Learn about and get hands-on with common technologies and security products used in corporate environments; both host and network-based security solutions are covered.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-pwnkit",
+    "name": "Pwnkit: CVE-2021-4034",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/pwnkit",
+    "writeupUrl": "",
+    "hint": "Interactive lab for exploiting and remediating Pwnkit (CVE-2021-4034) in the Polkit package",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-pyramidofpainax",
+    "name": "Pyramid Of Pain",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/pyramidofpainax",
+    "writeupUrl": "",
+    "hint": "Learn what is the Pyramid of Pain and how to utilize this model to determine the level of difficulty it will cause for an adversary to change the indicators associated with them, and their campaign.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dearqa",
+    "name": "Dear QA",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dearqa",
+    "writeupUrl": "",
+    "hint": "Are you able to solve this challenge involving reverse engineering and exploit development?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-bruteforceheroes",
+    "name": "Brute Force Heroes",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "hydra",
+      "Burp Suite",
+      "ZAP",
+      "Patator"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/bruteforceheroes",
+    "writeupUrl": "",
+    "hint": "Walkthrough room to look at the different tools that can be used when brute forcing, as well as the different situations that might favour one tool over another",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-redteamfirewalls",
+    "name": "Firewalls",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/redteamfirewalls",
+    "writeupUrl": "",
+    "hint": "Learn about and experiment with various firewall evasion techniques, such as port hopping and port tunneling.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-gallery666",
+    "name": "Gallery",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/gallery666",
+    "writeupUrl": "",
+    "hint": "Try to exploit our image gallery system",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-solar",
+    "name": "Solar, exploiting log4j",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/solar",
+    "writeupUrl": "",
+    "hint": "Explore CVE-2021-44228, a vulnerability in log4j affecting almost all software under the sun.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsforensics2",
+    "name": "Windows Forensics 2",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "MFT Explorer",
+      "Autopsy",
+      "Prefetch Parser",
+      "WxTCmd"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsforensics2",
+    "writeupUrl": "",
+    "hint": "Learn about common Windows file systems and forensic artifacts in the file systems.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-plottedtms",
+    "name": "Plotted-TMS",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/plottedtms",
+    "writeupUrl": "",
+    "hint": "Everything here is plotted!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-jrsecanalystintrouxo",
+    "name": "Junior Security Analyst Intro",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/jrsecanalystintrouxo",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-junior-security-analyst-intro-walkthrough-writeup-7ceaf4060263",
+    "hint": "Play through a day in the life of a Junior Security Analyst, their responsibilities and qualifications needed to land a role as an analyst.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-insekube",
+    "name": "Insekube",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/insekube",
+    "writeupUrl": "",
+    "hint": "Exploiting Kubernetes by leveraging a Grafana LFI vulnerability",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-flatline",
+    "name": "Flatline",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/flatline",
+    "writeupUrl": "",
+    "hint": "How low are your morals?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsinternals",
+    "name": "Windows Internals",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsinternals",
+    "writeupUrl": "",
+    "hint": "Learn and understand the fundamentals of how Windows operates at its core.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-redteamnetsec",
+    "name": "Network Security Solutions",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/redteamnetsec",
+    "writeupUrl": "",
+    "hint": "Learn about and experiment with various IDS/IPS evasion techniques, such as protocol and payload manipulation.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hackinghadoop",
+    "name": "Hacking Hadoop",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hackinghadoop",
+    "writeupUrl": "",
+    "hint": "Learning about the security failings commonly seen in Hadoop",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ohmyweb",
+    "name": "Oh My WebServer",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ohmyweb",
+    "writeupUrl": "",
+    "hint": "Can you root me?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtoc2",
+    "name": "Intro to C2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtoc2",
+    "writeupUrl": "",
+    "hint": "Learn the essentials of Command and Control to help you become a better Red Teamer and simplify your next Red Team assessment!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-biteme",
+    "name": "biteme",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/biteme",
+    "writeupUrl": "",
+    "hint": "Stay out of my server!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-snort",
+    "name": "Snort",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "snort"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/snort",
+    "writeupUrl": "",
+    "hint": "Learn how to use Snort to detect real-time threats, analyse recorded traffic files and identify anomalies.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-snortchallenges2",
+    "name": "Snort Challenge - Live Attacks",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "snort"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/snortchallenges2",
+    "writeupUrl": "",
+    "hint": "Put your snort skills into practice and defend against a live attack",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introdigitalforensics",
+    "name": "Intro to Digital Forensics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introdigitalforensics",
+    "writeupUrl": "",
+    "hint": "Learn about digital forensics and related processes and experiment with a practical example.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-operatingsystemsecurity",
+    "name": "Operating System Security",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/operatingsystemsecurity",
+    "writeupUrl": "",
+    "hint": "This room introduces users to operating system security and demonstrates SSH authentication on Linux.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-runtimedetectionevasion",
+    "name": "Runtime Detection Evasion",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/runtimedetectionevasion",
+    "writeupUrl": "",
+    "hint": "Learn how to bypass common runtime detection measures, such as AMSI, using modern tool-agnostic approaches.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dirtypipe",
+    "name": "Dirty Pipe: CVE-2022-0847",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dirtypipe",
+    "writeupUrl": "",
+    "hint": "Interactive lab for exploiting Dirty Pipe (CVE-2022-0847) in the Linux Kernel",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-nappingis1337",
+    "name": "Napping",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/nappingis1337",
+    "writeupUrl": "",
+    "hint": "Even Admins can fall asleep on the job",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-aratus",
+    "name": "Aratus",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/aratus",
+    "writeupUrl": "",
+    "hint": "Do you like reading? Do you like to go through tons of text? Aratus has what you need!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-abusingwindowsinternals",
+    "name": "Abusing Windows Internals",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/abusingwindowsinternals",
+    "writeupUrl": "",
+    "hint": "Leverage windows internals components to evade common detection solutions, using modern tool-agnostic approaches.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-0x41haz",
+    "name": "0x41haz",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/0x41haz",
+    "writeupUrl": "",
+    "hint": "Simple Reversing Challenge",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-bypassinguac",
+    "name": "Bypassing UAC",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/bypassinguac",
+    "writeupUrl": "",
+    "hint": "Learn common ways to bypass User Account Control (UAC) in Windows hosts.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-splunk201",
+    "name": "Incident handling with Splunk",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Splunk"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/splunk201",
+    "writeupUrl": "",
+    "hint": "Learn to use Splunk for incident handling through interactive scenarios.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-spring4shell",
+    "name": "Spring4Shell: CVE-2022-22965",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/spring4shell",
+    "writeupUrl": "",
+    "hint": "Interactive lab for exploiting Spring4Shell (CVE-2022-22965) in the Java Spring Framework",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-thehiveproject",
+    "name": "TheHive Project",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "TheHive"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/thehiveproject",
+    "writeupUrl": "",
+    "hint": "Learn how to use TheHive, a Security Incident Response Platform, to report investigation findings",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-snortchallenges1",
+    "name": "Snort Challenge - The Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "snort"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/snortchallenges1",
+    "writeupUrl": "",
+    "hint": "Put your snort skills into practice and write snort rules to analyse live capture network traffic.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ollie",
+    "name": "Ollie",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ollie",
+    "writeupUrl": "",
+    "hint": "Meet the world's most powerful hacker dog!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-misp",
+    "name": "MISP",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "MISP"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/misp",
+    "writeupUrl": "",
+    "hint": "Walkthrough on the use of MISP as a Threat Sharing Platform",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-idsevasion",
+    "name": "Intrusion Detection",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/idsevasion",
+    "writeupUrl": "",
+    "hint": "Learn cyber evasion techniques and put them to the test against two IDS",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-techsupp0rt1",
+    "name": "Tech_Supp0rt: 1",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/techsupp0rt1",
+    "writeupUrl": "",
+    "hint": "Hack into the scammer's under-development website to foil their plans.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-wazuhct",
+    "name": "Wazuh",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Wazuh"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/wazuhct",
+    "writeupUrl": "",
+    "hint": "Wazuh is a free, open source and enterprise-ready security monitoring solution for threat detection, integrity monitoring.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-offensivesecurityintro",
+    "name": "Offensive Security Intro",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/offensivesecurityintro",
+    "writeupUrl": "",
+    "hint": "Hack your first website (legally in a safe environment) and experience an ethical hacker's job.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtooffensivesecurity",
+    "name": "Intro to Offensive Security",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtooffensivesecurity",
+    "writeupUrl": "",
+    "hint": "Hack your first website (legally in a safe environment) and experience an ethical hacker's job.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introwebapplicationsecurity",
+    "name": "Web Application Security",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introwebapplicationsecurity",
+    "writeupUrl": "",
+    "hint": "Learn about web applications and explore some of their common security issues.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-intronetworksecurity",
+    "name": "Network Security",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/intronetworksecurity",
+    "writeupUrl": "",
+    "hint": "Learn about network security, understand attack methodology, and practice hacking into a target server.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-layer2",
+    "name": "L2 MAC Flooding & ARP Spoofing",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/layer2",
+    "writeupUrl": "",
+    "hint": "Learn how to use MAC Flooding to sniff traffic and ARP Cache Poisoning to manipulate network traffic as a MITM.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-pwn101",
+    "name": "PWN101",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/pwn101",
+    "writeupUrl": "",
+    "hint": "Beginner level binary exploitation challenges.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-printnightmarehpzqlp8",
+    "name": "PrintNightmare",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/printnightmarehpzqlp8",
+    "writeupUrl": "",
+    "hint": "Learn about the vulnerability known as PrintNightmare (CVE-2021-1675) and (CVE-2021-34527).",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-kape",
+    "name": "KAPE",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "KAPE"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/kape",
+    "writeupUrl": "",
+    "hint": "An introduction to Kroll Artifact Parser and Extractor (KAPE) for collecting and processing forensic artifacts",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-intromalwareanalysis",
+    "name": "Intro to Malware Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "strings",
+      "md5sum",
+      "pecheck"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/intromalwareanalysis",
+    "writeupUrl": "",
+    "hint": "What to do when you run into a suspected malware",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-defensivesecurityintro",
+    "name": "Defensive Security Intro",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/defensivesecurityintro",
+    "writeupUrl": "",
+    "hint": "Introducing defensive security and related topics, such as Threat Intelligence, SOC, DFIR, Malware Analysis, and SIEM.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-defensivesecurity",
+    "name": "Intro to Defensive Security",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/defensivesecurity",
+    "writeupUrl": "",
+    "hint": "Introducing defensive security and related topics, such as threat intelligence, SOC, DFIR, and SIEM.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-kubernetesforyouly",
+    "name": "Kubernetes for Everyone",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/kubernetesforyouly",
+    "writeupUrl": "",
+    "hint": "A Kubernetes hacking challenge for DevOps/SRE enthusiasts.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sandboxevasion",
+    "name": "Sandbox Evasion",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sandboxevasion",
+    "writeupUrl": "",
+    "hint": "Learn about active defense mechanisms Blue Teamers can deploy to identify adversaries in their environment.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-securityoperations",
+    "name": "Security Operations",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/securityoperations",
+    "writeupUrl": "",
+    "hint": "Learn about Security Operations Center (SOC): its responsibilities, services, and data sources.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-careersincyber",
+    "name": "Careers in Cyber",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/careersincyber",
+    "writeupUrl": "",
+    "hint": "Learn about the different careers in cyber security.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cve202226923",
+    "name": "CVE-2022-26923",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Certipy"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cve202226923",
+    "writeupUrl": "",
+    "hint": "Walkthrough on the exploitation of CVE-2022-26923, a vulnerability in AD Certificate Services.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-digdug",
+    "name": "Dig Dug",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/digdug",
+    "writeupUrl": "",
+    "hint": "Turns out this machine is a DNS server - it's time to get your shovels out!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-biblioteca",
+    "name": "Biblioteca",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/biblioteca",
+    "writeupUrl": "",
+    "hint": "Shhh. Be very very quiet, no shouting inside the biblioteca.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-networkminer",
+    "name": "NetworkMiner",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "NetworkMiner"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/networkminer",
+    "writeupUrl": "",
+    "hint": "Learn how to use NetworkMiner to analyse recorded traffic files and practice network forensics activities.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introductiontodevsecops",
+    "name": "Introduction to DevSecOps",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introductiontodevsecops",
+    "writeupUrl": "",
+    "hint": "Learn about the story of DevSecOps, Software Development Models & Shifting Left.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cyberheroes",
+    "name": "CyberHeroes",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "Burp Suite"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cyberheroes",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-cyberheroes-ctf-writeup-a491f4db5954",
+    "hint": "Want to be a part of the elite club of CyberHeroes? Prove your merit by finding a way to log in!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxforensics",
+    "name": "Linux Forensics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxforensics",
+    "writeupUrl": "",
+    "hint": "Learn about the common forensic artifacts found in the file system of Linux Operating System",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-monitoringevasion",
+    "name": "Evading Logging and Monitoring",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/monitoringevasion",
+    "writeupUrl": "",
+    "hint": "Learn how to bypass common logging and system monitoring, such as ETW, using modern tool-agnostic approaches.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-frankandherbytryagain",
+    "name": "Frank and Herby try again.....",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/frankandherbytryagain",
+    "writeupUrl": "",
+    "hint": "Frank and Herby still don't know how to use kubernetes correctly.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-breachingad",
+    "name": "Breaching Active Director",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/breachingad",
+    "writeupUrl": "",
+    "hint": "This network covers techniques and tools that can be used to acquire that first set of AD credentials that can then be used to enumerate AD.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-mrphisher",
+    "name": "Mr. Phisher",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/mrphisher",
+    "writeupUrl": "",
+    "hint": "I received a suspicious email with a very weird looking attachment. It keeps on asking me to \"enable macros\". What are those?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-adenumeration",
+    "name": "Enumerating Active Directory",
+    "ip": "10.10.x.x",
+    "os": "Active Directory",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/adenumeration",
+    "writeupUrl": "",
+    "hint": "This room covers various Active Directory enumeration techniques, their use cases as well as drawbacks.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsprivesc20",
+    "name": "Windows Privilege Escalation",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "winPEAS",
+      "Metasploit"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsprivesc20",
+    "writeupUrl": "",
+    "hint": "Learn the fundamentals of Windows privilege escalation techniques.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-seasurfer",
+    "name": "Sea Surfer",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/seasurfer",
+    "writeupUrl": "",
+    "hint": "Ride the Wave!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-islandorchestration",
+    "name": "Island Orchestration",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/islandorchestration",
+    "writeupUrl": "",
+    "hint": "Looking for the next holiday destination? Look no further than the Islands of Orchestration.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-annie",
+    "name": "Annie",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/annie",
+    "writeupUrl": "",
+    "hint": "Remote access comes in different flavors.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cve202226134",
+    "name": "Atlassian CVE-2022-26134",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cve202226134",
+    "writeupUrl": "",
+    "hint": "An interactive lab showcasing the Confluence Server and Data Center un-authenticated RCE vulnerability.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-wiresharkthebasics",
+    "name": "Wireshark: The Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Wireshark"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/wiresharkthebasics",
+    "writeupUrl": "",
+    "hint": "Learn the basics of Wireshark and how to analyse protocols and PCAPs.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-persistingad",
+    "name": "Persisting Active Directory",
+    "ip": "10.10.x.x",
+    "os": "Active Directory",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/persistingad",
+    "writeupUrl": "",
+    "hint": "Learn about common Active Directory persistence techniques that can be used post-compromise to ensure the blue team will not be able to kick you out during a red team exercise.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-committed",
+    "name": "Committed",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/committed",
+    "writeupUrl": "",
+    "hint": "One of our developers accidentally committed some sensitive code to our GitHub repository. Well, at least, that is what they told us...",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-wiresharkpacketoperations",
+    "name": "Wireshark: Packet Operations",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Wireshark"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/wiresharkpacketoperations",
+    "writeupUrl": "",
+    "hint": "Learn the fundamentals of packet analysis with Wireshark and how to find the needle in the haystack!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-follinamsdt",
+    "name": "Follina MSDT",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/follinamsdt",
+    "writeupUrl": "",
+    "hint": "A walkthrough on the CVE-2022-30190, the MSDT service, exploitation of the service vulnerability, and consequent detection techniques and remediation processes",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-securesdlc",
+    "name": "SSDLC",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/securesdlc",
+    "writeupUrl": "",
+    "hint": "This room focuses on the Secure Software Development Lifecycle (S-SDLC), its processes, and methodologies.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-olympusroom",
+    "name": "Olympus",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/olympusroom",
+    "writeupUrl": "",
+    "hint": "My first CTF !",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtoav",
+    "name": "Introduction to Antivirus",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Antivirus"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtoav",
+    "writeupUrl": "",
+    "hint": "Understand how antivirus software works and what detection techniques are used to bypass malicious file checks.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-zeekbro",
+    "name": "Zeek",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Zeek"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/zeekbro",
+    "writeupUrl": "",
+    "hint": "Introduction to hands-on network monitoring and threat detection with Zeek (formerly Bro).",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-zeekbroexercises",
+    "name": "Zeek Exercises",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "Zeek"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/zeekbroexercises",
+    "writeupUrl": "",
+    "hint": "Put your Zeek skills into practice and analyse network traffic.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ettubrute",
+    "name": "Brute",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ettubrute",
+    "writeupUrl": "",
+    "hint": "You as well, Brutus?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-threatinteltools",
+    "name": "Threat Intelligence Tools",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/threatinteltools",
+    "writeupUrl": "",
+    "hint": "Explore different OSINT tools used to conduct security threat assessments and investigations.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-agentt",
+    "name": "Agent T",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "nmap",
+      "ffuf",
+      "ExploitDB",
+      "Burp Suite"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/agentt",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-agent-t-ctf-writeup-cd369d491e88",
+    "hint": "Something seems a little off with the server.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-velociraptorhp",
+    "name": "Velociraptor",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Velociraptor"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/velociraptorhp",
+    "writeupUrl": "",
+    "hint": "Learn Velociraptor, an advanced open-source endpoint monitoring, digital forensic and cyber response platform.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hackervshacker",
+    "name": "Hacker vs. Hacker",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hackervshacker",
+    "writeupUrl": "",
+    "hint": "Someone has compromised this server already! Can you get in and evade their countermeasures?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-enumerationpe",
+    "name": "Enumeration",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "GhostPack Seatbelt",
+      "Process Hacker"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/enumerationpe",
+    "writeupUrl": "",
+    "hint": "This room is an introduction to enumeration when approaching an unknown corporate environment.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-confidential",
+    "name": "Confidential",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/confidential",
+    "writeupUrl": "",
+    "hint": "We got our hands on a confidential case file from some self-declared \"black hat hackers\"... it looks like they have a secret invite code.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-brim",
+    "name": "Brim",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Brim"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/brim",
+    "writeupUrl": "",
+    "hint": "Learn and practice log investigation, pcap analysis and threat hunting with Brim.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-b3dr0ck",
+    "name": "b3dr0ck",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/b3dr0ck",
+    "writeupUrl": "",
+    "hint": "Server trouble in Bedrock.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dataxexfilt",
+    "name": "Data Exfiltration",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dataxexfilt",
+    "writeupUrl": "",
+    "hint": "An introduction to Data Exfiltration and Tunneling techniques over various protocols.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-signatureevasion",
+    "name": "Signature Evasion",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/signatureevasion",
+    "writeupUrl": "",
+    "hint": "Learn how to break signatures and evade common AV, using modern tool-agnostic approaches.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-obfuscationprinciples",
+    "name": "Obfuscation Principles",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/obfuscationprinciples",
+    "writeupUrl": "",
+    "hint": "Leverage tool-agnostic software obfuscation practices to hide malicious functions and create unique code.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-credharvesting",
+    "name": "Credentials Harvesting",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Metasploit",
+      "MimiKatz",
+      "hashcat"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/credharvesting",
+    "writeupUrl": "",
+    "hint": "Apply current authentication models employed in modern environments to a red team approach.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsapi",
+    "name": "Introduction to Windows API",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsapi",
+    "writeupUrl": "",
+    "hint": "Learn how to interact with the win32 API and understand its wide range of use cases",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-vulnnetendgame",
+    "name": "VulnNet: Endgame",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/vulnnetendgame",
+    "writeupUrl": "",
+    "hint": "Hack your way into this simulated vulnerable infrastructure. No puzzles. Enumeration is the key.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cyberkillchainzmt",
+    "name": "Cyber Kill Chain",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cyberkillchainzmt",
+    "writeupUrl": "",
+    "hint": "The Cyber Kill Chain framework is designed for identification and prevention of the network intrusions. You will learn what the adversaries need to do in order to achieve their goals.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-intermediatenmap",
+    "name": "Intermediate Nmap",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "nmap"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/intermediatenmap",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-intermediate-nmap-ctf-writeup-8ee1878ce7a0",
+    "hint": "Can you combine your great nmap skills with other tools to log in to this machine?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-microsoftwindowshardening",
+    "name": "Microsoft Windows Hardening",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/microsoftwindowshardening",
+    "writeupUrl": "",
+    "hint": "To learn key attack vectors used by hackers and how to protect yourself using different hardening techniques.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-takedown",
+    "name": "Takedown",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/takedown",
+    "writeupUrl": "",
+    "hint": "We have reason to believe a corporate webserver has been compromised by RISOTTO GROUP. Cyber interdiction is authorized for this operation. Find their teamserver and take it down.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-unifiedkillchain",
+    "name": "Unified Kill Chain",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/unifiedkillchain",
+    "writeupUrl": "",
+    "hint": "The Unified Kill Chain is a framework which establishes the phases of an attack, and a means of identifying and mitigating risk to IT assets.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-diamondmodelrmuwwg42",
+    "name": "Diamond Model",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/diamondmodelrmuwwg42",
+    "writeupUrl": "",
+    "hint": "Learn about the four core features of the Diamond Model of Intrusion Analysis: adversary, infrastructure, capability, and victim.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-opencti",
+    "name": "OpenCTI",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/opencti",
+    "writeupUrl": "",
+    "hint": "Provide an understanding of the OpenCTI Project",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cyberthreatintel",
+    "name": "Intro to Cyber Threat Intel",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cyberthreatintel",
+    "writeupUrl": "",
+    "hint": "Introducing cyber threat intelligence and related topics, such as relevant standards and frameworks.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-wiresharktrafficanalysis",
+    "name": "Wireshark: Traffic Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Wireshark"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/wiresharktrafficanalysis",
+    "writeupUrl": "",
+    "hint": "Learn the basics of traffic analysis with Wireshark and how to find anomalies on your network!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-surfer",
+    "name": "Surfer",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/surfer",
+    "writeupUrl": "",
+    "hint": "Surf some internal webpages to find the flag!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introductoryroomdfirmodule",
+    "name": "DFIR: An Introduction",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introductoryroomdfirmodule",
+    "writeupUrl": "",
+    "hint": "Introductory room for the DFIR module",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtoendpointsecurity",
+    "name": "Intro to Endpoint Security",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "TCPView",
+      "SysInternals"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtoendpointsecurity",
+    "writeupUrl": "",
+    "hint": "Learn about fundamentals, methodology, and tooling for endpoint security monitoring.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dx1libertyislandplde",
+    "name": "DX1: Liberty Island",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dx1libertyislandplde",
+    "writeupUrl": "",
+    "hint": "Can you help the NSF get a foothold in UNATCO's system?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-benign",
+    "name": "Benign",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "Splunk"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/benign",
+    "writeupUrl": "",
+    "hint": "Challenge room to investigate a compromised host.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-itsybitsy",
+    "name": "ItsyBitsy",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "ELK"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/itsybitsy",
+    "writeupUrl": "",
+    "hint": "Put your ELK knowledge together and investigate an incident.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-printnightmarec2bn7l",
+    "name": "PrintNightmare, again!",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/printnightmarec2bn7l",
+    "writeupUrl": "",
+    "hint": "Search the artifacts on the endpoint to determine if the employee used any of the Windows Printer Spooler vulnerabilities to elevate their privileges.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-epoch",
+    "name": "Epoch",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/epoch",
+    "writeupUrl": "",
+    "hint": "Be honest, you have always wanted an online tool that could help you convert UNIX dates and timestamps!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-warzoneone",
+    "name": "Warzone 1",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/warzoneone",
+    "writeupUrl": "",
+    "hint": "You received an IDS/IPS alert. Time to triage the alert to determine if its a true positive.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-templates",
+    "name": "Templates",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/templates",
+    "writeupUrl": "",
+    "hint": "Pug is my favorite templating engine! I made this super slick application so you can play around with Pug and see how it works.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-investigatingwithsplunk",
+    "name": "Investigating with Splunk",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "Splunk"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/investigatingwithsplunk",
+    "writeupUrl": "",
+    "hint": "Investigate anomalies using Splunk.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-posheclipse",
+    "name": "PS Eclipse",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "Splunk"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/posheclipse",
+    "writeupUrl": "",
+    "hint": "Use Splunk to investigate the ransomware activity.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-investigatingwithelk101",
+    "name": "Investigating with ELK 101",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "ELK"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/investigatingwithelk101",
+    "writeupUrl": "",
+    "hint": "Investigate VPN logs through ELK.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtosiem",
+    "name": "Introduction to SIEM",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtosiem",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-introduction-to-siem-walkthrough-writeup-b33c889e6032",
+    "hint": "An introduction to Security Information and Event Management.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-splunk101",
+    "name": "Splunk: Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Splunk"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/splunk101",
+    "writeupUrl": "",
+    "hint": "Learn the basics of Splunk.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-printnightmarec3kj",
+    "name": "PrintNightmare, thrice!",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/printnightmarec3kj",
+    "writeupUrl": "",
+    "hint": "The nightmare continues.. Search the artifacts on the endpoint, again, to determine if the employee used any of the Windows Printer Spooler vulnerabilities to elevate their privileges.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-trafficanalysisessentials",
+    "name": "Traffic Analysis Essentials",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/trafficanalysisessentials",
+    "writeupUrl": "",
+    "hint": "Learn Network Security and Traffic Analysis foundations and take a step into probing network anomalies.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-osqueryf8",
+    "name": "Osquery: The Basics",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Osquery"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/osqueryf8",
+    "writeupUrl": "",
+    "hint": "Let's cover the basics of Osquery.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-volatility",
+    "name": "Volatility",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Volatility"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/volatility",
+    "writeupUrl": "",
+    "hint": "Learn how to perform memory forensics with Volatility!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-neighbour",
+    "name": "Neighbour",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/neighbour",
+    "writeupUrl": "",
+    "hint": "Check out our new cloud service, Authentication Anywhere. Can you find other user's secrets?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-securityprinciples",
+    "name": "Security Principles",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/securityprinciples",
+    "writeupUrl": "",
+    "hint": "Learn about the security triad and common security models and principles.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tempestincident",
+    "name": "Tempest",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "EvtxEcmd",
+      "Timeline Explorer",
+      "SysmonView",
+      "Event Viewer"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tempestincident",
+    "writeupUrl": "",
+    "hint": "You are tasked to conduct an investigation from a workstation affected by a full attack chain.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dissectingpeheaders",
+    "name": "Dissecting PE Headers",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dissectingpeheaders",
+    "writeupUrl": "",
+    "hint": "Learn about Portable Executable files and how their headers work.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-warzonetwo",
+    "name": "Warzone 2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/warzonetwo",
+    "writeupUrl": "",
+    "hint": "You received another IDS/IPS alert. Time to triage the alert to determine if its a true positive.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtocontainerisation",
+    "name": "Intro to Containerisation",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtocontainerisation",
+    "writeupUrl": "",
+    "hint": "Learn about the technologies and benefits of containerisation.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-adventofcyber4",
+    "name": "Advent of Cyber 2022",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/adventofcyber4",
+    "writeupUrl": "",
+    "hint": "Get started with Cyber Security in 24 Days - learn the basics by doing a new, beginner-friendly security challenge every day leading up to Christmas.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-registry4n6",
+    "name": "Secret Recipe",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "RegistryExplorer",
+      "Everything.exe"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/registry4n6",
+    "writeupUrl": "",
+    "hint": "Perform Registry Forensics to Investigate a case.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tacticaldetection",
+    "name": "Tactical Detection",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Sigma"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tacticaldetection",
+    "writeupUrl": "",
+    "hint": "Establish a baseline knowledge of tactical detection, leveraging efficient techniques to bolster your security posture.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-newhireoldartifacts",
+    "name": "New Hire Old Artifacts",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/newhireoldartifacts",
+    "writeupUrl": "",
+    "hint": "Investigate the intrusion attack using Splunk.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sigma",
+    "name": "Sigma",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Sigma"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sigma",
+    "writeupUrl": "",
+    "hint": "Provide understanding to Sigma, a Generic Signature Format for SIEM Systems.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sighunt",
+    "name": "SigHunt",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sighunt",
+    "writeupUrl": "",
+    "hint": "You are tasked to create detection rules based on a new threat intel.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-owaspapisecuritytop105w",
+    "name": "OWASP API Security Top 10 - 1",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/owaspapisecuritytop105w",
+    "writeupUrl": "",
+    "hint": "Learn the basic concepts for secure API development (Part 1).",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-takeover",
+    "name": "TakeOver",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "ffuf"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/takeover",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-takeover-ctf-writeup-07111cf5e57e",
+    "hint": "This challenge revolves around subdomain enumeration.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-owaspapisecuritytop10d0",
+    "name": "OWASP API Security Top 10 - 2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/owaspapisecuritytop10d0",
+    "writeupUrl": "",
+    "hint": "Learn the basic concepts for secure API development (Part 2).",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-malbuster",
+    "name": "MalBuster",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/malbuster",
+    "writeupUrl": "",
+    "hint": "You are tasked to analyse unknown malware samples detected by your SOC team.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtopipelineautomation",
+    "name": "Intro to Pipeline Automation",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtopipelineautomation",
+    "writeupUrl": "",
+    "hint": "This room provides an introduction to DevOps pipeline automation and the potential security concerns.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-eavesdropper",
+    "name": "Eavesdropper",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/eavesdropper",
+    "writeupUrl": "",
+    "hint": "Listen closely, you might hear a password!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cryptographyintro",
+    "name": "Introduction to Cryptography",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cryptographyintro",
+    "writeupUrl": "",
+    "hint": "Learn about encryption algorithms such as AES, Diffie-Hellman key exchange, hashing, PKI, and TLS.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-md2pdf",
+    "name": "MD2PDF",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "nmap",
+      "dirb",
+      "exiftool"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/md2pdf",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-md2pdf-ctf-writeup-e74e0579c5a1",
+    "hint": "TopTierConversions LTD is proud to present its latest product launch.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-staticanalysis1",
+    "name": "Basic Static Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/staticanalysis1",
+    "writeupUrl": "",
+    "hint": "Learn basic malware analysis techniques without running the malware.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-fearsecond",
+    "name": "Second",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/fearsecond",
+    "writeupUrl": "",
+    "hint": "You Shall Fear The Second Order.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dependencymanagement",
+    "name": "Dependency Management",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dependencymanagement",
+    "writeupUrl": "",
+    "hint": "Learn about the security concerns regarding dependency management in the automated DevOps pipeline.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tardigrade",
+    "name": "Tardigrade",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tardigrade",
+    "writeupUrl": "",
+    "hint": "Can you find all the basic persistence mechanisms in this Linux endpoint?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-localpotato",
+    "name": "LocalPotato",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/localpotato",
+    "writeupUrl": "",
+    "hint": "Learn how to elevate your privileges on Windows using LocalPotato (CVE-2023-21746).",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introductiontocloudsecurityc6",
+    "name": "Intro to Cloud Security",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introductiontocloudsecurityc6",
+    "writeupUrl": "",
+    "hint": "Learn fundamental concepts regarding securing a cloud environment.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-bugged",
+    "name": "Bugged",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/bugged",
+    "writeupUrl": "",
+    "hint": "John likes to live in a very Internet connected world. Maybe too connected...",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-owasptop102021",
+    "name": "OWASP Top 10 - 2021",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/owasptop102021",
+    "writeupUrl": "",
+    "hint": "Learn about and exploit each of the OWASP Top 10 vulnerabilities; the 10 most critical web security risks.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-unattended",
+    "name": "Unattended",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Kape",
+      "RegistryExplorer"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/unattended",
+    "writeupUrl": "",
+    "hint": "Use your Windows forensics knowledge to investigate an incident.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-auroraedr",
+    "name": "Aurora EDR",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/auroraedr",
+    "writeupUrl": "",
+    "hint": "Familiarise with the use of a Sigma-based EDR tool, Aurora.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-lookback",
+    "name": "Lookback",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/lookback",
+    "writeupUrl": "",
+    "hint": "You\u2019ve been asked to run a vulnerability test on a production environment.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-networksecurityprotocols",
+    "name": "Network Security Protocols",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/networksecurityprotocols",
+    "writeupUrl": "",
+    "hint": "Learn about secure network protocols at the different layers of the OSI model.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-outlookntlmleak",
+    "name": "Outlook NTLM Leak",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/outlookntlmleak",
+    "writeupUrl": "",
+    "hint": "Leak password hashes from a user by sending them an email by abusing CVE-2023-23397.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-disgruntled",
+    "name": "Disgruntled",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/disgruntled",
+    "writeupUrl": "",
+    "hint": "Use your Linux forensics knowledge to investigate an incident.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-atomicredteam",
+    "name": "Atomic Red Team",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/atomicredteam",
+    "writeupUrl": "",
+    "hint": "Leveraging the Atomic Red Team Framework to strengthen the Security Operations' detection capabilities.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-devie",
+    "name": "Devie",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/devie",
+    "writeupUrl": "",
+    "hint": "A developer has asked you to do a vulnerability check on their system.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sdlc",
+    "name": "SDLC",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sdlc",
+    "writeupUrl": "",
+    "hint": "An introduction to the Software Development Lifecycle.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-opacity",
+    "name": "Opacity",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/opacity",
+    "writeupUrl": "",
+    "hint": "Opacity is a Boot2Root made for pentesters and cybersecurity enthusiasts.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dastzap",
+    "name": "DAST",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "ZAP"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dastzap",
+    "writeupUrl": "",
+    "hint": "Learn about Dynamic Application Security Testing.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-boogeyman1",
+    "name": "Boogeyman 1",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "jq",
+      "Wireshark",
+      "Thunderbird",
+      "LNKParse3"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/boogeyman1",
+    "writeupUrl": "",
+    "hint": "A new threat actor emerges from the wild using the name Boogeyman. Are you afraid of the Boogeyman?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-weaponizingvulnerabilities",
+    "name": "Weaponizing Vulnerabilities",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "sqlmap"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/weaponizingvulnerabilities",
+    "writeupUrl": "",
+    "hint": "Learn how a vulnerability evolves and methods to weaponize multiple vulnerabilities leading to RCE.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-services",
+    "name": "Services",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/services",
+    "writeupUrl": "",
+    "hint": "At your service.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-basicdynamicanalysis",
+    "name": "Basic Dynamic Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/basicdynamicanalysis",
+    "writeupUrl": "",
+    "hint": "Learn how to analyze malware Dynamically by running them in a Virtual Machine.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-obscured",
+    "name": "Obscure",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/obscured",
+    "writeupUrl": "",
+    "hint": "A CTF room focused on web and binary exploitation.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtodockerk8pdqk",
+    "name": "Intro to Docker",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtodockerk8pdqk",
+    "writeupUrl": "",
+    "hint": "Learn to create, build and deploy Docker containers!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-capture",
+    "name": "Capture!",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/capture",
+    "writeupUrl": "",
+    "hint": "Can you bypass the login form?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxsystemhardening",
+    "name": "Linux System Hardening",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxsystemhardening",
+    "writeupUrl": "",
+    "hint": "Learn how to improve the security posture of your Linux systems.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-prioritise",
+    "name": "Prioritise",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/prioritise",
+    "writeupUrl": "",
+    "hint": "In this challenge you will explore some less common SQL Injection techniques.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-soar",
+    "name": "SOAR",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "SOAR"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/soar",
+    "writeupUrl": "",
+    "hint": "Learn the concepts and methodology surrounding security orchestration, automation and response.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-weasel",
+    "name": "Weasel",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/weasel",
+    "writeupUrl": "",
+    "hint": "I think the data science team has been a bit fast and loose with their project resources.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-valleype",
+    "name": "Valley",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/valleype",
+    "writeupUrl": "",
+    "hint": "Can you find your way into the Valley?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-vulnerabilitymanagementkj",
+    "name": "Vulnerability Management",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/vulnerabilitymanagementkj",
+    "writeupUrl": "",
+    "hint": "Learn how to identify, detect, mitigate and report a vulnerability effectively.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-advanceddynamicanalysis",
+    "name": "Dynamic Analysis: Debugging",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/advanceddynamicanalysis",
+    "writeupUrl": "",
+    "hint": "Learn more advanced techniques of dynamic malware analysis.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-caseb4dm755",
+    "name": "Digital Forensics Case B4DM755",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/caseb4dm755",
+    "writeupUrl": "",
+    "hint": "Acquire the critical skills of evidence preservation, disk imaging, and artefact analysis for use in court.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtodetectionengineering",
+    "name": "Intro to Detection Engineering",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtodetectionengineering",
+    "writeupUrl": "",
+    "hint": "Introduce the concept of detection engineering and the frameworks used towards crafting effective threat detection strategies.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-becomeahackeroa",
+    "name": "Become a Hacker",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "gobuster",
+      "hydra"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/becomeahackeroa",
+    "writeupUrl": "",
+    "hint": "Learn how TryHackMe can help you become a hacker.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-raceconditions",
+    "name": "Race Conditions Challenge",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/raceconditions",
+    "writeupUrl": "",
+    "hint": "Knock knock! Race condition. Who's there?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-antireverseengineering",
+    "name": "Anti-Reverse Engineering",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/antireverseengineering",
+    "writeupUrl": "",
+    "hint": "Learn the techniques used by malware authors to bypass detection.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-threatintelligenceforsoc",
+    "name": "Threat Intelligence for SOC",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "ElastAlert",
+      "Sigma"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/threatintelligenceforsoc",
+    "writeupUrl": "",
+    "hint": "Learn how to utilise Threat Intelligence to improve the Security Operations pipeline.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-securesolacodersintra",
+    "name": "Intranet",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/securesolacodersintra",
+    "writeupUrl": "",
+    "hint": "Welcome to the intranet!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-networkdevicehardening",
+    "name": "Network Device Hardening",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/networkdevicehardening",
+    "writeupUrl": "",
+    "hint": "Learn techniques for securing and protecting network devices from potential threats and attacks.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sast",
+    "name": "SAST",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Psalm"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sast",
+    "writeupUrl": "",
+    "hint": "Learn about Static Application Security Testing.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-flip",
+    "name": "Flip",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/flip",
+    "writeupUrl": "",
+    "hint": "Hey, do a flip!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-caldera",
+    "name": "CALDERA",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/caldera",
+    "writeupUrl": "",
+    "hint": "Leveraging CALDERA to emulate various adversarial activities for detection capability testing.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cybergovernanceregulation",
+    "name": "Governance & Regulation",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cybergovernanceregulation",
+    "writeupUrl": "",
+    "hint": "Explore policies and frameworks vital for regulating cyber security in an organisation.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-owaspbrokenaccesscontrol",
+    "name": "OWASP Broken Access Control",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Burp Suite",
+      "ZAP"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/owaspbrokenaccesscontrol",
+    "writeupUrl": "",
+    "hint": "Exploit Broken Access Control: Number 1 of the Top 10 web security risks.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-catpictures2",
+    "name": "Cat Pictures 2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/catpictures2",
+    "writeupUrl": "",
+    "hint": "Now with more Cat Pictures!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-advancedelkqueries",
+    "name": "Advanced ELK Queries",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/advancedelkqueries",
+    "writeupUrl": "",
+    "hint": "Search large datasets efficiently with advanced queries in Kibana.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-virtualizationandcontainers",
+    "name": "Virtualization and Containers",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/virtualizationandcontainers",
+    "writeupUrl": "",
+    "hint": "Introduction to common virtualization technologies and applications.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-snappedphishingline",
+    "name": "Snapped Phish-ing Line",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "VirusTotal"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/snappedphishingline",
+    "writeupUrl": "",
+    "hint": "Apply learned skills to probe malicious emails and URLs, exposing a vast phishing campaign.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-iaaaidm",
+    "name": "Identity and Access Management",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/iaaaidm",
+    "writeupUrl": "",
+    "hint": "Learn about identification, authentication, authorisation, accounting, and identity management.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-iaaaidm-2",
+    "name": "Multi-Factor Authentication",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/iaaaidm",
+    "writeupUrl": "",
+    "hint": "Use your exploitation skills to bypass authentication mechanisms on a website and get RCE.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-redisl33t",
+    "name": "Red",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/redisl33t",
+    "writeupUrl": "",
+    "hint": "A classic battle for the ages.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-x8664arch",
+    "name": "x86 Architecture Overview",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/x8664arch",
+    "writeupUrl": "",
+    "hint": "A crash course in x86 architecture to enable us in malware reverse engineering.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-parrotpost",
+    "name": "ParrotPost: Phishing Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/parrotpost",
+    "writeupUrl": "",
+    "hint": "Reveal how attackers can craft client-side credential-stealing webpages that evade detection by security tools.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-trooper",
+    "name": "Trooper",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/trooper",
+    "writeupUrl": "",
+    "hint": "Use Cyber Threat Intelligence knowledge and skills to identify a threat based on a report.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-splunkexploringspl",
+    "name": "Splunk: Exploring SPL",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Splunk"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/splunkexploringspl",
+    "writeupUrl": "https://medium.com/@akyuksel/tryhackme-splunk-exploring-spl-walkthrough-writeup-1cdaafa2f638",
+    "hint": "Learn and explore the basics of the Search Processing Language.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-forgottenimplant",
+    "name": "Forgotten Implant",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/forgottenimplant",
+    "writeupUrl": "",
+    "hint": "With almost no attack surface, you must use a forgotten C2 implant to get initial access.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-auditingandmonitoringse",
+    "name": "Auditing and Monitoring",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/auditingandmonitoringse",
+    "writeupUrl": "",
+    "hint": "Learn about auditing, monitoring, logging, and SIEM.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-traverse",
+    "name": "Traverse",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/traverse",
+    "writeupUrl": "",
+    "hint": "Challenge your secure coding skills to restore a compromised website.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cve202338408",
+    "name": "CVE-2023-38408",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cve202338408",
+    "writeupUrl": "",
+    "hint": "Learn how to move laterally abusing libraries' side effects in Ubuntu (CVE-2023-38408).",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-intelcreationandcontainment",
+    "name": "Threat Intel & Containment",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Wireshark"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/intelcreationandcontainment",
+    "writeupUrl": "",
+    "hint": "Learn what threat intelligence looks like, and some containment strategies used in the IR process.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-securityengineerintro",
+    "name": "Security Engineer Intro",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/securityengineerintro",
+    "writeupUrl": "",
+    "hint": "What does a day in the life of a security engineer look like?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-crylo4a",
+    "name": "Crylo",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/crylo4a",
+    "writeupUrl": "",
+    "hint": "Learn about the CryptoJS library and JavaScript-based client-side encryption and decryption.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-threatemulationintro",
+    "name": "Intro to Threat Emulation",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/threatemulationintro",
+    "writeupUrl": "",
+    "hint": "A look into threat emulation practices as a means of cyber security assessment.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-splunkdashboardsandreports",
+    "name": "Splunk: Dashboards and Reports",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Splunk"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/splunkdashboardsandreports",
+    "writeupUrl": "https://medium.com/@akyuksel/tryhackme-splunk-dashboards-and-reports-walkthrough-writeup-29b2e59fadf3",
+    "hint": "Creating Dashboards and Reports in Splunk.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-greprtp",
+    "name": "Grep",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/greprtp",
+    "writeupUrl": "",
+    "hint": "A challenge that tests your reconnaissance and OSINT skills.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-x86assemblycrashcourse",
+    "name": "x86 Assembly Crash Course",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/x86assemblycrashcourse",
+    "writeupUrl": "",
+    "hint": "A crash course in x86 assembly to enable us in malware reverse engineering.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-identificationandscoping",
+    "name": "Identification & Scoping",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/identificationandscoping",
+    "writeupUrl": "",
+    "hint": "A look into the second phase of the Incident Response Framework, Identification & Scoping.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-lessonlearned",
+    "name": "Lesson Learned?",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/lessonlearned",
+    "writeupUrl": "",
+    "hint": "Have you learned your lesson?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtologs",
+    "name": "Intro to Logs",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtologs",
+    "writeupUrl": "",
+    "hint": "Learn the fundamentals of logging, data sources, collection methods and principles to step into the log analysis world.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-advancedstaticanalysis",
+    "name": "Advanced Static Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/advancedstaticanalysis",
+    "writeupUrl": "",
+    "hint": "Learn how to identify code constructs and examine the assembly code of malware.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-seriskmanagement",
+    "name": "Risk Management",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/seriskmanagement",
+    "writeupUrl": "",
+    "hint": "Learn about framing, assessing, responding, and monitoring risk.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-expose",
+    "name": "Expose",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/expose",
+    "writeupUrl": "",
+    "hint": "Use your red teaming knowledge to pwn a Linux machine.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-preparation",
+    "name": "Preparation",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "TheHive",
+      "Atomic Test"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/preparation",
+    "writeupUrl": "",
+    "hint": "A look into the Preparation phase of the Incident Response.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-codeanalysis",
+    "name": "Mother's Secret",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/codeanalysis",
+    "writeupUrl": "",
+    "hint": "Exploit flaws found in Mother's code to reveal its secrets.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-burpsuiterepeater",
+    "name": "Burp Suite: Repeater",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Burp Suite"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/burpsuiterepeater",
+    "writeupUrl": "",
+    "hint": "Learn how to use Repeater to duplicate requests in Burp Suite.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-burpsuiteintruder",
+    "name": "Burp Suite: Intruder",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Burp Suite"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/burpsuiteintruder",
+    "writeupUrl": "",
+    "hint": "Learn how to use Intruder to automate requests in Burp Suite.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-burpsuiteom",
+    "name": "Burp Suite: Other Modules",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Burp Suite"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/burpsuiteom",
+    "writeupUrl": "",
+    "hint": "Take a dive into some of Burp Suite's lesser-known modules.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-burpsuiteextensions",
+    "name": "Burp Suite: Extensions",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Burp Suite"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/burpsuiteextensions",
+    "writeupUrl": "",
+    "hint": "Learn how to use Extensions to broaden the functionality of Burp Suite.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-loggingforaccountability",
+    "name": "Logging for Accountability",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/loggingforaccountability",
+    "writeupUrl": "",
+    "hint": "Learn about the role accountability plays in logging and incident response.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtosecurityarchitecture",
+    "name": "Secure Network Architecture",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtosecurityarchitecture",
+    "writeupUrl": "",
+    "hint": "Learn about and implement security best practices for network environments.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-threatmodelling",
+    "name": "Threat Modelling",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/threatmodelling",
+    "writeupUrl": "",
+    "hint": "Building cyber resiliency and emulation capabilities through threat modelling.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtoirandim",
+    "name": "Intro to IR and IM",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtoirandim",
+    "writeupUrl": "",
+    "hint": "An introduction to Incident Response and Incident Management.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cybercrisismanagement",
+    "name": "Cyber Crisis Management",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cybercrisismanagement",
+    "writeupUrl": "",
+    "hint": "An introduction into cyber crisis management and how a CMT works.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-becomingafirstresponder",
+    "name": "Becoming a First Responder",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/becomingafirstresponder",
+    "writeupUrl": "",
+    "hint": "Explaining how first responders work and what to do if you are a first responder to a cyber incident.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-4th3n4",
+    "name": "Athena",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/4th3n4",
+    "writeupUrl": "",
+    "hint": "Break all security and compromise the machine.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-customalertrulesinwazuh",
+    "name": "Custom Alert Rules in Wazuh",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/customalertrulesinwazuh",
+    "writeupUrl": "",
+    "hint": "Learn how to create rules in Wazuh for your environment.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-supersecrettip",
+    "name": "Super Secret TIp",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/supersecrettip",
+    "writeupUrl": "",
+    "hint": "Are you only good at one thing? You better be a matrix!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introductiontothreathunting",
+    "name": "Threat Hunting: Introduction",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "MITRE ATT&CK"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introductiontothreathunting",
+    "writeupUrl": "",
+    "hint": "Behind the scenes of Threat Hunting - mindset, process, and goals.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-threathuntingfoothold",
+    "name": "Threat Hunting: Foothold",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/threathuntingfoothold",
+    "writeupUrl": "",
+    "hint": "Hunting suspicious activities indicating initial user or host compromise.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-threathuntingpivoting",
+    "name": "Threat Hunting: Pivoting",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/threathuntingpivoting",
+    "writeupUrl": "",
+    "hint": "Hunting suspicious activities indicating threat propagation across the infrastructure.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-threathuntingendgame",
+    "name": "Threat Hunting: Endgame",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/threathuntingendgame",
+    "writeupUrl": "",
+    "hint": "Learn how to hunt and discover suspicious activities indicating actions on objectives.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-paymentcollectors",
+    "name": "Hunt Me I: Payment Collectors",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/paymentcollectors",
+    "writeupUrl": "",
+    "hint": "A Finance Director was recently phished. Can you hunt the logs and determine what damage was done?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-typosquatters",
+    "name": "Hunt Me II: Typo Squatters",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/typosquatters",
+    "writeupUrl": "",
+    "hint": "One of your software developers unknowingly installed a malicious software. Can you trace back the root cause?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-splunklab",
+    "name": "Splunk: Setting up a SOC Lab",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Splunk"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/splunklab",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-splunk-setting-up-a-soc-lab-walkthrough-writeup-149d89ac3b0a",
+    "hint": "Explore Splunk beyond basics.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-maldoc",
+    "name": "MalDoc: Static Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/maldoc",
+    "writeupUrl": "",
+    "hint": "Perform detailed Static Analysis on malicious documents.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-logstash",
+    "name": "Logstash: Data Processing Unit",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/logstash",
+    "writeupUrl": "",
+    "hint": "Learn how to collect, process and transform data with Logstash.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-splunkdatamanipulation",
+    "name": "Splunk: Data Manipulation",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Splunk"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/splunkdatamanipulation",
+    "writeupUrl": "",
+    "hint": "Learn how to parse and manipulate data in Splunk.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-slingshot",
+    "name": "Slingshot",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/slingshot",
+    "writeupUrl": "",
+    "hint": "Can you retrace an attacker's steps after they enumerate and compromise a web server?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtologanalysis",
+    "name": "Intro to Log Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "awk",
+      "grep",
+      "cut",
+      "head"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtologanalysis",
+    "writeupUrl": "",
+    "hint": "An intro to log analysis, best practices, and essential tools for effective detection and response.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-atomicbirdone",
+    "name": "Atomic Bird Goes Purple #1",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/atomicbirdone",
+    "writeupUrl": "",
+    "hint": "Time to simulate hunting and detecting activities to sharpen your purple teaming skills.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-atomicbirdtwo",
+    "name": "Atomic Bird Goes Purple #2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/atomicbirdtwo",
+    "writeupUrl": "",
+    "hint": "Time to simulate hunting and detecting activities to sharpen your purple teaming skills.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-eradicationandremediation",
+    "name": "Eradication & Remediation",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/eradicationandremediation",
+    "writeupUrl": "",
+    "hint": "A look into the fourth phase of the Incident Response framework: Eradication, Remediation, and Recovery.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-lessonslearned",
+    "name": "Lessons Learned",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Sigma"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/lessonslearned",
+    "writeupUrl": "",
+    "hint": "A look into the fifth phase of the Incident Response framework: Lessons Learned.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-logoperations",
+    "name": "Log Operations",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/logoperations",
+    "writeupUrl": "",
+    "hint": "Learn the operation process details.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-fixit",
+    "name": "Fixit",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/fixit",
+    "writeupUrl": "",
+    "hint": "Fix the log parsing issue and analyze the logs in Splunk.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-compiled",
+    "name": "Compiled",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/compiled",
+    "writeupUrl": "",
+    "hint": "Strings can only help you so far.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-looneytunes",
+    "name": "Looney Tunables",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/looneytunes",
+    "writeupUrl": "",
+    "hint": "CVE-2023-4911: That's all Sec-Folks!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-registrypersistencedetection",
+    "name": "Registry Persistence Detection",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/registrypersistencedetection",
+    "writeupUrl": "",
+    "hint": "Learn to use the AutoRuns PowerShell module to detect persistence mechanisms that use the Registry.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sourcecodesecurity",
+    "name": "Source Code Security",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sourcecodesecurity",
+    "writeupUrl": "",
+    "hint": "Learn how to keep your source code secure using credential hygiene practices.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-confluence202322515",
+    "name": "Confluence CVE-2023-22515",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/confluence202322515",
+    "writeupUrl": "",
+    "hint": "Exploit CVE-2023-22515 to get admin access to Confluence Server and Data Center editions.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hijack",
+    "name": "Hijack",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hijack",
+    "writeupUrl": "",
+    "hint": "Misconfigs conquered, identities claimed.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-servidae",
+    "name": "Servidae: Log Analysis in ELK",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/servidae",
+    "writeupUrl": "",
+    "hint": "Analyze the logs of an affected workstation to determine the attacker's indicators of compromise.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-bppenguin",
+    "name": "Bulletproof Penguin",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/bppenguin",
+    "writeupUrl": "",
+    "hint": "Can you harden this Linux server?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-boogeyman2",
+    "name": "Boogeyman 2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/boogeyman2",
+    "writeupUrl": "",
+    "hint": "The Boogeyman is back. Are you still afraid of the Boogeyman?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-boogeyman3",
+    "name": "Boogeyman 3",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/boogeyman3",
+    "writeupUrl": "",
+    "hint": "The Boogeyman emerges from the darkness again.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cauldron",
+    "name": "The Witch's Cauldron",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cauldron",
+    "writeupUrl": "",
+    "hint": "Can you share Bob's secret recipe with Alice without Eve finding out?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dockmagic",
+    "name": "DockMagic",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dockmagic",
+    "writeupUrl": "",
+    "hint": "In a land of magic, a wizard escaped from his confinement and embarks on a new adventure.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-loguniverse",
+    "name": "Log Universe",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "ULogViewer"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/loguniverse",
+    "writeupUrl": "",
+    "hint": "Explore log files from various systems and learn how to carve data to adopt a course of action!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-probe",
+    "name": "Probe",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/probe",
+    "writeupUrl": "",
+    "hint": "Use your baseline scanning skills to enumerate a secure network.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-recoveringactivedirectory",
+    "name": "Recovering Active Directory",
+    "ip": "10.10.x.x",
+    "os": "Active Directory",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/recoveringactivedirectory",
+    "writeupUrl": "",
+    "hint": "Learn basic techniques to recover an AD in case of compromise.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dreaming",
+    "name": "Dreaming",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dreaming",
+    "writeupUrl": "",
+    "hint": "Solve the riddle that dreams have woven.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cactus",
+    "name": "Cactus",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cactus",
+    "writeupUrl": "",
+    "hint": "Bypass authentication and execute commands remotely on Cacti using CVE-2022-46169.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-avenger",
+    "name": "AVenger",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/avenger",
+    "writeupUrl": "",
+    "hint": "You\u2019ve been asked to exploit all the vulnerabilities present.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-stealth",
+    "name": "Stealth",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/stealth",
+    "writeupUrl": "",
+    "hint": "Use your evasion skills to pwn a Windows target with an updated defence mechanism.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-adventofcyber23sidequest",
+    "name": "Advent of Cyber '23 Side Quest",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/adventofcyber23sidequest",
+    "writeupUrl": "",
+    "hint": "Explore a series of advanced challenges alongside the core Advent of Cyber event!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-adventofcyber2023",
+    "name": "Advent of Cyber 2023",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/adventofcyber2023",
+    "writeupUrl": "",
+    "hint": "Get started with Cyber Security in 24 Days - Learn the basics by doing a new, beginner friendly security challenge every day leading up to Christmas.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-armageddon2r",
+    "name": "Snowy ARMageddon",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/armageddon2r",
+    "writeupUrl": "",
+    "hint": "Assist the Yeti in breaching the cyber police perimeter!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-adv3nt0fdbopsjcap",
+    "name": "The Bandit Surfer",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/adv3nt0fdbopsjcap",
+    "writeupUrl": "",
+    "hint": "The Bandit Yeti is surfing to town.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-busyvimfrosteau",
+    "name": "Frosteau Busy with Vim",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/busyvimfrosteau",
+    "writeupUrl": "",
+    "hint": "Stay frosty!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-surfingyetiiscomingtotown",
+    "name": "The Return of the Yeti",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/surfingyetiiscomingtotown",
+    "writeupUrl": "",
+    "hint": "The Yeti needs a plan for 2023. Help him out!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dodge",
+    "name": "Dodge",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dodge",
+    "writeupUrl": "",
+    "hint": "Test your pivoting and network evasion skills.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-whyhackme",
+    "name": "WhyHackMe",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/whyhackme",
+    "writeupUrl": "",
+    "hint": "Dive into the depths of security and analysis with WhyHackMe.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-containervulnerabilitiesdg",
+    "name": "Container Vulnerabilities",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/containervulnerabilitiesDG",
+    "writeupUrl": "",
+    "hint": "Learn how some of the common vulnerabilities found within Docker containers can be exploited.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ssrfhr",
+    "name": "SSRF",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ssrfhr",
+    "writeupUrl": "",
+    "hint": "Discover the inner workings of SSRF and explore multiple exploitation techniques.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-gitlabcve20237028",
+    "name": "GitLab CVE-2023-7028",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/gitlabcve20237028",
+    "writeupUrl": "",
+    "hint": "Learn to exploit a GitLab instance using CVE-2023-7028 and understand various mitigation techniques.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-umbrella",
+    "name": "Umbrella",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/umbrella",
+    "writeupUrl": "",
+    "hint": "Breach Umbrella Corp's time-tracking server by exploiting misconfigurations around containerisation.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-httprequestsmuggling",
+    "name": "HTTP Request Smuggling",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/httprequestsmuggling",
+    "writeupUrl": "",
+    "hint": "Learn about HTTP Request Smuggling and its different techniques.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-resetui",
+    "name": "Reset",
+    "ip": "10.10.x.x",
+    "os": "Active Directory",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/resetui",
+    "writeupUrl": "",
+    "hint": "This challenge simulates a cyber-attack scenario where you must exploit an Active Directory environment.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-filepathtraversal",
+    "name": "File Inclusion, Path Traversal",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/filepathtraversal",
+    "writeupUrl": "",
+    "hint": "Exploit File Inclusion and Path Traversal vulnerabilities.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-kitty",
+    "name": "Kitty",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/kitty",
+    "writeupUrl": "",
+    "hint": "Map? Where we are going, we don't need maps.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-containerhardening",
+    "name": "Container Hardening",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/containerhardening",
+    "writeupUrl": "",
+    "hint": "Learn how to implement the mechanisms designed to secure your Docker containers.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-eviction",
+    "name": "Eviction",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/eviction",
+    "writeupUrl": "",
+    "hint": "Unearth the monster from under your bed.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cicdandbuildsecurity",
+    "name": "CI/CD and Build Security",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cicdandbuildsecurity",
+    "writeupUrl": "",
+    "hint": "Learn about CI/CD and build principles to safeguard your pipelines.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtoiac",
+    "name": "Intro to IaC",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtoiac",
+    "writeupUrl": "",
+    "hint": "An introduction to infrastructure as code.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-breakrsa",
+    "name": "Breaking RSA",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/breakrsa",
+    "writeupUrl": "",
+    "hint": "Hop in and break poorly implemented RSA using Fermat's factorization algorithm.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-onpremisesiac",
+    "name": "On-Premises IaC",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/onpremisesiac",
+    "writeupUrl": "",
+    "hint": "This room provides security guidance for on-premises infrastructure as code deployments.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtok8s",
+    "name": "Intro to Kubernetes",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtok8s",
+    "writeupUrl": "",
+    "hint": "An introduction to Kubernetes covering the basics of cluster creation and hardening.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cloudbasediac",
+    "name": "Cloud-based IaC",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cloudbasediac",
+    "writeupUrl": "",
+    "hint": "Learn about infrastructure as code (IaC) using tools for cloud deployment.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-monikerlink",
+    "name": "Moniker Link (CVE-2024-21413)",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/monikerlink",
+    "writeupUrl": "",
+    "hint": "Leak user's credentials using CVE-2024-21413 to bypass Outlook's Protected View.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-exfilibur",
+    "name": "Exfilibur",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/exfilibur",
+    "writeupUrl": "",
+    "hint": "You\u2019ve been asked to exploit all the vulnerabilities present.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-chrome",
+    "name": "Chrome",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/chrome",
+    "writeupUrl": "",
+    "hint": "Let us place all of our trust in a password manager.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-http2requestsmuggling",
+    "name": "HTTP/2 Request Smuggling",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/http2requestsmuggling",
+    "writeupUrl": "",
+    "hint": "Exploit HTTP Request Smuggling in HTTP/2 environments.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-requestsmugglingbrowserdesync",
+    "name": "HTTP Browser Desync",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/requestsmugglingbrowserdesync",
+    "writeupUrl": "",
+    "hint": "Learn about Request Smuggling Browser Desync.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-summit",
+    "name": "Summit",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "PicoSecure"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/summit",
+    "writeupUrl": "",
+    "hint": "Can you chase a simulated adversary up the Pyramid of Pain until they finally back down?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dfirprocesslegalconsiderations",
+    "name": "Legal Considerations in DFIR",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dfirprocesslegalconsiderations",
+    "writeupUrl": "",
+    "hint": "Understand the processes involved in DFIR and the legal considerations that guide them.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hacksmartersecurity",
+    "name": "Hack Smarter Security",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hacksmartersecurity",
+    "writeupUrl": "",
+    "hint": "Can you hack the hackers?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxfilesystemanalysis",
+    "name": "Linux File System Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxfilesystemanalysis",
+    "writeupUrl": "",
+    "hint": "Perform real-time file system analysis on a Linux system to identify an attacker's artefacts.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-wsrequestsmuggling",
+    "name": "Request Smuggling: WebSockets",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/wsrequestsmuggling",
+    "writeupUrl": "",
+    "hint": "Exploit HTTP Request Smuggling through WebSockets.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-elbandito",
+    "name": "El Bandito",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/elbandito",
+    "writeupUrl": "",
+    "hint": "Can you help capture El Bandito before he leaves the galaxy?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-clocky",
+    "name": "Clocky",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/clocky",
+    "writeupUrl": "",
+    "hint": "Time is an illusion.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsapplications",
+    "name": "Windows Applications Forensics",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsapplications",
+    "writeupUrl": "",
+    "hint": "Perform a live analysis on Windows systems, focused on determining the outliers based on known behaviour of scheduled tasks, services, and installed applications.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-expregistryforensics",
+    "name": "Expediting Registry Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/expregistryforensics",
+    "writeupUrl": "",
+    "hint": "This room explores different tools used to expedite analysis of registry data during investigation.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-bypass",
+    "name": "Bypass",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/bypass",
+    "writeupUrl": "",
+    "hint": "Use your defence evasion skills to take control of a secure network.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsuseractivity",
+    "name": "Windows User Activity Analysis",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsuseractivity",
+    "writeupUrl": "",
+    "hint": "What happened in those 36 hours? A forensics case to solve.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsuseraccountforensics",
+    "name": "Windows User Account Forensics",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "ntdsutil"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsuseraccountforensics",
+    "writeupUrl": "",
+    "hint": "Learn where to search for artefacts associated with users and accounts.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-creative",
+    "name": "Creative",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/creative",
+    "writeupUrl": "",
+    "hint": "Exploit a vulnerable web application and some misconfigurations to gain root privileges.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-burg3rbytes",
+    "name": "TryHack3M: Burg3r Bytes",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/burg3rbytes",
+    "writeupUrl": "",
+    "hint": "They say these burgers are worth every penny. Can you buy one?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sch3mad3mon",
+    "name": "TryHack3M: Sch3Ma D3Mon",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sch3mad3mon",
+    "writeupUrl": "",
+    "hint": "A guided challenge to learn about SQL injection exploits.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tryhack3mencryptionchallenge",
+    "name": "TryHack3M: TriCipher Summit",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tryhack3mencryptionchallenge",
+    "writeupUrl": "",
+    "hint": "Reach the apex of this triple-crypto challenge!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-subscribe",
+    "name": "TryHack3M: Subscribe",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/subscribe",
+    "writeupUrl": "",
+    "hint": "Can you help Hack3M reach 3M subscribers?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tryhack3mbricksheist",
+    "name": "TryHack3M: Bricks Heist",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tryhack3mbricksheist",
+    "writeupUrl": "",
+    "hint": "Crack the code, command the exploit! Dive into the heart of the system with just an RCE CVE as your key.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-axss",
+    "name": "XSS",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/axss",
+    "writeupUrl": "",
+    "hint": "Explore in-depth the different types of XSS and their root causes.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-csrfv2",
+    "name": "CSRF",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/csrfV2",
+    "writeupUrl": "",
+    "hint": "Learn how a CSRF vulnerability works and methods to exploit and defend against CSRF vulnerabilities.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-capturereturns",
+    "name": "Capture Returns",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/capturereturns",
+    "writeupUrl": "",
+    "hint": "The developers have improved their login form since last time. Can you bypass it?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-raceconditionsattacks",
+    "name": "Race Conditions",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/raceconditionsattacks",
+    "writeupUrl": "",
+    "hint": "Learn about race conditions and how they affect web application security.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-corsandsop",
+    "name": "Challenge",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/corsandsop",
+    "writeupUrl": "",
+    "hint": "Discover the forensic artefacts present within iOS.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-whatsyourname",
+    "name": "Whats Your Name?",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/whatsyourname",
+    "writeupUrl": "",
+    "hint": "CORS & SOP",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-irdifficultiesandchallenges",
+    "name": "IR Difficulties and Challenges",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/irdifficultiesandchallenges",
+    "writeupUrl": "",
+    "hint": "Whats Your Name?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-analysingvolatilememory",
+    "name": "Analysing Volatile Memory",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/analysingvolatilememory",
+    "writeupUrl": "",
+    "hint": "Explore common DFIR obstacles and learn strategies for overcoming these challenges effectively.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-blizzard",
+    "name": "Blizzard",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/blizzard",
+    "writeupUrl": "",
+    "hint": "Learn how the Windows OS manages volatile data in different files on disk. Explore how to extract and analyse volatile data from those artefacts.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-insecuredeserialisation",
+    "name": "Insecure Deserialisation",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/insecuredeserialisation",
+    "writeupUrl": "",
+    "hint": "Get in-depth knowledge of the deserialisation process and how it poses a vulnerability in a web app.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsnetworkanalysis",
+    "name": "Windows Network Analysis",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsnetworkanalysis",
+    "writeupUrl": "",
+    "hint": "Discover networking artefacts using internal tooling on Windows.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-profilesroom",
+    "name": "Profiles",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/profilesroom",
+    "writeupUrl": "",
+    "hint": "No profile? No problem.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dombasedattacks",
+    "name": "DOM-Based Attacks",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dombasedattacks",
+    "writeupUrl": "",
+    "hint": "Learn about DOM-based vulnerabilities that can be leveraged to stage client-side attacks!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-irphilosophyethics",
+    "name": "IR Philosophy and Ethics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/irphilosophyethics",
+    "writeupUrl": "",
+    "hint": "Addressing the Incident Response philosophy.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cyberlensp6",
+    "name": "CyberLens",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cyberlensp6",
+    "writeupUrl": "",
+    "hint": "Can you exploit the CyberLens web server and discover the hidden flags?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-prototypepollution",
+    "name": "Prototype Pollution",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/prototypepollution",
+    "writeupUrl": "",
+    "hint": "Explore the concept of prototype pollution and its implications during pentesting.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-deadend",
+    "name": "Dead End?",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/deadend",
+    "writeupUrl": "",
+    "hint": "IR Timeline Analysis",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ldapinjection",
+    "name": "LDAP Injection",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ldapinjection",
+    "writeupUrl": "",
+    "hint": "Dead End?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxprocessanalysis",
+    "name": "Linux Process Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxprocessanalysis",
+    "writeupUrl": "",
+    "hint": "Exploiting Lightweight Directory Access Protocol.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-include",
+    "name": "Include",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/include",
+    "writeupUrl": "",
+    "hint": "Perform thorough process and application analysis to identify an attacker's persistence methods.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-xxeinjection",
+    "name": "XXE Injection",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Burp Suite"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/xxeinjection",
+    "writeupUrl": "",
+    "hint": "Exploiting XML External Entities.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tsharkthebasics",
+    "name": "TShark: The Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Tshark"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tsharkthebasics",
+    "writeupUrl": "",
+    "hint": "Learn the basics of TShark and take your protocol and PCAP analysis skills a step further.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-airplane",
+    "name": "Airplane",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/airplane",
+    "writeupUrl": "",
+    "hint": "Are you ready to fly?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-advancedsqlinjection",
+    "name": "Advanced SQL Injection",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/advancedsqlinjection",
+    "writeupUrl": "",
+    "hint": "Learn advanced injection techniques to exploit a web app.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tsharkcliwiresharkfeatures",
+    "name": "TShark: CLI Wireshark Features",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Tshark",
+      "Wireshark"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tsharkcliwiresharkfeatures",
+    "writeupUrl": "",
+    "hint": "Take your TShark skills to the next level by implementing Wireshark functionalities in the CLI.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-mkingdom",
+    "name": "mKingdom",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/mkingdom",
+    "writeupUrl": "",
+    "hint": "Beginner-friendly box inspired by a certain mustache man.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-serversidetemplateinjection",
+    "name": "Server-side Template Injection",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/serversidetemplateinjection",
+    "writeupUrl": "",
+    "hint": "Exploit various templating engines that lead to SSTI vulnerability.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-iosanalysis",
+    "name": "iOS Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/iosanalysis",
+    "writeupUrl": "",
+    "hint": "Discover the forensic artefacts present within iOS.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-snykopensource",
+    "name": "Snyk Open Source",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/snykopensource",
+    "writeupUrl": "",
+    "hint": "Securing open-source dependencies with Snyk - a junior application security engineer's journey.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-snykcode",
+    "name": "Snyk Code",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/snykcode",
+    "writeupUrl": "",
+    "hint": "Securing code with Snyk - a junior application security engineer's journey.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-w1seguy",
+    "name": "W1seGuy",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/w1seguy",
+    "writeupUrl": "",
+    "hint": "Securing code with Snyk - a junior application security engineer's journey.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-clusterhardening",
+    "name": "Cluster Hardening",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/clusterhardening",
+    "writeupUrl": "",
+    "hint": "A w1se guy 0nce said, the answer is usually as plain as day.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-winincidentsurface",
+    "name": "Windows Incident Surface",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/winincidentsurface",
+    "writeupUrl": "",
+    "hint": "Learn how to implement DFIR techniques to explore the Windows incident surface.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-publisher",
+    "name": "Publisher",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/publisher",
+    "writeupUrl": "",
+    "hint": "Test your enumeration skills on this boot-to-root machine.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-orminjection",
+    "name": "ORM Injection",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/orminjection",
+    "writeupUrl": "",
+    "hint": "Learn how to exploit injection vulnerabilities in an ORM-based web app.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxlogsinvestigations",
+    "name": "Linux Logs Investigations",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxlogsinvestigations",
+    "writeupUrl": "",
+    "hint": "Explore Linux system logs for effective incident response.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-nanocherryctf",
+    "name": "NanoCherryCTF",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/nanocherryctf",
+    "writeupUrl": "",
+    "hint": "Explore a double-sided site and escalate to root!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-nosqlinjectiontutorial",
+    "name": "NoSQL injection Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/nosqlinjectiontutorial",
+    "writeupUrl": "",
+    "hint": "A walkthrough depicting basic NoSQL injections on MongoDB.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxliveanalysis",
+    "name": "Linux Live Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxliveanalysis",
+    "writeupUrl": "",
+    "hint": "Learn how to perform live forensics on a Linux host.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-thenewyorkflankees",
+    "name": "New York Flankees",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/thenewyorkflankees",
+    "writeupUrl": "",
+    "hint": "Discover the forensic artefacts present within iOS.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-k8sbestsecuritypractices",
+    "name": "K8s Best Security Practices",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/k8sbestsecuritypractices",
+    "writeupUrl": "",
+    "hint": "Can you, the rogue adventurer, break through Stefan's defences to take control of his blog!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-critical",
+    "name": "Critical",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "FTK imager",
+      "WinPmem",
+      "LIME",
+      "osxpmem"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/critical",
+    "writeupUrl": "",
+    "hint": "Best Kubernetes security practices at a cluster level.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dx2hellskitchen",
+    "name": "DX2: Hell's Kitchen",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dx2hellskitchen",
+    "writeupUrl": "",
+    "hint": "Acquire the basic skills to analyze a memory dump in a practical scenario.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introductiontocryptops",
+    "name": "Introduction to CryptOps",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introductiontocryptops",
+    "writeupUrl": "",
+    "hint": "Can you help compromise a civilian machine that we believe is connected to the NSF?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-fridayovertime",
+    "name": "Friday Overtime",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/fridayovertime",
+    "writeupUrl": "",
+    "hint": "Step into the shoes of a Cyber Threat Intelligence Analyst and put your investigation skills to the test.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-retracted",
+    "name": "Retracted",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/retracted",
+    "writeupUrl": "",
+    "hint": "Investigate the case of the missing ransomware.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-mondaymonitor",
+    "name": "Monday Monitor",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "Wazuh",
+      "Sysmon"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/mondaymonitor",
+    "writeupUrl": "",
+    "hint": "Ready to test Swiftspend's endpoint monitoring?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tsharkchallengesone",
+    "name": "TShark Challenge I: Teamwork",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "Tshark"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tsharkchallengesone",
+    "writeupUrl": "",
+    "hint": "Put your TShark skills into practice and analyse some network traffic.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tsharkchallengestwo",
+    "name": "TShark Challenge II: Directory",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "Tshark"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tsharkchallengestwo",
+    "writeupUrl": "",
+    "hint": "Put your TShark skills into practice and analyse some network traffic.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-injectics",
+    "name": "Injectics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/injectics",
+    "writeupUrl": "",
+    "hint": "Use your injection skills to take control of a web app.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-enumerationbruteforce",
+    "name": "Enumeration & Brute Force",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/enumerationbruteforce",
+    "writeupUrl": "",
+    "hint": "Enumerate and brute force authentication mechanisms.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-forensicimaging",
+    "name": "Forensic Imaging",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/forensicimaging",
+    "writeupUrl": "",
+    "hint": "Discover the forensic artefacts present within iOS.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-apiwizardsbreach",
+    "name": "APIWizards Breach",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/apiwizardsbreach",
+    "writeupUrl": "",
+    "hint": "Learn the basic concepts of forensic imaging.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sessionmanagement",
+    "name": "Session Management",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sessionmanagement",
+    "writeupUrl": "",
+    "hint": "Investigate a security breach at APIWizards Inc.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-joomify",
+    "name": "Joomify: CVE-2023-23752",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/joomify",
+    "writeupUrl": "",
+    "hint": "Learn about session management and the different attacks that can be performed against insecure implementations.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-blockroom",
+    "name": "Block",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/blockroom",
+    "writeupUrl": "",
+    "hint": "Learn how to exploit a Joomla CMS using CVE-2023-23752 and understand various mitigation techniques.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-microservicearchitectures",
+    "name": "Microservices Architectures",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/microservicearchitectures",
+    "writeupUrl": "",
+    "hint": "Explore the problems associated with building a Microservice Architecture and how to overcome these to build a secure environment.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtocoldsystemforensics",
+    "name": "Intro to Cold System Forensics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtocoldsystemforensics",
+    "writeupUrl": "",
+    "hint": "A look into the concepts of cold system forensics and how DFIR teams examine offline systems.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ironshade",
+    "name": "IronShade",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ironshade",
+    "writeupUrl": "",
+    "hint": "Perform a compromise assessment on a Linux host and identify the attack footprints.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-securegitops",
+    "name": "Secure GitOps",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/securegitops",
+    "writeupUrl": "",
+    "hint": "Learn how to secure the GitOps framework.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-papercut",
+    "name": "PaperCut: CVE-2023-27350",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/papercut",
+    "writeupUrl": "",
+    "hint": "Authorisation bypass (CVE-2023-27350) in PaperCut Print Management software leading to remote code execution.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-yueiua",
+    "name": "U.A. High School",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/yueiua",
+    "writeupUrl": "",
+    "hint": "Welcome to the web application of U.A., the Superhero Academy.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-oauthvulnerabilities",
+    "name": "OAuth Vulnerabilities",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/oauthvulnerabilities",
+    "writeupUrl": "",
+    "hint": "Learn how the OAuth protocol works and master techniques to exploit it.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hypervisorinternals",
+    "name": "Hypervisor Internals",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hypervisorinternals",
+    "writeupUrl": "",
+    "hint": "An introduction to the use of Hypervisors and their internal components.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hammer",
+    "name": "Hammer",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hammer",
+    "writeupUrl": "",
+    "hint": "An introduction to the use of Hypervisors and their internal components.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hostedhypervisors",
+    "name": "Hosted Hypervisors",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hostedhypervisors",
+    "writeupUrl": "",
+    "hint": "Exploiting Multi-Factor Authentication.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-trypwnmeone",
+    "name": "TryPwnMe One",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/trypwnmeone",
+    "writeupUrl": "",
+    "hint": "Learn about Hosted Hypervisors, how to investigate them, and more.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-k8sruntimesecurity",
+    "name": "K8s Runtime Security",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/k8sruntimesecurity",
+    "writeupUrl": "",
+    "hint": "Secure a Kubernetes environment using in-house offerings and runtime security tools like Falco.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-irplaybooks",
+    "name": "IR Playbooks",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Elastic"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/irplaybooks",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-ir-playbooks-walkthrough-writeup-d85dac36258b",
+    "hint": "Learn the basics of creating and using IR playbooks.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-certaindoom",
+    "name": "CERTain Doom",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/certaindoom",
+    "writeupUrl": "",
+    "hint": "Bob has since joined the CERT team and developed a nifty new site. Is there more than meets the eye?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-jwtsecurity",
+    "name": "JWT Security",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/jwtsecurity",
+    "writeupUrl": "",
+    "hint": "Learn about JWTs, where they are used, and how they need to be secured.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxincidentsurface",
+    "name": "Linux Incident Surface",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxincidentsurface",
+    "writeupUrl": "",
+    "hint": "Explore various areas of Incident Surface in Linux and how to identify the footprints of the incident.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-breakmenu",
+    "name": "Breakme",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/breakmenu",
+    "writeupUrl": "",
+    "hint": "Break this secure system and get the flags, if you can.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cheesectfv10",
+    "name": "Cheese CTF",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cheesectfv10",
+    "writeupUrl": "",
+    "hint": "Inspired by the great cheese talk of THM!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-thelondonbridge",
+    "name": "The London Bridge",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/thelondonbridge",
+    "writeupUrl": "",
+    "hint": "The London Bridge is falling down.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-k2room",
+    "name": "K2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/k2room",
+    "writeupUrl": "",
+    "hint": "Are you able to make your way through the mountain?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-pyrat",
+    "name": "Pyrat",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/pyrat",
+    "writeupUrl": "",
+    "hint": "Test your enumeration skills on this boot-to-root machine.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-brains",
+    "name": "Brains",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/brains",
+    "writeupUrl": "",
+    "hint": "The city forgot to close its gate.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-backtrack",
+    "name": "Backtrack",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/backtrack",
+    "writeupUrl": "",
+    "hint": "Daring to set foot where no one has.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-extractedroom",
+    "name": "Extracted",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/extractedroom",
+    "writeupUrl": "",
+    "hint": "We need your help!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-mountaineerlinux",
+    "name": "Mountaineer",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/mountaineerlinux",
+    "writeupUrl": "",
+    "hint": "Will you find the flags between all these mountains?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-networkingsecureprotocols",
+    "name": "Networking Secure Protocols",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/networkingsecureprotocols",
+    "writeupUrl": "",
+    "hint": "Learn how TLS, SSH, and VPN can secure your network traffic.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-networkingcoreprotocols",
+    "name": "Networking Core Protocols",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/networkingcoreprotocols",
+    "writeupUrl": "",
+    "hint": "Learn about the core TCP/IP protocols.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-networkingessentials",
+    "name": "Networking Essentials",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/networkingessentials",
+    "writeupUrl": "",
+    "hint": "Explore networking protocols from automatic configuration to routing packets to the destination.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tcpdump",
+    "name": "Tcpdump: The Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tcpdump",
+    "writeupUrl": "",
+    "hint": "Learn how to use Tcpdump to save, filter, and display packets.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-networkingconcepts",
+    "name": "Networking Concepts",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/networkingconcepts",
+    "writeupUrl": "",
+    "hint": "Learn about the ISO OSI model and the TCP/IP protocol suite.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-nmap",
+    "name": "Nmap: The Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "nmap"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/nmap",
+    "writeupUrl": "",
+    "hint": "Learn how to use Nmap to discover live hosts, find open ports, and detect service versions.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-searchskills",
+    "name": "Search Skills",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/searchskills",
+    "writeupUrl": "",
+    "hint": "Learn to efficiently search the Internet and use specialized search engines and technical docs.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowscommandline",
+    "name": "Windows Command Line",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowscommandline",
+    "writeupUrl": "",
+    "hint": "Learn the essential Windows commands.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-capabasics",
+    "name": "CAPA: The Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/capabasics",
+    "writeupUrl": "",
+    "hint": "Learn to use CAPA to identify malicious capabilities.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hashingbasics",
+    "name": "Hashing Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hashingbasics",
+    "writeupUrl": "",
+    "hint": "Learn about hashing functions and their uses in password verification and file integrity checking.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cryptographybasics",
+    "name": "Cryptography Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cryptographybasics",
+    "writeupUrl": "",
+    "hint": "Learn the basics of cryptography and symmetric encryption.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-publickeycrypto",
+    "name": "Public Key Cryptography Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/publickeycrypto",
+    "writeupUrl": "",
+    "hint": "Discover how public key ciphers such as RSA work and explore their role in applications such as SSH.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cyberchefbasics",
+    "name": "CyberChef: The Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "www.cyberchef.com"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cyberchefbasics",
+    "writeupUrl": "",
+    "hint": "This room is an introduction to CyberChef, the Swiss Army knife for cyber security professionals.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-vulnerabilityscanneroverview",
+    "name": "Vulnerability Scanner Overview",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/vulnerabilityscanneroverview",
+    "writeupUrl": "",
+    "hint": "Learn about vulnerability scanners and how they work in a practical scenario.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-idsfundamentals",
+    "name": "IDS Fundamentals",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/idsfundamentals",
+    "writeupUrl": "",
+    "hint": "Learn the fundamentals of IDS, along with the experience of working with Snort.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-firewallfundamentals",
+    "name": "Firewall Fundamentals",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/firewallfundamentals",
+    "writeupUrl": "",
+    "hint": "Learn about firewalls and get hands-on with Windows and Linux built-in firewalls.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-digitalforensicsfundamentals",
+    "name": "Digital Forensics Fundamentals",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "pdfinfo",
+      "exiftool"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/digitalforensicsfundamentals",
+    "writeupUrl": "",
+    "hint": "Learn about digital forensics and related processes and experiment with a practical example.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-socfundamentals",
+    "name": "SOC Fundamentals",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/socfundamentals",
+    "writeupUrl": "",
+    "hint": "Learn about the SOC team and their processes.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-logsfundamentals",
+    "name": "Logs Fundamentals",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/logsfundamentals",
+    "writeupUrl": "",
+    "hint": "Learn what logs are and how to analyze them for effective investigation.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-incidentresponsefundamentals",
+    "name": "Incident Response Fundamentals",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/incidentresponsefundamentals",
+    "writeupUrl": "",
+    "hint": "Learn how to perform Incident Response in cyber security.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-trywinme",
+    "name": "TryWinMe: Think Cyber Monopoly",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/trywinme",
+    "writeupUrl": "",
+    "hint": "Enhance your skills, have fun, and collect tickets for a chance to win prizes! The more tickets you collect and match, the greater your odds of scoring big.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-shellsoverview",
+    "name": "Shells Overview",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/shellsoverview",
+    "writeupUrl": "",
+    "hint": "Learn about the different types of shells.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sqlfundamentals",
+    "name": "SQL Fundamentals",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sqlfundamentals",
+    "writeupUrl": "",
+    "hint": "Learn how to perform basic SQL queries to retrieve and manage data in a database.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-webapplicationbasics",
+    "name": "Web Application Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/webapplicationbasics",
+    "writeupUrl": "",
+    "hint": "Learn the basics of web applications: HTTP, URLs, request methods, response codes, and headers.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-javascriptessentials",
+    "name": "JavaScript Essentials",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/javascriptessentials",
+    "writeupUrl": "",
+    "hint": "Learn how to use JavaScript to add interactivity to a website and understand associated vulnerabilities.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sqlmapthebasics",
+    "name": "SQLMap: The Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "sqlmap"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sqlmapthebasics",
+    "writeupUrl": "",
+    "hint": "Learn about SQL injection and exploit this vulnerability through the SQLMap tool.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-training",
+    "name": "Training Impact on Teams",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/training",
+    "writeupUrl": "",
+    "hint": "Discover the impact of training on teams and organisations.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-gobusterthebasics",
+    "name": "Gobuster: The Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/gobusterthebasics",
+    "writeupUrl": "",
+    "hint": "This room focuses on an introduction to Gobuster, an offensive security tool used for enumeration.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxshells",
+    "name": "Linux Shells",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxshells",
+    "writeupUrl": "",
+    "hint": "Learn about scripting and the different types of Linux shells.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-remnuxgettingstarted",
+    "name": "REMnux: Getting Started",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/remnuxgettingstarted",
+    "writeupUrl": "",
+    "hint": "Learn how you can use the tools inside the REMnux VM.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-flarevmarsenaloftools",
+    "name": "FlareVM: Arsenal of Tools",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/flarevmarsenaloftools",
+    "writeupUrl": "",
+    "hint": "Learn the arsenal of investigative tools in FlareVM.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowspowershell",
+    "name": "Windows PowerShell",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowspowershell",
+    "writeupUrl": "",
+    "hint": "Discover the \"Power\" in PowerShell and learn the basics.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-rabbitholeqq",
+    "name": "Rabbit Hole",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/rabbitholeqq",
+    "writeupUrl": "",
+    "hint": "It's easy to fall into rabbit holes.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-seetworoom",
+    "name": "SeeTwo",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "Wireshark",
+      "tshark",
+      "base64",
+      "file"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/seetworoom",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-seetwo-ctf-writeup-351db967d02d",
+    "hint": "Can you see who is in command and control?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hackback",
+    "name": "Hack Back",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hackback",
+    "writeupUrl": "",
+    "hint": "Can you get to the bottom of what's wrong with the machine?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-adventofcyber2024",
+    "name": "Advent of Cyber 2024",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "file",
+      "exiftool",
+      "ELK",
+      "Burp Suite"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/adventofcyber2024",
+    "writeupUrl": "",
+    "hint": "Dive into the wonderful world of cyber security by engaging in festive beginner-friendly exercises every day in the lead-up to Christmas!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-threathuntingwithyara",
+    "name": "Threat Hunting With YARA",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Yara",
+      "MITRE ATT&CK"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/threathuntingwithyara",
+    "writeupUrl": "",
+    "hint": "This room focuses on using YARA for threat hunting.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-mousetrap",
+    "name": "Mouse Trap",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/mousetrap",
+    "writeupUrl": "",
+    "hint": "Follow Jom and Terry on their purple teaming adventures, emulating attacks and investigating the leftover artefacts.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-supplychainattacks",
+    "name": "Supply Chain Attack: Lottie",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/supplychainattacks",
+    "writeupUrl": "",
+    "hint": "Learn about supply chain attacks and their various mitigation techniques.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-incidentresponseprocess",
+    "name": "Incident Response Process",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/incidentresponseprocess",
+    "writeupUrl": "",
+    "hint": "Practice the NIST Incident Response lifecycle steps on a compromised Windows workstation.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-thestickershop",
+    "name": "The Sticker Shop",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/thestickershop",
+    "writeupUrl": "",
+    "hint": "Can you exploit the sticker shop in order to capture the flag?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-adventofcyber24sidequest",
+    "name": "Advent of Cyber '24 Side Quest",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/adventofcyber24sidequest",
+    "writeupUrl": "",
+    "hint": "Explore a series of advanced challenges alongside the core Advent of Cyber event!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-baselineanomalies",
+    "name": "Baselines and Anomalies",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/baselineanomalies",
+    "writeupUrl": "",
+    "hint": "Identify normal activity and hunt for anomalies.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-silverplatter",
+    "name": "Silver Platter",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/silverplatter",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-silver-platter-ctf-writeup-9a13f9c7a25b",
+    "hint": "Can you breach the server?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-insecurerandomness",
+    "name": "Insecure Randomness",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/insecurerandomness",
+    "writeupUrl": "",
+    "hint": "Learn how incorrectly configured randomness can lead to application compromise.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-lofi",
+    "name": "Lo-Fi",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/lofi",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-lo-fi-ctf-writeup-c1f464615983",
+    "hint": "Want to hear some lo-fi beats, to relax or study to? We've got you covered!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-lightroom",
+    "name": "Light",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/lightroom",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-light-ctf-writeup-58f4c32a37fe",
+    "hint": "Welcome to the Light database application!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-mbrandgptanalysis",
+    "name": "MBR and GPT Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/mbrandgptanalysis",
+    "writeupUrl": "",
+    "hint": "Learn how MBR and GPT forensics are carried out to identify attacks during the boot process.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-smol",
+    "name": "Smol",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "nmap",
+      "wpscan",
+      "www.cyberchef.com",
+      "John the Ripper"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/smol",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-smol-ctf-writeup-7ad4f9373d22",
+    "hint": "Test your enumeration skills on this boot-to-root machine.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-paddingoracles",
+    "name": "Padding Oracles",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/paddingoracles",
+    "writeupUrl": "",
+    "hint": "Learn how the padding works during encryption and master techniques to exploit it.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-trypwnmetwo",
+    "name": "TryPwnMe Two",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/trypwnmetwo",
+    "writeupUrl": "",
+    "hint": "Test yourself with our Exploit Development challenges and practice the foundational techniques of binary exploitation in this second part of the TryPwnMe saga.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-bypassreallysimplesecurity",
+    "name": "Bypass Really Simple Security",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/bypassreallysimplesecurity",
+    "writeupUrl": "",
+    "hint": "Learn how to exploit a WordPress website using CVE-2024-10924 and understand various mitigation techniques.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-fat32analysis",
+    "name": "FAT32 Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/fat32analysis",
+    "writeupUrl": "",
+    "hint": "Examine the FAT32 filesystem from a forensic point of view.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-yougotmail",
+    "name": "You Got Mail",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/yougotmail",
+    "writeupUrl": "",
+    "hint": "Test your recon and phishing skills in order to complete your objective.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-lengthextensionattacks",
+    "name": "Length Extension Attacks",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/lengthextensionattacks",
+    "writeupUrl": "",
+    "hint": "Learn how hash functions enable attackers to extend and manipulate data using length extension attacks.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-decryptify",
+    "name": "Decryptify",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/decryptify",
+    "writeupUrl": "",
+    "hint": "Use your exploitation skills to uncover encrypted keys and get RCE.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-extanalysis",
+    "name": "EXT Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/extanalysis",
+    "writeupUrl": "",
+    "hint": "Discover the forensic basics of the EXT file system.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-rabbitstore",
+    "name": "Rabbit Store",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/rabbitstore",
+    "writeupUrl": "",
+    "hint": "Demonstrate your web application testing skills and the basics of Linux to escalate your privileges.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-cryptofailures",
+    "name": "Crypto Failures",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/cryptofailures",
+    "writeupUrl": "",
+    "hint": "Implementing your own military-grade encryption is usually not the best idea.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ntfsanalysis",
+    "name": "NTFS Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ntfsanalysis",
+    "writeupUrl": "",
+    "hint": "Explore the NTFS file system, its layout, and important components.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-billing",
+    "name": "Billing",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/billing",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-billing-ctf-writeup-460364a08de8",
+    "hint": "Some mistakes can be costly.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-tomcatcve202450379",
+    "name": "Tomcat: CVE-2024-50379",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/tomcatcve202450379",
+    "writeupUrl": "",
+    "hint": "Explore and learn about the Tomcat CVE-2024-50379 vulnerability.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-filecarving",
+    "name": "File Carving",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/filecarving",
+    "writeupUrl": "",
+    "hint": "Learn about the forensic technique known as file carving.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-robots",
+    "name": "Robots",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/robots",
+    "writeupUrl": "",
+    "hint": "A (small) tribute to I. Asimov.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hackfinitybattleencore",
+    "name": "Hackfinity Battle Encore",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/HackfinityBattleEncore",
+    "writeupUrl": "",
+    "hint": "Welcome to the Hackfinity Battle CTF!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-nextjscve202529927",
+    "name": "Next.js: CVE-2025-29927",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/nextjscve202529927",
+    "writeupUrl": "",
+    "hint": "Explore an authorization bypass vulnerability in Next.js.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-publickeyinfrastructure",
+    "name": "Public Key Infrastructure",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/publickeyinfrastructure",
+    "writeupUrl": "",
+    "hint": "Learn about Public Key Infrastructure and why it's important to secure certificate lifecycles.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-diskrupt",
+    "name": "Diskrupt",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/diskrupt",
+    "writeupUrl": "",
+    "hint": "Fix the damaged disk, analyse the filesystem, and recover the deleted files.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-attackingecboracles",
+    "name": "Attacking ECB Oracles",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/attackingecboracles",
+    "writeupUrl": "",
+    "hint": "Learn about the electronic codebook (ECB) cipher mode and how to exploit its weaknesses.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-simplehelpcve202457727",
+    "name": "SimpleHelp: CVE-2024-57727",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/simplehelpcve202457727",
+    "writeupUrl": "",
+    "hint": "Learn how attackers can exploit CVE-2024-57727 and how to detect that.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-macosforensicsbasics",
+    "name": "macOS Forensics: The Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/macosforensicsbasics",
+    "writeupUrl": "",
+    "hint": "Learn the basics to prepare for performing forensics on macOS.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-diskfiltration",
+    "name": "DiskFiltration",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/diskfiltration",
+    "writeupUrl": "",
+    "hint": "Test your Windows investigation skills on a critical data exfiltration case.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-breakingcryptothesimpleway",
+    "name": "Breaking Crypto the Simple Way",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/breakingcryptothesimpleway",
+    "writeupUrl": "",
+    "hint": "Exploiting common cryptographic mistakes.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-compromisedwindowsanalysis",
+    "name": "Compromised Windows Analysis",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/compromisedwindowsanalysis",
+    "writeupUrl": "",
+    "hint": "Learn about some key forensic artifacts and solve an interesting case of a compromised Windows workstation.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-socl1alerttriage",
+    "name": "SOC L1 Alert Triage",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/socl1alerttriage",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-soc-l1-alert-triage-walkthrough-writeup-295b6165ea95",
+    "hint": "Learn more about SOC alerts and build a systematic approach to efficiently triaging them.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-exfilnode",
+    "name": "ExfilNode",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/exfilnode",
+    "writeupUrl": "",
+    "hint": "Continue hunting for the exfiltration footprints in the ex-employee's personal workstation.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-justlooking",
+    "name": "MS Sentinel: Just Looking",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/justlooking",
+    "writeupUrl": "",
+    "hint": "Microsoft Sentinel challenge for SOC analysts: incident investigation & threat hunting.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-xdrintroduction",
+    "name": "XDR: Introduction",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/xdrintroduction",
+    "writeupUrl": "",
+    "hint": "This room will introduce you to the Microsoft Defender XDR portal and how to navigate around the portal.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-macosforensicsartefacts",
+    "name": "macOS Forensics: Artefacts",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/macosforensicsartefacts",
+    "writeupUrl": "",
+    "hint": "Understand the forensic artefacts in macOS and learn to leverage them for forensic analysis.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-mayhemroom",
+    "name": "Mayhem",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/mayhemroom",
+    "writeupUrl": "",
+    "hint": "Can you find the secrets inside the sea of mayhem?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-socl1alertreporting",
+    "name": "SOC L1 Alert Reporting",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/socl1alertreporting",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-soc-l1-alert-reporting-walkthrough-writeup-4905606997d0",
+    "hint": "Learn how to properly report, escalate, and communicate about high-risk SOC alerts.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-customtoolingpython",
+    "name": "Custom Tooling Using Python",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "Python"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/customtoolingpython",
+    "writeupUrl": "https://medium.com/traditional-cyber-security/tryhackme-custom-tooling-using-python-walkthrough-writeup-df91a7ad93d1",
+    "hint": "Creating custom tooling for application testing using Python.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-memoryanalysisintroduction",
+    "name": "Memory Analysis Introduction",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/memoryanalysisintroduction",
+    "writeupUrl": "",
+    "hint": "Learn how memory analysis helps detect threats during live investigations.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-erlangotpsshcve202532433",
+    "name": "Erlang/OTP SSH: CVE-2025-32433",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/erlangotpsshcve202532433",
+    "writeupUrl": "",
+    "hint": "Learn about and exploit Erlang/OTP SSH CVE-2025-32433 in a lab setup.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-moebius",
+    "name": "Moebius",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/moebius",
+    "writeupUrl": "",
+    "hint": "A place where you start at some point, and you have to go back to it in the end.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-loglesshunt",
+    "name": "Logless Hunt",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/loglesshunt",
+    "writeupUrl": "",
+    "hint": "Detect every attack step on a Windows machine even after threat actors cleared Security logs.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-socworkbookslookups",
+    "name": "SOC Workbooks and Lookups",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/socworkbookslookups",
+    "writeupUrl": "",
+    "hint": "Discover useful corporate resources to help you structure and simplify L1 alert triage.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ledger",
+    "name": "Ledger",
+    "ip": "10.10.x.x",
+    "os": "Active Directory",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ledger",
+    "writeupUrl": "",
+    "hint": "This challenge simulates a real cyber-attack scenario where you must exploit an Active Directory.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtographqlhacking",
+    "name": "Intro to GraphQL Hacking",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtographqlhacking",
+    "writeupUrl": "",
+    "hint": "An introduction to GraphQL Hacking.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-memoryacquisition",
+    "name": "Memory Acquisition",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/memoryacquisition",
+    "writeupUrl": "",
+    "hint": "Learn the techniques and best practices to acquire digitally sound memory.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-socmetricsobjectives",
+    "name": "SOC Metrics and Objectives",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/socmetricsobjectives",
+    "writeupUrl": "",
+    "hint": "Explore key metrics driving SOC effectiveness and discover ways to improve them.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-securityfootage",
+    "name": "Security Footage",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/securityfootage",
+    "writeupUrl": "",
+    "hint": "Perform digital forensics on a network capture to recover footage from a camera.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-writingpentestreports",
+    "name": "Writing Pentest Reports",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/writingpentestreports",
+    "writeupUrl": "",
+    "hint": "Learn how to write professional pentesting reports that communicate risk to business stakeholders.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-apt28inceptiontheory",
+    "name": "APT28 Inception Theory",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/apt28inceptiontheory",
+    "writeupUrl": "",
+    "hint": "Dive into the world of Fancy Bear, a Russian cyber espionage group, and explore their tactics and techniques.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-volttyphoon",
+    "name": "Volt Typhoon",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/volttyphoon",
+    "writeupUrl": "",
+    "hint": "Investigate a suspected intrusion by the notorious APT group Volt Typhoon.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-adauthenticatedenumeration",
+    "name": "AD: Authenticated Enumeration",
+    "ip": "10.10.x.x",
+    "os": "Active Directory",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/adauthenticatedenumeration",
+    "writeupUrl": "",
+    "hint": "Explore how to breach and enumerate Active Directory with an authenticated account.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-adbasicenumeration",
+    "name": "AD: Basic Enumeration",
+    "ip": "10.10.x.x",
+    "os": "Active Directory",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/adbasicenumeration",
+    "writeupUrl": "",
+    "hint": "Learn how to enumerate an Active Directory network and get initial access.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-androidanalysis",
+    "name": "Android Analysis",
+    "ip": "10.10.x.x",
+    "os": "Android",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/androidanalysis",
+    "writeupUrl": "",
+    "hint": "Dive deep into the Android OS and learn how to examine from a forensics point of view.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-apt28inthesnare",
+    "name": "APT28 in the Snare",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/apt28inthesnare",
+    "writeupUrl": "",
+    "hint": "Engage in a hands-on investigation tracing Fancy Bear\u2019s intrusion chain.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1heist",
+    "name": "Heist",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1heist",
+    "writeupUrl": "",
+    "hint": "From the Hackfinity Battle CTF event.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1passcode",
+    "name": "PassCode",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1passcode",
+    "writeupUrl": "",
+    "hint": "From the Hackfinity Battle CTF event.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1abucketofphish",
+    "name": "A Bucket of Phish",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1abucketofphish",
+    "writeupUrl": "",
+    "hint": "From the Hackfinity Battle CTF event.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-mobileacquisition",
+    "name": "Mobile Acquisition",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/mobileacquisition",
+    "writeupUrl": "",
+    "hint": "Prepare for mobile acquisition with the challenges and methods used throughout the process.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-customtoolingviaburp",
+    "name": "Custom Tooling using Burp",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/customtoolingviaburp",
+    "writeupUrl": "",
+    "hint": "Creating custom tooling for application testing using Burp Plugins.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsmemoryandprocs",
+    "name": "Windows Memory & Processes",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsmemoryandprocs",
+    "writeupUrl": "",
+    "hint": "Analyze a memory dump of a Windows host and uncover malicious processes.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1flagvault",
+    "name": "Flag Vault",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1flagvault",
+    "writeupUrl": "",
+    "hint": "Understand the basics of buffer overflows.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1flagvault2",
+    "name": "Flag Vault 2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1flagvault2",
+    "writeupUrl": "",
+    "hint": "Exploit a simple format string vulnerability.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1precision",
+    "name": "Precision",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1precision",
+    "writeupUrl": "",
+    "hint": "Practice your advanced Linux Exploit Development skills.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1voidexecution",
+    "name": "Void Execution",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1voidexecution",
+    "writeupUrl": "",
+    "hint": "Learn how to bypass restrictions in Linux exploit development.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1thegame",
+    "name": "The Game",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1thegame",
+    "writeupUrl": "",
+    "hint": "Practice your Game Hacking skills.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1thegamev2",
+    "name": "The Game v2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1thegamev2",
+    "writeupUrl": "",
+    "hint": "Practice your Game Hacking skills.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-adbadsuccessor",
+    "name": "AD: BadSuccessor",
+    "ip": "10.10.x.x",
+    "os": "Active Directory",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/adbadsuccessor",
+    "writeupUrl": "",
+    "hint": "Use the BadSuccessor attack for privilege escalation in an Active Directory environment.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsmemoryanduseractivity",
+    "name": "Windows Memory & User Activity",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsmemoryanduseractivity",
+    "writeupUrl": "",
+    "hint": "Trace user behavior, command execution, file access, and macro-based payload delivery from memory.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-macosforensicsapplications",
+    "name": "macOS Forensics: Applications",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/macosforensicsapplications",
+    "writeupUrl": "",
+    "hint": "Learn about macOS forensic artefacts related to different applications.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-machunt",
+    "name": "Mac Hunt",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/machunt",
+    "writeupUrl": "",
+    "hint": "Utilize your macOS investigation skills to reveal the mystery behind a compromise.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsmemoryandnetwork",
+    "name": "Windows Memory & Network",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsmemoryandnetwork",
+    "writeupUrl": "",
+    "hint": "Identify C2 traffic & post-exploit activity in Windows memory.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxmemoryanalysis",
+    "name": "Linux Memory Analysis",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxmemoryanalysis",
+    "writeupUrl": "",
+    "hint": "Learn how to investigate and find the footprints of a threat actor in the Linux memory.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-supplementalmemory",
+    "name": "Supplemental Memory",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/supplementalmemory",
+    "writeupUrl": "",
+    "hint": "Investigate lateral movement, credential theft, and additional adversary actions in a memory dump.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-volatilityessentials",
+    "name": "Volatility Essentials",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/volatilityessentials",
+    "writeupUrl": "",
+    "hint": "Learn how to perform memory forensics with Volatility!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-roundcubecve202549113",
+    "name": "Roundcube: CVE-2025-49113",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/roundcubecve202549113",
+    "writeupUrl": "",
+    "hint": "Exploit CVE-2025-49113 in a lab environment.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-customtoolingviabrowserautomation",
+    "name": "Tooling via Browser Automation",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/customtoolingviabrowserautomation",
+    "writeupUrl": "",
+    "hint": "Creating custom tooling for application testing using Selenium and Playwright.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-captchapocalypse",
+    "name": "CAPTCHApocalypse",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/captchapocalypse",
+    "writeupUrl": "",
+    "hint": "When crypto interferes, automate.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-industrial-intrusion",
+    "name": "Industrial Intrusion",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/industrial-intrusion",
+    "writeupUrl": "",
+    "hint": "Industrial Intrusion CTF",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsloggingforsoc",
+    "name": "Windows Logging for SOC",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsloggingforsoc",
+    "writeupUrl": "",
+    "hint": "Start your Windows monitoring journey by learning how to use key system logs to detect threats.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-oracle9",
+    "name": "Oracle 9",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "Python"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/oracle9",
+    "writeupUrl": "https://medium.com/genai-llm-security/tryhackme-oracle-9-ctf-writeup-7ad909ec1da1",
+    "hint": "My designation is Oracle 9, I carry with me a sealed transmission.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1cipherssecretmessage",
+    "name": "Cipher's Secret Message",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1cipherssecretmessage",
+    "writeupUrl": "",
+    "hint": "Sharpen your cryptography skills by analyzing code to get the flag.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1cryptosystem",
+    "name": "Cryptosystem",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1cryptosystem",
+    "writeupUrl": "",
+    "hint": "Learn public-key cryptography concepts by analyzing data.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1darkmatter",
+    "name": "DarkMatter",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1darkmatter",
+    "writeupUrl": "",
+    "hint": "Practice how to exploit a weak RSA implementation to recover the private key and decrypt a ransomware-encrypted files.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1order",
+    "name": "Order",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1order",
+    "writeupUrl": "",
+    "hint": "Perform a known-plaintext attack to recover a repeating-key XOR key and decrypt a hidden message.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1evilgpt",
+    "name": "Evil-GPT",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "Python"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1evilgpt",
+    "writeupUrl": "https://medium.com/genai-llm-security/tryhackme-evil-gpt-ctf-writeup-c0d6bb8e3174",
+    "hint": "Practice your LLM hacking skills.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1evilgptv2",
+    "name": "Evil-GPT v2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1evilgptv2",
+    "writeupUrl": "https://medium.com/genai-llm-security/tryhackme-evil-gpt-v2-ctf-writeup-en-draft-c25ac7634744",
+    "hint": "Put your LLM hacking skills to the test one more time.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-aimlsecuritythreats",
+    "name": "AI/ML Security Threats",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/aimlsecuritythreats",
+    "writeupUrl": "https://medium.com/genai-llm-security/tryhackme-ai-ml-security-threats-walkthrough-writeup-04abd3f717ca",
+    "hint": "Learn AI basics, key terms, and how it's used by both attackers and defenders.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-idadversarialattacks",
+    "name": "Detecting Adversarial Attacks",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/idadversarialattacks",
+    "writeupUrl": "",
+    "hint": "Learn how to identify and analyse adversarial attacks.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-defadversarialattacks",
+    "name": "Defending Adversarial Attacks",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/defadversarialattacks",
+    "writeupUrl": "",
+    "hint": "Learn defence mechanisms to harden machine learning models.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-aiforensics",
+    "name": "AI Forensics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/aiforensics",
+    "writeupUrl": "",
+    "hint": "Explore AI DFIR and learn how it boosts your investigation capabilities.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-containment",
+    "name": "ContAInment",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/containment",
+    "writeupUrl": "",
+    "hint": "Can you help contain the ransomware threat with the help of AI?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsthreatdetection1",
+    "name": "Windows Threat Detection 1",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsthreatdetection1",
+    "writeupUrl": "",
+    "hint": "Explore common Initial Access methods on Windows and learn how to detect them.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-honeynet-collapse",
+    "name": "Honeynet Collapse",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/honeynet-collapse",
+    "writeupUrl": "",
+    "hint": "Welcome to Honeynet Collapse!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1hideandseek",
+    "name": "Hide and Seek",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1hideandseek",
+    "writeupUrl": "",
+    "hint": "Conduct a live system analysis to uncover post-compromise activity related to persistence mechanisms.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1infinityshell",
+    "name": "Infinity Shell",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1infinityshell",
+    "writeupUrl": "",
+    "hint": "Investigate and analyse the traces of an attack from an implanted webshell.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1sequeldump",
+    "name": "Sequel Dump",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1sequeldump",
+    "writeupUrl": "",
+    "hint": "Can you decipher the captured traffic of an SQL Injection attack?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1sneakypatch",
+    "name": "Sneaky Patch",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1sneakypatch",
+    "writeupUrl": "",
+    "hint": "Investigate the potential kernel backdoor implanted within the compromised system.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1stolenmount",
+    "name": "Stolen Mount",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1stolenmount",
+    "writeupUrl": "",
+    "hint": "Analyse network traffic related to an unauthenticated file share access attempt, focusing on potential signs of data exfiltration.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hfb1royalrouter",
+    "name": "Royal Router",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hfb1royalrouter",
+    "writeupUrl": "",
+    "hint": "You will learn how to compromise an IoT device.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsthreatdetection2",
+    "name": "Windows Threat Detection 2",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsthreatdetection2",
+    "writeupUrl": "",
+    "hint": "Discover how to detect and analyze the first steps of threat actors after breaching Windows.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-directorydfirroom",
+    "name": "Directory",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/directorydfirroom",
+    "writeupUrl": "",
+    "hint": "Do you have what it takes to crack this case?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-windowsthreatdetection3",
+    "name": "Windows Threat Detection 3",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/windowsthreatdetection3",
+    "writeupUrl": "",
+    "hint": "Learn how threat actors manage to maintain access to the breached Windows hosts.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-humansattackvectors",
+    "name": "Humans as Attack Vectors",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/humansattackvectors",
+    "writeupUrl": "",
+    "hint": "Understand why and how people are targeted in cyber attacks and how the SOC helps defend them.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-soupedecode01",
+    "name": "Soupedecode 01",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/soupedecode01",
+    "writeupUrl": "",
+    "hint": "Test your enumeration skills on this boot-to-root machine.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-detectingwebshells",
+    "name": "Detecting Web Shells",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/detectingwebshells",
+    "writeupUrl": "",
+    "hint": "Explore web shell detection by analyzing logs, file systems, and network traffic",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-eventhorizonroom",
+    "name": "Event Horizon",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/eventhorizonroom",
+    "writeupUrl": "",
+    "hint": "Unearth the secrets beyond the Event Horizon.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-systemsattackvectors",
+    "name": "Systems as Attack Vectors",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/systemsattackvectors",
+    "writeupUrl": "",
+    "hint": "Learn how attackers exploit vulnerable and misconfigured systems, and how you can protect them.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-contrabando",
+    "name": "Contrabando",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/contrabando",
+    "writeupUrl": "",
+    "hint": "Never tell me the odds.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-fileandhashthreatintel",
+    "name": "File and Hash Threat Intel",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/fileandhashthreatintel",
+    "writeupUrl": "",
+    "hint": "This room seeks to teach on enriching file and hash artefacts using threat intelligence.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-loganalysiswithsiem",
+    "name": "Log Analysis with SIEM",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/loganalysiswithsiem",
+    "writeupUrl": "",
+    "hint": "Learn how SIEM solutions can be used to detect and analyse different types of malicious behaviour.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-extract",
+    "name": "Extract",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/extract",
+    "writeupUrl": "",
+    "hint": "Can you extract the secrets of the library?",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-hack2win",
+    "name": "Hack2Win: How you can grab extra tickets",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Very Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/hack2win",
+    "writeupUrl": "",
+    "hint": "Where hacking meets winning. Turn your cyber security skills into real rewards. Complete rooms, collect tickets, fill your stamp cards, and enter raffles for prizes worth over $40,000!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-websecurityessentials",
+    "name": "Web Security Essentials",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/websecurityessentials",
+    "writeupUrl": "",
+    "hint": "Learn how the web works, common website security risks, and protections for a safer internet.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introductiontoedrs",
+    "name": "Introduction to EDR",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introductiontoedrs",
+    "writeupUrl": "",
+    "hint": "Learn the fundamentals of EDR and explore its features and working.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-voyage",
+    "name": "Voyage",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/voyage",
+    "writeupUrl": "",
+    "hint": "Chain multiple vulnerabilities to gain control of a system.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sessionforensics",
+    "name": "Session Forensics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sessionforensics",
+    "writeupUrl": "",
+    "hint": "Analyse sessions and tokens for web application investigation.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-malwareclassification",
+    "name": "Malware Classification",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/malwareclassification",
+    "writeupUrl": "",
+    "hint": "Learn how to identify, classify, and understand common types of malware.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-ipanddomainthreatintel",
+    "name": "IP and Domain Threat Intel",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/ipanddomainthreatintel",
+    "writeupUrl": "",
+    "hint": "A look into enriching IP and domain insights with open source threat intelligence.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-pressedroom",
+    "name": "Pressed",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/pressedroom",
+    "writeupUrl": "",
+    "hint": "A full-scale intrusion was recently detected within the network, raising critical alarms.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-socroleinblueteam",
+    "name": "SOC Role in Blue Team",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/socroleinblueteam",
+    "writeupUrl": "https://akyuksel.medium.com/tryhackme-soc-role-in-blue-team-ctf-writeup-3e814a1fecff",
+    "hint": "Discover security roles and learn how to advance your SOC career, starting from the L1 analyst.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-detectingwebattacks",
+    "name": "Detecting Web Attacks",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/detectingwebattacks",
+    "writeupUrl": "",
+    "hint": "Explore web attacks and detection methods through log and network traffic analysis.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-invite-only",
+    "name": "Invite Only",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/invite-only",
+    "writeupUrl": "",
+    "hint": "Extract insight from a set of flagged artefacts, and distil the information into usable threat intelligence.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-appsecir",
+    "name": "AppSec IR",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/appsecir",
+    "writeupUrl": "",
+    "hint": "An introduction into the overlapping worlds of AppSec and IR.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-chainingvulnerabilitieszp",
+    "name": "Chaining Vulnerabilities",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/chainingvulnerabilitiesZp",
+    "writeupUrl": "",
+    "hint": "Learn how to chain vulnerabilities! From Low to High!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxloggingforsoc",
+    "name": "Linux Logging for SOC",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxloggingforsoc",
+    "writeupUrl": "",
+    "hint": "Explore key Linux log sources and learn how to use them in your SOC triage.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-detectingwebddos",
+    "name": "Detecting Web DDoS",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/detectingwebddos",
+    "writeupUrl": "",
+    "hint": "Explore denial-of-service attacks, detection techniques, and strategies for protection.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-sequence",
+    "name": "Sequence",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/sequence",
+    "writeupUrl": "",
+    "hint": "Chain multiple vulnerabilities to take control of a system.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-introtocredentialharvesting",
+    "name": "Intro to Credential Harvesting",
+    "ip": "10.10.x.x",
+    "os": "Active Directory",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/introtocredentialharvesting",
+    "writeupUrl": "",
+    "hint": "Learn how credentials are stored, cached, and exposed in Windows and Active Directory environments.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxthreatdetection1",
+    "name": "Linux Threat Detection 1",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxthreatdetection1",
+    "writeupUrl": "",
+    "hint": "Explore how attackers break into Linux systems and how you can detect this in logs.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-networksecurityessentials",
+    "name": "Network Security Essentials",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/networksecurityessentials",
+    "writeupUrl": "",
+    "hint": "Learn about key aspects of network security essentials and how to monitor and protect against adversaries.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-xdroperationglobaldagger",
+    "name": "XDR: Operation Global Dagger",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/xdroperationglobaldagger",
+    "writeupUrl": "",
+    "hint": "Investigate and detect potential threats across your environment.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-xdrcredentialaccess",
+    "name": "XDR: Credential Access",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/xdrcredentialaccess",
+    "writeupUrl": "",
+    "hint": "XDR: Credential Access",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-networkdiscoverydetection",
+    "name": "Network Discovery Detection",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/networkdiscoverydetection",
+    "writeupUrl": "",
+    "hint": "Understand how attackers discover assets in a network, and how to detect that activity.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-dataexfildetection",
+    "name": "Data Exfiltration Detection",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/dataexfildetection",
+    "writeupUrl": "",
+    "hint": "Learn how to detect data exfiltration attempts in various network channels.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-xdroperationglobaldagger2",
+    "name": "XDR: Operation Global Dagger 2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/xdroperationglobaldagger2",
+    "writeupUrl": "",
+    "hint": "Investigate and detect potential threats across your environment.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-mitmdetection",
+    "name": "Man-in-the-Middle Detection",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/mitmdetection",
+    "writeupUrl": "",
+    "hint": "Learn what MITM attack is, and how to identify the footprints of this attack in the network traffic.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxthreatdetection2",
+    "name": "Linux Threat Detection 2",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxthreatdetection2",
+    "writeupUrl": "",
+    "hint": "Explore the first actions of attackers after breaching a Linux server and learn how to detect them.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-shadowtrace",
+    "name": "Shadow Trace",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/shadowtrace",
+    "writeupUrl": "",
+    "hint": "Analyse a suspicious file, uncover hidden clues, and trace the source of the infection.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-linuxthreatdetection3",
+    "name": "Linux Threat Detection 3",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/linuxthreatdetection3",
+    "writeupUrl": "",
+    "hint": "Cover the last stages of attacks on Linux and learn how they look in system logs.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-networktrafficbasics",
+    "name": "Network Traffic Basics",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/networktrafficbasics",
+    "writeupUrl": "",
+    "hint": "This room teaches the basics of Network Traffic Analysis.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-phishingpond",
+    "name": "The Phishing Pond",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/phishingpond",
+    "writeupUrl": "",
+    "hint": "Catch the phish before the phish catches you.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-initialaccesspot",
+    "name": "Initial Access Pot",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/initialaccesspot",
+    "writeupUrl": "",
+    "hint": "Investigate the first, Linux part of the Honeynet Collapse!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-alerttriagewithsplunk",
+    "name": "Alert Triage With Splunk",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/alerttriagewithsplunk",
+    "writeupUrl": "",
+    "hint": "Use Splunk to triage alerts and investigate malicious activity efficiently.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-alerttriagewithelastic",
+    "name": "Alert Triage With Elastic",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/alerttriagewithelastic",
+    "writeupUrl": "",
+    "hint": "Investigate alerts with Elastic by analyzing logs and spotting threats.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-elevatingmovement",
+    "name": "Elevating Movement",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/elevatingmovement",
+    "writeupUrl": "",
+    "hint": "Investigate the second, Windows part of the Honeynet Collapse!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-livingoffthelandattacks",
+    "name": "Living Off the Land Attacks",
+    "ip": "10.10.x.x",
+    "os": "Windows",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/livingoffthelandattacks",
+    "writeupUrl": "",
+    "hint": "Learn to detect and analyse Living Off the Land attacks using trusted Windows tools.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-lostinramslation",
+    "name": "Lost in RAMslation",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/lostinramslation",
+    "writeupUrl": "",
+    "hint": "Use your memory forensics skills to unwrap the third stage of the Honeynet Collapse!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-crmsnatch",
+    "name": "CRM Snatch",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/crmsnatch",
+    "writeupUrl": "",
+    "hint": "Investigate the fourth, Disk part of the Honeynet Collapse!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-inputmanipulationpromptinjection",
+    "name": "Input Manipulation & Prompt Injection",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough",
+      "-"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/inputmanipulationpromptinjection",
+    "writeupUrl": "https://medium.com/@akyuksel/tryhackme-input-manipulation-prompt-injection-walkthrough-writeup-502ff2446dbf",
+    "hint": "Understand the basics of LLM Prompt Injection attacks.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-owasptopten2025one",
+    "name": "OWASP Top 10 2025: IAAA Failures",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/owasptopten2025one",
+    "writeupUrl": "",
+    "hint": "Learn about A01, A07, and A09 in how they related to failures in the applied IAAA model.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-owasptopten2025two",
+    "name": "OWASP Top 10 2025: Application Design Flaws",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/owasptopten2025two",
+    "writeupUrl": "",
+    "hint": "Learn about A02, A03, A06, and A10 and how they related to design flaws in the application.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-owasptopten2025three",
+    "name": "OWASP Top 10 2025: Insecure Data Handling",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "Walkthrough"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/owasptopten2025three",
+    "writeupUrl": "",
+    "hint": "Learn about A04, A05, and A08 as they related to insecure data handling.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-shockandsilence",
+    "name": "Shock and Silence",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/shockandsilence",
+    "writeupUrl": "",
+    "hint": "Investigate the fifth, File System part of the Honeynet Collapse!",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "thm-farewell",
+    "name": "Farewell",
+    "ip": "10.10.x.x",
+    "os": "Linux",
+    "platform": "THM",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "THM",
+      "CTF"
+    ],
+    "certifications": [],
+    "roomUrl": "https://tryhackme.com/room/farewell",
+    "writeupUrl": "",
+    "hint": "Use red-teaming techniques to bypass the WAF and obtain admin access to the web application.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-skyfall",
+    "name": "Skyfall",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/skyfall",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#skyfall",
+    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-02-03T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-pov",
+    "name": "Pov",
+    "ip": "10.10.10.x",
+    "os": "Windows",
+    "platform": "HTB",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/pov",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#pov",
+    "hint": "Hack The Box Windows machine. Rated Medium difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-27T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-analysis",
+    "name": "Analysis",
+    "ip": "10.10.10.x",
+    "os": "Windows",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/analysis",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#analysis",
+    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2024-01-20T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-corporate",
+    "name": "Corporate",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/corporate",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#corporate",
+    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-12-16T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-ouija",
+    "name": "Ouija",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/ouija",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#ouija",
+    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-12-02T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-napper",
+    "name": "Napper",
+    "ip": "10.10.10.x",
+    "os": "Windows",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/napper",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#napper",
+    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-11-11T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-appsanity",
+    "name": "Appsanity",
+    "ip": "10.10.10.x",
+    "os": "Windows",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/appsanity",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#appsanity",
+    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-10-28T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-drive",
+    "name": "Drive",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/drive",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#drive",
+    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-10-14T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-rebound",
+    "name": "Rebound",
+    "ip": "10.10.10.x",
+    "os": "Windows",
+    "platform": "HTB",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/rebound",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#rebound",
+    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-09-09T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-registrytwo",
+    "name": "RegistryTwo",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/registrytwo",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#registrytwo",
+    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-07-22T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-aero",
+    "name": "Aero",
+    "ip": "10.10.10.x",
+    "os": "Windows",
+    "platform": "HTB",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/aero",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#aero",
+    "hint": "Hack The Box Windows machine. Rated Medium difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-09-28T12:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-wifinetic",
+    "name": "Wifinetic",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/wifinetic",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#wifinetic",
+    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-09-13T10:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-cybermonday",
+    "name": "Cybermonday",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/cybermonday",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#cybermonday",
+    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-08-19T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-download",
+    "name": "Download",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/download",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#download",
+    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-08-05T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-gofer",
+    "name": "Gofer",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/gofer",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#gofer",
+    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-07-29T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-intentions",
+    "name": "Intentions",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/intentions",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#intentions",
+    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-07-01T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-bookworm",
+    "name": "Bookworm",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/bookworm",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#bookworm",
+    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-05-27T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-snoopy",
+    "name": "Snoopy",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/snoopy",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#snoopy",
+    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-05-06T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-onlyforyou",
+    "name": "OnlyForYou",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/onlyforyou",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#onlyforyou",
+    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-04-22T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-mailroom",
+    "name": "Mailroom",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/mailroom",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#mailroom",
+    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-04-15T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-coder",
+    "name": "Coder",
+    "ip": "10.10.10.x",
+    "os": "Windows",
+    "platform": "HTB",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/coder",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#coder",
+    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-04-01T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-socket",
+    "name": "Socket",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/socket",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#socket",
+    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-03-25T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-cerberus",
+    "name": "Cerberus",
+    "ip": "10.10.10.x",
+    "os": "Windows",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/cerberus",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#cerberus",
+    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-03-18T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-pikatwoo",
+    "name": "PikaTwoo",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/pikatwoo",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#pikatwoo",
+    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-02-04T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-interface",
+    "name": "Interface",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/interface",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#interface",
+    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2023-02-11T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-mentor",
+    "name": "Mentor",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/mentor",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#mentor",
+    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2022-12-10T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-pollution",
+    "name": "Pollution",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/pollution",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#pollution",
+    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2022-12-03T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-derailed",
+    "name": "Derailed",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/derailed",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#derailed",
+    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2022-11-19T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-forgot",
+    "name": "Forgot",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/forgot",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#forgot",
+    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2022-11-12T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-metatwo",
+    "name": "MetaTwo",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/metatwo",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#metatwo",
+    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2022-10-29T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-awkward",
+    "name": "Awkward",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/awkward",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#awkward",
+    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2022-10-22T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-absolute",
+    "name": "Absolute",
+    "ip": "10.10.10.x",
+    "os": "Windows",
+    "platform": "HTB",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/absolute",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#absolute",
+    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2022-09-24T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-sekhmet",
+    "name": "Sekhmet",
+    "ip": "10.10.10.x",
+    "os": "Windows",
+    "platform": "HTB",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/sekhmet",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#sekhmet",
+    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2022-09-10T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-vessel",
+    "name": "Vessel",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/vessel",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#vessel",
+    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2022-08-27T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-extension",
+    "name": "Extension",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/extension",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#extension",
+    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2022-07-16T16:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-backendtwo",
+    "name": "BackendTwo",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/backendtwo",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#backendtwo",
+    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2022-05-02T07:00:05.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-backend",
+    "name": "Backend",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/backend",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#backend",
+    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2022-04-12T07:00:05.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-altered",
+    "name": "Altered",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/altered",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#altered",
+    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2022-03-30T07:00:05.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-ransom",
+    "name": "Ransom",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/ransom",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#ransom",
+    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2022-03-15T08:00:05.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-pressed",
+    "name": "Pressed",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/pressed",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#pressed",
+    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2022-02-03T08:00:05.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-nodeblog",
+    "name": "NodeBlog",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/nodeblog",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#nodeblog",
+    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2022-01-10T08:00:05.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-logforge",
+    "name": "LogForge",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/logforge",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#logforge",
+    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2021-12-23T10:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-union",
+    "name": "Union",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/union",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#union",
+    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2021-11-22T10:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-spooktrol",
+    "name": "Spooktrol",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/spooktrol",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#spooktrol",
+    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2021-10-26T09:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-jarmis",
+    "name": "Jarmis",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/jarmis",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#jarmis",
+    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2021-09-27T09:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-sharp",
+    "name": "Sharp",
+    "ip": "10.10.10.x",
+    "os": "Windows",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/sharp",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#sharp",
+    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2020-12-05T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-cereal",
+    "name": "Cereal",
+    "ip": "10.10.10.x",
+    "os": "Windows",
+    "platform": "HTB",
+    "difficulty": "Hard",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/cereal",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#cereal",
+    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2020-11-21T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-academy",
+    "name": "Academy",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Easy",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/academy",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#academy",
+    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2020-11-07T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-apt",
+    "name": "APT",
+    "ip": "10.10.10.x",
+    "os": "Windows",
+    "platform": "HTB",
+    "difficulty": "Insane",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/apt",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#apt",
+    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2020-10-31T17:00:00.000000Z",
+    "updatedAt": "2026-08-20T11:30:00.000Z"
+  },
+  {
+    "id": "htb-hawk",
+    "name": "Hawk",
+    "ip": "10.10.10.x",
+    "os": "Linux",
+    "platform": "HTB",
+    "difficulty": "Medium",
+    "status": "backlog",
+    "tags": [
+      "HTB"
+    ],
+    "certifications": [],
+    "roomUrl": "https://app.hackthebox.com/machines/hawk",
+    "writeupUrl": "https://0xdf.gitlab.io/tags#hawk",
+    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "timeSpentSeconds": 0,
+    "createdAt": "2018-07-14T16:00:00.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z"
   }
 ];
