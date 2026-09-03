@@ -18,7 +18,8 @@ import {
   Zap, 
   Flag,
   Server,
-  Sparkles
+  Sparkles,
+  ZoomIn
 } from 'lucide-react';
 import { CyberLogo } from '../common/CyberLogo';
 import { PlatformIcon } from '../common/PlatformBadge';
@@ -57,6 +58,8 @@ export const Header: React.FC = () => {
     setBackupModalOpen,
     setReconAutomationModalOpen,
     setOperatorModalOpen,
+    uiScale,
+    cycleUiScale,
   } = useCtfStore();
 
   const { user } = useAuthStore();
@@ -137,17 +140,17 @@ export const Header: React.FC = () => {
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className="flex items-center gap-2.5">
-              <Link to="/tracker" className="flex items-center gap-2.5 group">
-                <CyberLogo size="md" />
+              <Link to="/tracker" className="flex items-center gap-3 group">
+                <CyberLogo size="lg" />
                 <div className="text-left">
                   <div className="flex items-center">
-                    <span className="font-mono font-bold text-base tracking-wider text-white">
+                    <span className="font-mono font-extrabold text-lg tracking-wider text-white">
                       {activeBrand.namePrefix}
                       <span className={activeBrand.suffixColor}>{activeBrand.nameSuffix}</span>
                     </span>
                   </div>
-                  <div className="hidden sm:flex text-[10px] font-mono text-cyber-muted tracking-tight items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyber-emerald inline-block shadow-[0_0_6px_#10B981]" />
+                  <div className="hidden sm:flex text-[11px] font-mono text-cyber-muted tracking-tight items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-cyber-emerald inline-block shadow-[0_0_8px_#10B981]" />
                     <span>{activeBrand.tagline}</span>
                   </div>
                 </div>
@@ -283,6 +286,23 @@ export const Header: React.FC = () => {
               title="Backup & Restore JSON State"
             >
               <Database className="w-3.5 h-3.5" />
+            </button>
+
+            {/* UI Scale / Zoom Toggle */}
+            <button
+              onClick={() => {
+                cycleUiScale();
+                if (soundEnabled) playCyberSound('click');
+              }}
+              className={`flex items-center gap-1 px-2 py-1 rounded-md border text-xs font-mono font-bold transition-all ${
+                uiScale !== 'normal'
+                  ? 'bg-cyber-cyan/20 border-cyber-cyan text-cyber-cyan shadow-[0_0_8px_rgba(6,182,212,0.35)]'
+                  : 'bg-cyber-card border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-cyan/50'
+              }`}
+              title={`Display Scale: ${uiScale === 'huge' ? '122% (Huge)' : uiScale === 'large' ? '110% (Large)' : '100% (Normal)'}. Click to enlarge entire UI.`}
+            >
+              <ZoomIn className="w-3.5 h-3.5" />
+              <span>{uiScale === 'huge' ? '122%' : uiScale === 'large' ? '110%' : '100%'}</span>
             </button>
           </div>
 

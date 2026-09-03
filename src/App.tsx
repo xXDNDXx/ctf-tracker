@@ -31,8 +31,17 @@ const MainAppContent: React.FC = () => {
   const machines = useCtfStore((s) => s.machines);
   const reportMachineId = useCtfStore((s) => s.reportMachineId);
   const setReportMachineId = useCtfStore((s) => s.setReportMachineId);
+  const uiScale = useCtfStore((s) => s.uiScale || 'normal');
 
   const reportMachine = reportMachineId ? machines.find((m) => m.id === reportMachineId) || null : null;
+
+  // Handle global UI scale (Normal: 100%, Large: 110%, Huge: 122%)
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const zoomVal = uiScale === 'huge' ? '1.22' : uiScale === 'large' ? '1.10' : '1.0';
+      (document.documentElement.style as any).zoom = zoomVal;
+    }
+  }, [uiScale]);
 
   // Guarantee that all 45 completed HTB targets are populated in active state and profile,
   // and force brand to SPECTER CTF if still set to legacy rootvector

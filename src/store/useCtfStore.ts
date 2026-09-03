@@ -112,6 +112,7 @@ interface CtfStoreState {
   mobileMenuOpen: boolean;
   crtOverlay: boolean;
   soundEnabled: boolean;
+  uiScale: 'normal' | 'large' | 'huge';
   
   // Timer State
   isTimerRunning: boolean;
@@ -135,6 +136,8 @@ interface CtfStoreState {
   setMobileMenuOpen: (open: boolean) => void;
   toggleCrtOverlay: () => void;
   toggleSound: () => void;
+  setUiScale: (scale: 'normal' | 'large' | 'huge') => void;
+  cycleUiScale: () => void;
 
   // Machine Actions
   updateMachineStatus: (id: string, status: PipelineStatus) => void;
@@ -328,6 +331,7 @@ export const useCtfStore = create<CtfStoreState>()(
       mobileMenuOpen: false,
       crtOverlay: false,
       soundEnabled: true,
+      uiScale: 'normal',
       isTimerRunning: false,
       activeTimerSeconds: 0,
       filters: DEFAULT_FILTERS,
@@ -346,6 +350,11 @@ export const useCtfStore = create<CtfStoreState>()(
       setMobileMenuOpen: (open) => set({ mobileMenuOpen: open }),
       toggleCrtOverlay: () => set((s) => ({ crtOverlay: !s.crtOverlay })),
       toggleSound: () => set((s) => ({ soundEnabled: !s.soundEnabled })),
+      setUiScale: (scale) => set({ uiScale: scale }),
+      cycleUiScale: () => set((s) => {
+        const next = s.uiScale === 'normal' ? 'large' : s.uiScale === 'large' ? 'huge' : 'normal';
+        return { uiScale: next };
+      }),
 
       updateMachineStatus: (id, status) => {
         set((state) => {
@@ -877,6 +886,7 @@ export const useCtfStore = create<CtfStoreState>()(
         viewMode: state.viewMode,
         crtOverlay: state.crtOverlay,
         soundEnabled: state.soundEnabled,
+        uiScale: state.uiScale,
       }),
     }
   )

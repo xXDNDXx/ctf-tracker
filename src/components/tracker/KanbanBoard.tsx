@@ -178,17 +178,17 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ filteredMachines }) =>
                       }`}
                     >
                       {/* Top Badges */}
-                      <div className="flex items-center justify-between gap-1.5 mb-1.5">
+                      <div className="flex items-center justify-between gap-1.5 mb-2">
                         <PlatformBadge platform={m.platform} size="sm" />
 
-                        <div className="flex items-center gap-1">
-                          <OsBadge os={m.os} size="xs" />
+                        <div className="flex items-center gap-1.5">
+                          <OsBadge os={m.os} size="sm" />
                           <span
-                            className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${
-                              m.difficulty === 'Easy' ? 'bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/20' :
-                              m.difficulty === 'Medium' ? 'bg-cyber-amber/10 text-cyber-amber border border-cyber-amber/20' :
-                              m.difficulty === 'Hard' ? 'bg-cyber-crimson/10 text-cyber-crimson border border-cyber-crimson/20' :
-                              'bg-purple-950/40 text-purple-400 border border-purple-800/40'
+                            className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider ${
+                              m.difficulty === 'Easy' ? 'bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30' :
+                              m.difficulty === 'Medium' ? 'bg-cyber-amber/10 text-cyber-amber border border-cyber-amber/30' :
+                              m.difficulty === 'Hard' ? 'bg-cyber-crimson/10 text-cyber-crimson border border-cyber-crimson/30' :
+                              'bg-purple-950/40 text-purple-400 border border-purple-800/50'
                             }`}
                           >
                             {m.difficulty}
@@ -197,12 +197,12 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ filteredMachines }) =>
                       </div>
 
                       {/* Machine Name & IP */}
-                      <div className="flex items-start justify-between gap-1">
+                      <div className="flex items-start justify-between gap-1.5">
                         <div>
-                          <div className="font-bold text-white text-sm group-hover:text-cyber-cyan transition-colors">
+                          <div className="font-bold text-white text-base group-hover:text-cyber-cyan transition-colors leading-snug">
                             {m.name}
                           </div>
-                          <div className="text-[10px] text-cyber-muted font-mono">{m.ip}</div>
+                          <div className="text-xs text-cyber-muted font-mono mt-0.5">{m.ip}</div>
                         </div>
 
                         {/* Active Target Engage Button */}
@@ -210,39 +210,39 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ filteredMachines }) =>
                           whileHover={{ scale: 1.15 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={(e) => handleSetTarget(e, m.id)}
-                          className={`p-1 rounded transition-colors ${
+                          className={`p-1.5 rounded transition-colors ${
                             isActiveTarget
                               ? 'text-cyber-emerald bg-cyber-emerald/10 border border-cyber-emerald/40 shadow-glow-emerald/20'
                               : 'text-cyber-muted hover:text-white bg-cyber-bg hover:bg-cyber-card border border-cyber-border'
                           }`}
                           title={isActiveTarget ? 'Currently Engaged' : 'Engage Target & Start Timer'}
                         >
-                          <Crosshair className={`w-3.5 h-3.5 ${isActiveTarget ? 'animate-spin-slow' : ''}`} />
+                          <Crosshair className={`w-4 h-4 ${isActiveTarget ? 'animate-spin-slow' : ''}`} />
                         </motion.button>
                       </div>
 
                       {/* Flags & Time Spent Pill */}
-                      <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-cyber-border/70 text-[10px]">
+                      <div className="flex items-center justify-between gap-2 mt-2.5 pt-2.5 border-t border-cyber-border/70 text-xs">
                         <div className="flex items-center gap-1.5">
                           <span
-                            className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded border ${
+                            className={`flex items-center gap-1 px-2 py-0.5 rounded border text-[11px] font-bold ${
                               hasUser
-                                ? 'bg-cyber-cyan/10 border-cyber-cyan/40 text-cyber-cyan font-bold'
+                                ? 'bg-cyber-cyan/10 border-cyber-cyan/40 text-cyber-cyan'
                                 : 'bg-cyber-bg border-cyber-border/60 text-cyber-muted'
                             }`}
                             title={hasUser ? 'User Flag Captured' : 'User Flag Pending'}
                           >
-                            <Flag className="w-2.5 h-2.5" /> U
+                            <Flag className="w-3 h-3" /> U
                           </span>
                           <span
-                            className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded border ${
+                            className={`flex items-center gap-1 px-2 py-0.5 rounded border text-[11px] font-bold ${
                               hasRoot
-                                ? 'bg-cyber-emerald/10 border-cyber-emerald/40 text-cyber-emerald font-bold'
+                                ? 'bg-cyber-emerald/10 border-cyber-emerald/40 text-cyber-emerald'
                                 : 'bg-cyber-bg border-cyber-border/60 text-cyber-muted'
                             }`}
                             title={hasRoot ? 'Root Flag Captured' : 'Root Flag Pending'}
                           >
-                            <Flag className="w-2.5 h-2.5" /> R
+                            <Flag className="w-3 h-3" /> R
                           </span>
                         </div>
 

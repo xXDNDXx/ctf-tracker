@@ -200,11 +200,11 @@ export const MobileNav: React.FC = () => {
             >
               {/* Drawer Header */}
               <div className="p-4 border-b border-cyber-border flex items-center justify-between bg-cyber-bg">
-                <div className="flex items-center gap-2">
-                  <CyberLogo size="sm" />
+                <div className="flex items-center gap-2.5">
+                  <CyberLogo size="md" />
                   <div>
                     <div className="font-bold text-white text-xs tracking-wider">
-                      ROOTVECTOR // MOBILE
+                      SPECTER CTF // MOBILE
                     </div>
                     <div className="text-[10px] text-cyber-muted">Tactical CTF & Lab Suite</div>
                   </div>
