@@ -20,13 +20,5 @@
   </head>
   <body class="bg-[#0B0F19] text-gray-200 antialiased selection:bg-emerald-500 selection:text-black">
     <div id="root"></div>
-    <script>
-      // Fallback: If GitHub Pages serves this raw development index.html directly from main branch root
-      if (window.location.hostname.includes('github.io') && !window.__SPECTER_LOADED__) {
-        var p = window.location.pathname;
-        if (!p.endsWith('/')) p += '/';
-        window.location.replace(p + 'docs/' + window.location.hash);
-      }
-    </script>
   </body>
 </html>
