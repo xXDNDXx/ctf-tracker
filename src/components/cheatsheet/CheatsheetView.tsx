@@ -102,7 +102,7 @@ export const CheatsheetView: React.FC = () => {
   const interpolatedListenerCmd = interpolateCommand(activeRevShell.listener, globalVars);
 
   return (
-    <div className="space-y-6 max-w-[1920px] mx-auto font-mono pb-12">
+    <div className="space-y-6 w-full font-mono pb-12">
       {/* Top Banner & Dynamic Variable Tuning Station */}
       <motion.div 
         initial={{ opacity: 0, y: -10 }}

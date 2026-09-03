@@ -33,11 +33,17 @@ const MainAppContent: React.FC = () => {
 
   const reportMachine = reportMachineId ? machines.find((m) => m.id === reportMachineId) || null : null;
 
-  // Guarantee that all 45 completed HTB targets are populated in active state and profile
+  // Guarantee that all 45 completed HTB targets are populated in active state and profile,
+  // and force brand to SPECTER CTF if still set to legacy rootvector
   useEffect(() => {
-    const current = useCtfStore.getState().machines;
+    const state = useCtfStore.getState();
+    const current = state.machines;
     const merged = mergeMachinesWithCatalog(current);
-    useCtfStore.setState({ machines: merged });
+    const updates: Partial<typeof state> = { machines: merged };
+    if (!state.appBrand || state.appBrand === 'rootvector') {
+      updates.appBrand = 'specter';
+    }
+    useCtfStore.setState(updates);
     useCtfStore.getState().saveProfileData();
   }, []);
 

@@ -290,7 +290,7 @@ cat /root/root.txt
   };
 
   return (
-    <div className="space-y-4 max-w-[1920px] mx-auto font-mono">
+    <div className="space-y-4 w-full font-mono">
       {/* Studio Header Bar */}
       <div className="p-4 rounded-xl border border-cyber-border bg-cyber-card/90 shadow-md flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">

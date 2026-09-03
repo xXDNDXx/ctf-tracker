@@ -67,7 +67,13 @@ export const Header: React.FC = () => {
   const [copiedVar, setCopiedVar] = useState<'lhost' | 'lport' | 'target' | null>(null);
 
   const activeMachine = machines.find((m) => m.id === activeTargetId);
-  const activeBrand = BRAND_THEMES.find((b) => b.id === appBrand) || BRAND_THEMES[0];
+  const activeBrand = BRAND_THEMES.find((b) => b.id === (appBrand === 'rootvector' || !appBrand ? 'specter' : appBrand)) || BRAND_THEMES[0];
+
+  useEffect(() => {
+    if (!appBrand || appBrand === 'rootvector') {
+      setAppBrand('specter');
+    }
+  }, [appBrand, setAppBrand]);
 
   const handleQuickUserPwn = () => {
     if (!activeMachine) return;
@@ -123,10 +129,10 @@ export const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-40 border-b border-cyber-border bg-cyber-bg/95 backdrop-blur-md transition-colors">
       
-      {/* Tier 1: Primary Bar (Brand + Search on Left, Tools & Profile ALWAYS on Right) */}
-      <div className="px-4 py-2 border-b border-cyber-border/40 flex items-center justify-between gap-3 max-w-[1920px] mx-auto">
+      {/* Tier 1: Primary Bar (Brand on Left, Centered Global Search, Tools & Profile on Right) */}
+      <div className="w-full px-4 xl:px-6 py-2 border-b border-cyber-border/40 flex items-center justify-between gap-3">
         
-        {/* Left: Brand Identity & Global Search */}
+        {/* Left: Brand Identity */}
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className="flex items-center gap-2.5">
@@ -175,7 +181,7 @@ export const Header: React.FC = () => {
                       if (soundEnabled) playCyberSound('toggle');
                     }}
                     className={`w-full p-2 rounded-lg text-left transition-all flex items-center justify-between ${
-                      appBrand === b.id
+                      activeBrand.id === b.id
                         ? 'bg-cyber-bg border border-cyber-emerald/50 text-white font-bold'
                         : 'hover:bg-cyber-bg/80 text-cyber-muted hover:text-white'
                     }`}
@@ -186,22 +192,28 @@ export const Header: React.FC = () => {
                       </div>
                       <div className="text-[9px] text-cyber-muted">{b.tagline.split('//')[0]}</div>
                     </div>
-                    {appBrand === b.id && <Check className="w-3.5 h-3.5 text-cyber-emerald" />}
+                    {activeBrand.id === b.id && <Check className="w-3.5 h-3.5 text-cyber-emerald" />}
                   </button>
                 ))}
               </div>
             )}
           </div>
+        </div>
 
-          {/* Quick Command Palette Launcher */}
+        {/* Center: Global Quick Command Search (Ctrl+K) */}
+        <div className="hidden md:flex items-center flex-1 max-w-lg mx-4">
           <button
             onClick={() => setCommandPaletteOpen(true)}
-            className="hidden md:flex items-center gap-2 px-3 py-1.5 text-xs font-mono rounded-md bg-cyber-card border border-cyber-border text-cyber-muted hover:text-cyber-text hover:border-cyber-emerald/50 transition-all shadow-inner"
+            className="w-full flex items-center justify-between px-3.5 py-1.5 text-xs font-mono rounded-lg bg-cyber-card/80 border border-cyber-border text-cyber-muted hover:text-cyber-text hover:border-cyber-cyan/50 transition-all shadow-inner group"
             title="Global Quick Search (Ctrl+K)"
           >
-            <Search className="w-3.5 h-3.5 text-cyber-emerald" />
-            <span>Search machines, cheats...</span>
-            <kbd className="ml-2 px-1.5 py-0.5 rounded text-[10px] bg-cyber-border/70 text-gray-300">
+            <div className="flex items-center gap-2">
+              <Search className="w-3.5 h-3.5 text-cyber-emerald group-hover:text-cyber-cyan transition-colors" />
+              <span className="text-[11px] text-cyber-muted group-hover:text-white transition-colors">
+                Search 400+ machines, cheats, tools...
+              </span>
+            </div>
+            <kbd className="px-1.5 py-0.5 rounded text-[10px] bg-cyber-bg border border-cyber-border text-cyber-cyan font-bold shadow-sm">
               Ctrl+K
             </kbd>
           </button>
@@ -250,7 +262,7 @@ export const Header: React.FC = () => {
       </div>
 
       {/* Tier 2: Tactical Operations Strip (Combat HUD, Automations, Add Box & Payload Vars) */}
-      <div className="px-4 py-1.5 bg-cyber-card/40 flex items-center justify-between gap-3 overflow-x-auto scrollbar-none max-w-[1920px] mx-auto text-xs font-mono">
+      <div className="w-full px-4 xl:px-6 py-1.5 bg-cyber-card/40 flex items-center justify-between gap-3 overflow-x-auto scrollbar-none text-xs font-mono">
         
         {/* Left: Active Target HUD / Quick Selector & Action Buttons */}
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -458,6 +470,19 @@ export const Header: React.FC = () => {
             <Plus className="w-3.5 h-3.5" />
             <span>Add Box</span>
           </button>
+        </div>
+
+        {/* Center: Live Mission Telemetry Status (Eliminates dead space on wide screens) */}
+        <div className="hidden xl:flex items-center gap-2 px-3 py-1 rounded-lg bg-cyber-card/60 border border-cyber-border/70 text-[11px] text-cyber-muted font-mono flex-shrink-0">
+          <span className="flex items-center gap-1.5 text-cyber-emerald font-bold">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyber-emerald animate-pulse shadow-glow-emerald" />
+            <span>MISSION TELEMETRY:</span>
+          </span>
+          <span>TARGET: <strong className="text-white">{activeMachine ? activeMachine.name : 'STANDBY (NO TARGET)'}</strong></span>
+          <span className="text-cyber-border">|</span>
+          <span>PLATFORM: <strong className="text-cyber-cyan">{activeMachine ? activeMachine.platform : 'HTB / THM'}</strong></span>
+          <span className="text-cyber-border">|</span>
+          <span>DIFFICULTY: <strong className="text-cyber-amber">{activeMachine ? activeMachine.difficulty : 'N/A'}</strong></span>
         </div>
 
         {/* Right: Live Variable Injection Hub (LHOST, LPORT, TARGET) */}

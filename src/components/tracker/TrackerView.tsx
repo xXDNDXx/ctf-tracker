@@ -212,7 +212,7 @@ export const TrackerView: React.FC = () => {
     filters.selectedTags.length > 0;
 
   return (
-    <div className="space-y-4 max-w-[1920px] mx-auto">
+    <div className="space-y-4 w-full">
       {/* 1. Curated Practice Tracks Carousel / Pathways */}
       <div className="p-3 rounded-xl border border-cyber-border bg-cyber-card/90 shadow-md font-mono space-y-2">
         <div className="flex items-center justify-between gap-2">

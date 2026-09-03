@@ -224,7 +224,7 @@ export const AnalyticsView: React.FC = () => {
   }, [activitySessions]);
 
   return (
-    <div className="space-y-6 max-w-[1920px] mx-auto font-mono pb-12">
+    <div className="space-y-6 w-full font-mono pb-12">
       
       {/* Analytics Header Station */}
       <motion.div 

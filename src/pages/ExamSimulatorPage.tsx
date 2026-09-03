@@ -264,7 +264,7 @@ ${scratchNotes}
   };
 
   return (
-    <div className="max-w-[1920px] mx-auto space-y-5 font-mono">
+    <div className="w-full space-y-5 font-mono">
       {/* 1. Exam Header & Live Scoring Gauge */}
       <div className="p-4 rounded-xl border border-cyber-border bg-cyber-card/90 shadow-xl space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
