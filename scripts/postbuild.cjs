@@ -1,4 +1,4 @@
-﻿const fs = require('fs');
+const fs = require('fs');
 const path = require('path');
 
 const rootDir = path.resolve(__dirname, '..');
@@ -34,5 +34,30 @@ const root404 = path.join(rootDir, '404.html');
 if (fs.existsSync(distIndex)) {
   fs.copyFileSync(distIndex, root404);
 }
+
+// 5. Explicitly mirror all favicon and icon assets to root and docs
+const iconFiles = [
+  'favicon.ico',
+  'favicon.png',
+  'favicon-32x32.png',
+  'favicon-16x16.png',
+  'apple-touch-icon.png',
+  'icon-192.png',
+  'icon-512.png',
+  'icon-192.jpg',
+  'icon-512.jpg',
+  'favicon.jpg',
+  'manifest.webmanifest'
+];
+
+iconFiles.forEach(file => {
+  const srcPub = path.join(rootDir, 'public', file);
+  if (fs.existsSync(srcPub)) {
+    fs.copyFileSync(srcPub, path.join(distDir, file));
+    fs.copyFileSync(srcPub, path.join(docsDir, file));
+    fs.copyFileSync(srcPub, path.join(rootDir, file));
+  }
+});
+console.log('✓ Mirrored all icon and favicon variants across root, dist, and docs');
 
 console.log('✓ Post-build GitHub Pages deployment preparation complete.');
