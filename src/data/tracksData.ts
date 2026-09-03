@@ -30,7 +30,9 @@ export const PRACTICE_TRACKS: PracticeTrack[] = [
     description: 'Hack The Box Academy flagship path covering deep enumeration and complex pivot chains.',
     badgeColor: 'border-cyber-cyan/40 bg-cyber-cyan/10 text-cyber-cyan',
     accentColor: '#06B6D4',
-    filterFn: (m) => m.certifications.includes('CPTS') || m.platform === 'HTB',
+    filterFn: (m) => 
+      m.certifications.includes('CPTS') || 
+      m.tags.some(t => ['cpts', 'htb academy', 'academy', 'pivoting'].includes(t.toLowerCase())),
   },
   {
     id: 'crto-ad',
@@ -70,7 +72,7 @@ export const PRACTICE_TRACKS: PracticeTrack[] = [
     accentColor: '#EF4444',
     filterFn: (m) => 
       m.os === 'Linux' && 
-      (m.tags.some(t => ['suid', 'sudo', 'kernel', 'cron', 'capabilities', 'privesc', 'nfs', 'path'].includes(t.toLowerCase())) || true),
+      m.tags.some(t => ['suid', 'sudo', 'kernel', 'cron', 'capabilities', 'privesc', 'nfs', 'path', 'wildcard'].includes(t.toLowerCase())),
   },
   {
     id: 'windows-privesc',
