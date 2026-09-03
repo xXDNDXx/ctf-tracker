@@ -6,7 +6,8 @@ import {
   Clock, 
   ChevronRight, 
   ChevronLeft,
-  FileText
+  FileText,
+  Sparkles
 } from 'lucide-react';
 import { Machine, PipelineStatus } from '../../types';
 import { useCtfStore } from '../../store/useCtfStore';
@@ -82,6 +83,13 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ filteredMachines }) =>
     filters,
   } = useCtfStore();
 
+  const [laneLimits, setLaneLimits] = React.useState<Record<string, number>>({});
+
+  // Reset limits when filters change
+  React.useEffect(() => {
+    setLaneLimits({});
+  }, [filters.searchQuery, filters.selectedPlatform, filters.selectedDifficulty, filters.selectedOs, filters.selectedTrack]);
+
   const handleAdvance = (e: React.MouseEvent, m: Machine, nextStatus: PipelineStatus) => {
     e.stopPropagation();
     updateMachineStatus(m.id, nextStatus);
@@ -125,13 +133,37 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ filteredMachines }) =>
     <div className={`grid ${gridColsClass} gap-3.5 items-start font-mono pb-8 transition-all`}>
       {visibleLanes.map((lane) => {
         const laneMachines = filteredMachines.filter((m) => m.status === lane.id);
+        const limit = laneLimits[lane.id] ?? 40;
+
+        // Active Target Hoisting: Ensure active target is always visible
+        const displayedMachines = laneMachines.length <= limit 
+          ? laneMachines 
+          : (() => {
+              let slice = laneMachines.slice(0, limit);
+              if (activeTargetId && !slice.some((m) => m.id === activeTargetId)) {
+                const activeM = laneMachines.find((m) => m.id === activeTargetId);
+                if (activeM) {
+                  slice = [activeM, ...slice.slice(0, limit - 1)];
+                }
+              }
+              return slice;
+            })();
+
+        const handleLaneScroll = (e: React.UIEvent<HTMLDivElement>) => {
+          const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+          if (scrollHeight - scrollTop - clientHeight < 160) {
+            if (limit < laneMachines.length) {
+              setLaneLimits(prev => ({ ...prev, [lane.id]: limit + 40 }));
+            }
+          }
+        };
+
         const fullLaneIdx = LANES.findIndex((l) => l.id === lane.id);
         const prevLane = fullLaneIdx > 0 ? LANES[fullLaneIdx - 1].id : null;
         const nextLane = fullLaneIdx < LANES.length - 1 ? LANES[fullLaneIdx + 1].id : null;
 
         return (
-          <motion.div
-            layout
+          <div
             key={lane.id}
             className="flex flex-col rounded-xl border border-cyber-border bg-cyber-card/60 backdrop-blur-sm min-h-[550px] overflow-hidden shadow-lg transition-colors hover:border-cyber-borderGlow"
           >
@@ -149,165 +181,173 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ filteredMachines }) =>
             </div>
 
             {/* Lane Cards Container */}
-            <div className="flex-1 p-2 space-y-2.5 overflow-y-auto max-h-[calc(100vh-250px)]">
-              <AnimatePresence mode="popLayout">
-                {laneMachines.map((m) => {
-                  const isActiveTarget = activeTargetId === m.id;
-                  const hasUser = Boolean(m.userPwnedAt || m.userFlag);
-                  const hasRoot = Boolean(m.rootPwnedAt || m.rootFlag);
+            <div 
+              onScroll={handleLaneScroll}
+              className="flex-1 p-2 space-y-2.5 overflow-y-auto max-h-[calc(100vh-250px)] scroll-smooth"
+            >
+              {displayedMachines.map((m) => {
+                const isActiveTarget = activeTargetId === m.id;
+                const hasUser = Boolean(m.userPwnedAt || m.userFlag);
+                const hasRoot = Boolean(m.rootPwnedAt || m.rootFlag);
 
-                  return (
-                    <motion.div
-                      layout
-                      initial={{ opacity: 0, scale: 0.92, y: 15 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ 
-                        type: 'spring', 
-                        stiffness: 400, 
-                        damping: 28 
-                      }}
-                      whileHover={{ y: -3, scale: 1.012 }}
-                      whileTap={{ scale: 0.985 }}
-                      key={m.id}
-                      onClick={() => setSelectedMachineId(m.id)}
-                      className={`group relative p-3 rounded-lg border bg-cyber-card hover:bg-cyber-cardHover transition-colors cursor-pointer shadow-sm ${
-                        isActiveTarget
-                          ? 'border-cyber-emerald shadow-glow-emerald/30 ring-1 ring-cyber-emerald/40'
-                          : 'border-cyber-border hover:border-cyber-cyan/50 hover:shadow-glow-cyan/20'
-                      }`}
-                    >
-                      {/* Top Badges */}
-                      <div className="flex items-center justify-between gap-1.5 mb-2">
-                        <PlatformBadge platform={m.platform} size="sm" />
+                return (
+                  <div
+                    key={m.id}
+                    onClick={() => setSelectedMachineId(m.id)}
+                    className={`group relative p-3 rounded-lg border bg-cyber-card hover:bg-cyber-cardHover transition-all duration-150 hover:-translate-y-0.5 cursor-pointer shadow-sm ${
+                      isActiveTarget
+                        ? 'border-cyber-emerald shadow-glow-emerald/30 ring-1 ring-cyber-emerald/40'
+                        : 'border-cyber-border hover:border-cyber-cyan/50 hover:shadow-glow-cyan/20'
+                    }`}
+                  >
+                    {/* Top Badges */}
+                    <div className="flex items-center justify-between gap-1.5 mb-2">
+                      <PlatformBadge platform={m.platform} size="sm" />
 
-                        <div className="flex items-center gap-1.5">
-                          <OsBadge os={m.os} size="sm" />
-                          <span
-                            className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider ${
-                              m.difficulty === 'Easy' ? 'bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30' :
-                              m.difficulty === 'Medium' ? 'bg-cyber-amber/10 text-cyber-amber border border-cyber-amber/30' :
-                              m.difficulty === 'Hard' ? 'bg-cyber-crimson/10 text-cyber-crimson border border-cyber-crimson/30' :
-                              'bg-purple-950/40 text-purple-400 border border-purple-800/50'
-                            }`}
-                          >
-                            {m.difficulty}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Machine Name & IP */}
-                      <div className="flex items-start justify-between gap-1.5">
-                        <div>
-                          <div className="font-bold text-white text-base group-hover:text-cyber-cyan transition-colors leading-snug">
-                            {m.name}
-                          </div>
-                          <div className="text-xs text-cyber-muted font-mono mt-0.5">{m.ip}</div>
-                        </div>
-
-                        {/* Active Target Engage Button */}
-                        <motion.button
-                          whileHover={{ scale: 1.15 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={(e) => handleSetTarget(e, m.id)}
-                          className={`p-1.5 rounded transition-colors ${
-                            isActiveTarget
-                              ? 'text-cyber-emerald bg-cyber-emerald/10 border border-cyber-emerald/40 shadow-glow-emerald/20'
-                              : 'text-cyber-muted hover:text-white bg-cyber-bg hover:bg-cyber-card border border-cyber-border'
+                      <div className="flex items-center gap-1.5">
+                        <OsBadge os={m.os} size="sm" />
+                        <span
+                          className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider ${
+                            m.difficulty === 'Easy' ? 'bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30' :
+                            m.difficulty === 'Medium' ? 'bg-cyber-amber/10 text-cyber-amber border border-cyber-amber/30' :
+                            m.difficulty === 'Hard' ? 'bg-cyber-crimson/10 text-cyber-crimson border border-cyber-crimson/30' :
+                            'bg-purple-950/40 text-purple-400 border border-purple-800/50'
                           }`}
-                          title={isActiveTarget ? 'Currently Engaged' : 'Engage Target & Start Timer'}
                         >
-                          <Crosshair className={`w-4 h-4 ${isActiveTarget ? 'animate-spin-slow' : ''}`} />
-                        </motion.button>
+                          {m.difficulty}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Machine Name & IP */}
+                    <div className="flex items-start justify-between gap-1.5">
+                      <div>
+                        <div className="font-bold text-white text-base group-hover:text-cyber-cyan transition-colors leading-snug">
+                          {m.name}
+                        </div>
+                        <div className="text-xs text-cyber-muted font-mono mt-0.5">{m.ip}</div>
                       </div>
 
-                      {/* Flags & Time Spent Pill */}
-                      <div className="flex items-center justify-between gap-2 mt-2.5 pt-2.5 border-t border-cyber-border/70 text-xs">
-                        <div className="flex items-center gap-1.5">
+                      {/* Active Target Engage Button */}
+                      <button
+                        onClick={(e) => handleSetTarget(e, m.id)}
+                        className={`p-1.5 rounded transition-all hover:scale-110 active:scale-95 ${
+                          isActiveTarget
+                            ? 'text-cyber-emerald bg-cyber-emerald/10 border border-cyber-emerald/40 shadow-glow-emerald/20'
+                            : 'text-cyber-muted hover:text-white bg-cyber-bg hover:bg-cyber-card border border-cyber-border'
+                        }`}
+                        title={isActiveTarget ? 'Currently Engaged' : 'Engage Target & Start Timer'}
+                      >
+                        <Crosshair className={`w-4 h-4 ${isActiveTarget ? 'animate-spin-slow' : ''}`} />
+                      </button>
+                    </div>
+
+                    {/* Flags & Time Spent Pill */}
+                    <div className="flex items-center justify-between gap-2 mt-2.5 pt-2.5 border-t border-cyber-border/70 text-xs">
+                      <div className="flex items-center gap-1.5">
+                        <span
+                          className={`flex items-center gap-1 px-2 py-0.5 rounded border text-[11px] font-bold ${
+                            hasUser
+                              ? 'bg-cyber-cyan/10 border-cyber-cyan/40 text-cyber-cyan'
+                              : 'bg-cyber-bg border-cyber-border/60 text-cyber-muted'
+                          }`}
+                          title={hasUser ? 'User Flag Captured' : 'User Flag Pending'}
+                        >
+                          <Flag className="w-3 h-3" /> U
+                        </span>
+                        <span
+                          className={`flex items-center gap-1 px-2 py-0.5 rounded border text-[11px] font-bold ${
+                            hasRoot
+                              ? 'bg-cyber-emerald/10 border-cyber-emerald/40 text-cyber-emerald'
+                              : 'bg-cyber-bg border-cyber-border/60 text-cyber-muted'
+                          }`}
+                          title={hasRoot ? 'Root Flag Captured' : 'Root Flag Pending'}
+                        >
+                          <Flag className="w-3 h-3" /> R
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2 text-cyber-muted">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setReportMachineId(m.id);
+                          }}
+                          className="p-1 rounded bg-cyber-bg hover:bg-purple-950/60 border border-cyber-border hover:border-purple-600 text-cyber-muted hover:text-purple-300 transition-colors"
+                          title="Open Pentest Pre-Report"
+                        >
+                          <FileText className="w-3 h-3" />
+                        </button>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          <span>{formatDurationHuman(m.timeSpentSeconds)}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Certifications */}
+                    {m.certifications.length > 0 && (
+                      <div className="flex items-center gap-1 mt-2">
+                        {m.certifications.map((cert) => (
                           <span
-                            className={`flex items-center gap-1 px-2 py-0.5 rounded border text-[11px] font-bold ${
-                              hasUser
-                                ? 'bg-cyber-cyan/10 border-cyber-cyan/40 text-cyber-cyan'
-                                : 'bg-cyber-bg border-cyber-border/60 text-cyber-muted'
-                            }`}
-                            title={hasUser ? 'User Flag Captured' : 'User Flag Pending'}
+                            key={cert}
+                            className="text-[9px] px-1.5 py-0.2 rounded bg-cyber-purple/10 border border-cyber-purple/30 text-cyber-purple font-bold"
                           >
-                            <Flag className="w-3 h-3" /> U
+                            {cert}
                           </span>
-                          <span
-                            className={`flex items-center gap-1 px-2 py-0.5 rounded border text-[11px] font-bold ${
-                              hasRoot
-                                ? 'bg-cyber-emerald/10 border-cyber-emerald/40 text-cyber-emerald'
-                                : 'bg-cyber-bg border-cyber-border/60 text-cyber-muted'
-                            }`}
-                            title={hasRoot ? 'Root Flag Captured' : 'Root Flag Pending'}
-                          >
-                            <Flag className="w-3 h-3" /> R
-                          </span>
-                        </div>
-
-                        <div className="flex items-center gap-2 text-cyber-muted">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setReportMachineId(m.id);
-                            }}
-                            className="p-1 rounded bg-cyber-bg hover:bg-purple-950/60 border border-cyber-border hover:border-purple-600 text-cyber-muted hover:text-purple-300 transition-colors"
-                            title="Open Pentest Pre-Report"
-                          >
-                            <FileText className="w-3 h-3" />
-                          </button>
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            <span>{formatDurationHuman(m.timeSpentSeconds)}</span>
-                          </div>
-                        </div>
+                        ))}
                       </div>
+                    )}
 
-                      {/* Certifications */}
-                      {m.certifications.length > 0 && (
-                        <div className="flex items-center gap-1 mt-2">
-                          {m.certifications.map((cert) => (
-                            <span
-                              key={cert}
-                              className="text-[9px] px-1.5 py-0.2 rounded bg-cyber-purple/10 border border-cyber-purple/30 text-cyber-purple font-bold"
-                            >
-                              {cert}
-                            </span>
-                          ))}
-                        </div>
-                      )}
+                    {/* Quick Move Across Lanes Action Footer */}
+                    <div className="flex items-center justify-between mt-2.5 pt-1.5 border-t border-dashed border-cyber-border/60">
+                      {prevLane ? (
+                        <button
+                          onClick={(e) => handleRetreat(e, m, prevLane)}
+                          className="flex items-center gap-0.5 text-[10px] text-cyber-muted hover:text-white hover:-translate-x-0.5 transition-all"
+                          title="Move back"
+                        >
+                          <ChevronLeft className="w-3.5 h-3.5" /> Back
+                        </button>
+                      ) : <div />}
 
-                      {/* Quick Move Across Lanes Action Footer */}
-                      <div className="flex items-center justify-between mt-2.5 pt-1.5 border-t border-dashed border-cyber-border/60">
-                        {prevLane ? (
-                          <motion.button
-                            whileHover={{ x: -2 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={(e) => handleRetreat(e, m, prevLane)}
-                            className="flex items-center gap-0.5 text-[9px] text-cyber-muted hover:text-white transition-colors"
-                            title="Move back"
-                          >
-                            <ChevronLeft className="w-3 h-3" /> Back
-                          </motion.button>
-                        ) : <div />}
+                      {nextLane ? (
+                        <button
+                          onClick={(e) => handleAdvance(e, m, nextLane)}
+                          className="flex items-center gap-0.5 text-[10px] text-cyber-cyan hover:underline hover:translate-x-0.5 transition-all font-semibold ml-auto"
+                          title="Advance stage"
+                        >
+                          Advance <ChevronRight className="w-3.5 h-3.5" />
+                        </button>
+                      ) : <div />}
+                    </div>
+                  </div>
+                );
+              })}
 
-                        {nextLane ? (
-                          <motion.button
-                            whileHover={{ x: 2 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={(e) => handleAdvance(e, m, nextLane)}
-                            className="flex items-center gap-0.5 text-[9px] text-cyber-cyan hover:underline font-semibold ml-auto"
-                            title="Advance stage"
-                          >
-                            Advance <ChevronRight className="w-3 h-3" />
-                          </motion.button>
-                        ) : <div />}
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </AnimatePresence>
+              {/* Lane Pagination / Load More Footer */}
+              {laneMachines.length > displayedMachines.length && (
+                <div className="pt-2.5 pb-1.5 px-2 flex flex-col items-center gap-2 border-t border-cyber-border/80 bg-cyber-bg/60 rounded-xl">
+                  <div className="text-[10px] text-cyber-muted">
+                    Showing <span className="text-white font-bold">{displayedMachines.length}</span> of <span className="text-cyber-cyan font-bold">{laneMachines.length}</span> targets
+                  </div>
+                  <div className="flex items-center gap-2 w-full">
+                    <button
+                      onClick={() => setLaneLimits(prev => ({ ...prev, [lane.id]: limit + 40 }))}
+                      className="flex-1 py-1.5 px-2 rounded-lg bg-cyber-card hover:bg-cyber-cyan/20 border border-cyber-border hover:border-cyber-cyan text-cyber-cyan text-[11px] font-bold transition-all flex items-center justify-center gap-1 shadow-sm"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" /> Load +40 More
+                    </button>
+                    <button
+                      onClick={() => setLaneLimits(prev => ({ ...prev, [lane.id]: laneMachines.length }))}
+                      className="py-1.5 px-3 rounded-lg bg-cyber-card hover:bg-cyber-cardHover border border-cyber-border text-cyber-muted hover:text-white text-[10px] transition-all font-semibold"
+                      title="Render all targets in this lane"
+                    >
+                      All ({laneMachines.length})
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {laneMachines.length === 0 && (
                 <div className="p-6 text-center text-[11px] text-cyber-muted/60 border border-dashed border-cyber-border/50 rounded-lg">
@@ -315,7 +355,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ filteredMachines }) =>
                 </div>
               )}
             </div>
-          </motion.div>
+          </div>
         );
       })}
     </div>

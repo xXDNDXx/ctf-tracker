@@ -892,20 +892,76 @@ export const useCtfStore = create<CtfStoreState>()(
   )
 );
 
-// Auto-save data to the active profile whenever state changes
-useCtfStore.subscribe((state) => {
-  if (typeof window !== 'undefined' && state.currentProfileId) {
-    const targetKey = getProfileStorageKey(state.currentProfileId);
-    const payload = {
-      machines: state.machines,
-      activeTargetId: state.activeTargetId,
-      globalVars: state.globalVars,
-      cheatsheets: state.cheatsheets,
-      activitySessions: state.activitySessions,
-    };
-    try {
-      localStorage.setItem(targetKey, JSON.stringify(payload));
-    } catch {}
+// Selective, high-performance profile auto-save
+// Guards against 1Hz timer ticks, uses debouncing with maxWait cap, and flushes on tab close
+let lastSavedMachines = useCtfStore.getState().machines;
+let lastSavedTargetId = useCtfStore.getState().activeTargetId;
+let lastSavedGlobalVars = useCtfStore.getState().globalVars;
+let lastSavedCheatsheets = useCtfStore.getState().cheatsheets;
+let lastSavedSessions = useCtfStore.getState().activitySessions;
+let saveDebounceTimer: any = null;
+let maxWaitTimer: any = null;
+
+const flushProfileSave = () => {
+  if (saveDebounceTimer) {
+    clearTimeout(saveDebounceTimer);
+    saveDebounceTimer = null;
   }
+  if (maxWaitTimer) {
+    clearTimeout(maxWaitTimer);
+    maxWaitTimer = null;
+  }
+  if (typeof window === 'undefined') return;
+  const state = useCtfStore.getState();
+  if (!state.currentProfileId) return;
+
+  const targetKey = getProfileStorageKey(state.currentProfileId);
+  const payload = {
+    machines: state.machines,
+    activeTargetId: state.activeTargetId,
+    globalVars: state.globalVars,
+    cheatsheets: state.cheatsheets,
+    activitySessions: state.activitySessions,
+  };
+  try {
+    localStorage.setItem(targetKey, JSON.stringify(payload));
+    lastSavedMachines = state.machines;
+    lastSavedTargetId = state.activeTargetId;
+    lastSavedGlobalVars = state.globalVars;
+    lastSavedCheatsheets = state.cheatsheets;
+    lastSavedSessions = state.activitySessions;
+  } catch {}
+};
+
+useCtfStore.subscribe((state) => {
+  if (typeof window === 'undefined' || !state.currentProfileId) return;
+
+  // Selective Persistence Check: Only trigger if persisted data actually changed!
+  // Prevents 1Hz timer ticks (activeTimerSeconds) from ever touching localStorage!
+  const hasChanged = 
+    state.machines !== lastSavedMachines ||
+    state.activeTargetId !== lastSavedTargetId ||
+    state.globalVars !== lastSavedGlobalVars ||
+    state.cheatsheets !== lastSavedCheatsheets ||
+    state.activitySessions !== lastSavedSessions;
+
+  if (!hasChanged) return;
+
+  // Debounce with maxWait cap (5000ms max)
+  if (saveDebounceTimer) clearTimeout(saveDebounceTimer);
+  if (!maxWaitTimer) {
+    maxWaitTimer = setTimeout(flushProfileSave, 5000);
+  }
+  saveDebounceTimer = setTimeout(flushProfileSave, 1200);
 });
+
+// Flush immediately on tab close or backgrounding
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeunload', flushProfileSave);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      flushProfileSave();
+    }
+  });
+}
 

@@ -71,10 +71,28 @@ export const TrackerView: React.FC = () => {
 
   // Filter and sort machines based on active filter state
   const filteredMachines = useMemo(() => {
+    const q = deferredQuery ? deferredQuery.trim().toLowerCase() : '';
+    const platformFilter = filters.selectedPlatform;
+    const diffFilter = filters.selectedDifficulty;
+    const osFilter = filters.selectedOs;
+    const trackFilter = filters.selectedTrack;
+    const catFilter = filters.selectedCategory;
+    const certFilter = filters.selectedCert;
+    const hasTags = filters.selectedTags.length > 0;
+    const selectedTrack = (trackFilter && trackFilter !== 'ALL') ? PRACTICE_TRACKS.find(t => t.id === trackFilter) : null;
+
     const list = machines.filter((m) => {
-      // Search query
-      if (deferredQuery) {
-        const q = deferredQuery.toLowerCase();
+      // 1. Fast primitive checks first (0 allocations, rejects immediately)
+      if (platformFilter !== 'ALL' && m.platform !== platformFilter) return false;
+      if (diffFilter !== 'ALL' && m.difficulty !== diffFilter) return false;
+      if (osFilter && osFilter !== 'ALL' && m.os !== osFilter) return false;
+      if (certFilter !== 'ALL' && !m.certifications.includes(certFilter)) return false;
+
+      // 2. Curated Track filter
+      if (selectedTrack && !selectedTrack.filterFn(m)) return false;
+
+      // 3. Search query (only evaluated on candidates that passed platform/diff)
+      if (q) {
         const matchName = m.name.toLowerCase().includes(q);
         const matchIp = m.ip.includes(q);
         const matchOs = m.os.toLowerCase().includes(q);
@@ -82,60 +100,31 @@ export const TrackerView: React.FC = () => {
         if (!matchName && !matchIp && !matchOs && !matchTag) return false;
       }
 
-      // Platform filter
-      if (filters.selectedPlatform !== 'ALL' && m.platform !== filters.selectedPlatform) {
-        return false;
-      }
-
-      // Difficulty filter
-      if (filters.selectedDifficulty !== 'ALL' && m.difficulty !== filters.selectedDifficulty) {
-        return false;
-      }
-
-      // Operating System filter
-      if (filters.selectedOs && filters.selectedOs !== 'ALL' && m.os !== filters.selectedOs) {
-        return false;
-      }
-
-      // Curated Track filter
-      if (filters.selectedTrack && filters.selectedTrack !== 'ALL') {
-        const track = PRACTICE_TRACKS.find(t => t.id === filters.selectedTrack);
-        if (track && !track.filterFn(m)) {
-          return false;
-        }
-      }
-
-      // Exploit Vector / Box Archetype filter
-      if (filters.selectedCategory && filters.selectedCategory !== 'ALL') {
-        const cat = filters.selectedCategory;
-        if (cat === 'Web') {
+      // 4. Exploit Vector / Box Archetype filter
+      if (catFilter && catFilter !== 'ALL') {
+        if (catFilter === 'Web') {
           const webTags = ['web', 'sqli', 'xss', 'rce', 'lfi', 'ssti', 'csrf', 'idor', 'deserialization', 'upload', 'ssrf'];
           if (!m.tags.some(t => webTags.includes(t.toLowerCase()))) return false;
-        } else if (cat === 'Linux PrivEsc') {
+        } else if (catFilter === 'Linux PrivEsc') {
           const lpeTags = ['sudo', 'cron', 'suid', 'kernel', 'wildcard', 'path hijack', 'capabilities', 'docker', 'lxd', 'privesc'];
           if (m.os !== 'Linux' || !m.tags.some(t => lpeTags.includes(t.toLowerCase()))) return false;
-        } else if (cat === 'Windows PrivEsc') {
+        } else if (catFilter === 'Windows PrivEsc') {
           const wpeTags = ['token', 'impersonation', 'seimpersonate', 'potato', 'alwaysinstallelevated', 'unquoted', 'dll hijacking', 'uac', 'service'];
           if (m.os !== 'Windows' || !m.tags.some(t => wpeTags.includes(t.toLowerCase()))) return false;
-        } else if (cat === 'Active Directory') {
+        } else if (catFilter === 'Active Directory') {
           const adTags = ['active directory', 'kerberos', 'roasting', 'bloodhound', 'as-rep', 'kerberoast', 'gpo', 'ldap', 'ad'];
           if (m.os !== 'Active Directory' && !m.tags.some(t => adTags.includes(t.toLowerCase()))) return false;
-        } else if (cat === 'Binary / Pwn') {
+        } else if (catFilter === 'Binary / Pwn') {
           const bofTags = ['bof', 'buffer overflow', 'pwn', 'binary', 'overflow', 'rop', 'format string'];
           if (!m.tags.some(t => bofTags.includes(t.toLowerCase()))) return false;
-        } else if (cat === 'Network / SMB') {
+        } else if (catFilter === 'Network / SMB') {
           const netTags = ['smb', 'samba', 'ftp', 'snmp', 'ssh', 'rpc', 'nfs', 'anonymous'];
           if (!m.tags.some(t => netTags.includes(t.toLowerCase()))) return false;
         }
       }
 
-      // Legacy certification track
-      if (filters.selectedCert !== 'ALL' && !m.certifications.includes(filters.selectedCert)) {
-        return false;
-      }
-
-      // Selected Tags
-      if (filters.selectedTags.length > 0) {
+      // 5. Selected Tags
+      if (hasTags) {
         const hasAllTags = filters.selectedTags.every((t) => m.tags.includes(t));
         if (!hasAllTags) return false;
       }
