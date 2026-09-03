@@ -20,6 +20,8 @@ if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
   }
 }
 
+(window as any).__SPECTER_LOADED__ = true;
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ErrorBoundary>

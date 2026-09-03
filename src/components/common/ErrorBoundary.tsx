@@ -29,7 +29,8 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public handleReset = () => {
     try {
-      localStorage.removeItem('specter_ctf_store_v2');
+      localStorage.removeItem('specter_ctf_store_v3');
+      localStorage.removeItem('specter_ctf_profile_guest');
     } catch (_) {}
     window.location.reload();
   };
