@@ -26,6 +26,7 @@ import { ChecklistWorkspace } from '../components/checklist/ChecklistWorkspace';
 import { formatSeconds, playCyberSound, triggerRootCelebration } from '../utils/helpers';
 import { PlatformBadge } from '../components/common/PlatformBadge';
 import { OsBadge } from '../components/common/OsBadge';
+import { EditableIpBadge } from '../components/common/EditableIpBadge';
 
 export const TargetDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -154,8 +155,8 @@ export const TargetDetailPage: React.FC = () => {
                 {machine.difficulty}
               </span>
             </div>
-            <div className="text-xs text-cyber-muted mt-1 flex items-center gap-4">
-              <span>IP: <strong className="text-white">{machine.ip}</strong></span>
+            <div className="text-xs text-cyber-muted mt-1 flex flex-wrap items-center gap-4">
+              <EditableIpBadge machineId={machine.id} initialIp={machine.ip} size="sm" showLabel />
               {machine.roomUrl && (
                 <a
                   href={machine.roomUrl}

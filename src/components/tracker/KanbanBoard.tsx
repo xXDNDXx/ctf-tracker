@@ -14,6 +14,7 @@ import { useCtfStore } from '../../store/useCtfStore';
 import { formatDurationHuman, playCyberSound, triggerRootCelebration } from '../../utils/helpers';
 import { PlatformBadge } from '../common/PlatformBadge';
 import { OsBadge } from '../common/OsBadge';
+import { EditableIpBadge } from '../common/EditableIpBadge';
 
 interface KanbanBoardProps {
   filteredMachines: Machine[];
@@ -225,7 +226,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ filteredMachines }) =>
                         <div className="font-bold text-white text-base group-hover:text-cyber-cyan transition-colors leading-snug">
                           {m.name}
                         </div>
-                        <div className="text-xs text-cyber-muted font-mono mt-0.5">{m.ip}</div>
+                        <EditableIpBadge machineId={m.id} initialIp={m.ip} size="xs" className="mt-0.5" />
                       </div>
 
                       {/* Active Target Engage Button */}

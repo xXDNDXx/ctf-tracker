@@ -17,6 +17,7 @@ import { useCtfStore } from '../../store/useCtfStore';
 import { formatDurationHuman, playCyberSound, triggerRootCelebration } from '../../utils/helpers';
 import { PlatformBadge } from '../common/PlatformBadge';
 import { OsBadge } from '../common/OsBadge';
+import { EditableIpBadge } from '../common/EditableIpBadge';
 
 interface GridViewProps {
   filteredMachines: Machine[];
@@ -122,7 +123,7 @@ export const GridView: React.FC<GridViewProps> = ({ filteredMachines }) => {
                     </motion.span>
                   )}
                 </div>
-                <div className="text-xs text-cyber-muted font-mono">{m.ip}</div>
+                <EditableIpBadge machineId={m.id} initialIp={m.ip} size="xs" className="mt-0.5" />
               </div>
 
               {/* Certifications */}

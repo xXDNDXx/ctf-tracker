@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { CyberLogo } from '../common/CyberLogo';
 import { PlatformIcon } from '../common/PlatformBadge';
+import { EditableIpBadge } from '../common/EditableIpBadge';
 import { playCyberSound, formatSeconds, triggerRootCelebration, safeCopyToClipboard } from '../../utils/helpers';
 import { UserMenu } from '../auth/UserMenu';
 
@@ -330,26 +331,8 @@ export const Header: React.FC = () => {
                   {activeMachine.name}
                 </Link>
 
-                {/* Quick Copy IP */}
-                <button
-                  onClick={handleCopyTargetIp}
-                  className={`px-1.5 py-0.5 rounded border flex items-center gap-1 text-[10px] transition-all ${
-                    copiedTargetIp
-                      ? 'bg-cyber-emerald text-black font-bold border-cyber-emerald shadow-glow-emerald scale-105'
-                      : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-white'
-                  }`}
-                  title="Click to copy target IP"
-                >
-                  <span>{activeMachine.ip}</span>
-                  {copiedTargetIp ? (
-                    <>
-                      <Check className="w-2.5 h-2.5 stroke-[3]" />
-                      <span className="text-[9px] uppercase font-bold">COPIED!</span>
-                    </>
-                  ) : (
-                    <Copy className="w-2.5 h-2.5" />
-                  )}
-                </button>
+                {/* Editable Target IP Badge */}
+                <EditableIpBadge machineId={activeMachine.id} initialIp={activeMachine.ip} size="xs" />
               </div>
 
               {/* 1-Click Quick Flags */}

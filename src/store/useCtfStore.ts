@@ -417,11 +417,15 @@ export const useCtfStore = create<CtfStoreState>()(
         set((state) => {
           const isNowCompleted = updates.status === 'root' || updates.status === 'completed';
           const shouldStopTimer = isNowCompleted && (state.activeTargetId === id || state.isTimerRunning);
+          const syncTargetIp = Boolean(state.activeTargetId === id && updates.ip);
 
           return {
             machines: state.machines.map((m) =>
               m.id === id ? { ...m, ...updates, updatedAt: new Date().toISOString() } : m
             ),
+            globalVars: syncTargetIp
+              ? { ...state.globalVars, targetIp: updates.ip! }
+              : state.globalVars,
             isTimerRunning: shouldStopTimer ? false : state.isTimerRunning,
           };
         });

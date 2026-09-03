@@ -34,6 +34,7 @@ import { formatSeconds, playCyberSound, triggerRootCelebration, safeCopyToClipbo
 import { ChecklistWorkspace } from '../checklist/ChecklistWorkspace';
 import { PlatformBadge } from '../common/PlatformBadge';
 import { OsBadge } from '../common/OsBadge';
+import { EditableIpBadge } from '../common/EditableIpBadge';
 
 export const MachineDetailModal: React.FC = () => {
   const {
@@ -217,8 +218,8 @@ During the security assessment of target host ${machine.name} (${machine.ip}), s
                 {machine.difficulty}
               </span>
             </div>
-            <div className="text-xs text-cyber-muted mt-1 flex items-center gap-3">
-              <span>IP: <strong className="text-white">{machine.ip}</strong></span>
+            <div className="text-xs text-cyber-muted mt-1 flex flex-wrap items-center gap-3">
+              <EditableIpBadge machineId={machine.id} initialIp={machine.ip} size="sm" showLabel />
               {machine.roomUrl && (
                 <a
                   href={machine.roomUrl}

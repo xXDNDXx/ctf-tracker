@@ -1,0 +1,208 @@
+﻿import React, { useState, useRef, useEffect } from 'react';
+import { Pencil, Check, X, Copy, CheckCheck } from 'lucide-react';
+import { useCtfStore } from '../../store/useCtfStore';
+import { playCyberSound } from '../../utils/helpers';
+
+export interface EditableIpBadgeProps {
+  machineId: string;
+  initialIp: string;
+  size?: 'xs' | 'sm' | 'md';
+  showLabel?: boolean;
+  className?: string;
+  onSaved?: (newIp: string) => void;
+}
+
+export const EditableIpBadge: React.FC<EditableIpBadgeProps> = ({
+  machineId,
+  initialIp,
+  size = 'xs',
+  showLabel = false,
+  className = '',
+  onSaved,
+}) => {
+  const { updateMachine, soundEnabled } = useCtfStore();
+  const [isEditing, setIsEditing] = useState(false);
+  const [ipValue, setIpValue] = useState(initialIp);
+  const [copied, setCopied] = useState(false);
+  const [justSaved, setJustSaved] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setIpValue(initialIp);
+  }, [initialIp]);
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isEditing]);
+
+  const handleStartEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsEditing(true);
+    setIpValue(initialIp);
+  };
+
+  const handleCancel = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setIsEditing(false);
+    setIpValue(initialIp);
+  };
+
+  const handleSave = (e?: React.MouseEvent | React.FormEvent) => {
+    if (e) e.stopPropagation();
+    const cleanIp = ipValue.trim();
+    if (!cleanIp) {
+      handleCancel();
+      return;
+    }
+
+    updateMachine(machineId, { ip: cleanIp });
+    setIsEditing(false);
+    setJustSaved(true);
+    if (soundEnabled) playCyberSound('click');
+    if (onSaved) onSaved(cleanIp);
+
+    setTimeout(() => {
+      setJustSaved(false);
+    }, 1800);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    e.stopPropagation();
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSave();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      handleCancel();
+    }
+  };
+
+  const handleCopy = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!initialIp) return;
+    navigator.clipboard.writeText(initialIp);
+    setCopied(true);
+    if (soundEnabled) playCyberSound('copy');
+    setTimeout(() => setCopied(false), 1800);
+  };
+
+  const sizeClasses = {
+    xs: {
+      text: 'text-[11px]',
+      input: 'text-[11px] py-0.5 px-1.5 w-28',
+      icon: 'w-3 h-3',
+      button: 'p-1',
+    },
+    sm: {
+      text: 'text-xs',
+      input: 'text-xs py-1 px-2 w-32',
+      icon: 'w-3.5 h-3.5',
+      button: 'p-1',
+    },
+    md: {
+      text: 'text-sm',
+      input: 'text-sm py-1 px-2.5 w-36',
+      icon: 'w-4 h-4',
+      button: 'p-1.5',
+    },
+  }[size];
+
+  if (isEditing) {
+    return (
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className={`inline-flex items-center gap-1 bg-cyber-bg border border-cyber-cyan/70 rounded-md p-0.5 shadow-[0_0_12px_rgba(6,182,212,0.25)] font-mono ${className}`}
+      >
+        {showLabel && <span className="text-[10px] text-cyber-muted px-1">IP:</span>}
+        <input
+          ref={inputRef}
+          type="text"
+          value={ipValue}
+          onChange={(e) => setIpValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          onClick={(e) => e.stopPropagation()}
+          className={`bg-transparent text-white font-mono font-bold focus:outline-none ${sizeClasses.input}`}
+          placeholder="10.10.x.x"
+        />
+        <button
+          type="button"
+          onClick={handleSave}
+          className={`${sizeClasses.button} rounded bg-cyber-emerald/20 text-cyber-emerald hover:bg-cyber-emerald hover:text-black transition-all`}
+          title="Save IP (Enter)"
+        >
+          <Check className={sizeClasses.icon} />
+        </button>
+        <button
+          type="button"
+          onClick={handleCancel}
+          className={`${sizeClasses.button} rounded bg-cyber-crimson/20 text-cyber-crimson hover:bg-cyber-crimson hover:text-white transition-all`}
+          title="Cancel (Esc)"
+        >
+          <X className={sizeClasses.icon} />
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      onClick={(e) => e.stopPropagation()}
+      className={`group/ip inline-flex items-center gap-1.5 font-mono ${sizeClasses.text} ${className}`}
+    >
+      {showLabel && <span className="text-cyber-muted text-[10px]">IP:</span>}
+
+      <div
+        className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded border transition-all ${
+          justSaved
+            ? 'bg-cyber-emerald/15 border-cyber-emerald text-cyber-emerald shadow-[0_0_10px_rgba(16,185,129,0.3)]'
+            : copied
+            ? 'bg-cyber-cyan/15 border-cyber-cyan text-cyber-cyan shadow-[0_0_10px_rgba(6,182,212,0.3)]'
+            : 'bg-cyber-bg/70 border-cyber-border hover:border-cyber-borderGlow text-cyber-muted hover:text-white'
+        }`}
+      >
+        <span
+          onClick={handleCopy}
+          className="cursor-pointer font-bold select-all tracking-wide"
+          title="Click to copy IP"
+        >
+          {initialIp}
+        </span>
+
+        {/* Copy confirmation or icon */}
+        {copied ? (
+          <CheckCheck className={`${sizeClasses.icon} text-cyber-cyan stroke-[2.5]`} />
+        ) : justSaved ? (
+          <Check className={`${sizeClasses.icon} text-cyber-emerald stroke-[2.5]`} />
+        ) : (
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="text-cyber-muted hover:text-cyber-cyan transition-colors"
+            title="Copy IP"
+          >
+            <Copy className={sizeClasses.icon} />
+          </button>
+        )}
+
+        {/* Edit Button */}
+        <button
+          type="button"
+          onClick={handleStartEdit}
+          className="text-cyber-muted hover:text-cyber-amber transition-all hover:scale-110 ml-0.5 opacity-70 group-hover/ip:opacity-100"
+          title="Change / Update Target IP"
+        >
+          <Pencil className={sizeClasses.icon} />
+        </button>
+      </div>
+
+      {justSaved && (
+        <span className="text-[9px] text-cyber-emerald font-bold animate-pulse uppercase">
+          IP SAVED ✓
+        </span>
+      )}
+    </div>
+  );
+};

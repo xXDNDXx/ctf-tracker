@@ -15,6 +15,7 @@ import { useCtfStore } from '../../store/useCtfStore';
 import { formatSeconds, playCyberSound, triggerRootCelebration } from '../../utils/helpers';
 import { PlatformBadge, PlatformIcon } from '../common/PlatformBadge';
 import { OsBadge } from '../common/OsBadge';
+import { EditableIpBadge } from '../common/EditableIpBadge';
 
 interface TableViewProps {
   filteredMachines: Machine[];
@@ -180,7 +181,7 @@ export const TableView: React.FC<TableViewProps> = ({ filteredMachines }) => {
                         <div className="font-bold text-white group-hover:text-cyber-cyan transition-colors">
                           {m.name}
                         </div>
-                        <div className="text-[10px] text-cyber-muted font-mono">{m.ip}</div>
+                        <EditableIpBadge machineId={m.id} initialIp={m.ip} size="xs" className="mt-0.5" />
                       </div>
                     </div>
                   </td>
