@@ -1,5 +1,5 @@
 import React from 'react';
-import logoImg from '../../assets/logo.jpg';
+import logoImg from '../../assets/logo.png';
 
 interface CyberLogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -13,23 +13,23 @@ export const CyberLogo: React.FC<CyberLogoProps> = ({
   glow = true 
 }) => {
   const containerSizeMap = {
-    sm: 'w-7 h-7 rounded-lg',
-    md: 'w-8 h-8 rounded-lg',
-    lg: 'w-10 h-10 rounded-xl',
-    xl: 'w-14 h-14 rounded-2xl',
+    sm: 'w-7 h-7',
+    md: 'w-8 h-8',
+    lg: 'w-10 h-10',
+    xl: 'w-14 h-14',
   };
 
   return (
     <div
-      className={`relative flex items-center justify-center overflow-hidden border border-cyber-emerald/40 bg-black transition-all duration-200 group-hover:scale-105 group-hover:border-cyber-emerald ${containerSizeMap[size]} ${
-        glow ? 'shadow-[0_0_12px_rgba(16,185,129,0.35)] group-hover:shadow-[0_0_20px_rgba(16,185,129,0.6)]' : ''
+      className={`relative flex items-center justify-center transition-all duration-200 group-hover:scale-110 ${containerSizeMap[size]} ${
+        glow ? 'drop-shadow-[0_0_10px_rgba(56,189,248,0.5)] group-hover:drop-shadow-[0_0_18px_rgba(56,189,248,0.85)]' : ''
       } ${className}`}
-      title="SPECTER CTF // CYBER EMBLEM"
+      title="SPECTER CTF // OPEN BLUE BOX"
     >
       <img
         src={logoImg}
-        alt="Specter CTF Emblem"
-        className="w-full h-full object-cover select-none"
+        alt="Specter CTF Open Blue Box"
+        className="w-full h-full object-contain select-none filter transition-all duration-200"
       />
     </div>
   );
