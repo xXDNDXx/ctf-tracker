@@ -22,7 +22,8 @@ import {
   Server, 
   Sparkles, 
   Zap,
-  ZoomIn
+  ZoomIn,
+  Keyboard
 } from 'lucide-react';
 import { CyberLogo } from '../common/CyberLogo';
 import { PlatformIcon } from '../common/PlatformBadge';
@@ -134,6 +135,7 @@ export const Header: React.FC = () => {
     setBackupModalOpen,
     setReconAutomationModalOpen,
     setOperatorModalOpen,
+    setShortcutsModalOpen,
     uiScale,
     cycleUiScale,
   } = useCtfStore(
@@ -158,6 +160,7 @@ export const Header: React.FC = () => {
       setBackupModalOpen: s.setBackupModalOpen,
       setReconAutomationModalOpen: s.setReconAutomationModalOpen,
       setOperatorModalOpen: s.setOperatorModalOpen,
+      setShortcutsModalOpen: s.setShortcutsModalOpen,
       uiScale: s.uiScale,
       cycleUiScale: s.cycleUiScale,
     }))
@@ -548,6 +551,20 @@ export const Header: React.FC = () => {
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Box</span>
+          </button>
+
+          {/* Tactical Keyboard Shortcuts Button */}
+          <button
+            onClick={() => {
+              setShortcutsModalOpen(true);
+              if (soundEnabled) playCyberSound('click');
+            }}
+            className="hidden lg:flex items-center gap-1 px-2 py-1 rounded-md bg-cyber-bg border border-cyber-border hover:border-cyber-cyan text-cyber-muted hover:text-white font-mono text-xs transition-all"
+            title="Keyboard Shortcuts Cheat Sheet (Press ?)"
+          >
+            <Keyboard className="w-3.5 h-3.5 text-cyber-cyan" />
+            <span className="hidden xl:inline">Hotkeys</span>
+            <kbd className="text-[10px] px-1 py-0.2 rounded bg-cyber-card border border-cyber-border text-white">?</kbd>
           </button>
         </div>
 

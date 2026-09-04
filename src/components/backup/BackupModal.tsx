@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import { useCtfStore } from '../../store/useCtfStore';
 import { playCyberSound } from '../../utils/helpers';
+import { generateObsidianVaultZip } from '../../utils/obsidianVaultExporter';
+import { Sparkles, Package, BookOpen } from 'lucide-react';
 
 export const BackupModal: React.FC = () => {
   const {
@@ -21,11 +23,14 @@ export const BackupModal: React.FC = () => {
     exportBackup,
     importBackup,
     resetAllProgress,
+    machines,
+    cheatsheets,
     soundEnabled,
   } = useCtfStore();
 
   const [importText, setImportText] = useState('');
   const [copied, setCopied] = useState(false);
+  const [isExportingVault, setIsExportingVault] = useState(false);
   const [importStatus, setImportStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -38,12 +43,33 @@ export const BackupModal: React.FC = () => {
     const link = document.createElement('a');
     link.href = url;
     const dateStr = new Date().toISOString().slice(0, 10);
-    link.download = `specter_ctf_backup_${dateStr}.json`;
+    link.download = `zerobox_ctf_backup_${dateStr}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
     if (soundEnabled) playCyberSound('root');
+  };
+
+  const handleExportObsidianVault = async () => {
+    try {
+      setIsExportingVault(true);
+      const zipBlob = await generateObsidianVaultZip(machines, cheatsheets);
+      const url = URL.createObjectURL(zipBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      const dateStr = new Date().toISOString().slice(0, 10);
+      link.download = `ZeroBox-Obsidian-Vault-${dateStr}.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      if (soundEnabled) playCyberSound('root');
+    } catch (err) {
+      console.error('Failed to generate Obsidian Vault zip:', err);
+    } finally {
+      setIsExportingVault(false);
+    }
   };
 
   const handleCopyBackup = () => {
@@ -121,6 +147,7 @@ export const BackupModal: React.FC = () => {
         <div className="flex-1 overflow-y-auto p-5 space-y-5 text-xs scrollbar-thin">
           
           {/* Section 1: Export */}
+          {/* Section 1: Export JSON */}
           <div className="p-3.5 rounded-lg bg-cyber-bg border border-cyber-border space-y-3">
             <div className="flex items-center justify-between">
               <div>
@@ -151,6 +178,43 @@ export const BackupModal: React.FC = () => {
                   <>
                     <Copy className="w-3.5 h-3.5" />
                     <span>Copy JSON String</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Section 1B: Export as Standalone Obsidian Vault (.zip) */}
+          <div className="p-3.5 rounded-lg bg-purple-950/20 border border-purple-800/40 space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-purple-300 text-sm block">1-Click Obsidian Vault Export (.zip)</span>
+                  <span className="text-[10px] px-2 py-0.2 rounded bg-purple-900/60 border border-purple-700/50 text-purple-200 font-bold uppercase">
+                    Obsidian Ready
+                  </span>
+                </div>
+                <span className="text-cyber-muted text-[11px] block mt-0.5">
+                  Package all {machines.length} target cards, 63 completed solves, official HTB walkthroughs, methodology phases, and cheatsheets into a complete, standalone Obsidian Vault with YAML frontmatter, wikilinks, and tags.
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                disabled={isExportingVault}
+                onClick={handleExportObsidianVault}
+                className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-cyber-cyan text-black font-bold hover:bg-cyan-300 transition-all shadow-glow-cyan disabled:opacity-50"
+              >
+                {isExportingVault ? (
+                  <>
+                    <Sparkles className="w-4 h-4 animate-spin text-black" />
+                    <span>Compiling Vault ZIP...</span>
+                  </>
+                ) : (
+                  <>
+                    <Package className="w-4 h-4" />
+                    <span>Export Obsidian Vault (.zip)</span>
                   </>
                 )}
               </button>

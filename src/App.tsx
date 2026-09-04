@@ -17,6 +17,8 @@ import { NewMachineModal } from './components/tracker/NewMachineModal';
 import { PentestReportModal } from './components/writeup/PentestReportModal';
 import { OperatorDossierModal } from './components/common/OperatorDossierModal';
 import { QuickAssignIpModal } from './components/common/QuickAssignIpModal';
+import { KeyboardShortcutsModal } from './components/common/KeyboardShortcutsModal';
+import { useTacticalHotkeys } from './hooks/useTacticalHotkeys';
 import { useCtfStore, mergeMachinesWithCatalog } from './store/useCtfStore';
 
 // Code-Split Route Modules (Zero-overhead on initial tracker load)
@@ -84,6 +86,9 @@ const MainAppContent: React.FC = () => {
   const setReportMachineId = useCtfStore((s) => s.setReportMachineId);
   const uiScale = useCtfStore((s) => s.uiScale || 'normal');
 
+  // Tactical keyboard hotkeys engine
+  useTacticalHotkeys();
+
   // Handle global UI scale (Normal: 100%, Large: 110%, Huge: 122%)
   useEffect(() => {
     if (typeof document !== 'undefined') {
@@ -93,14 +98,14 @@ const MainAppContent: React.FC = () => {
   }, [uiScale]);
 
   // Guarantee that all 45 completed HTB targets are populated in active state and profile,
-  // and force brand to SPECTER CTF if still set to legacy rootvector
+  // and force brand to ZEROBOX if still set to legacy rootvector or specter
   useEffect(() => {
     const state = useCtfStore.getState();
     const current = state.machines;
     const merged = mergeMachinesWithCatalog(current);
     const updates: Partial<typeof state> = { machines: merged };
-    if (!state.appBrand || state.appBrand === 'rootvector') {
-      updates.appBrand = 'specter';
+    if (!state.appBrand || state.appBrand === 'rootvector' || state.appBrand === 'specter') {
+      updates.appBrand = 'zerobox';
     }
     useCtfStore.setState(updates);
     useCtfStore.getState().saveProfileData();
@@ -165,6 +170,9 @@ const MainAppContent: React.FC = () => {
 
       {/* Operator & Creator Classified Dossier Modal */}
       <OperatorDossierModal />
+
+      {/* Tactical Keyboard Shortcuts & Hotkeys Modal */}
+      <KeyboardShortcutsModal />
 
       {/* Tactical Top Header */}
       <Header />
