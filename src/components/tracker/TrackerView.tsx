@@ -23,7 +23,8 @@ import {
   Eye,
   EyeOff,
   Ban,
-  Filter
+  Filter,
+  Share2
 } from 'lucide-react';
 import { useCtfStore, BoxVectorCategory, FilterState, mergeMachinesWithCatalog } from '../../store/useCtfStore';
 import { useShallow } from 'zustand/react/shallow';
@@ -32,6 +33,7 @@ import { Platform, Difficulty, OperatingSystem } from '../../types';
 import { KanbanBoard } from './KanbanBoard';
 import { TableView } from './TableView';
 import { GridView } from './GridView';
+import { GraphView } from './GraphView';
 import { PlatformBadge, PlatformIcon } from '../common/PlatformBadge';
 import { OsIcon } from '../common/OsBadge';
 import { PRACTICE_TRACKS, PracticeTrack } from '../../data/tracksData';
@@ -489,6 +491,17 @@ export const TrackerView: React.FC = () => {
             >
               <LayoutGrid className="w-4 h-4" />
             </button>
+            <button
+              onClick={() => setViewMode('graph')}
+              className={`p-1.5 rounded transition-all ${
+                viewMode === 'graph'
+                  ? 'bg-cyber-card text-cyber-emerald border border-cyber-emerald/40'
+                  : 'text-cyber-muted hover:text-white'
+              }`}
+              title="Attack Topology Network Graph"
+            >
+              <Share2 className="w-4 h-4" />
+            </button>
           </div>
         </div>
 
@@ -784,6 +797,7 @@ export const TrackerView: React.FC = () => {
       {viewMode === 'kanban' && <KanbanBoard filteredMachines={filteredMachines} />}
       {viewMode === 'table' && <TableView filteredMachines={filteredMachines} />}
       {viewMode === 'grid' && <GridView filteredMachines={filteredMachines} />}
+      {viewMode === 'graph' && <GraphView filteredMachines={filteredMachines} />}
     </div>
   );
 };

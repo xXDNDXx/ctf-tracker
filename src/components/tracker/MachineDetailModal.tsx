@@ -40,6 +40,7 @@ import { OsBadge } from '../common/OsBadge';
 import { EditableIpBadge } from '../common/EditableIpBadge';
 import { CategoryBadge } from '../common/CategoryBadge';
 import { classifyMachine, VULN_CATEGORIES } from '../../utils/categoryUtils';
+import { getRecommendedNotesForMachine } from '../../utils/obsidianManualUtils';
 
 export const MachineDetailModal: React.FC = () => {
   const {
@@ -84,6 +85,9 @@ export const MachineDetailModal: React.FC = () => {
     if (!machine?.checklist?.itemsState) return 0;
     return Object.values(machine.checklist.itemsState).filter((s) => s.status === 'done').length;
   }, [machine?.checklist?.itemsState]);
+
+  const [copiedCommand, setCopiedCommand] = useState<string | null>(null);
+  const recommendedNotes = useMemo(() => (machine ? getRecommendedNotesForMachine(machine, 4) : []), [machine]);
 
   // Handle ESC key to dismiss modal
   useEffect(() => {
@@ -1029,7 +1033,65 @@ During the security assessment of target host ${machine.name} (${machine.ip}), s
             </div>
           </div>
         </div>
-      </div>
+
+          {/* Section 7: CPTS Field Manual Intel (Daniel Dayan's Obsidian Notes) */}
+          {recommendedNotes.length > 0 && (
+            <div className="p-3.5 rounded-xl bg-cyber-bg/80 border border-purple-500/40 space-y-3 shadow-lg">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <span className="text-[10px] text-purple-400 uppercase font-bold flex items-center gap-1.5 tracking-wider">
+                  <BookOpen className="w-3.5 h-3.5 text-purple-400" />
+                  CPTS FIELD MANUAL INTEL // OBSIDIAN VAULT ({recommendedNotes.length} MATCHING NOTES)
+                </span>
+                <span className="text-[9px] px-2 py-0.5 rounded font-mono bg-purple-950/40 border border-purple-800/60 text-purple-300">
+                  Daniel Dayan's Vault (414 Notes)
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                {recommendedNotes.map((note) => (
+                  <div
+                    key={note.id}
+                    className="p-2.5 rounded-lg bg-cyber-card border border-cyber-border hover:border-purple-500/50 transition-all space-y-1.5"
+                  >
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="text-xs font-bold text-white truncate max-w-[210px]" title={note.title}>
+                        {note.title}
+                      </span>
+                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 flex-shrink-0 font-mono">
+                        {note.difficulty}
+                      </span>
+                    </div>
+                    <div className="text-[10px] text-cyber-muted line-clamp-2 font-sans">
+                      {note.summary || note.subCategory}
+                    </div>
+                    {note.commands && note.commands.length > 0 && (
+                      <div className="pt-1">
+                        <div className="flex items-center justify-between gap-2 p-1.5 rounded bg-black/50 border border-cyber-border/70 font-mono text-[10px]">
+                          <code className="text-cyber-cyan truncate flex-1">
+                            {note.commands[0]}
+                          </code>
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              await safeCopyToClipboard(note.commands[0]);
+                              setCopiedCommand(note.commands[0]);
+                              setTimeout(() => setCopiedCommand(null), 2000);
+                              if (soundEnabled) playCyberSound('copy');
+                            }}
+                            className="px-1.5 py-0.5 rounded text-[9px] bg-cyber-bg hover:bg-cyber-cyan hover:text-black text-cyber-muted transition-colors flex-shrink-0 font-bold"
+                            title="Copy command"
+                          >
+                            {copiedCommand === note.commands[0] ? '✓ COPIED' : 'COPY'}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       )}
     </div>
 

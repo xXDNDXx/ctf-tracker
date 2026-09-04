@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && node scripts/postbuild.cjs",
+    "index-notes": "node scripts/index-cpts-notes.cjs",
+    "build": "node scripts/index-cpts-notes.cjs && tsc && vite build && node scripts/postbuild.cjs",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -19,6 +19,9 @@ import {
 import { Machine, Platform } from '../../types';
 import { useCtfStore } from '../../store/useCtfStore';
 import { PlatformBadge, PlatformIcon } from '../common/PlatformBadge';
+import { CategoryBadge } from '../common/CategoryBadge';
+import { EditableIpBadge } from '../common/EditableIpBadge';
+import { classifyMachine } from '../../utils/categoryUtils';
 import { playCyberSound } from '../../utils/helpers';
 
 interface GraphViewProps {
@@ -36,6 +39,7 @@ interface GraphNode {
   cluster: string;
   x: number;
   y: number;
+  machine: Machine;
 }
 
 export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
@@ -55,21 +59,25 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
   // Clusters definition
   const clusters = [
     { id: 'htb-early', name: '10.10.10.x [HTB Legacy]', angle: -Math.PI * 0.75, radius: 240, color: '#10B981' },
+    { id: 'web-perimeter', name: 'DMZ [Web Application Surface]', angle: -Math.PI * 0.5, radius: 260, color: '#38BDF8' },
     { id: 'htb-modern', name: '10.10.11.x [HTB Seasons]', angle: -Math.PI * 0.25, radius: 240, color: '#06B6D4' },
-    { id: 'ad-forest', name: 'CORP.LOCAL [Active Directory]', angle: Math.PI * 0.5, radius: 270, color: '#A855F7' },
     { id: 'thm-network', name: '10.10.x.x [THM Labs]', angle: Math.PI * 0.15, radius: 240, color: '#EF4444' },
+    { id: 'ad-forest', name: 'CORP.LOCAL [Active Directory]', angle: Math.PI * 0.5, radius: 270, color: '#A855F7' },
     { id: 'internal-lab', name: '192.168.x.x [Internal Pivots]', angle: Math.PI * 0.85, radius: 240, color: '#F59E0B' },
   ];
 
   // Map machines to graph nodes in an aesthetic circular topology
   const nodes = useMemo(() => {
-    // Limit to 50 nodes for peak 120 FPS animation
+    // Limit to 48 nodes for peak 120 FPS animation
     const sample = filteredMachines.slice(0, 48);
 
     return sample.map((m, idx) => {
+      const { isAD, primary } = classifyMachine(m);
       let clusterId = 'htb-modern';
-      if (m.os === 'Active Directory' || m.tags.includes('active directory') || m.tags.includes('kerberos')) {
+      if (m.os === 'Active Directory' || isAD) {
         clusterId = 'ad-forest';
+      } else if (primary.startsWith('Web')) {
+        clusterId = 'web-perimeter';
       } else if (m.platform === 'THM') {
         clusterId = 'thm-network';
       } else if (m.platform === 'VulnHub') {
@@ -99,6 +107,7 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
         cluster: clusterId,
         x,
         y,
+        machine: m,
       };
     });
   }, [filteredMachines]);
@@ -424,18 +433,21 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
             exit={{ opacity: 0, x: 20, scale: 0.95 }}
             className="absolute bottom-4 right-4 z-30 w-80 p-4 rounded-xl bg-cyber-card/95 border border-cyber-cyan shadow-2xl backdrop-blur-md space-y-3"
           >
-            <div className="flex items-start justify-between">
-              <div>
-                <div className="flex items-center gap-1.5 mb-1">
+            <div className="flex items-start justify-between gap-2">
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-1.5 flex-wrap">
                   <PlatformIcon platform={selectedNode.platform} className="w-4 h-4" />
                   <span className="text-xs font-bold text-white tracking-wide">{selectedNode.name}</span>
+                  <CategoryBadge machine={selectedNode.machine} size="xs" />
                 </div>
-                <span className="text-[11px] text-cyber-cyan font-mono">{selectedNode.ip}</span>
+                <div>
+                  <EditableIpBadge machineId={selectedNode.id} initialIp={selectedNode.ip} size="xs" showLabel />
+                </div>
               </div>
 
               <button
                 onClick={() => setSelectedNode(null)}
-                className="p-1 rounded text-cyber-muted hover:text-white"
+                className="p-1 rounded text-cyber-muted hover:text-white flex-shrink-0"
               >
                 <X className="w-4 h-4" />
               </button>
