@@ -23,7 +23,7 @@ import {
 import { useCtfStore } from '../store/useCtfStore';
 import { Difficulty, PipelineStatus } from '../types';
 import { ChecklistWorkspace } from '../components/checklist/ChecklistWorkspace';
-import { formatSeconds, playCyberSound, triggerRootCelebration } from '../utils/helpers';
+import { formatSeconds, playCyberSound, triggerRootCelebration, sanitizeExternalUrl } from '../utils/helpers';
 import { PlatformBadge } from '../components/common/PlatformBadge';
 import { OsBadge } from '../components/common/OsBadge';
 import { EditableIpBadge } from '../components/common/EditableIpBadge';
@@ -157,9 +157,9 @@ export const TargetDetailPage: React.FC = () => {
             </div>
             <div className="text-xs text-cyber-muted mt-1 flex flex-wrap items-center gap-4">
               <EditableIpBadge machineId={machine.id} initialIp={machine.ip} size="sm" showLabel />
-              {machine.roomUrl && (
+              {Boolean(sanitizeExternalUrl(machine.roomUrl)) && (
                 <a
-                  href={machine.roomUrl}
+                  href={sanitizeExternalUrl(machine.roomUrl)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 text-cyber-cyan hover:underline"

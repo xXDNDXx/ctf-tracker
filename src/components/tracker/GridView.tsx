@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { Machine } from '../../types';
 import { useCtfStore } from '../../store/useCtfStore';
-import { formatDurationHuman, playCyberSound, triggerRootCelebration } from '../../utils/helpers';
+import { formatDurationHuman, playCyberSound, triggerRootCelebration, sanitizeExternalUrl } from '../../utils/helpers';
 import { PlatformBadge } from '../common/PlatformBadge';
 import { OsBadge } from '../common/OsBadge';
 import { EditableIpBadge } from '../common/EditableIpBadge';
@@ -311,11 +311,11 @@ export const GridView: React.FC<GridViewProps> = ({ filteredMachines }) => {
                   <FileText className="w-3.5 h-3.5" />
                 </motion.button>
 
-                {m.roomUrl && (
+                {Boolean(sanitizeExternalUrl(m.roomUrl)) && (
                   <motion.a
                     whileHover={{ scale: 1.08 }}
                     whileTap={{ scale: 0.92 }}
-                    href={m.roomUrl}
+                    href={sanitizeExternalUrl(m.roomUrl)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-1.5 rounded bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white transition-all"

@@ -864,10 +864,18 @@ export const useCtfStore = create<CtfStoreState>()(
           const data = JSON.parse(jsonStr);
           if (!data || typeof data !== 'object') return false;
 
-          const machinesToSet = Array.isArray(data.machines) ? data.machines : null;
-          if (machinesToSet) {
+          const rawMachines = Array.isArray(data.machines) ? data.machines : null;
+          if (rawMachines) {
+            const normalizedMachines = mergeMachinesWithCatalog(
+              rawMachines.map((m: any) => ({
+                ...m,
+                tags: Array.isArray(m?.tags) ? m.tags : [],
+                openPorts: Array.isArray(m?.openPorts) ? m.openPorts : [],
+                checklist: m?.checklist && typeof m.checklist === 'object' ? m.checklist : {},
+              }))
+            );
             set((state) => ({
-              machines: machinesToSet,
+              machines: normalizedMachines,
               globalVars: data.globalVars || state.globalVars,
               cheatsheets: Array.isArray(data.cheatsheets) ? data.cheatsheets : state.cheatsheets,
               activitySessions: Array.isArray(data.activitySessions) ? data.activitySessions : state.activitySessions,

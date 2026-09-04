@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { X, Plus, Server } from 'lucide-react';
 import { useCtfStore } from '../../store/useCtfStore';
 import { Platform, OperatingSystem, Difficulty } from '../../types';
-import { playCyberSound } from '../../utils/helpers';
+import { playCyberSound, sanitizeExternalUrl } from '../../utils/helpers';
 import { OsBadge } from '../common/OsBadge';
 
 export const NewMachineModal: React.FC = () => {
@@ -48,7 +48,7 @@ export const NewMachineModal: React.FC = () => {
       status: 'backlog',
       tags: tagList,
       certifications: [],
-      roomUrl: roomUrl.trim() || undefined,
+      roomUrl: sanitizeExternalUrl(roomUrl.trim()),
       hint: hint.trim() || undefined,
       timeSpentSeconds: 0,
     });

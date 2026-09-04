@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { Machine, PipelineStatus } from '../../types';
 import { useCtfStore } from '../../store/useCtfStore';
-import { formatSeconds, playCyberSound, triggerRootCelebration } from '../../utils/helpers';
+import { formatSeconds, playCyberSound, triggerRootCelebration, sanitizeExternalUrl } from '../../utils/helpers';
 import { PlatformBadge, PlatformIcon } from '../common/PlatformBadge';
 import { OsBadge } from '../common/OsBadge';
 import { EditableIpBadge } from '../common/EditableIpBadge';
@@ -360,11 +360,11 @@ export const TableView: React.FC<TableViewProps> = ({ filteredMachines }) => {
                         <FileText className="w-3.5 h-3.5" />
                       </motion.button>
 
-                      {m.roomUrl && (
+                      {Boolean(sanitizeExternalUrl(m.roomUrl)) && (
                         <motion.a
                           whileHover={{ scale: 1.12 }}
                           whileTap={{ scale: 0.9 }}
-                          href={m.roomUrl}
+                          href={sanitizeExternalUrl(m.roomUrl)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="p-1 rounded bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white transition-all"

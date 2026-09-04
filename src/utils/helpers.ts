@@ -163,3 +163,18 @@ export async function safeCopyToClipboard(text: string): Promise<boolean> {
   return false;
 }
 
+/**
+ * Strict protocol sanitizer for external target URLs (preventing javascript: XSS)
+ */
+export function sanitizeExternalUrl(url?: string): string | undefined {
+  if (!url) return undefined;
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+  // Automatically prepend https:// for bare domains (e.g. tryhackme.com/room/...)
+  if (/^[a-zA-Z0-9][a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/i.test(trimmed)) {
+    return `https://${trimmed}`;
+  }
+  return undefined;
+}

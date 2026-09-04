@@ -79,14 +79,22 @@ export function getServiceIntelligence(port: number, service: string, version: s
   return { tools, cve };
 }
 
+const isValidPort = (p: number): boolean => !isNaN(p) && p >= 1 && p <= 65535;
+
 /**
  * Parse Nmap XML output using browser DOMParser with <parsererror> safeguard
  */
 export function parseNmapXml(xmlContent: string): ScanImportResult | null {
   try {
     if (typeof window === 'undefined' || typeof DOMParser === 'undefined') return null;
+
+    // Defense against XML entity expansion (Billion Laughs) and XXE constructs
+    const sanitizedXml = xmlContent
+      .replace(/<!DOCTYPE[\s\S]*?>/gi, '')
+      .replace(/<!ENTITY[\s\S]*?>/gi, '');
+
     const parser = new DOMParser();
-    const doc = parser.parseFromString(xmlContent, 'text/xml');
+    const doc = parser.parseFromString(sanitizedXml, 'text/xml');
 
     // Safeguard against XML parsing errors
     const parserError = doc.querySelector('parsererror');
@@ -124,6 +132,7 @@ export function parseNmapXml(xmlContent: string): ScanImportResult | null {
         if (state !== 'open') return;
 
         const portNum = parseInt(portEl.getAttribute('portid') || '0', 10);
+        if (!isValidPort(portNum)) return;
         const protocol = (portEl.getAttribute('protocol') || 'tcp').toLowerCase();
         const serviceEl = portEl.querySelector('service');
         const service = (serviceEl?.getAttribute('name') || 'unknown').toLowerCase();
@@ -193,7 +202,7 @@ export function parseGrepableNmap(content: string): ScanImportResult | null {
             const service = parts[4]?.toLowerCase() || 'unknown';
             const version = (parts[6] || parts[5] || 'Unknown Version').trim();
 
-            if (state === 'open' && !isNaN(portNum)) {
+            if (state === 'open' && isValidPort(portNum)) {
               const { tools, cve } = getServiceIntelligence(portNum, service, version);
               ports.push({
                 port: portNum,
@@ -236,21 +245,28 @@ export function parseRustscan(content: string): ScanImportResult | null {
   let match: RegExpExecArray | null;
   while ((match = openLineRegex.exec(content)) !== null) {
     if (!detectedIp) detectedIp = match[1];
-    discoveredPorts.push(parseInt(match[2], 10));
+    const port = parseInt(match[2], 10);
+    if (isValidPort(port)) discoveredPorts.push(port);
   }
 
   const arrayMatch = content.match(/\[([0-9,\s]+)\]/);
   if (arrayMatch && discoveredPorts.length === 0) {
-    const rawNums = arrayMatch[1].split(',').map((s) => parseInt(s.trim(), 10)).filter((n) => !isNaN(n) && n > 0 && n < 65536);
+    const rawNums = arrayMatch[1]
+      .split(',')
+      .map((s) => parseInt(s.trim(), 10))
+      .filter((n) => isValidPort(n));
     discoveredPorts.push(...rawNums);
   }
 
   const nmapTextResult = parseNmapText(content);
   if (nmapTextResult && nmapTextResult.ports.length > 0) {
     return {
-      ...nmapTextResult,
       format: 'rustscan',
       detectedIp: detectedIp || nmapTextResult.detectedIp,
+      detectedHost: nmapTextResult.detectedHost,
+      detectedOs: nmapTextResult.detectedOs,
+      ports: nmapTextResult.ports,
+      rawSummary: `Rustscan parsed: ${nmapTextResult.ports.length} open ports detected.`,
     };
   }
 
@@ -258,25 +274,13 @@ export function parseRustscan(content: string): ScanImportResult | null {
 
   const uniquePorts = Array.from(new Set(discoveredPorts)).sort((a, b) => a - b);
   const ports: ParsedPort[] = uniquePorts.map((portNum) => {
-    let service = 'unknown';
-    if (portNum === 21) service = 'ftp';
-    else if (portNum === 22) service = 'ssh';
-    else if (portNum === 80 || portNum === 8080) service = 'http';
-    else if (portNum === 443 || portNum === 8443) service = 'https';
-    else if (portNum === 445 || portNum === 139) service = 'smb';
-    else if (portNum === 88) service = 'kerberos';
-    else if (portNum === 389 || portNum === 636) service = 'ldap';
-    else if (portNum === 3306) service = 'mysql';
-    else if (portNum === 3389) service = 'rdp';
-    else if (portNum === 5985) service = 'winrm';
-
-    const { tools, cve } = getServiceIntelligence(portNum, service);
+    const { tools, cve } = getServiceIntelligence(portNum, 'unknown', 'Unknown');
     return {
       port: portNum,
       protocol: 'tcp',
       state: 'open',
-      service,
-      version: 'Detected via Rustscan',
+      service: 'unknown',
+      version: 'Unknown',
       suggestedTools: tools,
       cveNotes: cve,
     };
@@ -300,7 +304,7 @@ export function parseNmapText(content: string): ScanImportResult | null {
 
   const ipMatch = content.match(/Nmap scan report for (?:[^\s(]+\s\()?([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})/);
   const hostMatch = content.match(/Nmap scan report for ([^\s(]+)/);
-  const osMatch = content.match(/Service Info:.*(?:OSs?|OS):\s*([^;\n]+)/i);
+  const osMatch = content.match(/Service Info:[^\n\r]*?\bOSs?:\s*([^;\n\r]+)/i);
 
   const portRegex = /([0-9]{1,5})\/(tcp|udp)\s+open\s+([^\s]+)\s*([^\r\n]*)/gi;
   const ports: ParsedPort[] = [];
@@ -308,6 +312,7 @@ export function parseNmapText(content: string): ScanImportResult | null {
 
   while ((match = portRegex.exec(content)) !== null) {
     const portNum = parseInt(match[1], 10);
+    if (!isValidPort(portNum)) continue;
     const proto = match[2].toLowerCase();
     const service = match[3].toLowerCase();
     const version = match[4].trim() || 'Unknown Version';

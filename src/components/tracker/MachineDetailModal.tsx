@@ -33,7 +33,7 @@ import {
 } from 'lucide-react';
 import { useCtfStore, BRAND_THEMES } from '../../store/useCtfStore';
 import { PipelineStatus, Difficulty } from '../../types';
-import { formatSeconds, playCyberSound, triggerRootCelebration, safeCopyToClipboard } from '../../utils/helpers';
+import { formatSeconds, playCyberSound, triggerRootCelebration, safeCopyToClipboard, sanitizeExternalUrl } from '../../utils/helpers';
 import { ChecklistWorkspace } from '../checklist/ChecklistWorkspace';
 import { PlatformBadge } from '../common/PlatformBadge';
 import { OsBadge } from '../common/OsBadge';
@@ -244,9 +244,9 @@ During the security assessment of target host ${machine.name} (${machine.ip}), s
                   <span>Assign Spawned IP</span>
                 </button>
               )}
-              {machine.roomUrl && (
+              {Boolean(sanitizeExternalUrl(machine.roomUrl)) && (
                 <a
-                  href={machine.roomUrl}
+                  href={sanitizeExternalUrl(machine.roomUrl)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 text-cyber-cyan hover:underline"
@@ -254,9 +254,9 @@ During the security assessment of target host ${machine.name} (${machine.ip}), s
                   Official Room <ExternalLink className="w-3 h-3" />
                 </a>
               )}
-              {machine.writeupUrl && (
+              {Boolean(sanitizeExternalUrl(machine.writeupUrl)) && (
                 <a
-                  href={machine.writeupUrl}
+                  href={sanitizeExternalUrl(machine.writeupUrl)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 text-cyber-purple hover:underline"

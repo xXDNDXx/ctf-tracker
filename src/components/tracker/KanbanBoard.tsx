@@ -102,6 +102,7 @@ const KanbanCard = React.memo<KanbanCardProps>(({
 
   return (
     <div
+      data-testid="kanban-card"
       onClick={() => onSelect(m.id)}
       style={{ contentVisibility: 'auto', containIntrinsicSize: '0 160px' }}
       className={`group relative p-3 rounded-lg border bg-cyber-card hover:bg-cyber-cardHover transition-all duration-150 hover:-translate-y-0.5 cursor-pointer shadow-sm transform-gpu will-change-transform ${
