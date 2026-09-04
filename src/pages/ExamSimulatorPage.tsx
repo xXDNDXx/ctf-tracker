@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   GraduationCap, 
@@ -15,198 +15,238 @@ import {
   Copy, 
   ExternalLink,
   ChevronRight,
+  ChevronDown,
   Server,
   Layers,
   Terminal,
   Trophy,
-  Zap
+  Zap,
+  CheckSquare,
+  Square,
+  Camera,
+  FileCode,
+  HelpCircle,
+  Sparkles
 } from 'lucide-react';
 import { useCtfStore } from '../store/useCtfStore';
-import { Machine, OperatingSystem, Difficulty } from '../types';
 import { OsBadge } from '../components/common/OsBadge';
-import { PlatformBadge, PlatformIcon } from '../components/common/PlatformBadge';
 import { playCyberSound, triggerRootCelebration } from '../utils/helpers';
+import { 
+  ExamTrack, 
+  ExamBox, 
+  ExamSessionState, 
+  validateFlagFormat, 
+  generateExamTargetsForTrack, 
+  calculateExamScore, 
+  generateExamReportMarkdown 
+} from '../utils/examComplianceUtils';
 
-interface ExamBox {
-  id: string;
-  name: string;
-  ip: string;
-  os: OperatingSystem;
-  difficulty: Difficulty;
-  type: 'ad-foothold' | 'ad-lateral' | 'ad-dc' | 'standalone-1' | 'standalone-2' | 'standalone-3';
-  label: string;
-  userPoints: number;
-  rootPoints: number;
-  userPwned: boolean;
-  rootPwned: boolean;
-  userFlagText?: string;
-  rootFlagText?: string;
-  notes?: string;
-}
+const STORAGE_KEY = 'zerobox_exam_session_v2';
 
 export const ExamSimulatorPage: React.FC = () => {
   const { machines, soundEnabled } = useCtfStore();
 
-  // Exam Presets: OSCP (100 pts, pass: 70) vs CPTS (100 pts, pass: 80)
-  const [examType, setExamType] = useState<'OSCP' | 'CPTS'>('OSCP');
+  // Load initial session or create default
+  const [session, setSession] = useState<ExamSessionState>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.boxes && parsed.boxes.length > 0) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load exam session:', e);
+    }
 
-  // 24 Hour Countdown Timer (in seconds = 86400)
-  const [timerSeconds, setTimerSeconds] = useState(24 * 3600);
-  const [timerRunning, setTimerRunning] = useState(false);
+    const defaultTrack: ExamTrack = 'OSCP';
+    const boxes = generateExamTargetsForTrack(defaultTrack, machines);
+    return {
+      track: defaultTrack,
+      examStartedAt: Date.now(),
+      examDurationSeconds: 24 * 3600,
+      examExpiresAt: Date.now() + 24 * 3600 * 1000,
+      isTimerRunning: false,
+      timerPausedRemainingSeconds: 24 * 3600,
+      boxes,
+      scratchNotes: '# CANDIDATE LOG\n\n## Target Credential Vault\n- administrator : P@ssw0rd2024!\n\n## Active Tunnels\n- Chisel SOCKS5 proxy on 127.0.0.1:1080 -> 172.16.1.0/24',
+      candidateName: 'Daniel Dayan',
+      candidateCallsign: 'xXDNDXx',
+      osid: 'OS-94821',
+    };
+  });
 
-  // Scratchpad
-  const [scratchNotes, setScratchNotes] = useState(
-    '# EXAM OPERATION LOG\n\n## Credentials Captured\n- administrator : Password123!\n\n## Pivoting Notes\n- Chisel tunnel on port 1080 -> 172.16.1.0/24'
-  );
+  // Track expanded box IDs
+  const [expandedBoxId, setExpandedBoxId] = useState<string | null>(null);
 
-  // Helper to generate a realistic mock exam set
-  const generateExamBoxes = (): ExamBox[] => {
-    // 1. Pick AD boxes for the AD chain
-    const adMachines = machines.filter(m => m.os === 'Active Directory' || m.tags.includes('active directory') || m.tags.includes('kerberos'));
-    const linuxMachines = machines.filter(m => m.os === 'Linux');
-    const winMachines = machines.filter(m => m.os === 'Windows');
+  // Remaining seconds derived from absolute epoch timestamp to prevent drift
+  const [remainingSeconds, setRemainingSeconds] = useState<number>(() => {
+    if (!session.isTimerRunning) {
+      return session.timerPausedRemainingSeconds ?? 24 * 3600;
+    }
+    if (!session.examExpiresAt) return 24 * 3600;
+    return Math.max(0, Math.floor((session.examExpiresAt - Date.now()) / 1000));
+  });
 
-    const shuffledAd = [...adMachines].sort(() => 0.5 - Math.random());
-    const shuffledLinux = [...linuxMachines].sort(() => 0.5 - Math.random());
-    const shuffledWin = [...winMachines].sort(() => 0.5 - Math.random());
+  // Persist session to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+    } catch (e) {
+      console.error('Failed to persist exam session:', e);
+    }
+  }, [session]);
 
-    const adDc = shuffledAd[0] || { name: 'CORP-DC01', ip: '192.168.1.10', os: 'Active Directory', difficulty: 'Hard' };
-    const adLat = shuffledAd[1] || { name: 'CORP-SRV01', ip: '192.168.1.20', os: 'Windows', difficulty: 'Medium' };
-    const adFoot = shuffledAd[2] || { name: 'CORP-WEB01', ip: '192.168.1.30', os: 'Linux', difficulty: 'Easy' };
-
-    const stand1 = shuffledLinux[0] || { name: 'ALPHA', ip: '192.168.1.101', os: 'Linux', difficulty: 'Easy' };
-    const stand2 = shuffledWin[0] || { name: 'BRAVO', ip: '192.168.1.102', os: 'Windows', difficulty: 'Medium' };
-    const stand3 = shuffledLinux[1] || { name: 'CHARLIE', ip: '192.168.1.103', os: 'Linux', difficulty: 'Hard' };
-
-    return [
-      {
-        id: 'ad-1',
-        name: adFoot.name,
-        ip: '192.168.1.30',
-        os: adFoot.os,
-        difficulty: 'Easy',
-        type: 'ad-foothold',
-        label: 'AD Set: Initial Access & Foothold',
-        userPoints: 10,
-        rootPoints: 0,
-        userPwned: false,
-        rootPwned: false,
-      },
-      {
-        id: 'ad-2',
-        name: adLat.name,
-        ip: '192.168.1.20',
-        os: adLat.os,
-        difficulty: 'Medium',
-        type: 'ad-lateral',
-        label: 'AD Set: Lateral Movement & Pivot',
-        userPoints: 10,
-        rootPoints: 0,
-        userPwned: false,
-        rootPwned: false,
-      },
-      {
-        id: 'ad-3',
-        name: adDc.name,
-        ip: '192.168.1.10',
-        os: 'Active Directory',
-        difficulty: 'Hard',
-        type: 'ad-dc',
-        label: 'AD Set: Domain Controller Compromise',
-        userPoints: 0,
-        rootPoints: 20,
-        userPwned: false,
-        rootPwned: false,
-      },
-      {
-        id: 'st-1',
-        name: stand1.name,
-        ip: '192.168.1.101',
-        os: stand1.os,
-        difficulty: 'Easy',
-        type: 'standalone-1',
-        label: 'Standalone Target 01 (Easy)',
-        userPoints: 10,
-        rootPoints: 10,
-        userPwned: false,
-        rootPwned: false,
-      },
-      {
-        id: 'st-2',
-        name: stand2.name,
-        ip: '192.168.1.102',
-        os: stand2.os,
-        difficulty: 'Medium',
-        type: 'standalone-2',
-        label: 'Standalone Target 02 (Medium)',
-        userPoints: 10,
-        rootPoints: 10,
-        userPwned: false,
-        rootPwned: false,
-      },
-      {
-        id: 'st-3',
-        name: stand3.name,
-        ip: '192.168.1.103',
-        os: stand3.os,
-        difficulty: 'Hard',
-        type: 'standalone-3',
-        label: 'Standalone Target 03 (Hard)',
-        userPoints: 10,
-        rootPoints: 10,
-        userPwned: false,
-        rootPwned: false,
-      },
-    ];
-  };
-
-  const [examBoxes, setExamBoxes] = useState<ExamBox[]>(() => generateExamBoxes());
-
-  // Timer Tick
+  // Timer Tick (Driven by absolute epoch timestamp)
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
-    if (timerRunning && timerSeconds > 0) {
+    if (session.isTimerRunning && session.examExpiresAt) {
       interval = setInterval(() => {
-        setTimerSeconds((prev) => Math.max(0, prev - 1));
-      }, 1000);
+        const remaining = Math.max(0, Math.floor((session.examExpiresAt! - Date.now()) / 1000));
+        setRemainingSeconds(remaining);
+        if (remaining <= 0) {
+          setSession((prev) => ({ ...prev, isTimerRunning: false, timerPausedRemainingSeconds: 0 }));
+        }
+      }, 500);
+    } else {
+      if (session.timerPausedRemainingSeconds !== null) {
+        setRemainingSeconds(session.timerPausedRemainingSeconds);
+      }
     }
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [timerRunning, timerSeconds]);
+  }, [session.isTimerRunning, session.examExpiresAt, session.timerPausedRemainingSeconds]);
 
-  // Score Calculations
+  // Toggle Timer Run/Pause
+  const toggleTimer = () => {
+    if (session.isTimerRunning) {
+      // Pause: capture remaining seconds
+      const currentRemaining = Math.max(0, Math.floor(((session.examExpiresAt || Date.now()) - Date.now()) / 1000));
+      setSession((prev) => ({
+        ...prev,
+        isTimerRunning: false,
+        timerPausedRemainingSeconds: currentRemaining,
+        examExpiresAt: null,
+      }));
+    } else {
+      // Start: set absolute expiration from paused seconds
+      const duration = session.timerPausedRemainingSeconds ?? 24 * 3600;
+      setSession((prev) => ({
+        ...prev,
+        isTimerRunning: true,
+        examExpiresAt: Date.now() + duration * 1000,
+        timerPausedRemainingSeconds: null,
+      }));
+    }
+    if (soundEnabled) playCyberSound('timer');
+  };
+
+  // Reset Timer to 24h
+  const resetTimer = () => {
+    const defaultDuration = session.track === 'CPTS' ? 48 * 3600 : 24 * 3600;
+    setSession((prev) => ({
+      ...prev,
+      isTimerRunning: false,
+      examDurationSeconds: defaultDuration,
+      examExpiresAt: null,
+      timerPausedRemainingSeconds: defaultDuration,
+    }));
+    setRemainingSeconds(defaultDuration);
+    if (soundEnabled) playCyberSound('click');
+  };
+
+  // Switch Track
+  const handleTrackChange = (newTrack: ExamTrack) => {
+    if (newTrack === session.track) return;
+    const newBoxes = generateExamTargetsForTrack(newTrack, machines);
+    const duration = newTrack === 'CPTS' ? 48 * 3600 : 24 * 3600;
+    setSession((prev) => ({
+      ...prev,
+      track: newTrack,
+      boxes: newBoxes,
+      examStartedAt: Date.now(),
+      examDurationSeconds: duration,
+      examExpiresAt: null,
+      isTimerRunning: false,
+      timerPausedRemainingSeconds: duration,
+    }));
+    setRemainingSeconds(duration);
+    if (soundEnabled) playCyberSound('click');
+  };
+
+  // Reset Exam Session / Pick New Mock Set
+  const handleNewMockSet = () => {
+    const newBoxes = generateExamTargetsForTrack(session.track, machines);
+    setSession((prev) => ({
+      ...prev,
+      boxes: newBoxes,
+      examStartedAt: Date.now(),
+    }));
+    if (soundEnabled) playCyberSound('shuffle');
+  };
+
+  // Score & Compliance calculations
   const scoreData = useMemo(() => {
-    let totalScore = 0;
-    const maxScore = 100;
-    const passThreshold = examType === 'OSCP' ? 70 : 80;
+    return calculateExamScore(session.track, session.boxes);
+  }, [session.track, session.boxes]);
 
-    examBoxes.forEach((b) => {
-      if (b.userPwned) totalScore += b.userPoints;
-      if (b.rootPwned) totalScore += b.rootPoints;
-    });
-
-    const isPassing = totalScore >= passThreshold;
-    const pointsNeeded = Math.max(0, passThreshold - totalScore);
-
-    return { totalScore, maxScore, passThreshold, isPassing, pointsNeeded };
-  }, [examBoxes, examType]);
-
-  // Timer Formatting
-  const formatExamTime = (secs: number) => {
+  // Format Timer
+  const formatTimer = (secs: number) => {
     const h = Math.floor(secs / 3600);
     const m = Math.floor((secs % 3600) / 60);
     const s = secs % 60;
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
-  // Toggle Pwn Flag
-  const toggleFlag = (boxId: string, flagType: 'user' | 'root') => {
-    setExamBoxes((prev) =>
-      prev.map((b) => {
+  // Update Box Proof or Flag
+  const updateBoxProof = (
+    boxId: string,
+    flagType: 'user' | 'root',
+    field: 'flagText' | 'whoamiOutput' | 'ipconfigOutput' | 'screenshotTaken',
+    val: any
+  ) => {
+    setSession((prev) => {
+      const updatedBoxes = prev.boxes.map((b) => {
+        if (b.id !== boxId) return b;
+        const proofKey = flagType === 'user' ? 'userProof' : 'rootProof';
+        const updatedProof = {
+          ...b[proofKey],
+          [field]: val,
+        };
+
+        // Automatically toggle pwned if valid flag is entered
+        let willBePwned = flagType === 'user' ? b.userPwned : b.rootPwned;
+        if (field === 'flagText') {
+          const validation = validateFlagFormat(val);
+          if (validation.valid && !willBePwned) {
+            willBePwned = true;
+            if (flagType === 'root') {
+              triggerRootCelebration();
+              if (soundEnabled) playCyberSound('root');
+            } else {
+              if (soundEnabled) playCyberSound('flag');
+            }
+          }
+        }
+
+        return {
+          ...b,
+          [flagType === 'user' ? 'userPwned' : 'rootPwned']: willBePwned,
+          [proofKey]: updatedProof,
+        };
+      });
+      return { ...prev, boxes: updatedBoxes };
+    });
+  };
+
+  // Toggle Pwn Flag manually
+  const togglePwn = (boxId: string, flagType: 'user' | 'root') => {
+    setSession((prev) => {
+      const updated = prev.boxes.map((b) => {
         if (b.id !== boxId) return b;
         const willBePwned = flagType === 'user' ? !b.userPwned : !b.rootPwned;
-
         if (willBePwned) {
           if (flagType === 'root') {
             triggerRootCelebration();
@@ -217,47 +257,23 @@ export const ExamSimulatorPage: React.FC = () => {
         } else {
           if (soundEnabled) playCyberSound('toggle');
         }
-
         return {
           ...b,
           [flagType === 'user' ? 'userPwned' : 'rootPwned']: willBePwned,
         };
-      })
-    );
+      });
+      return { ...prev, boxes: updated };
+    });
   };
 
-  // Export Exam Report
+  // Export OffSec Report (.md)
   const handleExportReport = () => {
-    const markdown = `# OFFSEC CERTIFIED PROFESSIONAL (OSCP) // OFFICIAL EXAM REPORT
-**Assessor:** CANDIDATE-OPERATOR
-**Exam Date:** ${new Date().toLocaleDateString()}
-**Status:** ${scoreData.isPassing ? 'PASSED (PASS CONFIRMED)' : 'IN PROGRESS'}
-**Final Score:** ${scoreData.totalScore} / 100 Points (Passing Threshold: 70 Points)
-**Time Remaining:** ${formatExamTime(timerSeconds)}
-
----
-
-## 1. Executive Point Breakdown
-${examBoxes
-  .map(
-    (b) =>
-      `- **${b.label} (${b.name} - ${b.ip})**:
-  - User Foothold: ${b.userPwned ? `PWNED (+${b.userPoints} pts)` : 'UNPWNED (0 pts)'}
-  - Root / System: ${b.rootPwned ? `PWNED (+${b.rootPoints} pts)` : 'UNPWNED (0 pts)'}`
-  )
-  .join('\n')}
-
----
-
-## 2. Technical Evidence & Notes
-${scratchNotes}
-`;
-
-    const blob = new Blob([markdown], { type: 'text/markdown' });
+    const md = generateExamReportMarkdown(session);
+    const blob = new Blob([md], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `OSCP_EXAM_REPORT_${new Date().toISOString().slice(0, 10)}.md`;
+    a.download = `${session.track}_EXAM_REPORT_${session.candidateCallsign}_${new Date().toISOString().slice(0, 10)}.md`;
     a.click();
     URL.revokeObjectURL(url);
     if (soundEnabled) playCyberSound('export');
@@ -265,11 +281,11 @@ ${scratchNotes}
 
   return (
     <div className="w-full space-y-5 font-mono">
-      {/* 1. Exam Header & Live Scoring Gauge */}
+      {/* 1. Exam Header & Telemetry Dashboard */}
       <div className="p-4 rounded-xl border border-cyber-border bg-cyber-card/90 shadow-xl space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
           
-          {/* Title & Mode Switcher */}
+          {/* Header Title */}
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-cyber-bg border border-cyber-emerald/40 shadow-glow-emerald/20 text-cyber-emerald">
               <GraduationCap className="w-6 h-6" />
@@ -277,56 +293,51 @@ ${scratchNotes}
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl font-bold text-white tracking-wider">
-                  24-HOUR EXAM SIMULATOR & SCORE ENGINE
+                  OFFSEC // EXAM COMPLIANCE & SCORING ENGINE
                 </h1>
                 <span className="text-[10px] px-2 py-0.5 rounded font-bold bg-cyber-emerald/10 border border-cyber-emerald/30 text-cyber-emerald">
-                  OFFSEC // PROVING LAB
+                  {session.track} COMPLIANT
                 </span>
               </div>
               <p className="text-xs text-cyber-muted">
-                Official scoring matrix, simulated multi-host AD chain, and standalone target proving ground.
+                Official scoring matrices, proof verification checklists, regex flag auditor, and report generator.
               </p>
             </div>
           </div>
 
-          {/* Exam Type Selector */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setExamType('OSCP')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
-                examType === 'OSCP'
-                  ? 'bg-cyber-emerald/20 border-cyber-emerald text-cyber-emerald shadow-glow-emerald/30'
-                  : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-white'
-              }`}
-            >
-              OSCP 2024 (70 Pts to Pass)
-            </button>
-            <button
-              onClick={() => setExamType('CPTS')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
-                examType === 'CPTS'
-                  ? 'bg-cyber-cyan/20 border-cyber-cyan text-cyber-cyan shadow-glow-cyan/30'
-                  : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-white'
-              }`}
-            >
-              HTB CPTS (80 Pts to Pass)
-            </button>
+          {/* Exam Track Switcher */}
+          <div className="flex flex-wrap items-center gap-2">
+            {(['OSCP', 'CPTS', 'CRTP'] as ExamTrack[]).map((t) => (
+              <button
+                key={t}
+                onClick={() => handleTrackChange(t)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                  session.track === t
+                    ? 'bg-cyber-emerald/20 border-cyber-emerald text-cyber-emerald shadow-glow-emerald/30'
+                    : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-white'
+                }`}
+              >
+                {t} ({t === 'CPTS' ? '80 Pts' : t === 'CRTP' ? '100 Pts' : '70 Pts'})
+              </button>
+            ))}
           </div>
 
         </div>
 
-        {/* 2. Tactical Telemetry Bar: Live Score + 24h Countdown */}
+        {/* Telemetry Bar */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-3 border-t border-cyber-border/80">
           
-          {/* Live Score Counter */}
+          {/* Score Counter */}
           <div className="p-3.5 rounded-lg bg-cyber-bg border border-cyber-border flex items-center justify-between">
             <div>
-              <span className="text-[10px] text-cyber-muted uppercase font-bold tracking-wider">EXAM SCORE</span>
+              <span className="text-[10px] text-cyber-muted uppercase font-bold tracking-wider">
+                {session.track} EXAM SCORE
+              </span>
               <div className="flex items-baseline gap-1 mt-0.5">
                 <span className={`text-2xl font-black ${scoreData.isPassing ? 'text-cyber-emerald' : 'text-cyber-amber'}`}>
                   {scoreData.totalScore}
                 </span>
-                <span className="text-cyber-muted text-xs">/ 100 PTS</span>
+                <span className="text-cyber-muted text-xs">/ {scoreData.maxScore} PTS</span>
               </div>
             </div>
 
@@ -339,46 +350,39 @@ ${scratchNotes}
               ) : (
                 <div className="flex items-center gap-1.5 text-cyber-amber font-bold text-xs bg-cyber-amber/10 border border-cyber-amber/30 px-2.5 py-1 rounded">
                   <AlertTriangle className="w-4 h-4" />
-                  <span>{scoreData.pointsNeeded} PTS TO PASS</span>
+                  <span>{scoreData.pointsNeeded} PTS NEEDED</span>
                 </div>
               )}
             </div>
           </div>
 
-          {/* 24-Hour Countdown Clock */}
+          {/* Exam Countdown Timer */}
           <div className="p-3.5 rounded-lg bg-cyber-bg border border-cyber-border flex items-center justify-between">
             <div>
               <span className="text-[10px] text-cyber-muted uppercase font-bold tracking-wider flex items-center gap-1">
-                <Clock className="w-3 h-3 text-cyber-cyan" /> 24H EXAM COUNTDOWN
+                <Clock className="w-3 h-3 text-cyber-cyan" /> {session.track === 'CPTS' ? '48H' : '24H'} COUNTDOWN CLOCK
               </span>
               <div className="text-2xl font-black text-white tracking-widest mt-0.5 font-mono">
-                {formatExamTime(timerSeconds)}
+                {formatTimer(remainingSeconds)}
               </div>
             </div>
 
             <div className="flex items-center gap-1">
               <button
-                onClick={() => {
-                  setTimerRunning(!timerRunning);
-                  if (soundEnabled) playCyberSound('timer');
-                }}
+                onClick={toggleTimer}
                 className={`p-2 rounded-lg border transition-all ${
-                  timerRunning
+                  session.isTimerRunning
                     ? 'bg-cyber-amber/20 border-cyber-amber text-cyber-amber'
                     : 'bg-cyber-emerald/20 border-cyber-emerald text-cyber-emerald'
                 }`}
-                title={timerRunning ? 'Pause Exam Clock' : 'Start Exam Clock'}
+                title={session.isTimerRunning ? 'Pause Exam Clock' : 'Start Exam Clock'}
               >
-                {timerRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                {session.isTimerRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               </button>
               <button
-                onClick={() => {
-                  setTimerSeconds(24 * 3600);
-                  setTimerRunning(false);
-                  if (soundEnabled) playCyberSound('click');
-                }}
+                onClick={resetTimer}
                 className="p-2 rounded-lg bg-cyber-card border border-cyber-border text-cyber-muted hover:text-white"
-                title="Reset Clock to 24:00:00"
+                title="Reset Clock"
               >
                 <RotateCcw className="w-4 h-4" />
               </button>
@@ -388,10 +392,7 @@ ${scratchNotes}
           {/* Generator & Report Controls */}
           <div className="p-3.5 rounded-lg bg-cyber-bg border border-cyber-border flex items-center justify-between gap-2">
             <button
-              onClick={() => {
-                setExamBoxes(generateExamBoxes());
-                if (soundEnabled) playCyberSound('shuffle');
-              }}
+              onClick={handleNewMockSet}
               className="flex-1 py-2 px-3 rounded-lg bg-cyber-card border border-cyber-cyan/40 text-cyber-cyan hover:bg-cyber-cyan hover:text-black font-bold text-xs transition-all flex items-center justify-center gap-1.5"
               title="Pick random real boxes matching exam difficulty"
             >
@@ -410,20 +411,48 @@ ${scratchNotes}
           </div>
 
         </div>
+
+        {/* 2. Compliance Warning & Status Banner */}
+        {scoreData.complianceIssues.length > 0 && scoreData.totalScore > 0 && (
+          <div className="p-3 rounded-lg bg-amber-950/40 border border-amber-500/50 text-amber-300 text-xs flex items-start gap-2.5">
+            <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <div className="font-bold flex items-center gap-2">
+                <span>OFFSEC PROOF COMPLIANCE ALERT ({scoreData.complianceIssues.length} items missing)</span>
+                <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200">
+                  DISQUALIFICATION RISK
+                </span>
+              </div>
+              <p className="text-[11px] text-amber-200/90 mt-0.5">
+                Official OffSec regulations require an interactive shell with <code>whoami</code> and <code>ipconfig / ifconfig</code> outputs and proof screenshots. Points are rejected without verified proof artifacts!
+              </p>
+            </div>
+          </div>
+        )}
+
+        {scoreData.isCompliant && scoreData.totalScore >= scoreData.passThreshold && (
+          <div className="p-3 rounded-lg bg-emerald-950/40 border border-emerald-500/50 text-emerald-300 text-xs flex items-center gap-2.5">
+            <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+            <span className="font-bold">
+              100% OFFSEC COMPLIANT: All mandatory screenshot checkpoints, whoami executions, and network proof commands verified!
+            </span>
+          </div>
+        )}
       </div>
 
       {/* 3. Exam Targets Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {examBoxes.map((box, idx) => {
-          const isAd = box.type.startsWith('ad');
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {session.boxes.map((box) => {
+          const isExpanded = expandedBoxId === box.id;
+          const isAd = box.type.startsWith('ad') || box.type.includes('dc');
           const isFullyPwned = (box.userPoints === 0 || box.userPwned) && (box.rootPoints === 0 || box.rootPwned);
 
+          const userVal = validateFlagFormat(box.userProof?.flagText || "");
+          const rootVal = validateFlagFormat(box.rootProof?.flagText || "");
+
           return (
-            <motion.div
+            <div
               key={box.id}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.05 }}
               className={`p-4 rounded-xl border bg-cyber-card/95 relative overflow-hidden transition-all ${
                 isFullyPwned
                   ? 'border-cyber-emerald shadow-[0_0_20px_rgba(16,185,129,0.2)]'
@@ -438,9 +467,18 @@ ${scratchNotes}
                   {box.label}
                 </span>
 
-                <span className="text-xs font-bold text-white px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border">
-                  {box.userPoints + box.rootPoints} PTS TOTAL
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-white px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border">
+                    {box.userPoints + box.rootPoints} PTS TOTAL
+                  </span>
+                  <button
+                    onClick={() => setExpandedBoxId(isExpanded ? null : box.id)}
+                    className="p-1 rounded bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white"
+                    title={isExpanded ? 'Collapse proof checklist' : 'Expand proof checklist'}
+                  >
+                    {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
               </div>
 
               {/* Box Identity */}
@@ -463,49 +501,181 @@ ${scratchNotes}
                 </span>
               </div>
 
-              {/* Flag Submission / Scoring Buttons */}
-              <div className="space-y-2 pt-3 border-t border-cyber-border/70">
-                {/* User Flag Button */}
-                {box.userPoints > 0 && (
+              {/* Quick Action Pwn Toggles */}
+              <div className="grid grid-cols-2 gap-2 mb-3">
+                {box.userPoints > 0 ? (
                   <button
-                    onClick={() => toggleFlag(box.id, 'user')}
-                    className={`w-full p-2.5 rounded-lg border flex items-center justify-between text-xs transition-all ${
+                    onClick={() => togglePwn(box.id, 'user')}
+                    className={`p-2 rounded-lg border text-xs flex items-center justify-between transition-all ${
                       box.userPwned
-                        ? 'bg-cyber-amber/20 border-cyber-amber text-cyber-amber font-bold shadow-[0_0_12px_rgba(245,158,11,0.2)]'
-                        : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-amber/50'
+                        ? 'bg-cyber-amber/20 border-cyber-amber text-cyber-amber font-bold'
+                        : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-white'
                     }`}
                   >
-                    <div className="flex items-center gap-2">
-                      <Flag className="w-3.5 h-3.5" />
-                      <span>{box.type === 'ad-foothold' ? 'Initial Access Flag' : 'User Flag (local.txt)'}</span>
-                    </div>
-                    <span className="font-bold">
-                      {box.userPwned ? `✓ +${box.userPoints} PTS` : `+${box.userPoints} PTS`}
+                    <span className="flex items-center gap-1.5">
+                      <Flag className="w-3 h-3" />
+                      User Flag
                     </span>
+                    <span>{box.userPwned ? `✓ +${box.userPoints}` : `+${box.userPoints}`}</span>
                   </button>
-                )}
+                ) : <div />}
 
-                {/* Root Flag Button */}
-                {box.rootPoints > 0 && (
+                {box.rootPoints > 0 ? (
                   <button
-                    onClick={() => toggleFlag(box.id, 'root')}
-                    className={`w-full p-2.5 rounded-lg border flex items-center justify-between text-xs transition-all ${
+                    onClick={() => togglePwn(box.id, 'root')}
+                    className={`p-2 rounded-lg border text-xs flex items-center justify-between transition-all ${
                       box.rootPwned
-                        ? 'bg-cyber-emerald/20 border-cyber-emerald text-cyber-emerald font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)]'
-                        : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-emerald/50'
+                        ? 'bg-cyber-emerald/20 border-cyber-emerald text-cyber-emerald font-bold'
+                        : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-white'
                     }`}
                   >
-                    <div className="flex items-center gap-2">
-                      <Trophy className="w-3.5 h-3.5" />
-                      <span>{box.type === 'ad-dc' ? 'Enterprise Admin (proof.txt)' : 'Root Flag (proof.txt)'}</span>
-                    </div>
-                    <span className="font-bold">
-                      {box.rootPwned ? `👑 +${box.rootPoints} PTS` : `+${box.rootPoints} PTS`}
+                    <span className="flex items-center gap-1.5">
+                      <Trophy className="w-3 h-3" />
+                      Root Flag
                     </span>
+                    <span>{box.rootPwned ? `👑 +${box.rootPoints}` : `+${box.rootPoints}`}</span>
                   </button>
-                )}
+                ) : <div />}
               </div>
-            </motion.div>
+
+              {/* Expandable Proof Checklist */}
+              <AnimatePresence>
+                {isExpanded && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="pt-3 border-t border-cyber-border/70 space-y-4 text-xs"
+                  >
+                    {/* User Proof Section */}
+                    {box.userPoints > 0 && (
+                      <div className="p-3 rounded-lg bg-cyber-bg/80 border border-cyber-border/80 space-y-2.5">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-cyber-amber flex items-center gap-1.5">
+                            <Flag className="w-3.5 h-3.5" />
+                            USER PROOF (local.txt)
+                          </span>
+                          {box.userProof.flagText && (
+                            <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold uppercase ${
+                              userVal.valid ? 'bg-cyber-emerald/20 text-cyber-emerald border border-cyber-emerald/40' : 'bg-red-950 text-red-400 border border-red-800'
+                            }`}>
+                              {userVal.label}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Flag Input */}
+                        <div>
+                          <input
+                            type="text"
+                            value={box.userProof?.flagText || ""}
+                            onChange={(e) => updateBoxProof(box.id, 'user', 'flagText', e.target.value)}
+                            placeholder="Enter captured user flag string or hash..."
+                            className="w-full px-2.5 py-1.5 rounded bg-cyber-card border border-cyber-border text-white text-xs font-mono focus:outline-none focus:border-cyber-amber"
+                          />
+                        </div>
+
+                        {/* Checklist items */}
+                        <div className="space-y-1.5 pt-1">
+                          <label className="flex items-center gap-2 cursor-pointer text-gray-300">
+                            <input
+                              type="checkbox"
+                              checked={box.userProof?.screenshotTaken || false}
+                              onChange={(e) => updateBoxProof(box.id, 'user', 'screenshotTaken', e.target.checked)}
+                              className="rounded border-cyber-border bg-cyber-card text-cyber-amber focus:ring-0"
+                            />
+                            <span className="flex items-center gap-1 text-[11px]">
+                              <Camera className="w-3 h-3 text-cyber-amber" />
+                              Mandatory Screenshot taken showing local.txt + whoami + ipconfig
+                            </span>
+                          </label>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                            <input
+                              type="text"
+                              value={box.userProof?.whoamiOutput || ""}
+                              onChange={(e) => updateBoxProof(box.id, 'user', 'whoamiOutput', e.target.value)}
+                              placeholder="whoami command output..."
+                              className="px-2 py-1 rounded bg-cyber-card border border-cyber-border text-[11px] text-white font-mono focus:outline-none focus:border-cyber-amber"
+                            />
+                            <input
+                              type="text"
+                              value={box.userProof?.ipconfigOutput || ""}
+                              onChange={(e) => updateBoxProof(box.id, 'user', 'ipconfigOutput', e.target.value)}
+                              placeholder="ipconfig / ifconfig output..."
+                              className="px-2 py-1 rounded bg-cyber-card border border-cyber-border text-[11px] text-white font-mono focus:outline-none focus:border-cyber-amber"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Root Proof Section */}
+                    {box.rootPoints > 0 && (
+                      <div className="p-3 rounded-lg bg-cyber-bg/80 border border-cyber-border/80 space-y-2.5">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-cyber-emerald flex items-center gap-1.5">
+                            <Trophy className="w-3.5 h-3.5" />
+                            ROOT / SYSTEM PROOF (proof.txt)
+                          </span>
+                          {box.rootProof.flagText && (
+                            <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold uppercase ${
+                              rootVal.valid ? 'bg-cyber-emerald/20 text-cyber-emerald border border-cyber-emerald/40' : 'bg-red-950 text-red-400 border border-red-800'
+                            }`}>
+                              {rootVal.label}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Flag Input */}
+                        <div>
+                          <input
+                            type="text"
+                            value={box.rootProof?.flagText || ""}
+                            onChange={(e) => updateBoxProof(box.id, 'root', 'flagText', e.target.value)}
+                            placeholder="Enter captured root flag string or hash..."
+                            className="w-full px-2.5 py-1.5 rounded bg-cyber-card border border-cyber-border text-white text-xs font-mono focus:outline-none focus:border-cyber-emerald"
+                          />
+                        </div>
+
+                        {/* Checklist items */}
+                        <div className="space-y-1.5 pt-1">
+                          <label className="flex items-center gap-2 cursor-pointer text-gray-300">
+                            <input
+                              type="checkbox"
+                              checked={box.rootProof?.screenshotTaken || false}
+                              onChange={(e) => updateBoxProof(box.id, 'root', 'screenshotTaken', e.target.checked)}
+                              className="rounded border-cyber-border bg-cyber-card text-cyber-emerald focus:ring-0"
+                            />
+                            <span className="flex items-center gap-1 text-[11px]">
+                              <Camera className="w-3 h-3 text-cyber-emerald" />
+                              Mandatory Screenshot taken showing proof.txt + whoami + ipconfig
+                            </span>
+                          </label>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                            <input
+                              type="text"
+                              value={box.rootProof?.whoamiOutput || ""}
+                              onChange={(e) => updateBoxProof(box.id, 'root', 'whoamiOutput', e.target.value)}
+                              placeholder="whoami output (root / system)..."
+                              className="px-2 py-1 rounded bg-cyber-card border border-cyber-border text-[11px] text-white font-mono focus:outline-none focus:border-cyber-emerald"
+                            />
+                            <input
+                              type="text"
+                              value={box.rootProof?.ipconfigOutput || ""}
+                              onChange={(e) => updateBoxProof(box.id, 'root', 'ipconfigOutput', e.target.value)}
+                              placeholder="ipconfig / ifconfig output..."
+                              className="px-2 py-1 rounded bg-cyber-card border border-cyber-border text-[11px] text-white font-mono focus:outline-none focus:border-cyber-emerald"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           );
         })}
       </div>
@@ -515,16 +685,16 @@ ${scratchNotes}
         <div className="flex items-center justify-between">
           <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
             <Terminal className="w-4 h-4 text-cyber-cyan" />
-            OFFICIAL EXAM LOG & CREDENTIALS VAULT
+            OFFICIAL EXAM EVIDENCE VAULT & CREDENTIAL SCRATCHPAD
           </span>
-          <span className="text-[10px] text-cyber-muted">Auto-saved locally • Included in exported report</span>
+          <span className="text-[10px] text-cyber-muted">Persisted automatically in local storage • Embedded in exported report</span>
         </div>
         <textarea
-          value={scratchNotes}
-          onChange={(e) => setScratchNotes(e.target.value)}
+          value={session.scratchNotes}
+          onChange={(e) => setSession((prev) => ({ ...prev, scratchNotes: e.target.value }))}
           rows={6}
           className="w-full p-3 rounded-lg bg-cyber-bg border border-cyber-border text-xs text-white font-mono focus:outline-none focus:border-cyber-cyan leading-relaxed"
-          placeholder="Paste flags, hashes, Nmap extracts, and proof screenshots references here..."
+          placeholder="Paste credentials, pivot routes, Nmap outputs, and command reproduction logs here..."
         />
       </div>
     </div>
