@@ -111,6 +111,7 @@ export const QuickAssignIpModal: React.FC = () => {
         exit={{ opacity: 0, scale: 0.95, y: 15 }}
         transition={{ duration: 0.15 }}
         onClick={(e) => e.stopPropagation()}
+        data-testid="quick-assign-ip-modal"
         className="w-full max-w-lg rounded-2xl border border-cyber-cyan/50 bg-cyber-card/95 shadow-2xl overflow-hidden shadow-glow-cyan/20 relative"
       >
         {/* Header Strip */}

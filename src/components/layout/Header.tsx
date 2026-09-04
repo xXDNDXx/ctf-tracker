@@ -641,6 +641,7 @@ export const Header: React.FC = () => {
             <span className="text-[10px] text-cyber-muted font-bold">T:</span>
             <input
               type="text"
+              data-testid="header-target-ip-input"
               value={globalVars.targetIp}
               onChange={(e) => setGlobalVars({ targetIp: e.target.value })}
               className="w-20 bg-transparent text-cyber-emerald font-mono text-[11px] font-semibold focus:outline-none"
