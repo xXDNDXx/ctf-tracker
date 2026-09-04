@@ -109,7 +109,7 @@ export const OperatorDossierModal: React.FC = () => {
                 </div>
 
                 <p className="text-xs text-gray-300 leading-relaxed pt-1">
-                  Creator and lead developer of <strong>SpecterCTF // HexTracker Suite</strong>. 
+                  Creator and lead developer of <strong>ZeroBox // Tactical CTF Suite</strong>. 
                   Passionate about offensive security, penetration testing, exploit engineering, and building high-performance 
                   tactical command-and-control dashboards for security teams and CTF operators.
                 </p>
@@ -260,10 +260,10 @@ export const OperatorDossierModal: React.FC = () => {
           {/* Creator Notes / Philosophy */}
           <div className="p-3.5 rounded-xl bg-cyber-bg border border-cyber-border/80 space-y-1.5">
             <div className="text-[10px] uppercase font-bold text-cyber-muted flex items-center gap-1.5">
-              <Cpu className="w-3 h-3 text-cyber-cyan" /> CREATOR PHILOSOPHY // SPECTER CTF
+              <Cpu className="w-3 h-3 text-cyber-cyan" /> CREATOR PHILOSOPHY // ZEROBOX
             </div>
             <p className="text-gray-300 text-[11px] leading-relaxed">
-              "I built SpecterCTF because offensive security operators need a single, lightning-fast workspace that keeps track of target states, automatically injects VPN IP parameters into payload commands, and structures machine lifecycles without friction or tedious note-taking."
+              "I built ZeroBox because offensive security operators need a single, lightning-fast workspace that keeps track of target states, automatically injects VPN IP parameters into payload commands, and structures machine lifecycles without friction or tedious note-taking."
             </p>
             <div className="text-[10px] text-cyber-emerald font-bold text-right">
               — Daniel Dayan (@xXDNDXx)
@@ -275,7 +275,7 @@ export const OperatorDossierModal: React.FC = () => {
         {/* Footer Actions */}
         <div className="px-5 py-3 bg-[#080c14] border-t border-cyber-border/80 flex flex-wrap items-center justify-between gap-2">
           <span className="text-[10px] text-cyber-muted">
-            SpecterCTF Suite v2.0 • Designed & Built by Daniel Dayan
+            ZeroBox Suite v2.0 • Designed & Built by Daniel Dayan
           </span>
 
           <div className="flex items-center gap-2">

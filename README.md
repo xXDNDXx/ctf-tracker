@@ -1,14 +1,14 @@
 <div align="center">
 
-# ⚡ SPECTER CTF // HexTracker v2.0
+# ⚡ ZEROBOX // Tactical CTF Tracker v2.0
 ### Advanced CTF Machine Tracking, Attack Lifecycle Management & Offensive Cheatsheet Dashboard
 
-[![Open Tracker](https://img.shields.io/badge/-%20LAUNCH%20SPECTER%20CTF%20-10B981?style=for-the-badge&labelColor=0B0F19)](https://xXDNDXx.github.io/ctf-tracker/)
+[![Open Tracker](https://img.shields.io/badge/-%20LAUNCH%20ZEROBOX%20-10B981?style=for-the-badge&labelColor=0B0F19)](https://xXDNDXx.github.io/ctf-tracker/)
 [![Live on GitHub Pages](https://img.shields.io/badge/Live_on-GitHub_Pages-181717?style=flat-square&logo=github)](https://xXDNDXx.github.io/ctf-tracker/)
 [![Tech Stack](https://img.shields.io/badge/Built%20With-React%2018%20%7C%20TypeScript%20%7C%20Tailwind-06B6D4?style=flat-square)](#tech-stack)
 [![License](https://img.shields.io/badge/License-MIT-EF4444?style=flat-square)](LICENSE)
 
-*400+ Machines · 5-Stage Attack Pipeline · Live Parameter Injection · Obsidian Writeup Studio · Skill Radar*
+*940+ Machines · 5-Stage Attack Pipeline · Live Parameter Injection · Obsidian Writeup Studio · Skill Radar*
 
 </div>
 
@@ -16,7 +16,7 @@
 
 ## 🎯 Overview
 
-**SpecterCTF / HexTracker** is a high-performance, cybersecurity-themed dashboard engineered for penetration testers, security researchers, and CTF competitors targeting **Hack The Box (HTB)**, **TryHackMe (THM)**, **VulnHub**, **ProLabs**, and custom offline labs.
+**ZeroBox** is a high-performance, cybersecurity-themed dashboard engineered for penetration testers, security researchers, and CTF competitors targeting **Hack The Box (HTB)**, **TryHackMe (THM)**, **VulnHub**, **ProLabs**, and custom offline labs.
 
 Built with an **offline-first architecture** (Zustand + LocalStorage/IndexedDB), zero backend dependency, and instantaneous command palette (`Ctrl+K`) navigation.
 

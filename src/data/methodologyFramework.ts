@@ -566,7 +566,7 @@ export const MASTER_METHODOLOGY_FRAMEWORK: MethodologyPhase[] = [
             id: 'p08-extract-flags',
             title: 'Extract User Flag & Root/SYSTEM Flag',
             commandSnippet: 'cat /home/*/user.txt /root/root.txt or type C:\\Users\\*\\Desktop\\*flag.txt',
-            description: 'Safely retrieve flags and copy directly into SpecterCTF Flags Vault.',
+            description: 'Safely retrieve flags and copy directly into ZeroBox Flags Vault.',
           },
           {
             id: 'p08-dump-hashes',

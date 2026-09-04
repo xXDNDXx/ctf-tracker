@@ -293,12 +293,15 @@ During the security assessment of target host ${machine.name} (${machine.ip}), s
             </button>
 
             <button
-              onClick={() => setReconAutomationModalOpen(true)}
-              className="flex items-center gap-1 px-2 py-1.5 rounded bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/40 hover:bg-cyber-emerald hover:text-black font-semibold text-xs transition-all shadow-glow-emerald/20"
-              title="Open Recon & Exploitation Automation for this box"
+              onClick={() => {
+                setSelectedMachineId(machine.id);
+                setReconAutomationModalOpen(true);
+              }}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-cyber-cyan/15 text-cyber-cyan border border-cyber-cyan/40 hover:bg-cyber-cyan hover:text-black font-semibold text-xs transition-all shadow-glow-cyan/20"
+              title="Open Multi-Format Scan Importer & Payload Crafter for this target"
             >
               <Zap className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Auto-Parse</span>
+              <span className="hidden sm:inline">Import Scan & Payloads</span>
             </button>
             <button
               onClick={() => {

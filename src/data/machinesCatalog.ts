@@ -1,4 +1,4 @@
-// SpecterCTF Master Target Catalog
+// ZeroBox Master Target Catalog
 // 100% Pure CTF Challenges (TryHackMe & Hack The Box)
 // Daniel Dayan's Solved Roster: 45 HTB + 18 THM = 63 Pwned Targets
 // Enriched with 291 Official Hack The Box Walkthroughs & Intelligence

@@ -1,10 +1,10 @@
 @echo off
-title SPECTER CTF // HexTracker Launcher
+title ZEROBOX // Tactical CTF Tracker Launcher
 color 0A
 cd /d "%~dp0"
 
 echo ================================================================
-echo    SPECTER CTF // HEXTRACKER - CYBERSECURITY LAB DASHBOARD
+echo    ZEROBOX // TACTICAL CYBERSECURITY LAB DASHBOARD
 echo ================================================================
 echo.
 echo [*] Checking environment...
@@ -17,7 +17,7 @@ if %errorlevel% neq 0 (
 )
 
 echo [+] Node.js detected.
-echo [*] Launching SpecterCTF on http://localhost:3000 ...
+echo [*] Launching ZeroBox on http://localhost:3000 ...
 echo.
 
 :: Automatically open browser after 2 seconds

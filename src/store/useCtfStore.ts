@@ -35,6 +35,14 @@ export interface BrandTheme {
 
 export const BRAND_THEMES: BrandTheme[] = [
   {
+    id: 'zerobox',
+    namePrefix: 'ZERO',
+    nameSuffix: 'BOX',
+    suffixColor: 'text-cyber-cyan',
+    tagline: 'Tactical Cyber Operations Suite',
+    badge: 'v2.0',
+  },
+  {
     id: 'specter',
     namePrefix: 'SPECTER',
     nameSuffix: 'CTF',
@@ -374,7 +382,7 @@ export const useCtfStore = create<CtfStoreState>()(
       activitySessions: initialProfileData?.activitySessions || [],
       currentProfileId: initialProfileId,
 
-      appBrand: (!initialProfileData?.appBrand || initialProfileData?.appBrand === 'rootvector') ? 'specter' : initialProfileData.appBrand,
+      appBrand: (!initialProfileData?.appBrand || initialProfileData?.appBrand === 'rootvector' || initialProfileData?.appBrand === 'specter') ? 'zerobox' : initialProfileData.appBrand,
       activeTab: 'tracker',
       viewMode: 'kanban',
       selectedMachineId: null,

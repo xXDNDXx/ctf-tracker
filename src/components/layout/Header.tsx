@@ -31,6 +31,7 @@ import { playCyberSound, formatSeconds, triggerRootCelebration, safeCopyToClipbo
 import { UserMenu } from '../auth/UserMenu';
 
 const BRAND_THEMES = [
+  { id: 'zerobox', namePrefix: 'ZERO', nameSuffix: 'BOX', suffixColor: 'text-cyber-cyan', tagline: 'Tactical Cyber Operations Suite' },
   { id: 'specter', namePrefix: 'SPECTER', nameSuffix: 'CTF', suffixColor: 'text-cyber-cyan', tagline: 'Tactical Cyber Operations Suite' },
   { id: 'rootvector', namePrefix: 'ROOT', nameSuffix: 'VECTOR', suffixColor: 'text-cyber-emerald', tagline: 'CTF & Lab Operations Tracker' },
   { id: 'hextracker', namePrefix: 'HEX', nameSuffix: 'TRACKER', suffixColor: 'text-cyber-purple', tagline: 'Tactical Pwn Tracker // v2.0' },
@@ -173,11 +174,11 @@ export const Header: React.FC = () => {
   const [copiedTargetIp, setCopiedTargetIp] = useState(false);
   const [copiedVar, setCopiedVar] = useState<'lhost' | 'lport' | 'target' | null>(null);
 
-  const activeBrand = BRAND_THEMES.find((b) => b.id === (appBrand === 'rootvector' || !appBrand ? 'specter' : appBrand)) || BRAND_THEMES[0];
+  const activeBrand = BRAND_THEMES.find((b) => b.id === (appBrand === 'rootvector' || appBrand === 'specter' || !appBrand ? 'zerobox' : appBrand)) || BRAND_THEMES[0];
 
   useEffect(() => {
-    if (!appBrand || appBrand === 'rootvector') {
-      setAppBrand('specter');
+    if (!appBrand || appBrand === 'rootvector' || appBrand === 'specter') {
+      setAppBrand('zerobox');
     }
   }, [appBrand, setAppBrand]);
 
@@ -533,10 +534,10 @@ export const Header: React.FC = () => {
           <button
             onClick={() => setReconAutomationModalOpen(true)}
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/40 hover:bg-cyber-cyan hover:text-black font-mono text-xs font-semibold transition-all shadow-glow-cyan/20"
-            title="Open Tactical Automation Hub (Nmap Parser & Payload Engine)"
+            title="Open Tactical Automation Hub (Multi-Format Scan Importer & Payload Crafter)"
           >
             <Zap className="w-3.5 h-3.5" />
-            <span>Automations</span>
+            <span>Scan & Payloads</span>
           </button>
 
           {/* Quick Add Custom Machine Button */}

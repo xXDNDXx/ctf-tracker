@@ -52,7 +52,7 @@ root_flag: "${m.rootFlag || 'FLAG{...}'}"
 time_spent: "${Math.round(m.timeSpentSeconds / 60)} minutes"
 tags: [${tagsList}]
 date: "${today}"
-author: "SpecterCTF Operator"
+author: "ZeroBox Operator"
 ---
 
 # ${m.name} — Writeup & Penetration Testing Report

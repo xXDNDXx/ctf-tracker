@@ -23,7 +23,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('SpecterCTF Caught Exception:', error, errorInfo);
+    console.error('ZeroBox Caught Exception:', error, errorInfo);
     this.setState({ errorInfo });
   }
 

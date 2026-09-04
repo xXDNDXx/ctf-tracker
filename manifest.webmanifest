@@ -1,7 +1,7 @@
 {
-  "name": "SpecterCTF // HexTracker",
-  "short_name": "SpecterCTF",
-  "description": "Advanced CTF Machine Tracking, Attack Lifecycle Management, and Dynamic Offensive Cheatsheet Dashboard.",
+  "name": "ZeroBox // Tactical CTF Tracker",
+  "short_name": "ZeroBox",
+  "description": "ZeroBox — Advanced CTF Machine Tracking, Attack Lifecycle Management, and Dynamic Offensive Cheatsheet Dashboard.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

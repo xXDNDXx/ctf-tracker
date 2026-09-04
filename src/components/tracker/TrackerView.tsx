@@ -449,11 +449,11 @@ export const TrackerView: React.FC = () => {
           {/* Tactical Recon Automation Launcher */}
           <button
             onClick={() => setReconAutomationModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/40 hover:bg-cyber-emerald hover:text-black font-semibold text-xs transition-all shadow-glow-emerald/20 whitespace-nowrap"
-            title="Launch Tactical Recon & Scan Automation"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/40 hover:bg-cyber-cyan hover:text-black font-semibold text-xs transition-all shadow-glow-cyan/20 whitespace-nowrap"
+            title="Launch Tactical Scan Importer & Payload Crafter"
           >
             <Zap className="w-3.5 h-3.5" />
-            <span>Recon Automation</span>
+            <span>Scan & Payloads</span>
           </button>
 
           {/* View Mode Switcher */}
