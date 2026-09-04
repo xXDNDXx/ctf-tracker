@@ -27,7 +27,10 @@ const SHORTCUTS: ShortcutEntry[] = [
   { keys: ['p'], description: 'Open Scan Importer & Payload Crafter', category: 'actions' },
   { keys: ['v'], description: '1-Click Export Obsidian Vault (.zip)', category: 'actions' },
 
-  // System
+  // System & Zoom
+  { keys: ['-'], description: 'Zoom Out (Make UI Smaller: 90%, 80%)', category: 'system' },
+  { keys: ['+'], description: 'Zoom In (Make UI Larger: 110%, 122%)', category: 'system' },
+  { keys: ['0'], description: 'Reset UI Display Scale to 100%', category: 'system' },
   { keys: ['Ctrl', 'K'], description: 'Open Global Command Palette', category: 'system' },
   { keys: ['?'], description: 'Open Keyboard Shortcuts cheat sheet', category: 'system' },
   { keys: ['Esc'], description: 'Close any active modal or flyout', category: 'system' },

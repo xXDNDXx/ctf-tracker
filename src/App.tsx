@@ -89,10 +89,17 @@ const MainAppContent: React.FC = () => {
   // Tactical keyboard hotkeys engine
   useTacticalHotkeys();
 
-  // Handle global UI scale (Normal: 100%, Large: 110%, Huge: 122%)
+  // Handle global UI scale (Tiny: 80%, Compact: 90%, Normal: 100%, Large: 110%, Huge: 122%)
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      const zoomVal = uiScale === 'huge' ? '1.22' : uiScale === 'large' ? '1.10' : '1.0';
+      const zoomMap: Record<string, string> = {
+        tiny: '0.80',
+        compact: '0.90',
+        normal: '1.0',
+        large: '1.10',
+        huge: '1.22',
+      };
+      const zoomVal = zoomMap[uiScale] || '1.0';
       (document.documentElement.style as any).zoom = zoomVal;
     }
   }, [uiScale]);

@@ -23,6 +23,7 @@ import {
   Sparkles, 
   Zap,
   ZoomIn,
+  ZoomOut,
   Keyboard
 } from 'lucide-react';
 import { CyberLogo } from '../common/CyberLogo';
@@ -138,6 +139,8 @@ export const Header: React.FC = () => {
     setShortcutsModalOpen,
     uiScale,
     cycleUiScale,
+    zoomIn,
+    zoomOut,
   } = useCtfStore(
     useShallow((s) => ({
       activeTargetId: s.activeTargetId,
@@ -163,6 +166,8 @@ export const Header: React.FC = () => {
       setShortcutsModalOpen: s.setShortcutsModalOpen,
       uiScale: s.uiScale,
       cycleUiScale: s.cycleUiScale,
+      zoomIn: s.zoomIn,
+      zoomOut: s.zoomOut,
     }))
   );
 
@@ -381,22 +386,55 @@ export const Header: React.FC = () => {
               <Database className="w-3.5 h-3.5" />
             </button>
 
-            {/* UI Scale / Zoom Toggle */}
-            <button
-              onClick={() => {
-                cycleUiScale();
-                if (soundEnabled) playCyberSound('click');
-              }}
-              className={`flex items-center gap-1 px-2 py-1 rounded-md border text-xs font-mono font-bold transition-all ${
-                uiScale !== 'normal'
-                  ? 'bg-cyber-cyan/20 border-cyber-cyan text-cyber-cyan shadow-[0_0_8px_rgba(6,182,212,0.35)]'
-                  : 'bg-cyber-card border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-cyan/50'
-              }`}
-              title={`Display Scale: ${uiScale === 'huge' ? '122% (Huge)' : uiScale === 'large' ? '110% (Large)' : '100% (Normal)'}. Click to enlarge entire UI.`}
+            {/* Tactical Display Scale / Zoom Controls (Zoom Out, Badge, Zoom In) */}
+            <div 
+              className="flex items-center rounded-md border border-cyber-border bg-cyber-card/90 p-0.5 shadow-sm text-xs font-mono"
+              data-testid="ui-zoom-controller"
             >
-              <ZoomIn className="w-3.5 h-3.5" />
-              <span>{uiScale === 'huge' ? '122%' : uiScale === 'large' ? '110%' : '100%'}</span>
-            </button>
+              {/* Zoom Out / Make Smaller Button */}
+              <button
+                onClick={() => {
+                  zoomOut();
+                  if (soundEnabled) playCyberSound('click');
+                }}
+                disabled={uiScale === 'tiny'}
+                className="p-1 rounded hover:bg-cyber-bg text-cyber-muted hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                title="Make UI Smaller (Zoom Out: 122% → 110% → 100% → 90% → 80%)"
+                aria-label="Make UI smaller"
+              >
+                <ZoomOut className="w-3.5 h-3.5" />
+              </button>
+
+              {/* Current Zoom Percentage (Click to cycle or reset) */}
+              <button
+                onClick={() => {
+                  cycleUiScale();
+                  if (soundEnabled) playCyberSound('click');
+                }}
+                className={`px-1.5 py-0.5 rounded text-[11px] font-bold transition-all ${
+                  uiScale !== 'normal'
+                    ? 'bg-cyber-cyan/20 text-cyber-cyan border border-cyber-cyan/40 shadow-[0_0_8px_rgba(6,182,212,0.3)]'
+                    : 'text-cyber-muted hover:text-white'
+                }`}
+                title={`Display Scale: ${uiScale === 'tiny' ? '80% (Tiny)' : uiScale === 'compact' ? '90% (Compact)' : uiScale === 'large' ? '110% (Large)' : uiScale === 'huge' ? '122% (Huge)' : '100% (Normal)'}. Click to cycle or reset.`}
+              >
+                {uiScale === 'tiny' ? '80%' : uiScale === 'compact' ? '90%' : uiScale === 'large' ? '110%' : uiScale === 'huge' ? '122%' : '100%'}
+              </button>
+
+              {/* Zoom In / Make Bigger Button */}
+              <button
+                onClick={() => {
+                  zoomIn();
+                  if (soundEnabled) playCyberSound('click');
+                }}
+                disabled={uiScale === 'huge'}
+                className="p-1 rounded hover:bg-cyber-bg text-cyber-muted hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                title="Make UI Bigger (Zoom In: 80% → 90% → 100% → 110% → 122%)"
+                aria-label="Make UI bigger"
+              >
+                <ZoomIn className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
 
           {/* User Profile & 1-Click Save Station */}

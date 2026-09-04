@@ -27,6 +27,9 @@ export function useTacticalHotkeys() {
     setBackupModalOpen,
     cheatsheets,
     soundEnabled,
+    zoomIn,
+    zoomOut,
+    setUiScale,
   } = useCtfStore();
 
   useEffect(() => {
@@ -192,6 +195,34 @@ export function useTacticalHotkeys() {
           return;
         }
       }
+
+      // 11. UI Display Scale: '-' or '_' (Zoom Out / Smaller), '+' or '=' (Zoom In / Larger), '0' (Reset to 100%)
+      if (e.key === '-' || e.key === '_') {
+        if (!e.ctrlKey && !e.altKey && !e.metaKey) {
+          e.preventDefault();
+          zoomOut();
+          if (soundEnabled) playCyberSound('click');
+          return;
+        }
+      }
+
+      if (e.key === '+' || e.key === '=') {
+        if (!e.ctrlKey && !e.altKey && !e.metaKey) {
+          e.preventDefault();
+          zoomIn();
+          if (soundEnabled) playCyberSound('click');
+          return;
+        }
+      }
+
+      if (e.key === '0') {
+        if (!e.ctrlKey && !e.altKey && !e.metaKey) {
+          e.preventDefault();
+          setUiScale('normal');
+          if (soundEnabled) playCyberSound('click');
+          return;
+        }
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -216,5 +247,8 @@ export function useTacticalHotkeys() {
     setBackupModalOpen,
     cheatsheets,
     soundEnabled,
+    zoomIn,
+    zoomOut,
+    setUiScale,
   ]);
 }

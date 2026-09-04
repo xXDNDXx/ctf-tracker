@@ -122,7 +122,7 @@ interface CtfStoreState {
   mobileMenuOpen: boolean;
   crtOverlay: boolean;
   soundEnabled: boolean;
-  uiScale: 'normal' | 'large' | 'huge';
+  uiScale: 'tiny' | 'compact' | 'normal' | 'large' | 'huge';
   
   // Timer State
   isTimerRunning: boolean;
@@ -150,8 +150,10 @@ interface CtfStoreState {
   setAssignIpMachineId: (id: string | null) => void;
   toggleCrtOverlay: () => void;
   toggleSound: () => void;
-  setUiScale: (scale: 'normal' | 'large' | 'huge') => void;
+  setUiScale: (scale: 'tiny' | 'compact' | 'normal' | 'large' | 'huge') => void;
   cycleUiScale: () => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
 
   // Machine Actions
   updateMachineStatus: (id: string, status: PipelineStatus) => void;
@@ -422,9 +424,23 @@ export const useCtfStore = create<CtfStoreState>()(
       toggleCrtOverlay: () => set((s) => ({ crtOverlay: !s.crtOverlay })),
       toggleSound: () => set((s) => ({ soundEnabled: !s.soundEnabled })),
       setUiScale: (scale) => set({ uiScale: scale }),
+      zoomIn: () => set((s) => {
+        const order: Array<'tiny' | 'compact' | 'normal' | 'large' | 'huge'> = ['tiny', 'compact', 'normal', 'large', 'huge'];
+        const currentIdx = order.indexOf(s.uiScale || 'normal');
+        const nextIdx = Math.min(order.length - 1, currentIdx + 1);
+        return { uiScale: order[nextIdx] };
+      }),
+      zoomOut: () => set((s) => {
+        const order: Array<'tiny' | 'compact' | 'normal' | 'large' | 'huge'> = ['tiny', 'compact', 'normal', 'large', 'huge'];
+        const currentIdx = order.indexOf(s.uiScale || 'normal');
+        const nextIdx = Math.max(0, currentIdx - 1);
+        return { uiScale: order[nextIdx] };
+      }),
       cycleUiScale: () => set((s) => {
-        const next = s.uiScale === 'normal' ? 'large' : s.uiScale === 'large' ? 'huge' : 'normal';
-        return { uiScale: next };
+        const order: Array<'tiny' | 'compact' | 'normal' | 'large' | 'huge'> = ['tiny', 'compact', 'normal', 'large', 'huge'];
+        const currentIdx = order.indexOf(s.uiScale || 'normal');
+        const nextIdx = (currentIdx + 1) % order.length;
+        return { uiScale: order[nextIdx] };
       }),
 
       updateMachineStatus: (id, status) => {
