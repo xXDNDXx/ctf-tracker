@@ -363,6 +363,24 @@ cat /root/root.txt
             <span>Executive Report</span>
           </button>
 
+          {Boolean(selectedMachine?.officialWalkthrough) && (
+            <button
+              onClick={() => {
+                if (!selectedMachine.officialWalkthrough) return;
+                const injection = `\n\n---\n\n## 🛡️ Official Hack The Box Walkthrough & Intelligence\n${selectedMachine.officialWalkthrough}\n`;
+                const updated = editorContent + injection;
+                setEditorContent(updated);
+                updateMachine(selectedMachine.id, { writeupMarkdown: updated });
+                if (soundEnabled) playCyberSound('engage');
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyber-emerald/15 border border-cyber-emerald/40 hover:border-cyber-emerald text-cyber-emerald hover:bg-cyber-emerald hover:text-black text-xs font-bold transition-all shadow-sm"
+              title="Append official Hack The Box Walkthrough & Intelligence to this writeup"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>+ Official HTB Intel</span>
+            </button>
+          )}
+
           <button
             onClick={handleDownloadMarkdown}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyber-emerald text-black font-bold text-xs hover:bg-cyber-emerald/90 transition-all shadow-glow-emerald"

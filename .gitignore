@@ -51,3 +51,5 @@ id_rsa*
 linux_full.svg
 linux_path.txt
 windows*.svg
+HackTheBoxPDF/
+*.pdf

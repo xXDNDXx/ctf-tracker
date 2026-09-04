@@ -30,6 +30,10 @@ export interface Machine {
   rating?: number; // 1 to 5 stars
   quickNotes?: string;
   writeupMarkdown?: string;
+  skillsLearned?: string[];
+  officialPdf?: string;
+  officialSynopsis?: string;
+  officialWalkthrough?: string;
   isCustom?: boolean;
   openPorts?: number[];
   checklist?: import('./checklist').MachineChecklistState;
