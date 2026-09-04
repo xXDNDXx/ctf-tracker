@@ -332,7 +332,7 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Center: Global Quick Command Search (Ctrl+K) */}
-        <div className="hidden md:flex items-center flex-1 max-w-xs xl:max-w-md mx-2 xl:mx-4">
+        <div className="hidden lg:flex items-center flex-1 max-w-xs xl:max-w-md mx-2 xl:mx-4">
           <button
             onClick={() => setCommandPaletteOpen(true)}
             className="w-full flex items-center justify-between px-3 py-1.5 text-xs font-mono rounded-lg bg-cyber-card/80 border border-cyber-border text-cyber-muted hover:text-cyber-text hover:border-cyber-cyan/50 transition-all shadow-inner group"

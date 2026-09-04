@@ -53,25 +53,31 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
 
   // Center coordinate of canvas
-  const centerX = 600;
-  const centerY = 450;
+  const centerX = 800;
+  const centerY = 600;
 
-  // Clusters definition
+  // Clusters definition with expanded radii in 1600x1200 canvas
   const clusters = [
-    { id: 'htb-early', name: '10.10.10.x [HTB Legacy]', angle: -Math.PI * 0.75, radius: 240, color: '#10B981' },
-    { id: 'web-perimeter', name: 'DMZ [Web Application Surface]', angle: -Math.PI * 0.5, radius: 260, color: '#38BDF8' },
-    { id: 'htb-modern', name: '10.10.11.x [HTB Seasons]', angle: -Math.PI * 0.25, radius: 240, color: '#06B6D4' },
-    { id: 'thm-network', name: '10.10.x.x [THM Labs]', angle: Math.PI * 0.15, radius: 240, color: '#EF4444' },
-    { id: 'ad-forest', name: 'CORP.LOCAL [Active Directory]', angle: Math.PI * 0.5, radius: 270, color: '#A855F7' },
-    { id: 'internal-lab', name: '192.168.x.x [Internal Pivots]', angle: Math.PI * 0.85, radius: 240, color: '#F59E0B' },
+    { id: 'htb-early', name: '10.10.10.x [HTB Legacy]', angle: -Math.PI * 0.75, radius: 340, color: '#10B981' },
+    { id: 'web-perimeter', name: 'DMZ [Web Surface]', angle: -Math.PI * 0.5, radius: 360, color: '#38BDF8' },
+    { id: 'htb-modern', name: '10.10.11.x [HTB Seasons]', angle: -Math.PI * 0.25, radius: 340, color: '#06B6D4' },
+    { id: 'thm-network', name: '10.10.x.x [THM Labs]', angle: Math.PI * 0.15, radius: 340, color: '#EF4444' },
+    { id: 'ad-forest', name: 'CORP.LOCAL [Active Directory]', angle: Math.PI * 0.5, radius: 370, color: '#A855F7' },
+    { id: 'internal-lab', name: '192.168.x.x [Internal Pivots]', angle: Math.PI * 0.85, radius: 340, color: '#F59E0B' },
   ];
 
-  // Map machines to graph nodes in an aesthetic circular topology
+  // Map machines to graph nodes using an outward-fanning orbital topology + force relaxation
   const nodes = useMemo(() => {
     // Limit to 48 nodes for peak 120 FPS animation
     const sample = filteredMachines.slice(0, 48);
 
-    return sample.map((m, idx) => {
+    // Group machines into their respective clusters
+    const clusterBuckets: Record<string, Machine[]> = {};
+    clusters.forEach((c) => {
+      clusterBuckets[c.id] = [];
+    });
+
+    sample.forEach((m) => {
       const { isAD, primary } = classifyMachine(m);
       let clusterId = 'htb-modern';
       if (m.os === 'Active Directory' || isAD) {
@@ -85,31 +91,114 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
       } else if (m.ip.startsWith('10.10.10.')) {
         clusterId = 'htb-early';
       }
-
-      const clusterObj = clusters.find((c) => c.id === clusterId) || clusters[1];
-      const clusterBaseX = centerX + Math.cos(clusterObj.angle) * clusterObj.radius;
-      const clusterBaseY = centerY + Math.sin(clusterObj.angle) * clusterObj.radius;
-
-      // Spread nodes around their cluster center
-      const nodeAngle = (idx * 0.8) % (2 * Math.PI);
-      const nodeDist = 55 + (idx % 3) * 35;
-      const x = clusterBaseX + Math.cos(nodeAngle) * nodeDist;
-      const y = clusterBaseY + Math.sin(nodeAngle) * nodeDist;
-
-      return {
-        id: m.id,
-        name: m.name,
-        ip: m.ip,
-        os: m.os,
-        platform: m.platform,
-        difficulty: m.difficulty,
-        status: m.status,
-        cluster: clusterId,
-        x,
-        y,
-        machine: m,
-      };
+      if (!clusterBuckets[clusterId]) {
+        clusterBuckets[clusterId] = [];
+      }
+      clusterBuckets[clusterId].push(m);
     });
+
+    const initialNodes: GraphNode[] = [];
+
+    // Fan-out tier definitions for radiating nodes away from central hub
+    const tiers = [
+      { cap: 4, dist: 110, arc: Math.PI * 0.52 },
+      { cap: 6, dist: 190, arc: Math.PI * 0.62 },
+      { cap: 8, dist: 270, arc: Math.PI * 0.72 },
+    ];
+
+    clusters.forEach((cluster) => {
+      const machinesInCluster = clusterBuckets[cluster.id] || [];
+      const clusterBaseX = centerX + Math.cos(cluster.angle) * cluster.radius;
+      const clusterBaseY = centerY + Math.sin(cluster.angle) * cluster.radius;
+
+      let processedCount = 0;
+      for (const tier of tiers) {
+        const tierMachines = machinesInCluster.slice(processedCount, processedCount + tier.cap);
+        if (tierMachines.length === 0) break;
+        processedCount += tierMachines.length;
+
+        const count = tierMachines.length;
+        tierMachines.forEach((m, idxInTier) => {
+          let fanAngle = cluster.angle;
+          if (count > 1) {
+            fanAngle = (cluster.angle - tier.arc / 2) + (idxInTier / (count - 1)) * tier.arc;
+          }
+          const x = clusterBaseX + Math.cos(fanAngle) * tier.dist;
+          const y = clusterBaseY + Math.sin(fanAngle) * tier.dist;
+
+          initialNodes.push({
+            id: m.id,
+            name: m.name,
+            ip: m.ip,
+            os: m.os,
+            platform: m.platform,
+            difficulty: m.difficulty,
+            status: m.status,
+            cluster: cluster.id,
+            x,
+            y,
+            machine: m,
+          });
+        });
+      }
+    });
+
+    // 30-iteration multi-body relaxation pass to guarantee minimum node separation >= 68px
+    const MIN_DIST = 68.0;
+    const MIN_HUB_DIST = 58.0;
+    const MIN_OP_DIST = 110.0;
+
+    for (let iter = 0; iter < 30; iter++) {
+      // 1. Node-to-node repulsion
+      for (let i = 0; i < initialNodes.length; i++) {
+        for (let j = i + 1; j < initialNodes.length; j++) {
+          const dx = initialNodes[j].x - initialNodes[i].x;
+          const dy = initialNodes[j].y - initialNodes[i].y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < MIN_DIST && dist > 0.001) {
+            const overlap = (MIN_DIST - dist) / 2;
+            const nx = dx / dist;
+            const ny = dy / dist;
+            initialNodes[i].x -= nx * overlap;
+            initialNodes[i].y -= ny * overlap;
+            initialNodes[j].x += nx * overlap;
+            initialNodes[j].y += ny * overlap;
+          }
+        }
+      }
+
+      // 2. Subnet hub repulsion (keep nodes clear of subnet hubs and labels)
+      for (const node of initialNodes) {
+        for (const cluster of clusters) {
+          const cx = centerX + Math.cos(cluster.angle) * cluster.radius;
+          const cy = centerY + Math.sin(cluster.angle) * cluster.radius;
+          const dx = node.x - cx;
+          const dy = node.y - cy;
+          const dist = Math.hypot(dx, dy);
+          if (dist < MIN_HUB_DIST && dist > 0.001) {
+            const overlap = MIN_HUB_DIST - dist;
+            node.x += (dx / dist) * overlap;
+            node.y += (dy / dist) * overlap;
+          }
+        }
+
+        // 3. Central Operator rig repulsion
+        const opDx = node.x - centerX;
+        const opDy = node.y - centerY;
+        const opDist = Math.hypot(opDx, opDy);
+        if (opDist < MIN_OP_DIST && opDist > 0.001) {
+          const overlap = MIN_OP_DIST - opDist;
+          node.x += (opDx / opDist) * overlap;
+          node.y += (opDy / opDist) * overlap;
+        }
+
+        // 4. Clamp within canvas boundaries
+        node.x = Math.max(60, Math.min(1540, node.x));
+        node.y = Math.max(60, Math.min(1140, node.y));
+      }
+    }
+
+    return initialNodes;
   }, [filteredMachines]);
 
   // Pan interaction handlers
@@ -206,7 +295,7 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
       >
         <svg
           className="w-full h-full"
-          viewBox="0 0 1200 900"
+          viewBox="0 0 1600 1200"
           style={{
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})`,
             transformOrigin: 'center center',
@@ -227,7 +316,7 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
           </defs>
 
           {/* Background Grid */}
-          <rect width="1200" height="900" fill="url(#graph-grid)" />
+          <rect width="1600" height="1200" fill="url(#graph-grid)" />
 
           {/* Subnet Cluster Hubs & Attack Edges */}
           {clusters.map((cluster) => {
@@ -260,10 +349,21 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
                 />
                 <circle cx={clusterX} cy={clusterY} r="8" fill={cluster.color} opacity="0.7" />
 
-                {/* Subnet Label */}
+                {/* Subnet Label Pill */}
+                <rect
+                  x={clusterX - 85}
+                  y={clusterY + 28}
+                  width="170"
+                  height="22"
+                  rx="4"
+                  fill="#0A0E17"
+                  fillOpacity="0.9"
+                  stroke={cluster.color}
+                  strokeWidth="1"
+                />
                 <text
                   x={clusterX}
-                  y={clusterY + 38}
+                  y={clusterY + 43}
                   fill={cluster.color}
                   fontSize="10"
                   fontFamily="monospace"
@@ -307,6 +407,7 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
             const isSelected = selectedNode?.id === node.id;
 
             const nodeColor = isRooted ? '#10B981' : isFoothold ? '#F59E0B' : '#06B6D4';
+            const displayName = node.name.length > 14 ? `${node.name.slice(0, 13)}…` : node.name;
 
             return (
               <g
@@ -328,7 +429,7 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
                     stroke="#06B6D4"
                     strokeWidth="2"
                     strokeDasharray="4 2"
-                    className="animate-spin-slow"
+                    className="animate-spin-slow pointer-events-none"
                   />
                 )}
 
@@ -342,7 +443,7 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
                     stroke="#10B981"
                     strokeWidth="1.5"
                     opacity="0.4"
-                    className="animate-ping"
+                    className="animate-ping pointer-events-none"
                   />
                 )}
 
@@ -358,30 +459,48 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
                 />
 
                 {/* Node Center Core */}
-                <circle cx={node.x} cy={node.y} r="5" fill={nodeColor} />
+                <circle cx={node.x} cy={node.y} r="5" fill={nodeColor} className="pointer-events-none" />
 
-                {/* Machine Name & IP */}
+                {/* Machine Name & IP Pill */}
+                <rect
+                  x={node.x - 46}
+                  y={node.y + 16}
+                  width="92"
+                  height="26"
+                  rx="4"
+                  fill="#0A0E17"
+                  fillOpacity="0.88"
+                  stroke={isSelected ? '#06B6D4' : 'rgba(6,182,212,0.22)'}
+                  strokeWidth={isSelected ? '1.5' : '0.8'}
+                  className="pointer-events-none"
+                />
+
                 <text
                   x={node.x}
-                  y={node.y + 24}
+                  y={node.y + 28}
                   fill={isSelected ? '#06B6D4' : '#FFFFFF'}
-                  fontSize="10"
+                  fontSize="9"
                   fontFamily="monospace"
                   fontWeight="bold"
                   textAnchor="middle"
+                  className="pointer-events-none select-none"
                 >
-                  {node.name}
+                  {displayName}
                 </text>
                 <text
                   x={node.x}
-                  y={node.y + 34}
+                  y={node.y + 38}
                   fill="#64748B"
-                  fontSize="8"
+                  fontSize="7.5"
                   fontFamily="monospace"
                   textAnchor="middle"
+                  className="pointer-events-none select-none"
                 >
                   {node.ip}
                 </text>
+
+                {/* Tooltip */}
+                <title>{`${node.name} (${node.ip}) - ${node.os} [${node.difficulty}]`}</title>
               </g>
             );
           })}
@@ -399,11 +518,22 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
               className="filter drop-shadow-[0_0_15px_#10B981]"
             />
             <circle cx={centerX} cy={centerY} r="12" fill="#10B981" />
+            <rect
+              x={centerX - 80}
+              y={centerY + 36}
+              width="160"
+              height="30"
+              rx="6"
+              fill="#080C14"
+              fillOpacity="0.92"
+              stroke="#10B981"
+              strokeWidth="1"
+            />
             <text
               x={centerX}
-              y={centerY + 48}
+              y={centerY + 49}
               fill="#10B981"
-              fontSize="12"
+              fontSize="11"
               fontFamily="monospace"
               fontWeight="bold"
               textAnchor="middle"
@@ -414,7 +544,7 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
               x={centerX}
               y={centerY + 60}
               fill="#06B6D4"
-              fontSize="9"
+              fontSize="8.5"
               fontFamily="monospace"
               textAnchor="middle"
             >

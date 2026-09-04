@@ -174,7 +174,8 @@ export const UserMenu: React.FC = () => {
           title="Force sync your 45 Hack The Box + 18 TryHackMe solves into completed column"
         >
           <Sparkles className="w-3.5 h-3.5 text-cyber-amber group-hover:scale-110 transition-transform" />
-          <span className="hidden sm:inline">⚡ SYNC 63 SOLVES (45 HTB + 18 THM)</span>
+          <span className="hidden xl:inline">⚡ SYNC 63 SOLVES (45 HTB + 18 THM)</span>
+          <span className="hidden sm:inline xl:hidden">⚡ 63 PWNS</span>
           <span className="sm:hidden">⚡ 63</span>
         </button>
 
