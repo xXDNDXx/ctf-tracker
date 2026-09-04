@@ -16,6 +16,7 @@ import { formatSeconds, playCyberSound, triggerRootCelebration } from '../../uti
 import { PlatformBadge, PlatformIcon } from '../common/PlatformBadge';
 import { OsBadge } from '../common/OsBadge';
 import { EditableIpBadge } from '../common/EditableIpBadge';
+import { CategoryBadge } from '../common/CategoryBadge';
 
 interface TableViewProps {
   filteredMachines: Machine[];
@@ -191,9 +192,12 @@ export const TableView: React.FC<TableViewProps> = ({ filteredMachines }) => {
                     <PlatformBadge platform={m.platform} size="sm" />
                   </td>
 
-                  {/* OS */}
+                  {/* OS & Category */}
                   <td className="py-2.5 px-3">
-                    <OsBadge os={m.os} size="xs" />
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <OsBadge os={m.os} size="xs" />
+                      <CategoryBadge machine={m} size="xs" />
+                    </div>
                   </td>
 
                   {/* Difficulty */}

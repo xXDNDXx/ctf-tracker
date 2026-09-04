@@ -15,6 +15,8 @@ export interface FilterState {
   selectedCert: 'OSCP' | 'CPTS' | 'CRTO' | 'ALL';
   selectedOs: 'ALL' | OperatingSystem;
   selectedCategory: BoxVectorCategory;
+  selectedVulnCategory?: string | 'ALL';
+  excludeActiveDirectory?: boolean;
   selectedTrack: string | 'ALL';
   selectedTags: string[];
   sortBy: SortOption;
@@ -201,6 +203,8 @@ const DEFAULT_FILTERS: FilterState = {
   selectedCert: 'ALL',
   selectedOs: 'ALL',
   selectedCategory: 'ALL',
+  selectedVulnCategory: 'ALL',
+  excludeActiveDirectory: false,
   selectedTrack: 'ALL',
   selectedTags: [],
   sortBy: 'default',

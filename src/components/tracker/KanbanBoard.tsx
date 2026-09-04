@@ -16,6 +16,7 @@ import { formatDurationHuman, playCyberSound, triggerRootCelebration } from '../
 import { PlatformBadge } from '../common/PlatformBadge';
 import { OsBadge } from '../common/OsBadge';
 import { EditableIpBadge } from '../common/EditableIpBadge';
+import { CategoryBadge } from '../common/CategoryBadge';
 
 interface KanbanBoardProps {
   filteredMachines: Machine[];
@@ -113,7 +114,8 @@ const KanbanCard = React.memo<KanbanCardProps>(({
       <div className="flex items-center justify-between gap-1.5 mb-2">
         <PlatformBadge platform={m.platform} size="sm" />
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 flex-wrap justify-end">
+          <CategoryBadge machine={m} size="xs" />
           <OsBadge os={m.os} size="sm" />
           <span
             className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider ${

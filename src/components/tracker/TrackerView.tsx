@@ -21,9 +21,11 @@ import {
   Zap,
   ArrowUpDown,
   Eye,
-  EyeOff
+  EyeOff,
+  Ban,
+  Filter
 } from 'lucide-react';
-import { useCtfStore, BoxVectorCategory, mergeMachinesWithCatalog } from '../../store/useCtfStore';
+import { useCtfStore, BoxVectorCategory, FilterState, mergeMachinesWithCatalog } from '../../store/useCtfStore';
 import { useShallow } from 'zustand/react/shallow';
 import { playCyberSound, triggerRootCelebration } from '../../utils/helpers';
 import { Platform, Difficulty, OperatingSystem } from '../../types';
@@ -33,6 +35,7 @@ import { GridView } from './GridView';
 import { PlatformBadge, PlatformIcon } from '../common/PlatformBadge';
 import { OsIcon } from '../common/OsBadge';
 import { PRACTICE_TRACKS, PracticeTrack } from '../../data/tracksData';
+import { VULN_CATEGORIES, classifyMachine, matchesCategory, isActiveDirectory } from '../../utils/categoryUtils';
 
 export const TrackerView: React.FC = () => {
   const {
@@ -43,6 +46,7 @@ export const TrackerView: React.FC = () => {
     viewMode,
     setViewMode,
     setReconAutomationModalOpen,
+    soundEnabled,
   } = useCtfStore(
     useShallow((s) => ({
       machines: s.machines,
@@ -52,6 +56,7 @@ export const TrackerView: React.FC = () => {
       viewMode: s.viewMode,
       setViewMode: s.setViewMode,
       setReconAutomationModalOpen: s.setReconAutomationModalOpen,
+      soundEnabled: s.soundEnabled,
     }))
   );
 
@@ -99,6 +104,29 @@ export const TrackerView: React.FC = () => {
     return stats;
   }, [machines]);
 
+  // Memoized live category counts across all catalog targets
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = { ALL: machines.length };
+    VULN_CATEGORIES.forEach((c) => {
+      counts[c.id] = 0;
+    });
+    let adCount = 0;
+    let nonAdCount = 0;
+    machines.forEach((m) => {
+      const res = classifyMachine(m);
+      if (res.isAD) adCount++;
+      else nonAdCount++;
+      res.categories.forEach((catId) => {
+        if (counts[catId] !== undefined) {
+          counts[catId]++;
+        }
+      });
+    });
+    counts['AD_TOTAL'] = adCount;
+    counts['NON_AD_TOTAL'] = nonAdCount;
+    return counts;
+  }, [machines]);
+
   // Deferred filter state for 120 FPS typing responsiveness
   const deferredFilters = React.useDeferredValue(filters);
 
@@ -110,6 +138,8 @@ export const TrackerView: React.FC = () => {
     const osFilter = deferredFilters.selectedOs;
     const trackFilter = deferredFilters.selectedTrack;
     const catFilter = deferredFilters.selectedCategory;
+    const vulnCatFilter = deferredFilters.selectedVulnCategory;
+    const excludeAD = Boolean(deferredFilters.excludeActiveDirectory);
     const certFilter = deferredFilters.selectedCert;
     const hasTags = deferredFilters.selectedTags.length > 0;
     const selectedTrack = (trackFilter && trackFilter !== 'ALL') ? PRACTICE_TRACKS.find(t => t.id === trackFilter) : null;
@@ -121,10 +151,18 @@ export const TrackerView: React.FC = () => {
       if (osFilter && osFilter !== 'ALL' && m.os !== osFilter) return false;
       if (certFilter !== 'ALL' && !m.certifications.includes(certFilter)) return false;
 
-      // 2. Curated Track filter
+      // 2. Active Directory Exclusion Check
+      if (excludeAD && isActiveDirectory(m)) return false;
+
+      // 3. Vulnerability Category filter
+      if (vulnCatFilter && vulnCatFilter !== 'ALL') {
+        if (!matchesCategory(m, vulnCatFilter)) return false;
+      }
+
+      // 4. Curated Track filter
       if (selectedTrack && !selectedTrack.filterFn(m)) return false;
 
-      // 3. Search query (only evaluated on candidates that passed platform/diff)
+      // 5. Search query (only evaluated on candidates that passed platform/diff)
       if (q) {
         const matchName = m.name.toLowerCase().includes(q);
         const matchIp = m.ip.includes(q);
@@ -133,30 +171,13 @@ export const TrackerView: React.FC = () => {
         if (!matchName && !matchIp && !matchOs && !matchTag) return false;
       }
 
-      // 4. Exploit Vector / Box Archetype filter
+      // 6. Legacy Exploit Vector filter compatibility
       if (catFilter && catFilter !== 'ALL') {
-        if (catFilter === 'Web') {
-          const webTags = ['web', 'sqli', 'xss', 'rce', 'lfi', 'ssti', 'csrf', 'idor', 'deserialization', 'upload', 'ssrf'];
-          if (!m.tags.some(t => webTags.includes(t.toLowerCase()))) return false;
-        } else if (catFilter === 'Linux PrivEsc') {
-          const lpeTags = ['sudo', 'cron', 'suid', 'kernel', 'wildcard', 'path hijack', 'capabilities', 'docker', 'lxd', 'privesc'];
-          if (m.os !== 'Linux' || !m.tags.some(t => lpeTags.includes(t.toLowerCase()))) return false;
-        } else if (catFilter === 'Windows PrivEsc') {
-          const wpeTags = ['token', 'impersonation', 'seimpersonate', 'potato', 'alwaysinstallelevated', 'unquoted', 'dll hijacking', 'uac', 'service'];
-          if (m.os !== 'Windows' || !m.tags.some(t => wpeTags.includes(t.toLowerCase()))) return false;
-        } else if (catFilter === 'Active Directory') {
-          const adTags = ['active directory', 'kerberos', 'roasting', 'bloodhound', 'as-rep', 'kerberoast', 'gpo', 'ldap', 'ad'];
-          if (m.os !== 'Active Directory' && !m.tags.some(t => adTags.includes(t.toLowerCase()))) return false;
-        } else if (catFilter === 'Binary / Pwn') {
-          const bofTags = ['bof', 'buffer overflow', 'pwn', 'binary', 'overflow', 'rop', 'format string'];
-          if (!m.tags.some(t => bofTags.includes(t.toLowerCase()))) return false;
-        } else if (catFilter === 'Network / SMB') {
-          const netTags = ['smb', 'samba', 'ftp', 'snmp', 'ssh', 'rpc', 'nfs', 'anonymous'];
-          if (!m.tags.some(t => netTags.includes(t.toLowerCase()))) return false;
-        }
+        const legacyTarget = catFilter === 'Binary / Pwn' ? 'Binary / BOF' : catFilter;
+        if (!matchesCategory(m, legacyTarget)) return false;
       }
 
-      // 5. Selected Tags
+      // 7. Selected Tags
       if (hasTags) {
         const hasAllTags = deferredFilters.selectedTags.every((t) => m.tags.includes(t));
         if (!hasAllTags) return false;
@@ -217,6 +238,8 @@ export const TrackerView: React.FC = () => {
     filters.selectedDifficulty !== 'ALL' ||
     (filters.selectedOs && filters.selectedOs !== 'ALL') ||
     (filters.selectedCategory && filters.selectedCategory !== 'ALL') ||
+    (filters.selectedVulnCategory && filters.selectedVulnCategory !== 'ALL') ||
+    Boolean(filters.excludeActiveDirectory) ||
     (filters.selectedTrack && filters.selectedTrack !== 'ALL') ||
     filters.selectedCert !== 'ALL' ||
     filters.selectedTags.length > 0;
@@ -499,29 +522,147 @@ export const TrackerView: React.FC = () => {
             </div>
           </div>
 
-          {/* Exploit Vector / Box Archetype Quick Filters */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-cyber-muted text-[10px] uppercase font-bold tracking-wider">EXPLOIT VECTOR:</span>
+          {/* Tactical 1-Click Presets Strip: ONLY WEB | ONLY AD | NO ACTIVE DIRECTORY (EXCLUSION) */}
+          <div className="flex items-center gap-2 flex-wrap pt-1 border-t border-cyber-border/40">
+            <span className="text-cyber-muted text-[10px] uppercase font-bold tracking-wider flex items-center gap-1">
+              <span>TACTICAL PRESETS:</span>
+            </span>
             <div className="flex items-center gap-1.5 flex-wrap">
-              {vectorCategoryList.map((vec) => {
-                const isActive = (filters.selectedCategory || 'ALL') === vec;
+              {/* Preset: ONLY WEB */}
+              <button
+                type="button"
+                onClick={() => {
+                  const isOnlyWeb = filters.selectedVulnCategory === 'Web' && !filters.excludeActiveDirectory;
+                  if (isOnlyWeb) {
+                    setFilters({ selectedVulnCategory: 'ALL', selectedCategory: 'ALL' });
+                  } else {
+                    setFilters({ selectedVulnCategory: 'Web', selectedCategory: 'ALL', excludeActiveDirectory: false });
+                  }
+                  if (soundEnabled) playCyberSound('click');
+                }}
+                className={`px-2.5 py-1 rounded text-[11px] border font-mono font-bold transition-all flex items-center gap-1.5 ${
+                  filters.selectedVulnCategory === 'Web' && !filters.excludeActiveDirectory
+                    ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400 shadow-glow-cyan/20 ring-1 ring-cyan-500/40 font-extrabold'
+                    : 'bg-cyber-bg border-cyan-500/30 text-cyan-400/80 hover:text-cyan-300 hover:border-cyan-400'
+                }`}
+                title="Filter only Web application targets (SQLi, XSS, SSRF, LFI, RCE, etc.)"
+              >
+                <Globe className="w-3.5 h-3.5 text-cyan-400" />
+                <span>🌐 ONLY WEB</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 ml-0.5">
+                  {categoryCounts['Web'] || 0}
+                </span>
+              </button>
+
+              {/* Preset: ONLY ACTIVE DIRECTORY */}
+              <button
+                type="button"
+                onClick={() => {
+                  const isOnlyAd = filters.selectedVulnCategory === 'Active Directory' && !filters.excludeActiveDirectory;
+                  if (isOnlyAd) {
+                    setFilters({ selectedVulnCategory: 'ALL', selectedCategory: 'ALL' });
+                  } else {
+                    setFilters({ selectedVulnCategory: 'Active Directory', selectedCategory: 'ALL', excludeActiveDirectory: false });
+                  }
+                  if (soundEnabled) playCyberSound('click');
+                }}
+                className={`px-2.5 py-1 rounded text-[11px] border font-mono font-bold transition-all flex items-center gap-1.5 ${
+                  filters.selectedVulnCategory === 'Active Directory' && !filters.excludeActiveDirectory
+                    ? 'bg-purple-500/20 text-purple-300 border-purple-400 shadow-glow-purple/20 ring-1 ring-purple-500/40 font-extrabold'
+                    : 'bg-cyber-bg border-purple-500/30 text-purple-400/80 hover:text-purple-300 hover:border-purple-400'
+                }`}
+                title="Filter only Active Directory domain environments (Kerberos, DCSync, BloodHound, etc.)"
+              >
+                <Cpu className="w-3.5 h-3.5 text-purple-400" />
+                <span>🛡️ ONLY AD</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 ml-0.5">
+                  {categoryCounts['AD_TOTAL'] || 0}
+                </span>
+              </button>
+
+              {/* Exclusion Toggle: NO ACTIVE DIRECTORY (EXCLUDE AD) */}
+              <button
+                type="button"
+                onClick={() => {
+                  const nextExclude = !filters.excludeActiveDirectory;
+                  const updates: Partial<FilterState> = { excludeActiveDirectory: nextExclude };
+                  if (nextExclude && (filters.selectedVulnCategory === 'Active Directory' || filters.selectedCategory === 'Active Directory')) {
+                    updates.selectedVulnCategory = 'ALL';
+                    updates.selectedCategory = 'ALL';
+                  }
+                  setFilters(updates);
+                  if (soundEnabled) playCyberSound('toggle');
+                }}
+                className={`px-2.5 py-1 rounded text-[11px] border font-mono font-bold transition-all flex items-center gap-1.5 ${
+                  filters.excludeActiveDirectory
+                    ? 'bg-rose-950/60 text-rose-300 border-rose-500 shadow-glow-crimson/20 ring-1 ring-rose-500/50 font-extrabold'
+                    : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-rose-400 hover:border-rose-500/40'
+                }`}
+                title="Exclude all 55 Active Directory machines from results (show pure standalone Linux/Windows/Web boxes)"
+              >
+                <Ban className={`w-3.5 h-3.5 ${filters.excludeActiveDirectory ? 'text-rose-400' : 'text-cyber-muted'}`} />
+                <span>{filters.excludeActiveDirectory ? '🚫 NO AD (ACTIVE)' : '🚫 NO ACTIVE DIRECTORY'}</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 ml-0.5">
+                  {filters.excludeActiveDirectory ? `${categoryCounts['NON_AD_TOTAL'] || 0} left` : `-${categoryCounts['AD_TOTAL'] || 0}`}
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Vulnerability Archetype Category Filter Pills */}
+          <div className="flex items-center gap-2 flex-wrap pt-1 border-t border-cyber-border/40">
+            <span className="text-cyber-muted text-[10px] uppercase font-bold tracking-wider">VULNERABILITY CATEGORY:</span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {/* ALL Categories Pill */}
+              <button
+                type="button"
+                onClick={() => setFilters({ selectedVulnCategory: 'ALL', selectedCategory: 'ALL' })}
+                className={`px-2.5 py-1 rounded text-[11px] border transition-all flex items-center gap-1 font-semibold ${
+                  (filters.selectedVulnCategory === 'ALL' || !filters.selectedVulnCategory) && (filters.selectedCategory === 'ALL' || !filters.selectedCategory)
+                    ? 'bg-cyber-card text-white border-cyber-cyan shadow-glow-cyan/20 font-bold'
+                    : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-borderGlow'
+                }`}
+              >
+                <span>All Categories</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyber-bg border border-cyber-border text-cyber-muted ml-0.5">
+                  {machines.length}
+                </span>
+              </button>
+
+              {/* Specific Vulnerability Pills */}
+              {VULN_CATEGORIES.map((cat) => {
+                const isActive = (filters.selectedVulnCategory === cat.id) || (filters.selectedCategory === cat.id);
+                const count = categoryCounts[cat.id] || 0;
                 return (
                   <button
-                    key={vec}
-                    onClick={() => setFilters({ selectedCategory: vec })}
-                    className={`px-2.5 py-1 rounded text-[11px] border transition-all flex items-center gap-1.5 ${
+                    key={cat.id}
+                    type="button"
+                    onClick={() => {
+                      if (isActive) {
+                        setFilters({ selectedVulnCategory: 'ALL', selectedCategory: 'ALL' });
+                      } else {
+                        const updates: Partial<FilterState> = {
+                          selectedVulnCategory: cat.id,
+                          selectedCategory: 'ALL',
+                        };
+                        if (cat.id === 'Active Directory' && filters.excludeActiveDirectory) {
+                          updates.excludeActiveDirectory = false;
+                        }
+                        setFilters(updates);
+                      }
+                      if (soundEnabled) playCyberSound('click');
+                    }}
+                    className={`px-2 py-0.5 rounded text-[11px] border font-mono transition-all flex items-center gap-1 ${
                       isActive
-                        ? 'bg-cyber-card text-white border-cyber-cyan shadow-glow-cyan/20 font-bold'
+                        ? `${cat.badgeColor} ${cat.borderColor} shadow-sm font-bold ring-1`
                         : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-borderGlow'
                     }`}
+                    title={`Filter by ${cat.label}`}
                   >
-                    {vec === 'Web' && <Globe className="w-3 h-3 text-cyber-cyan" />}
-                    {vec === 'Linux PrivEsc' && <Terminal className="w-3 h-3 text-cyber-crimson" />}
-                    {vec === 'Windows PrivEsc' && <Layers className="w-3 h-3 text-blue-400" />}
-                    {vec === 'Active Directory' && <Cpu className="w-3 h-3 text-cyber-purple" />}
-                    {vec === 'Network / SMB' && <Key className="w-3 h-3 text-cyber-amber" />}
-                    {vec === 'Binary / Pwn' && <Sparkles className="w-3 h-3 text-cyber-crimson" />}
-                    <span>{vec === 'ALL' ? 'All Vectors' : vec}</span>
+                    <span>{cat.shortLabel}</span>
+                    <span className={`text-[9px] px-1 py-0.2 rounded ${isActive ? 'bg-black/30 text-white' : 'bg-cyber-card text-cyber-muted'}`}>
+                      {count}
+                    </span>
                   </button>
                 );
               })}
@@ -590,6 +731,34 @@ export const TrackerView: React.FC = () => {
                 </button>
               </span>
             ))}
+            {/* Active Category & Exclusion Filter Chips */}
+            {((filters.selectedVulnCategory && filters.selectedVulnCategory !== 'ALL') || (filters.selectedCategory && filters.selectedCategory !== 'ALL')) && (
+              <span className="flex items-center gap-1 px-2 py-0.5 rounded bg-cyber-cyan/10 border border-cyber-cyan/40 text-cyber-cyan text-[11px] font-mono">
+                <span>Category: <strong>{filters.selectedVulnCategory && filters.selectedVulnCategory !== 'ALL' ? filters.selectedVulnCategory : filters.selectedCategory}</strong></span>
+                <button
+                  type="button"
+                  onClick={() => setFilters({ selectedVulnCategory: 'ALL', selectedCategory: 'ALL' })}
+                  className="hover:text-cyber-crimson ml-0.5 font-bold"
+                  title="Clear category filter"
+                >
+                  ✕
+                </button>
+              </span>
+            )}
+
+            {filters.excludeActiveDirectory && (
+              <span className="flex items-center gap-1 px-2 py-0.5 rounded bg-rose-950/40 border border-rose-500/50 text-rose-300 text-[11px] font-mono font-bold">
+                <span>🚫 Excluded: Active Directory</span>
+                <button
+                  type="button"
+                  onClick={() => setFilters({ excludeActiveDirectory: false })}
+                  className="hover:text-cyber-crimson ml-0.5 font-bold"
+                  title="Remove AD exclusion"
+                >
+                  ✕
+                </button>
+              </span>
+            )}
           </div>
 
           <div className="flex items-center gap-3">

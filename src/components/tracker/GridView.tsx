@@ -18,6 +18,7 @@ import { formatDurationHuman, playCyberSound, triggerRootCelebration } from '../
 import { PlatformBadge } from '../common/PlatformBadge';
 import { OsBadge } from '../common/OsBadge';
 import { EditableIpBadge } from '../common/EditableIpBadge';
+import { CategoryBadge } from '../common/CategoryBadge';
 
 interface GridViewProps {
   filteredMachines: Machine[];
@@ -92,9 +93,10 @@ export const GridView: React.FC<GridViewProps> = ({ filteredMachines }) => {
             <div>
               {/* Header: Platform, OS, Difficulty */}
               <div className="flex items-center justify-between gap-1.5 mb-2.5">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 flex-wrap">
                   <PlatformBadge platform={m.platform} size="sm" />
                   <OsBadge os={m.os} size="xs" />
+                  <CategoryBadge machine={m} size="xs" />
                 </div>
 
                 <span

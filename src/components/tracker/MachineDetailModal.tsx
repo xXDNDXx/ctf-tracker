@@ -38,6 +38,8 @@ import { ChecklistWorkspace } from '../checklist/ChecklistWorkspace';
 import { PlatformBadge } from '../common/PlatformBadge';
 import { OsBadge } from '../common/OsBadge';
 import { EditableIpBadge } from '../common/EditableIpBadge';
+import { CategoryBadge } from '../common/CategoryBadge';
+import { classifyMachine, VULN_CATEGORIES } from '../../utils/categoryUtils';
 
 export const MachineDetailModal: React.FC = () => {
   const {
@@ -211,10 +213,11 @@ During the security assessment of target host ${machine.name} (${machine.ip}), s
         {/* Modal Header (Pinned at Top) */}
         <div className="flex-shrink-0 flex items-start justify-between border-b border-cyber-border p-3.5 sm:p-4 bg-cyber-bg/95 backdrop-blur-sm">
           <div>
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2.5 flex-wrap">
               <PlatformBadge platform={machine.platform} size="md" />
               <h2 className="text-xl font-bold text-white tracking-wide">{machine.name}</h2>
               <OsBadge os={machine.os} size="sm" />
+              <CategoryBadge machine={machine} size="sm" />
               <span className={`text-xs px-2 py-0.5 rounded font-bold ${
                 machine.difficulty === 'Easy' ? 'bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30' :
                 machine.difficulty === 'Medium' ? 'bg-cyber-amber/10 text-cyber-amber border border-cyber-amber/30' :
@@ -957,17 +960,41 @@ During the security assessment of target host ${machine.name} (${machine.ip}), s
             </div>
           </div>
 
-          {/* Section 6: Attack Vectors & Tags */}
-          <div>
-            <div className="text-[10px] uppercase font-bold tracking-wider text-cyber-muted mb-2 flex items-center gap-1.5">
-              <Tag className="w-3.5 h-3.5 text-cyber-cyan" /> ATTACK VECTORS & TAGS
+          {/* Section 6: Identified Vulnerability Archetypes & Tags */}
+          <div className="space-y-4">
+            <div>
+              <div className="text-[10px] uppercase font-bold tracking-wider text-cyber-muted mb-2 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-cyber-purple" /> IDENTIFIED VULNERABILITY ARCHETYPES
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {classifyMachine(machine).categories.length > 0 ? (
+                  classifyMachine(machine).categories.map((catId) => {
+                    const catDef = VULN_CATEGORIES.find((c) => c.id === catId);
+                    return (
+                      <span
+                        key={catId}
+                        className={`px-2.5 py-1 rounded text-xs font-mono font-bold border ${catDef?.badgeColor || 'bg-cyber-card border-cyber-border text-white'}`}
+                      >
+                        {catDef?.label || catId}
+                      </span>
+                    );
+                  })
+                ) : (
+                  <span className="text-xs text-cyber-muted italic">Standard Host Operations</span>
+                )}
+              </div>
             </div>
-            <div className="flex flex-wrap gap-1.5 mb-2">
-              {machine.tags.map((t) => (
-                <span
-                  key={t}
-                  className="px-2 py-0.5 rounded bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan text-[11px] flex items-center gap-1"
-                >
+
+            <div>
+              <div className="text-[10px] uppercase font-bold tracking-wider text-cyber-muted mb-2 flex items-center gap-1.5">
+                <Tag className="w-3.5 h-3.5 text-cyber-cyan" /> ATTACK VECTORS & TAGS
+              </div>
+              <div className="flex flex-wrap gap-1.5 mb-2">
+                {machine.tags.map((t) => (
+                  <span
+                    key={t}
+                    className="px-2 py-0.5 rounded bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan text-[11px] flex items-center gap-1"
+                  >
                   {t}
                   <button
                     onClick={() => handleRemoveTag(t)}
@@ -1002,6 +1029,7 @@ During the security assessment of target host ${machine.name} (${machine.ip}), s
             </div>
           </div>
         </div>
+      </div>
       )}
     </div>
 
