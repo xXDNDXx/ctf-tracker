@@ -56,6 +56,11 @@ iconFiles.forEach(file => {
     fs.copyFileSync(srcPub, path.join(distDir, file));
     fs.copyFileSync(srcPub, path.join(docsDir, file));
     fs.copyFileSync(srcPub, path.join(rootDir, file));
+    if (file === 'manifest.webmanifest') {
+      fs.copyFileSync(srcPub, path.join(distDir, 'assets', file));
+      fs.copyFileSync(srcPub, path.join(docsDir, 'assets', file));
+      fs.copyFileSync(srcPub, path.join(rootDir, 'assets', file));
+    }
   }
 });
 console.log('✓ Mirrored all icon and favicon variants across root, dist, and docs');

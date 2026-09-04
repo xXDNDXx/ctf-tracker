@@ -6,8 +6,15 @@ export default defineConfig({
   plugins: [react()],
   base: './',
   server: {
+    host: true,
     port: 3000,
     open: false,
+    watch: {
+      ignored: ['**/dist/**', '**/docs/**', '**/assets/**', '**/scratch/**'],
+    },
+  },
+  optimizeDeps: {
+    entries: ['index.html', 'src/**/*.{ts,tsx}'],
   },
   build: {
     outDir: 'dist',
