@@ -1,4 +1,4 @@
-name: Deploy SpecterCTF to GitHub Pages
+name: Deploy ZeroBox to GitHub Pages
 
 on:
   push:
