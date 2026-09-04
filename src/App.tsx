@@ -22,6 +22,7 @@ import { MachineDetailModal } from './components/tracker/MachineDetailModal';
 import { NewMachineModal } from './components/tracker/NewMachineModal';
 import { PentestReportModal } from './components/writeup/PentestReportModal';
 import { OperatorDossierModal } from './components/common/OperatorDossierModal';
+import { QuickAssignIpModal } from './components/common/QuickAssignIpModal';
 import { useCtfStore, mergeMachinesWithCatalog } from './store/useCtfStore';
 
 const ParallaxBackdrop: React.FC = () => {
@@ -123,6 +124,9 @@ const MainAppContent: React.FC = () => {
 
       {/* Deep Target Inspection Modal */}
       <MachineDetailModal />
+
+      {/* Quick Spawned Target IP Assignment Dialog */}
+      <QuickAssignIpModal />
 
       {/* Deploy Target Modal */}
       <NewMachineModal />

@@ -20,12 +20,14 @@ export const EditableIpBadge: React.FC<EditableIpBadgeProps> = ({
   className = '',
   onSaved,
 }) => {
-  const { updateMachine, soundEnabled } = useCtfStore();
+  const { updateMachine, setAssignIpMachineId, soundEnabled } = useCtfStore();
   const [isEditing, setIsEditing] = useState(false);
   const [ipValue, setIpValue] = useState(initialIp);
   const [copied, setCopied] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const isPlaceholder = !initialIp || initialIp.includes('x');
 
   useEffect(() => {
     setIpValue(initialIp);
@@ -42,6 +44,11 @@ export const EditableIpBadge: React.FC<EditableIpBadgeProps> = ({
     e.stopPropagation();
     setIsEditing(true);
     setIpValue(initialIp);
+  };
+
+  const handleOpenQuickModal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setAssignIpMachineId(machineId);
   };
 
   const handleCancel = (e?: React.MouseEvent) => {
@@ -152,6 +159,36 @@ export const EditableIpBadge: React.FC<EditableIpBadgeProps> = ({
     );
   }
 
+  if (isPlaceholder) {
+    return (
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className={`group/ip inline-flex items-center gap-1 font-mono ${sizeClasses.text} ${className}`}
+      >
+        {showLabel && <span className="text-cyber-muted text-[10px]">IP:</span>}
+        <div className="inline-flex items-center rounded border border-amber-500/50 bg-amber-500/10 shadow-[0_0_8px_rgba(245,158,11,0.2)] overflow-hidden">
+          <button
+            type="button"
+            onClick={handleOpenQuickModal}
+            className="inline-flex items-center gap-1.5 px-2 py-0.5 text-amber-300 hover:bg-amber-500/25 hover:text-white transition-all font-bold tracking-wide"
+            title="Dynamic spawned IP needed! Click to quickly assign spawned instance IP"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+            <span>SET IP {initialIp ? `(${initialIp})` : ''}</span>
+          </button>
+          <button
+            type="button"
+            onClick={handleStartEdit}
+            className="px-1.5 py-0.5 text-amber-400/70 hover:text-white hover:bg-amber-500/30 border-l border-amber-500/30 transition-colors"
+            title="Edit inline"
+          >
+            <Pencil className={sizeClasses.icon} />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       onClick={(e) => e.stopPropagation()}
@@ -170,8 +207,9 @@ export const EditableIpBadge: React.FC<EditableIpBadgeProps> = ({
       >
         <span
           onClick={handleCopy}
+          onDoubleClick={handleStartEdit}
           className="cursor-pointer font-bold select-all tracking-wide"
-          title="Click to copy IP"
+          title="Click to copy IP • Double-click to edit"
         >
           {initialIp}
         </span>

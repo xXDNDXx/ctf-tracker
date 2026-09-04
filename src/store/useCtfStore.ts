@@ -134,6 +134,8 @@ interface CtfStoreState {
   setReconAutomationModalOpen: (open: boolean) => void;
   setOperatorModalOpen: (open: boolean) => void;
   setMobileMenuOpen: (open: boolean) => void;
+  assignIpMachineId: string | null;
+  setAssignIpMachineId: (id: string | null) => void;
   toggleCrtOverlay: () => void;
   toggleSound: () => void;
   setUiScale: (scale: 'normal' | 'large' | 'huge') => void;
@@ -380,6 +382,7 @@ export const useCtfStore = create<CtfStoreState>()(
       reconAutomationModalOpen: false,
       operatorModalOpen: false,
       mobileMenuOpen: false,
+      assignIpMachineId: null,
       crtOverlay: false,
       soundEnabled: true,
       uiScale: 'normal',
@@ -399,6 +402,7 @@ export const useCtfStore = create<CtfStoreState>()(
       setReconAutomationModalOpen: (open) => set({ reconAutomationModalOpen: open }),
       setOperatorModalOpen: (open) => set({ operatorModalOpen: open }),
       setMobileMenuOpen: (open) => set({ mobileMenuOpen: open }),
+      setAssignIpMachineId: (id) => set({ assignIpMachineId: id }),
       toggleCrtOverlay: () => set((s) => ({ crtOverlay: !s.crtOverlay })),
       toggleSound: () => set((s) => ({ soundEnabled: !s.soundEnabled })),
       setUiScale: (scale) => set({ uiScale: scale }),
@@ -696,10 +700,12 @@ export const useCtfStore = create<CtfStoreState>()(
           }
 
           const m = updatedMachines.find((x) => x.id === id);
+          const isPlaceholderIp = Boolean(m && (!m.ip || m.ip.includes('x')));
           return {
             machines: updatedMachines,
             activeTargetId: id,
             activeTimerSeconds: m?.timeSpentSeconds || 0,
+            assignIpMachineId: isPlaceholderIp ? id : null,
             globalVars: {
               ...state.globalVars,
               targetIp: m?.ip && !m.ip.includes('x') ? m.ip : state.globalVars.targetIp,
@@ -745,16 +751,31 @@ export const useCtfStore = create<CtfStoreState>()(
       },
 
       setGlobalVars: (vars) => {
-        set((state) => ({
-          globalVars: {
+        set((state) => {
+          const newVars = {
             ...state.globalVars,
             ...vars,
             customVars: {
               ...state.globalVars.customVars,
               ...(vars.customVars || {}),
-            }
+            },
+          };
+
+          // Synchronize targetIp to active target machine in real-time!
+          let updatedMachines = state.machines;
+          if (vars.targetIp && state.activeTargetId) {
+            updatedMachines = state.machines.map((m) =>
+              m.id === state.activeTargetId
+                ? { ...m, ip: vars.targetIp!, updatedAt: new Date().toISOString() }
+                : m
+            );
           }
-        }));
+
+          return {
+            globalVars: newVars,
+            machines: updatedMachines,
+          };
+        });
       },
 
       addCustomCommand: (cmd) => {

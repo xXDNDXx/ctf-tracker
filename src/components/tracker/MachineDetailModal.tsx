@@ -60,6 +60,7 @@ export const MachineDetailModal: React.FC = () => {
     setReportMachineId,
     deleteMachine,
     setReconAutomationModalOpen,
+    setAssignIpMachineId,
   } = useCtfStore();
 
   const navigate = useNavigate();
@@ -225,6 +226,17 @@ During the security assessment of target host ${machine.name} (${machine.ip}), s
             </div>
             <div className="text-xs text-cyber-muted mt-1 flex flex-wrap items-center gap-3">
               <EditableIpBadge machineId={machine.id} initialIp={machine.ip} size="sm" showLabel />
+              {Boolean(machine.ip && machine.ip.includes('x')) && (
+                <button
+                  type="button"
+                  onClick={() => setAssignIpMachineId(machine.id)}
+                  className="px-2 py-0.5 rounded bg-cyber-amber/15 border border-cyber-amber/40 text-cyber-amber hover:bg-cyber-amber hover:text-black font-bold text-[10px] transition-all flex items-center gap-1 shadow-sm"
+                  title="Target has placeholder IP. Click to assign live spawned IP"
+                >
+                  <Crosshair className="w-3 h-3" />
+                  <span>Assign Spawned IP</span>
+                </button>
+              )}
               {machine.roomUrl && (
                 <a
                   href={machine.roomUrl}
