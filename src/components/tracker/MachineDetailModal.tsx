@@ -149,6 +149,7 @@ export const MachineDetailModal: React.FC = () => {
     setWriteupMachineId(machine.id);
     setSelectedMachineId(null);
     setActiveTab('writeup');
+    navigate(`/writeup/${machine.id}`);
   };
 
   const activeBrand = BRAND_THEMES.find((b) => b.id === appBrand) || BRAND_THEMES[0];
