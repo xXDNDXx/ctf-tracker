@@ -74,15 +74,21 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
   const centerX = 800;
   const centerY = 600;
 
-  // 1. Dynamic Intelligent Subnet Clustering:
-  // Distributes nodes evenly across tactical subnets based on the active dataset
+  // 1. Dynamic Context-Aware Subnet Clustering & Interleaved Anti-Collision Layout:
+  // Distributes nodes evenly across 5-6 tactical subnets with strict capacity bounds (max 8 nodes/subnet)
+  // and interleaved angular slots to permanently prevent edge lines from intersecting node badges.
   const { clusters, nodes } = useMemo(() => {
     // Limit to 48 nodes for peak 120 FPS performance
     const sample = filteredMachines.slice(0, 48);
+    if (sample.length === 0) return { clusters: [], nodes: [] };
 
     // Analyze machine distributions
     const hasOnlyWeb = sample.every(m => classifyMachine(m).primary.startsWith('Web'));
     const hasOnlyAd = sample.every(m => classifyMachine(m).isAD || m.os === 'Active Directory');
+    const thmCount = sample.filter(m => m.platform === 'THM').length;
+    const isMajorityThm = thmCount >= sample.length * 0.55;
+    const htbCount = sample.filter(m => m.platform === 'HTB').length;
+    const isMajorityHtb = htbCount >= sample.length * 0.55;
 
     // Base cluster templates
     type RawCluster = { id: string; name: string; color: string; matcher: (m: Machine) => boolean };
@@ -95,71 +101,108 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
         { id: 'web-sqli', name: 'DMZ [SQLi & Databases]', color: '#38BDF8', matcher: (m) => classifyMachine(m).categories.includes('SQLi') },
         { id: 'web-rce', name: 'DMZ [Command Exec / RCE]', color: '#EF4444', matcher: (m) => classifyMachine(m).categories.includes('RCE') },
         { id: 'web-lfi', name: 'DMZ [LFI & File Inclusion]', color: '#F59E0B', matcher: (m) => classifyMachine(m).categories.includes('LFI') || classifyMachine(m).categories.includes('SSRF') },
-        { id: 'web-htb-modern', name: '10.10.11.x [Modern HTB Web]', color: '#06B6D4', matcher: (m) => m.platform === 'HTB' && (m.ip.startsWith('10.10.11.') || !m.ip.startsWith('10.10.10.')) },
-        { id: 'web-htb-legacy', name: '10.10.10.x [Legacy HTB Web]', color: '#10B981', matcher: (m) => m.platform === 'HTB' && m.ip.startsWith('10.10.10.') },
-        { id: 'web-thm', name: '10.10.x.x [THM Web Labs]', color: '#A855F7', matcher: (m) => m.platform === 'THM' },
+        { id: 'web-auth', name: 'DMZ [Auth Bypass & XSS]', color: '#EAB308', matcher: (m) => classifyMachine(m).categories.includes('XSS') || (m.tags || []).some(t => /auth|jwt|bypass/i.test(t)) },
+        { id: 'web-modern', name: '10.10.11.x [Modern Web Apps]', color: '#06B6D4', matcher: (m) => m.ip.startsWith('10.10.11.') || m.platform === 'HTB' },
+        { id: 'web-labs', name: '10.10.x.x [Web Exploitation Labs]', color: '#A855F7', matcher: () => true },
       ];
     } else if (hasOnlyAd) {
       // Specialized Active Directory Subnets when filtered by ONLY AD
       clusterTemplates = [
-        { id: 'ad-dc', name: 'DC01.CORP [Domain Controllers]', color: '#A855F7', matcher: (m) => m.name.toLowerCase().includes('dc') || m.difficulty === 'Hard' || m.difficulty === 'Insane' },
-        { id: 'ad-kerberos', name: 'AUTH [Kerberoast & AS-REP]', color: '#EF4444', matcher: (m) => classifyMachine(m).categories.includes('Active Directory') && (m.tags.some(t => t.toLowerCase().includes('roast') || t.toLowerCase().includes('kerberos'))) },
-        { id: 'ad-pivots', name: '172.16.x.x [Internal Forests]', color: '#F59E0B', matcher: (m) => m.ip.startsWith('172.') || m.tags.some(t => t.toLowerCase().includes('pivot')) },
+        { id: 'ad-dc', name: 'DC01.CORP [Domain Controllers]', color: '#A855F7', matcher: (m) => /dc/i.test(m.name) || m.difficulty === 'Hard' || m.difficulty === 'Insane' },
+        { id: 'ad-kerberos', name: 'AUTH [Kerberoast & AS-REP]', color: '#EF4444', matcher: (m) => (m.tags || []).some(t => /roast|kerberos/i.test(t)) },
+        { id: 'ad-pivots', name: '172.16.x.x [Internal Forests]', color: '#F59E0B', matcher: (m) => m.ip.startsWith('172.') || (m.tags || []).some(t => /pivot/i.test(t)) },
         { id: 'ad-htb', name: '10.10.x.x [HTB AD Domains]', color: '#06B6D4', matcher: (m) => m.platform === 'HTB' },
         { id: 'ad-thm', name: '10.10.x.x [THM AD Labs]', color: '#10B981', matcher: (m) => m.platform === 'THM' },
+        { id: 'ad-general', name: 'CORP.LOCAL [Active Directory]', color: '#38BDF8', matcher: () => true },
+      ];
+    } else if (isMajorityThm) {
+      // Specialized Subnets for THM Platform Focus
+      clusterTemplates = [
+        { id: 'thm-sqli', name: '10.10.x.x [THM Web Surface & DB]', color: '#38BDF8', matcher: (m) => classifyMachine(m).categories.includes('SQLi') || (m.tags || []).some(t => /web|sqli/i.test(t)) },
+        { id: 'thm-rce', name: '10.10.x.x [THM Code Exec & RCE]', color: '#EF4444', matcher: (m) => classifyMachine(m).categories.includes('RCE') || (m.tags || []).some(t => /command|upload|rce/i.test(t)) },
+        { id: 'thm-lfi', name: '10.10.x.x [THM File & Auth Vectors]', color: '#F59E0B', matcher: (m) => classifyMachine(m).categories.includes('LFI') || (m.tags || []).some(t => /lfi|bypass/i.test(t)) },
+        { id: 'thm-privesc', name: '10.10.x.x [THM Linux PrivEsc]', color: '#10B981', matcher: (m) => classifyMachine(m).categories.includes('Linux PrivEsc') || (m.tags || []).some(t => /privesc|suid/i.test(t)) },
+        { id: 'thm-windows', name: '10.10.x.x [THM Windows & AD Labs]', color: '#A855F7', matcher: (m) => m.os === 'Windows' || classifyMachine(m).isAD },
+        { id: 'thm-network', name: '10.10.x.x [THM Network Services]', color: '#06B6D4', matcher: () => true },
+      ];
+    } else if (isMajorityHtb) {
+      // Specialized Subnets for HTB Platform Focus
+      clusterTemplates = [
+        { id: 'htb-early', name: '10.10.10.x [HTB Legacy]', color: '#10B981', matcher: (m) => m.ip.startsWith('10.10.10.') || m.difficulty === 'Easy' },
+        { id: 'htb-modern', name: '10.10.11.x [HTB Seasons]', color: '#06B6D4', matcher: (m) => m.ip.startsWith('10.10.11.') || m.difficulty === 'Medium' },
+        { id: 'htb-hard', name: '10.129.x.x [HTB Enterprise & Hard]', color: '#EF4444', matcher: (m) => m.difficulty === 'Hard' || m.difficulty === 'Insane' },
+        { id: 'web-perimeter', name: 'DMZ [Web Surface]', color: '#38BDF8', matcher: (m) => classifyMachine(m).primary.startsWith('Web') },
+        { id: 'ad-forest', name: 'CORP.LOCAL [Active Directory]', color: '#A855F7', matcher: (m) => m.os === 'Active Directory' || classifyMachine(m).isAD },
+        { id: 'internal-lab', name: '192.168.x.x [Internal Pivots]', color: '#F59E0B', matcher: () => true },
       ];
     } else {
-      // General CTF Network Attack Topology
+      // General Multi-Platform CTF Network Attack Topology
       clusterTemplates = [
-        { id: 'htb-early', name: '10.10.10.x [HTB Legacy]', color: '#10B981', matcher: (m) => m.platform === 'HTB' && (m.ip.startsWith('10.10.10.') || m.difficulty === 'Easy') },
         { id: 'web-perimeter', name: 'DMZ [Web Surface]', color: '#38BDF8', matcher: (m) => classifyMachine(m).primary.startsWith('Web') },
+        { id: 'htb-early', name: '10.10.10.x [HTB Legacy]', color: '#10B981', matcher: (m) => m.platform === 'HTB' && (m.ip.startsWith('10.10.10.') || m.difficulty === 'Easy') },
         { id: 'htb-modern', name: '10.10.11.x [HTB Seasons]', color: '#06B6D4', matcher: (m) => m.platform === 'HTB' },
         { id: 'thm-network', name: '10.10.x.x [THM Labs]', color: '#EF4444', matcher: (m) => m.platform === 'THM' },
         { id: 'ad-forest', name: 'CORP.LOCAL [Active Directory]', color: '#A855F7', matcher: (m) => m.os === 'Active Directory' || classifyMachine(m).isAD },
-        { id: 'internal-lab', name: '192.168.x.x [Internal Pivots]', color: '#F59E0B', matcher: (m) => m.platform === 'VulnHub' || m.isCustom || m.ip.startsWith('192.168.') },
+        { id: 'internal-lab', name: '192.168.x.x [Internal Pivots]', color: '#F59E0B', matcher: () => true },
       ];
     }
 
-    // Partition machines into candidate buckets
-    const assignedMachines = new Set<string>();
+    // Capacity-bounded partitioning (max 8 nodes per subnet to prevent crowding)
+    const MAX_CAPACITY = 8;
     const bucketMap: Record<string, Machine[]> = {};
     clusterTemplates.forEach(ct => { bucketMap[ct.id] = []; });
+    const unassigned: Machine[] = [];
 
-    // Pass 1: Strict matching
+    // Pass 1: Strict matching with capacity ceiling
     sample.forEach(m => {
+      let placed = false;
       for (const ct of clusterTemplates) {
-        if (ct.matcher(m)) {
+        if (ct.matcher(m) && bucketMap[ct.id].length < MAX_CAPACITY) {
           bucketMap[ct.id].push(m);
-          assignedMachines.add(m.id);
+          placed = true;
           break;
         }
       }
+      if (!placed) unassigned.push(m);
     });
 
-    // Pass 2: Unmatched fallback distribution to smallest bucket
-    sample.forEach(m => {
-      if (!assignedMachines.has(m.id)) {
-        let minBucket = clusterTemplates[0].id;
-        let minSize = bucketMap[minBucket]?.length || 0;
-        for (const ct of clusterTemplates) {
-          const sz = bucketMap[ct.id]?.length || 0;
-          if (sz < minSize) {
-            minSize = sz;
-            minBucket = ct.id;
-          }
-        }
-        bucketMap[minBucket].push(m);
-        assignedMachines.add(m.id);
+    // Pass 2: Distribute unassigned to available buckets with capacity
+    unassigned.forEach(m => {
+      const eligible = clusterTemplates.filter(ct => bucketMap[ct.id].length < MAX_CAPACITY);
+      if (eligible.length > 0) {
+        eligible.sort((a, b) => bucketMap[a.id].length - bucketMap[b.id].length);
+        bucketMap[eligible[0].id].push(m);
+      } else {
+        // Fallback: add to absolute smallest
+        const smallest = clusterTemplates.reduce((prev, curr) => 
+          bucketMap[curr.id].length < bucketMap[prev.id].length ? curr : prev
+        );
+        bucketMap[smallest.id].push(m);
       }
     });
 
-    // Only keep clusters that actually have nodes
-    const activeClusterTemplates = clusterTemplates.filter(ct => (bucketMap[ct.id] || []).length > 0);
-    const activeCount = Math.max(1, activeClusterTemplates.length);
+    // Pass 3: Active Subnet Rebalancing (ensure at least 4-5 active subnets when sample >= 15)
+    let activeTemplates = clusterTemplates.filter(ct => (bucketMap[ct.id] || []).length > 0);
+    if (activeTemplates.length < 5 && sample.length >= 15) {
+      const emptyTemplates = clusterTemplates.filter(ct => (bucketMap[ct.id] || []).length === 0);
+      for (const emptyCt of emptyTemplates) {
+        const largest = activeTemplates.reduce((prev, curr) => 
+          bucketMap[curr.id].length > bucketMap[prev.id].length ? curr : prev
+        );
+        if (bucketMap[largest.id].length >= 6) {
+          const moveCount = Math.floor(bucketMap[largest.id].length / 2);
+          const moved = bucketMap[largest.id].splice(-moveCount, moveCount);
+          bucketMap[emptyCt.id].push(...moved);
+          activeTemplates = clusterTemplates.filter(ct => (bucketMap[ct.id] || []).length > 0);
+          if (activeTemplates.length >= 5) break;
+        }
+      }
+    }
 
-    // Compute equidistant angles around 360 degrees
-    // Start at -PI/2 (top) and step around evenly
-    const activeClusters: ClusterDef[] = activeClusterTemplates.map((ct, idx) => {
+    const activeCount = Math.max(1, activeTemplates.length);
+
+    // Equidistant 360-degree radial placement around central Operator Rig
+    const activeClusters: ClusterDef[] = activeTemplates.map((ct, idx) => {
       const angle = -Math.PI / 2 + (idx * 2 * Math.PI) / activeCount;
       return {
         id: ct.id,
@@ -170,51 +213,93 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
       };
     });
 
-    // Multi-tier concentric fanning parameters
-    const tiers = [
-      { cap: 4, dist: 110, arc: Math.PI * 0.44 },
-      { cap: 6, dist: 190, arc: Math.PI * 0.58 },
-      { cap: 8, dist: 270, arc: Math.PI * 0.70 },
-      { cap: 10, dist: 350, arc: Math.PI * 0.82 },
-    ];
-
     const initialNodes: GraphNode[] = [];
 
+    // Interleaved 2-Tier Radial Fan:
+    // Tier 1: Inner ring (R = 115px), up to 3 nodes
+    // Tier 2: Outer ring (R = 205px), remaining nodes
+    // Outer nodes are offset to interleave with inner nodes, eliminating line crossing!
     activeClusters.forEach(cluster => {
       const machinesInCluster = bucketMap[cluster.id] || [];
       const clusterBaseX = centerX + Math.cos(cluster.angle) * cluster.radius;
       const clusterBaseY = centerY + Math.sin(cluster.angle) * cluster.radius;
+      const count = machinesInCluster.length;
+      if (count === 0) return;
 
-      let processedCount = 0;
-      for (const tier of tiers) {
-        const tierMachines = machinesInCluster.slice(processedCount, processedCount + tier.cap);
-        if (tierMachines.length === 0) break;
-        processedCount += tierMachines.length;
+      let nTier1 = Math.min(count, 3);
+      if (count === 4) nTier1 = 2; // 2 in tier 1, 2 in tier 2
+      else if (count === 5) nTier1 = 2; // 2 in tier 1, 3 in tier 2
+      const nTier2 = count - nTier1;
 
-        const count = tierMachines.length;
-        tierMachines.forEach((m, idxInTier) => {
-          let fanAngle = cluster.angle;
-          if (count > 1) {
-            fanAngle = (cluster.angle - tier.arc / 2) + (idxInTier / (count - 1)) * tier.arc;
-          }
-          const x = clusterBaseX + Math.cos(fanAngle) * tier.dist;
-          const y = clusterBaseY + Math.sin(fanAngle) * tier.dist;
-
-          initialNodes.push({
-            id: m.id,
-            name: m.name,
-            ip: m.ip,
-            os: m.os,
-            platform: m.platform,
-            difficulty: m.difficulty,
-            status: m.status,
-            cluster: cluster.id,
-            x,
-            y,
-            machine: m,
-          });
-        });
+      // Tier 1 angular offsets
+      let tier1Offsets: number[] = [0];
+      if (nTier1 === 2) {
+        tier1Offsets = [-0.28, 0.28];
+      } else if (nTier1 === 3) {
+        tier1Offsets = [-0.38, 0, 0.38];
       }
+
+      // Tier 2 angular offsets (interleaved into gaps between Tier 1)
+      let tier2Offsets: number[] = [];
+      if (nTier2 === 1) {
+        tier2Offsets = nTier1 === 2 ? [0] : [0.44];
+      } else if (nTier2 === 2) {
+        tier2Offsets = nTier1 === 3 ? [-0.20, 0.20] : [-0.48, 0.48];
+      } else if (nTier2 === 3) {
+        tier2Offsets = nTier1 === 2 ? [-0.46, 0, 0.46] : [-0.54, 0.19, 0.54];
+      } else if (nTier2 === 4) {
+        tier2Offsets = [-0.54, -0.18, 0.18, 0.54];
+      } else if (nTier2 >= 5) {
+        tier2Offsets = [-0.58, -0.22, 0, 0.22, 0.58];
+      }
+
+      // Position Tier 1 nodes
+      const tier1Machines = machinesInCluster.slice(0, nTier1);
+      tier1Machines.forEach((m, idx) => {
+        const offset = tier1Offsets[idx] !== undefined ? tier1Offsets[idx] : 0;
+        const fanAngle = cluster.angle + offset;
+        const dist = 115;
+        const x = clusterBaseX + Math.cos(fanAngle) * dist;
+        const y = clusterBaseY + Math.sin(fanAngle) * dist;
+
+        initialNodes.push({
+          id: m.id,
+          name: m.name,
+          ip: m.ip,
+          os: m.os,
+          platform: m.platform,
+          difficulty: m.difficulty,
+          status: m.status,
+          cluster: cluster.id,
+          x,
+          y,
+          machine: m,
+        });
+      });
+
+      // Position Tier 2 nodes
+      const tier2Machines = machinesInCluster.slice(nTier1);
+      tier2Machines.forEach((m, idx) => {
+        const offset = tier2Offsets[idx] !== undefined ? tier2Offsets[idx] : 0;
+        const fanAngle = cluster.angle + offset;
+        const dist = 205;
+        const x = clusterBaseX + Math.cos(fanAngle) * dist;
+        const y = clusterBaseY + Math.sin(fanAngle) * dist;
+
+        initialNodes.push({
+          id: m.id,
+          name: m.name,
+          ip: m.ip,
+          os: m.os,
+          platform: m.platform,
+          difficulty: m.difficulty,
+          status: m.status,
+          cluster: cluster.id,
+          x,
+          y,
+          machine: m,
+        });
+      });
     });
 
     // 2. 50-iteration Elliptical Bounding-Box Force Relaxation Pass
@@ -386,7 +471,7 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
             BLOODHOUND // NETWORK ATTACK GRAPH
           </span>
           <span className="text-[10px] text-cyber-cyan font-bold px-2 py-0.5 rounded bg-cyber-cyan/10 border border-cyber-cyan/30">
-            {nodes.length} NODES
+            {filteredMachines.length > nodes.length ? `${nodes.length} / ${filteredMachines.length} NODES` : `${nodes.length} NODES`}
           </span>
           <span className="text-[10px] text-purple-400 font-bold px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/30">
             {clusters.length} SUBNETS
@@ -614,8 +699,10 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
                       stroke="#06B6D4"
                       strokeWidth="2"
                       strokeDasharray="6 3"
-                      className="animate-spin-slow pointer-events-none"
-                    />
+                      className="pointer-events-none"
+                    >
+                      <animate attributeName="stroke-dashoffset" values="0;18" dur="1.8s" repeatCount="indefinite" />
+                    </circle>
                     <circle
                       cx={node.x}
                       cy={node.y}
@@ -629,22 +716,25 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
                   </>
                 )}
 
-                {/* Outer Ping Glow for Rooted */}
+                {/* Outer Pulse Glow for Rooted (Native SVG attribute animation to permanently prevent phantom circle drift) */}
                 {isRooted && (
                   <circle
                     cx={node.x}
                     cy={node.y}
-                    r="20"
+                    r="18"
                     fill="none"
                     stroke="#10B981"
                     strokeWidth="1.5"
-                    opacity="0.4"
-                    className="animate-ping pointer-events-none"
-                  />
+                    opacity="0.6"
+                    className="pointer-events-none"
+                  >
+                    <animate attributeName="r" values="18;25;18" dur="2.4s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.7;0.15;0.7" dur="2.4s" repeatCount="indefinite" />
+                  </circle>
                 )}
 
-                {/* Invisible Stable Hit Target */}
-                <circle cx={node.x} cy={node.y} r="22" fill="transparent" className="cursor-pointer" />
+                {/* Invisible Stable Hit Target over Node Circle */}
+                <circle cx={node.x} cy={node.y} r="24" fill="#000000" opacity="0.001" pointerEvents="all" className="cursor-pointer" />
 
                 {/* Node Body Circle */}
                 <circle
@@ -677,7 +767,8 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
                   fillOpacity="0.94"
                   stroke={isSelected ? '#06B6D4' : isHovered ? '#FFFFFF' : 'rgba(6,182,212,0.28)'}
                   strokeWidth={isSelected ? '1.8' : isHovered ? '1.2' : '0.8'}
-                  className="pointer-events-none"
+                  pointerEvents="all"
+                  className="cursor-pointer"
                 />
 
                 {/* Target Name */}
