@@ -5,10 +5,11 @@
 
 [![Open Tracker](https://img.shields.io/badge/-%20LAUNCH%20ZEROBOX%20-10B981?style=for-the-badge&labelColor=0B0F19)](https://xXDNDXx.github.io/ctf-tracker/)
 [![Live on GitHub Pages](https://img.shields.io/badge/Live_on-GitHub_Pages-181717?style=flat-square&logo=github)](https://xXDNDXx.github.io/ctf-tracker/)
-[![Tech Stack](https://img.shields.io/badge/Built%20With-React%2018%20%7C%20TypeScript%20%7C%20Tailwind-06B6D4?style=flat-square)](#tech-stack)
-[![License](https://img.shields.io/badge/License-MIT-EF4444?style=flat-square)](LICENSE)
+[![Creator](https://img.shields.io/badge/Creator-Daniel%20Dayan%20(@xXDNDXx)-10B981?style=flat-square&logo=github)](https://xXDNDXx.github.io/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Daniel%20Dayan-0077B5?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/daniel-dayan-a66322352/)
+[![License](https://img.shields.io/badge/License-Non--Commercial%20(ZNSL--1.0)-F59E0B?style=flat-square&logo=shield)](LICENSE)
 
-*940+ Machines · 5-Stage Attack Pipeline · Live Parameter Injection · Obsidian Writeup Studio · Skill Radar*
+*945 Machines · Daniel Dayan's 63 Pwns · 414 Obsidian Notes · 1,574 Cmds · 5-Stage Pipeline · Attack Graph*
 
 </div>
 
@@ -105,19 +106,38 @@ npm run preview
 
 ---
 
-## 🔗 Author & Community Links
+## 👨‍💻 Creator & System Architect
 
-Built with precision by **DANIEL** ([@xXDNDXx](https://github.com/xXDNDXx))
+**ZeroBox** is designed, engineered, and maintained by **Daniel Dayan** ([@xXDNDXx](https://github.com/xXDNDXx)) — Cybersecurity Researcher, Penetration Tester, and Offensive Security Architect.
 
-| Link | Destination |
-|---|---|
-| 🧑‍🚀 Portfolio | <https://xXDNDXx.github.io/> |
-| 📝 CTF Write-ups | <https://xxdndxx.gitbook.io/thm-writeups/> |
-| 💻 GitHub Profile | <https://github.com/xXDNDXx> |
-| 💼 LinkedIn | <https://www.linkedin.com/in/daniel-dayan-a66322352/> |
+<div align="center">
+
+| Channel | Identifier | Link |
+|:---|:---|:---|
+| 🌐 **Official Portfolio** | `Daniel Dayan Security & Research` | [**xXDNDXx.github.io**](https://xXDNDXx.github.io/) |
+| 💼 **LinkedIn Profile** | `daniel-dayan-a66322352` | [**Connect on LinkedIn**](https://www.linkedin.com/in/daniel-dayan-a66322352/) |
+| 💻 **GitHub Repositories** | `@xXDNDXx` | [**Follow on GitHub**](https://github.com/xXDNDXx) |
+| 📝 **CTF Write-ups & Docs** | `THM & HTB Research Vault` | [**Read GitBook Writeups**](https://xxdndxx.gitbook.io/thm-writeups/) |
+
+</div>
 
 ---
 
-## 📜 License
-MIT License. Created for the cybersecurity and CTF community.
+## ⚖️ License & Intellectual Property Protection
+
+ZeroBox is released under the **ZeroBox Source-Available Non-Commercial & Educational License (ZNSL 1.0)**.  
+Copyright © 2026 **Daniel Dayan** (`@xXDNDXx`). All Rights Reserved.
+
+### Summary of Terms:
+
+| Permission / Restriction | Status | Details |
+|:---|:---:|:---|
+| **Personal & Educational Use** | ✅ **ALLOWED** | You may inspect, clone, build, and use ZeroBox locally for individual study, practice labs, and CTF preparation. |
+| **Commercial Exploitation** | ❌ **FORBIDDEN** | You may **NOT** sell, rent, monetize, sub-license, or charge fees for this platform or any portion thereof. |
+| **Public Re-Publishing / SaaS** | ❌ **FORBIDDEN** | You may **NOT** host a public web instance, re-publish, or distribute modified copies under your name without written consent. |
+| **Course Bundling / Paid Training** | ❌ **FORBIDDEN** | You may **NOT** include ZeroBox in any paid course, bootcamp, or commercial subscription service. |
+| **Attribution Requirement** | ⚠️ **MANDATORY** | All permitted educational mentions or references must prominently cite **Daniel Dayan** ([xXDNDXx.github.io](https://xXDNDXx.github.io/)). |
+
+For the full legal text, see the official [**LICENSE**](LICENSE) file.
+
 

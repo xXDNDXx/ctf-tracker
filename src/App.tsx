@@ -16,6 +16,7 @@ import { MachineDetailModal } from './components/tracker/MachineDetailModal';
 import { NewMachineModal } from './components/tracker/NewMachineModal';
 import { PentestReportModal } from './components/writeup/PentestReportModal';
 import { OperatorDossierModal } from './components/common/OperatorDossierModal';
+import { LicenseModal } from './components/common/LicenseModal';
 import { QuickAssignIpModal } from './components/common/QuickAssignIpModal';
 import { KeyboardShortcutsModal } from './components/common/KeyboardShortcutsModal';
 import { useTacticalHotkeys } from './hooks/useTacticalHotkeys';
@@ -177,6 +178,9 @@ const MainAppContent: React.FC = () => {
 
       {/* Operator & Creator Classified Dossier Modal */}
       <OperatorDossierModal />
+
+      {/* ZeroBox Legal & Non-Commercial License Modal */}
+      <LicenseModal />
 
       {/* Tactical Keyboard Shortcuts & Hotkeys Modal */}
       <KeyboardShortcutsModal />

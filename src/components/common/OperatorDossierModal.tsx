@@ -12,13 +12,26 @@ import {
   CheckCircle2, 
   Sparkles,
   Zap,
-  Target
+  Target,
+  Scale,
+  Copy,
+  Check
 } from 'lucide-react';
 import { useCtfStore } from '../../store/useCtfStore';
-import { playCyberSound } from '../../utils/helpers';
+import { playCyberSound, safeCopyToClipboard } from '../../utils/helpers';
 
 export const OperatorDossierModal: React.FC = () => {
-  const { operatorModalOpen, setOperatorModalOpen, soundEnabled } = useCtfStore();
+  const { operatorModalOpen, setOperatorModalOpen, setLicenseModalOpen, soundEnabled } = useCtfStore();
+  const [copiedField, setCopiedField] = React.useState<string | null>(null);
+
+  const handleCopyLink = async (e: React.MouseEvent, url: string, field: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    await safeCopyToClipboard(url);
+    setCopiedField(field);
+    if (soundEnabled) playCyberSound('copy');
+    setTimeout(() => setCopiedField(null), 2000);
+  };
 
   useEffect(() => {
     if (operatorModalOpen) {
@@ -153,80 +166,116 @@ export const OperatorDossierModal: React.FC = () => {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {/* Portfolio */}
-              <a
-                href={links.portfolio}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 rounded-xl bg-cyber-card hover:bg-cyber-card/80 border border-cyber-border hover:border-cyber-emerald transition-all group flex items-center justify-between"
-              >
-                <div className="flex items-center gap-3 min-w-0">
+              <div className="p-3 rounded-xl bg-cyber-card hover:bg-cyber-card/80 border border-cyber-border hover:border-cyber-emerald transition-all group flex items-center justify-between">
+                <a
+                  href={links.portfolio}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 min-w-0 flex-1 mr-2"
+                >
                   <div className="w-8 h-8 rounded-lg bg-cyber-emerald/15 border border-cyber-emerald/40 flex items-center justify-center text-cyber-emerald group-hover:scale-110 transition-transform">
                     <Globe className="w-4 h-4" />
                   </div>
                   <div className="truncate">
-                    <div className="font-bold text-white group-hover:text-cyber-emerald transition-colors">Portfolio Website</div>
+                    <div className="font-bold text-white group-hover:text-cyber-emerald transition-colors flex items-center gap-1.5">
+                      <span>Portfolio Website</span>
+                      <ExternalLink className="w-3 h-3 text-cyber-muted opacity-60" />
+                    </div>
                     <div className="text-[10px] text-cyber-muted truncate">xXDNDXx.github.io</div>
                   </div>
-                </div>
-                <ExternalLink className="w-3.5 h-3.5 text-cyber-muted group-hover:text-cyber-emerald transition-colors flex-shrink-0" />
-              </a>
+                </a>
+                <button
+                  onClick={(e) => handleCopyLink(e, links.portfolio, 'portfolio')}
+                  className="p-1.5 rounded-lg bg-cyber-bg hover:bg-cyber-emerald/20 text-cyber-muted hover:text-cyber-emerald border border-cyber-border hover:border-cyber-emerald/50 transition-all flex-shrink-0"
+                  title="Copy portfolio URL"
+                >
+                  {copiedField === 'portfolio' ? <Check className="w-3.5 h-3.5 text-cyber-emerald" /> : <Copy className="w-3.5 h-3.5" />}
+                </button>
+              </div>
 
               {/* LinkedIn */}
-              <a
-                href={links.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 rounded-xl bg-cyber-card hover:bg-[#0077B5]/15 border border-cyber-border hover:border-[#0077B5] transition-all group flex items-center justify-between"
-              >
-                <div className="flex items-center gap-3 min-w-0">
+              <div className="p-3 rounded-xl bg-cyber-card hover:bg-[#0077B5]/10 border border-cyber-border hover:border-[#0077B5] transition-all group flex items-center justify-between">
+                <a
+                  href={links.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 min-w-0 flex-1 mr-2"
+                >
                   <div className="w-8 h-8 rounded-lg bg-[#0077B5]/20 border border-[#0077B5]/50 flex items-center justify-center text-[#0077B5] group-hover:scale-110 transition-transform">
                     <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.7a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2Z"/></svg>
                   </div>
                   <div className="truncate">
-                    <div className="font-bold text-white group-hover:text-[#0077B5] transition-colors">LinkedIn Profile</div>
+                    <div className="font-bold text-white group-hover:text-[#0077B5] transition-colors flex items-center gap-1.5">
+                      <span>LinkedIn Profile</span>
+                      <ExternalLink className="w-3 h-3 text-cyber-muted opacity-60" />
+                    </div>
                     <div className="text-[10px] text-cyber-muted truncate">daniel-dayan-a66322352</div>
                   </div>
-                </div>
-                <ExternalLink className="w-3.5 h-3.5 text-cyber-muted group-hover:text-[#0077B5] transition-colors flex-shrink-0" />
-              </a>
+                </a>
+                <button
+                  onClick={(e) => handleCopyLink(e, links.linkedin, 'linkedin')}
+                  className="p-1.5 rounded-lg bg-cyber-bg hover:bg-[#0077B5]/25 text-cyber-muted hover:text-[#0077B5] border border-cyber-border hover:border-[#0077B5]/50 transition-all flex-shrink-0"
+                  title="Copy LinkedIn URL"
+                >
+                  {copiedField === 'linkedin' ? <Check className="w-3.5 h-3.5 text-cyber-emerald" /> : <Copy className="w-3.5 h-3.5" />}
+                </button>
+              </div>
 
               {/* GitHub */}
-              <a
-                href={links.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 rounded-xl bg-cyber-card hover:bg-white/10 border border-cyber-border hover:border-white transition-all group flex items-center justify-between"
-              >
-                <div className="flex items-center gap-3 min-w-0">
+              <div className="p-3 rounded-xl bg-cyber-card hover:bg-white/5 border border-cyber-border hover:border-white transition-all group flex items-center justify-between">
+                <a
+                  href={links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 min-w-0 flex-1 mr-2"
+                >
                   <div className="w-8 h-8 rounded-lg bg-white/10 border border-white/30 flex items-center justify-center text-white group-hover:scale-110 transition-transform">
                     <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
                   </div>
                   <div className="truncate">
-                    <div className="font-bold text-white group-hover:text-white transition-colors">GitHub Repositories</div>
+                    <div className="font-bold text-white group-hover:text-white transition-colors flex items-center gap-1.5">
+                      <span>GitHub Repositories</span>
+                      <ExternalLink className="w-3 h-3 text-cyber-muted opacity-60" />
+                    </div>
                     <div className="text-[10px] text-cyber-muted truncate">github.com/xXDNDXx</div>
                   </div>
-                </div>
-                <ExternalLink className="w-3.5 h-3.5 text-cyber-muted group-hover:text-white transition-colors flex-shrink-0" />
-              </a>
+                </a>
+                <button
+                  onClick={(e) => handleCopyLink(e, links.github, 'github')}
+                  className="p-1.5 rounded-lg bg-cyber-bg hover:bg-white/20 text-cyber-muted hover:text-white border border-cyber-border hover:border-white/50 transition-all flex-shrink-0"
+                  title="Copy GitHub URL"
+                >
+                  {copiedField === 'github' ? <Check className="w-3.5 h-3.5 text-cyber-emerald" /> : <Copy className="w-3.5 h-3.5" />}
+                </button>
+              </div>
 
               {/* CTF Writeups */}
-              <a
-                href={links.writeups}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 rounded-xl bg-cyber-card hover:bg-cyber-cyan/15 border border-cyber-border hover:border-cyber-cyan transition-all group flex items-center justify-between"
-              >
-                <div className="flex items-center gap-3 min-w-0">
+              <div className="p-3 rounded-xl bg-cyber-card hover:bg-cyber-cyan/10 border border-cyber-border hover:border-cyber-cyan transition-all group flex items-center justify-between">
+                <a
+                  href={links.writeups}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 min-w-0 flex-1 mr-2"
+                >
                   <div className="w-8 h-8 rounded-lg bg-cyber-cyan/20 border border-cyber-cyan/50 flex items-center justify-center text-cyber-cyan group-hover:scale-110 transition-transform">
                     <BookOpen className="w-4 h-4" />
                   </div>
                   <div className="truncate">
-                    <div className="font-bold text-white group-hover:text-cyber-cyan transition-colors">CTF Write-ups</div>
+                    <div className="font-bold text-white group-hover:text-cyber-cyan transition-colors flex items-center gap-1.5">
+                      <span>CTF Write-ups</span>
+                      <ExternalLink className="w-3 h-3 text-cyber-muted opacity-60" />
+                    </div>
                     <div className="text-[10px] text-cyber-muted truncate">xxdndxx.gitbook.io</div>
                   </div>
-                </div>
-                <ExternalLink className="w-3.5 h-3.5 text-cyber-muted group-hover:text-cyber-cyan transition-colors flex-shrink-0" />
-              </a>
+                </a>
+                <button
+                  onClick={(e) => handleCopyLink(e, links.writeups, 'writeups')}
+                  className="p-1.5 rounded-lg bg-cyber-bg hover:bg-cyber-cyan/25 text-cyber-muted hover:text-cyber-cyan border border-cyber-border hover:border-cyber-cyan/50 transition-all flex-shrink-0"
+                  title="Copy GitBook writeups URL"
+                >
+                  {copiedField === 'writeups' ? <Check className="w-3.5 h-3.5 text-cyber-emerald" /> : <Copy className="w-3.5 h-3.5" />}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -270,6 +319,38 @@ export const OperatorDossierModal: React.FC = () => {
             </div>
           </div>
 
+          {/* Legal & Non-Commercial License Protection Covenant */}
+          <div className="p-4 rounded-xl bg-gradient-to-r from-cyber-amber/15 via-cyber-card to-cyber-bg border border-cyber-amber/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-[0_0_20px_rgba(245,158,11,0.1)]">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-xl bg-cyber-amber/20 border border-cyber-amber/50 flex items-center justify-center text-cyber-amber flex-shrink-0 mt-0.5 sm:mt-0">
+                <Scale className="w-4 h-4" />
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-white text-xs">NON-COMMERCIAL SOURCE-AVAILABLE LICENSE (ZNSL 1.0)</span>
+                  <span className="px-1.5 py-0.2 rounded text-[9px] font-black bg-cyber-amber/20 text-cyber-amber border border-cyber-amber/40">
+                    PROTECTED
+                  </span>
+                </div>
+                <p className="text-[11px] text-gray-300 leading-relaxed max-w-xl">
+                  ZeroBox is authored by Daniel Dayan for personal and educational research. Commercial exploitation, reselling, paid course bundling, or public re-hosting is strictly prohibited by law.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                setOperatorModalOpen(false);
+                setLicenseModalOpen(true);
+                if (soundEnabled) playCyberSound('click');
+              }}
+              className="w-full sm:w-auto px-3.5 py-2 rounded-xl text-xs font-bold bg-cyber-amber hover:bg-cyber-amber/90 text-black shadow-[0_0_12px_rgba(245,158,11,0.3)] transition-all flex items-center justify-center gap-1.5 flex-shrink-0"
+            >
+              <Scale className="w-3.5 h-3.5" />
+              <span>VIEW LICENSE</span>
+            </button>
+          </div>
+
         </div>
 
         {/* Footer Actions */}
@@ -279,6 +360,18 @@ export const OperatorDossierModal: React.FC = () => {
           </span>
 
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                setOperatorModalOpen(false);
+                setLicenseModalOpen(true);
+                if (soundEnabled) playCyberSound('click');
+              }}
+              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-cyber-amber/15 hover:bg-cyber-amber/25 text-cyber-amber border border-cyber-amber/40 transition-all flex items-center gap-1.5"
+            >
+              <Scale className="w-3.5 h-3.5" />
+              <span>License (ZNSL 1.0)</span>
+            </button>
+
             <a
               href={links.portfolio}
               target="_blank"

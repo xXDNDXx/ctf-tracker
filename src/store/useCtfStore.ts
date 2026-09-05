@@ -143,6 +143,8 @@ interface CtfStoreState {
   setBackupModalOpen: (open: boolean) => void;
   setReconAutomationModalOpen: (open: boolean) => void;
   setOperatorModalOpen: (open: boolean) => void;
+  licenseModalOpen: boolean;
+  setLicenseModalOpen: (open: boolean) => void;
   shortcutsModalOpen: boolean;
   setShortcutsModalOpen: (open: boolean) => void;
   setMobileMenuOpen: (open: boolean) => void;
@@ -397,6 +399,7 @@ export const useCtfStore = create<CtfStoreState>()(
       backupModalOpen: false,
       reconAutomationModalOpen: false,
       operatorModalOpen: false,
+      licenseModalOpen: false,
       shortcutsModalOpen: false,
       mobileMenuOpen: false,
       assignIpMachineId: null,
@@ -418,6 +421,7 @@ export const useCtfStore = create<CtfStoreState>()(
       setBackupModalOpen: (open) => set({ backupModalOpen: open }),
       setReconAutomationModalOpen: (open) => set({ reconAutomationModalOpen: open }),
       setOperatorModalOpen: (open) => set({ operatorModalOpen: open }),
+      setLicenseModalOpen: (open) => set({ licenseModalOpen: open }),
       setShortcutsModalOpen: (open) => set({ shortcutsModalOpen: open }),
       setMobileMenuOpen: (open) => set({ mobileMenuOpen: open }),
       setAssignIpMachineId: (id) => set({ assignIpMachineId: id }),
