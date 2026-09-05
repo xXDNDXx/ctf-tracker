@@ -28,7 +28,8 @@ import {
   Scale,
   Globe,
   ShieldCheck,
-  Award
+  Award,
+  X
 } from 'lucide-react';
 import { CyberLogo } from '../common/CyberLogo';
 import { PlatformIcon } from '../common/PlatformBadge';
@@ -55,9 +56,10 @@ const MissionStopwatchDisplay: React.FC = () => {
 
 const TargetSelectorDropdown: React.FC<{
   onClose: () => void;
-  onSelect: (id: string) => void;
+  onSelect: (id: string | null) => void;
   soundEnabled: boolean;
-}> = ({ onClose, onSelect, soundEnabled }) => {
+  activeTargetId?: string | null;
+}> = ({ onClose, onSelect, soundEnabled, activeTargetId }) => {
   const machines = useCtfStore((s) => s.machines);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -86,6 +88,20 @@ const TargetSelectorDropdown: React.FC<{
         className="w-full px-2.5 py-1.5 rounded bg-cyber-bg border border-cyber-border text-xs text-white placeholder-cyber-muted focus:outline-none focus:border-cyber-emerald"
         autoFocus
       />
+      {activeTargetId && (
+        <button
+          type="button"
+          onClick={() => {
+            onSelect(null);
+            onClose();
+            if (soundEnabled) playCyberSound('click');
+          }}
+          className="w-full p-1.5 rounded bg-cyber-crimson/10 border border-cyber-crimson/30 hover:bg-cyber-crimson/20 flex items-center justify-center gap-1.5 text-cyber-crimson text-[11px] font-bold transition-colors"
+        >
+          <X className="w-3 h-3" />
+          <span>DISENGAGE / CLOSE ACTIVE TARGET</span>
+        </button>
+      )}
       <div className="max-h-56 overflow-y-auto space-y-1 scrollbar-thin">
         {filtered.map((m) => (
           <button
@@ -517,7 +533,7 @@ export const Header: React.FC = () => {
       </div>
 
       {/* Tier 2: Tactical Operations Strip (Combat HUD, Automations, Add Box & Payload Vars) */}
-      <div className="w-full px-3 xl:px-5 py-1 bg-cyber-card/40 flex items-center justify-between gap-2 overflow-x-hidden text-xs font-mono">
+      <div className="w-full px-3 xl:px-5 py-1 bg-cyber-card/40 flex items-center justify-between gap-2 text-xs font-mono relative z-20">
         
         {/* Left: Active Target HUD / Quick Selector & Action Buttons */}
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -614,14 +630,40 @@ export const Header: React.FC = () => {
                 </button>
               </div>
 
-              {/* Switch Target Trigger */}
-              <button
-                onClick={() => setTargetSelectorOpen(!targetSelectorOpen)}
-                className="p-1 rounded hover:bg-cyber-bg text-cyber-muted hover:text-white transition-colors border-l border-cyber-border pl-1.5"
-                title="Switch Target Box"
-              >
-                <ChevronDown className="w-3 h-3" />
-              </button>
+              {/* Target Controls: Switch & Close/Disengage */}
+              <div className="flex items-center gap-0.5 border-l border-cyber-border pl-1">
+                <button
+                  onClick={() => setTargetSelectorOpen(!targetSelectorOpen)}
+                  className="p-1 rounded hover:bg-cyber-bg text-cyber-muted hover:text-white transition-colors"
+                  title="Switch Target Box"
+                  aria-label="Switch Target Box"
+                >
+                  <ChevronDown className={`w-3 h-3 transition-transform ${targetSelectorOpen ? 'rotate-180 text-cyber-cyan' : ''}`} />
+                </button>
+
+                <button
+                  onClick={() => {
+                    setActiveTarget(null);
+                    setTargetSelectorOpen(false);
+                    if (soundEnabled) playCyberSound('click');
+                  }}
+                  className="p-1 rounded hover:bg-cyber-crimson/20 hover:text-cyber-crimson text-cyber-muted transition-colors"
+                  title="Close / Disengage Active Target HUD"
+                  aria-label="Close active target"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+
+              {/* Target Selector Dropdown */}
+              {targetSelectorOpen && (
+                <TargetSelectorDropdown
+                  onClose={() => setTargetSelectorOpen(false)}
+                  onSelect={setActiveTarget}
+                  soundEnabled={soundEnabled}
+                  activeTargetId={activeTargetId}
+                />
+              )}
             </div>
           ) : (
             <div className="relative">
@@ -631,7 +673,7 @@ export const Header: React.FC = () => {
               >
                 <span className="w-2 h-2 rounded-full bg-cyber-muted group-hover:bg-cyber-cyan transition-colors" />
                 <span>ENGAGE TARGET</span>
-                <ChevronDown className="w-3 h-3 text-cyber-muted group-hover:text-cyber-cyan" />
+                <ChevronDown className={`w-3 h-3 text-cyber-muted group-hover:text-cyber-cyan transition-transform ${targetSelectorOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {/* Target Selector Dropdown */}
@@ -640,6 +682,7 @@ export const Header: React.FC = () => {
                   onClose={() => setTargetSelectorOpen(false)}
                   onSelect={setActiveTarget}
                   soundEnabled={soundEnabled}
+                  activeTargetId={activeTargetId}
                 />
               )}
             </div>

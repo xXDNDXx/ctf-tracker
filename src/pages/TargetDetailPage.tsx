@@ -19,7 +19,8 @@ import {
   Tag, 
   ListChecks, 
   AlertCircle,
-  Zap
+  Zap,
+  X
 } from 'lucide-react';
 import { useCtfStore } from '../store/useCtfStore';
 import { Difficulty, PipelineStatus } from '../types';
@@ -181,15 +182,28 @@ export const TargetDetailPage: React.FC = () => {
               {formatSeconds(isActiveTarget ? activeTimerSeconds : machine.timeSpentSeconds)}
             </span>
             {isActiveTarget ? (
-              isTimerRunning ? (
-                <button onClick={pauseTimer} className="p-1 text-cyber-amber hover:text-white" title="Pause">
-                  <Pause className="w-3.5 h-3.5" />
+              <div className="flex items-center gap-1">
+                {isTimerRunning ? (
+                  <button onClick={pauseTimer} className="p-1 text-cyber-amber hover:text-white" title="Pause">
+                    <Pause className="w-3.5 h-3.5" />
+                  </button>
+                ) : (
+                  <button onClick={startTimer} className="p-1 text-cyber-emerald hover:text-white" title="Resume">
+                    <Play className="w-3.5 h-3.5" />
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    setActiveTarget(null);
+                    if (soundEnabled) playCyberSound('click');
+                  }}
+                  className="p-1 text-cyber-muted hover:text-cyber-crimson transition-colors"
+                  title="Disengage Active Target"
+                  aria-label="Disengage active target"
+                >
+                  <X className="w-3.5 h-3.5" />
                 </button>
-              ) : (
-                <button onClick={startTimer} className="p-1 text-cyber-emerald hover:text-white" title="Resume">
-                  <Play className="w-3.5 h-3.5" />
-                </button>
-              )
+              </div>
             ) : (
               <button
                 onClick={() => {
