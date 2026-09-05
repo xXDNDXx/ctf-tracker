@@ -21,11 +21,13 @@ import {
   Copy,
   Check,
   ChevronRight,
-  Save
+  Save,
+  Coffee,
+  Scale
 } from 'lucide-react';
 import { useCtfStore, BRAND_THEMES } from '../../store/useCtfStore';
 import { useAuthStore } from '../../store/useAuthStore';
-import { playCyberSound, safeCopyToClipboard } from '../../utils/helpers';
+import { playCyberSound, safeCopyToClipboard, CREATOR_PROFILE_LINKS } from '../../utils/helpers';
 import { CyberLogo } from '../common/CyberLogo';
 
 export const MobileNav: React.FC = () => {
@@ -53,6 +55,8 @@ export const MobileNav: React.FC = () => {
     setAppBrand,
     saveProfileData,
     currentProfileId,
+    setOperatorModalOpen,
+    setLicenseModalOpen,
   } = useCtfStore();
 
   const user = useAuthStore((s) => s.user);
@@ -455,6 +459,52 @@ export const MobileNav: React.FC = () => {
                         <span className="text-[11px] truncate">{theme.namePrefix}{theme.nameSuffix}</span>
                       </button>
                     ))}
+                  </div>
+                </div>
+
+                {/* 5. Creator & Support Card */}
+                <div className="p-3 rounded-xl bg-gradient-to-br from-cyber-card via-cyber-bg to-[#0d1527] border border-cyber-border/80 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-md bg-cyber-emerald/20 border border-cyber-emerald/50 flex items-center justify-center text-cyber-emerald text-[10px] font-black">
+                        DD
+                      </div>
+                      <div>
+                        <div className="text-white font-bold text-xs">Daniel Dayan</div>
+                        <div className="text-[10px] text-cyber-muted">@xXDNDXx • Creator & Architect</div>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        setOperatorModalOpen(true);
+                      }}
+                      className="text-[10px] text-cyber-emerald hover:underline font-bold"
+                    >
+                      Dossier ↗
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-1.5 pt-1">
+                    <a
+                      href={CREATOR_PROFILE_LINKS.coffee}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-lg bg-[#FFDD00]/15 hover:bg-[#FFDD00]/25 border border-[#FFDD00]/40 text-[#FFDD00] hover:text-white flex items-center justify-center gap-1.5 font-bold text-[11px] transition-all"
+                    >
+                      <Coffee className="w-3.5 h-3.5" />
+                      <span>Buy a Coffee</span>
+                    </a>
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        setLicenseModalOpen(true);
+                      }}
+                      className="p-2 rounded-lg bg-cyber-card hover:bg-cyber-card/80 border border-cyber-border text-gray-300 hover:text-white flex items-center justify-center gap-1 text-[11px] font-bold transition-all"
+                    >
+                      <Scale className="w-3.5 h-3.5 text-cyber-amber" />
+                      <span>License</span>
+                    </button>
                   </div>
                 </div>
               </div>

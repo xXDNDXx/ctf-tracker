@@ -193,3 +193,14 @@ export function sanitizeExternalUrl(url?: string): string | undefined {
   }
   return undefined;
 }
+
+/**
+ * Official verified profile and support links for Daniel Dayan (@xXDNDXx)
+ */
+export const CREATOR_PROFILE_LINKS = {
+  portfolio: 'https://xXDNDXx.github.io/',
+  linkedin: 'https://www.linkedin.com/in/daniel-dayan-a66322352/',
+  github: 'https://github.com/xXDNDXx',
+  writeups: 'https://xxdndxx.gitbook.io/thm-writeups/',
+  coffee: 'https://buymeacoffee.com/xxdndxx'
+} as const;

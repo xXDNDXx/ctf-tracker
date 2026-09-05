@@ -13,10 +13,11 @@ import {
   Check, 
   Terminal,
   Lock,
-  UserCheck
+  UserCheck,
+  Coffee
 } from 'lucide-react';
 import { useCtfStore } from '../../store/useCtfStore';
-import { playCyberSound, safeCopyToClipboard } from '../../utils/helpers';
+import { playCyberSound, safeCopyToClipboard, CREATOR_PROFILE_LINKS } from '../../utils/helpers';
 
 const FULL_LICENSE_TEXT = `ZEROBOX SOURCE-AVAILABLE NON-COMMERCIAL & EDUCATIONAL LICENSE (ZNSL 1.0)
 ========================================================================
@@ -270,7 +271,7 @@ export const LicenseModal: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <a
-                  href="https://xXDNDXx.github.io/"
+                  href={CREATOR_PROFILE_LINKS.portfolio}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-cyber-emerald hover:underline font-bold flex items-center gap-1"
@@ -280,7 +281,7 @@ export const LicenseModal: React.FC = () => {
                 </a>
                 <span className="text-cyber-border">•</span>
                 <a
-                  href="https://www.linkedin.com/in/daniel-dayan-a66322352/"
+                  href={CREATOR_PROFILE_LINKS.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#0077B5] hover:underline font-bold flex items-center gap-1"
@@ -290,12 +291,23 @@ export const LicenseModal: React.FC = () => {
                 </a>
                 <span className="text-cyber-border">•</span>
                 <a
-                  href="https://github.com/xXDNDXx"
+                  href={CREATOR_PROFILE_LINKS.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-white hover:underline font-bold flex items-center gap-1"
                 >
                   <span>GitHub</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+                <span className="text-cyber-border">•</span>
+                <a
+                  href={CREATOR_PROFILE_LINKS.coffee}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#FFDD00] hover:underline font-bold flex items-center gap-1"
+                >
+                  <Coffee className="w-3 h-3" />
+                  <span>Buy Me a Coffee</span>
                   <ExternalLink className="w-3 h-3" />
                 </a>
               </div>

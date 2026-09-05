@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuthStore, PUBLIC_GOOGLE_CLIENT_ID } from '../../store/useAuthStore';
 import { useCtfStore, mergeMachinesWithCatalog } from '../../store/useCtfStore';
-import { playCyberSound, triggerRootCelebration } from '../../utils/helpers';
+import { playCyberSound, triggerRootCelebration, CREATOR_PROFILE_LINKS } from '../../utils/helpers';
 import { 
   Save, 
   Check, 
@@ -12,7 +12,8 @@ import {
   LogOut,
   ShieldCheck,
   Sparkles,
-  Globe
+  Globe,
+  Coffee
 } from 'lucide-react';
 
 export const UserMenu: React.FC = () => {
@@ -316,26 +317,36 @@ export const UserMenu: React.FC = () => {
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-1.5">
+            <div className="grid grid-cols-3 gap-1.5">
               <a
-                href="https://xXDNDXx.github.io/"
+                href={CREATOR_PROFILE_LINKS.portfolio}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg bg-cyber-emerald/20 hover:bg-cyber-emerald/30 text-cyber-emerald hover:text-white border border-cyber-emerald/50 transition-all text-[10px] font-bold shadow-sm"
+                className="flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-cyber-emerald/20 hover:bg-cyber-emerald/30 text-cyber-emerald hover:text-white border border-cyber-emerald/50 transition-all text-[10px] font-bold shadow-sm"
                 title="Daniel Dayan's Official Portfolio"
               >
-                <Globe className="w-3 h-3" />
-                <span>PORTFOLIO</span>
+                <Globe className="w-3 h-3 flex-shrink-0" />
+                <span className="truncate">PORTFOLIO</span>
               </a>
               <a
-                href="https://www.linkedin.com/in/daniel-dayan-a66322352/"
+                href={CREATOR_PROFILE_LINKS.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg bg-[#0077B5]/20 hover:bg-[#0077B5]/30 text-[#0077B5] hover:text-white border border-[#0077B5]/50 transition-all text-[10px] font-bold shadow-sm"
+                className="flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-[#0077B5]/20 hover:bg-[#0077B5]/30 text-[#0077B5] hover:text-white border border-[#0077B5]/50 transition-all text-[10px] font-bold shadow-sm"
                 title="Daniel Dayan LinkedIn Profile"
               >
-                <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.7a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2Z"/></svg>
-                <span>LINKEDIN</span>
+                <svg className="w-3 h-3 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.7a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2Z"/></svg>
+                <span className="truncate">LINKEDIN</span>
+              </a>
+              <a
+                href={CREATOR_PROFILE_LINKS.coffee}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-[#FFDD00]/20 hover:bg-[#FFDD00]/30 text-[#FFDD00] hover:text-white border border-[#FFDD00]/50 transition-all text-[10px] font-bold shadow-sm"
+                title="Buy Daniel Dayan a Coffee (buymeacoffee.com/xxdndxx)"
+              >
+                <Coffee className="w-3 h-3 flex-shrink-0" />
+                <span className="truncate">COFFEE</span>
               </a>
             </div>
           </div>

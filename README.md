@@ -7,6 +7,7 @@
 [![Live on GitHub Pages](https://img.shields.io/badge/Live_on-GitHub_Pages-181717?style=flat-square&logo=github)](https://xXDNDXx.github.io/ctf-tracker/)
 [![Creator](https://img.shields.io/badge/Creator-Daniel%20Dayan%20(@xXDNDXx)-10B981?style=flat-square&logo=github)](https://xXDNDXx.github.io/)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Daniel%20Dayan-0077B5?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/daniel-dayan-a66322352/)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_a_Coffee-Daniel%20Dayan-FFDD00?style=flat-square&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/xxdndxx)
 [![License](https://img.shields.io/badge/License-Non--Commercial%20(ZNSL--1.0)-F59E0B?style=flat-square&logo=shield)](LICENSE)
 
 *945 Machines · Daniel Dayan's 63 Pwns · 414 Obsidian Notes · 1,574 Cmds · 5-Stage Pipeline · Attack Graph*
@@ -118,6 +119,7 @@ npm run preview
 | 💼 **LinkedIn Profile** | `daniel-dayan-a66322352` | [**Connect on LinkedIn**](https://www.linkedin.com/in/daniel-dayan-a66322352/) |
 | 💻 **GitHub Repositories** | `@xXDNDXx` | [**Follow on GitHub**](https://github.com/xXDNDXx) |
 | 📝 **CTF Write-ups & Docs** | `THM & HTB Research Vault` | [**Read GitBook Writeups**](https://xxdndxx.gitbook.io/thm-writeups/) |
+| ☕ **Buy Me a Coffee** | `xxdndxx` | [**Support on Buy Me a Coffee**](https://buymeacoffee.com/xxdndxx) |
 
 </div>
 

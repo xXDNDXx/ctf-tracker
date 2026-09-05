@@ -29,12 +29,13 @@ import {
   Globe,
   ShieldCheck,
   Award,
-  X
+  X,
+  Coffee
 } from 'lucide-react';
 import { CyberLogo } from '../common/CyberLogo';
 import { PlatformIcon } from '../common/PlatformBadge';
 import { EditableIpBadge } from '../common/EditableIpBadge';
-import { playCyberSound, formatSeconds, triggerRootCelebration, safeCopyToClipboard } from '../../utils/helpers';
+import { playCyberSound, formatSeconds, triggerRootCelebration, safeCopyToClipboard, CREATOR_PROFILE_LINKS } from '../../utils/helpers';
 import { UserMenu } from '../auth/UserMenu';
 
 const BRAND_THEMES = [
@@ -318,7 +319,7 @@ export const Header: React.FC = () => {
                 <div className="hidden 2xl:flex items-center gap-1">
                   {/* Portfolio */}
                   <a
-                    href="https://xXDNDXx.github.io/"
+                    href={CREATOR_PROFILE_LINKS.portfolio}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-1.5 rounded-lg bg-cyber-card hover:bg-cyber-emerald/20 border border-cyber-border hover:border-cyber-emerald text-cyber-emerald transition-all hover:scale-105 shadow-sm group"
@@ -329,7 +330,7 @@ export const Header: React.FC = () => {
 
                   {/* LinkedIn */}
                   <a
-                    href="https://www.linkedin.com/in/daniel-dayan-a66322352/"
+                    href={CREATOR_PROFILE_LINKS.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-1.5 rounded-lg bg-cyber-card hover:bg-[#0077B5]/25 border border-cyber-border hover:border-[#0077B5] text-[#0077B5] hover:text-white transition-all hover:scale-105 shadow-sm group"
@@ -342,7 +343,7 @@ export const Header: React.FC = () => {
 
                   {/* GitHub */}
                   <a
-                    href="https://github.com/xXDNDXx"
+                    href={CREATOR_PROFILE_LINKS.github}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-1.5 rounded-lg bg-cyber-card hover:bg-white/15 border border-cyber-border hover:border-white text-gray-300 hover:text-white transition-all hover:scale-105 shadow-sm group"
@@ -352,7 +353,31 @@ export const Header: React.FC = () => {
                       <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
                     </svg>
                   </a>
+
+                  {/* Buy Me a Coffee */}
+                  <a
+                    href={CREATOR_PROFILE_LINKS.coffee}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-1.5 rounded-lg bg-cyber-card hover:bg-[#FFDD00]/25 border border-cyber-border hover:border-[#FFDD00] text-[#FFDD00] hover:text-white transition-all hover:scale-105 shadow-sm group"
+                    title="Support Daniel Dayan on Buy Me a Coffee (buymeacoffee.com/xxdndxx)"
+                  >
+                    <Coffee className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+                  </a>
                 </div>
+
+                {/* Buy Me a Coffee Sponsor Pill */}
+                <a
+                  href={CREATOR_PROFILE_LINKS.coffee}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 px-2 py-1 rounded-lg bg-[#FFDD00]/10 hover:bg-[#FFDD00]/20 border border-[#FFDD00]/40 hover:border-[#FFDD00] text-[#FFDD00] hover:text-white transition-all text-[10px] font-bold shadow-sm group flex-shrink-0"
+                  title="Support Daniel Dayan on Buy Me a Coffee (buymeacoffee.com/xxdndxx)"
+                >
+                  <Coffee className="w-3 h-3 text-[#FFDD00] group-hover:scale-110 transition-transform flex-shrink-0" />
+                  <span className="hidden xl:inline">BUY A COFFEE</span>
+                  <span className="xl:hidden">COFFEE</span>
+                </a>
 
                 {/* Non-Commercial License Badge Button */}
                 <button
@@ -381,6 +406,17 @@ export const Header: React.FC = () => {
                 <span className="w-1.5 h-1.5 rounded-full bg-cyber-emerald" />
                 <span className="text-white font-bold">Daniel Dayan</span>
               </button>
+
+              {/* Compact Mobile / Tablet Buy Me a Coffee Link */}
+              <a
+                href={CREATOR_PROFILE_LINKS.coffee}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:flex lg:hidden p-1.5 rounded-lg bg-[#FFDD00]/10 border border-[#FFDD00]/40 text-[#FFDD00] hover:bg-[#FFDD00]/20 transition-all ml-1 flex-shrink-0"
+                title="Support Daniel Dayan on Buy Me a Coffee"
+              >
+                <Coffee className="w-3 h-3" />
+              </a>
             </div>
 
             {/* Brand Theme Switcher Dropdown */}

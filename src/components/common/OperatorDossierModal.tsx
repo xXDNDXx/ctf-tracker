@@ -15,10 +15,11 @@ import {
   Target,
   Scale,
   Copy,
-  Check
+  Check,
+  Coffee
 } from 'lucide-react';
 import { useCtfStore } from '../../store/useCtfStore';
-import { playCyberSound, safeCopyToClipboard } from '../../utils/helpers';
+import { playCyberSound, safeCopyToClipboard, CREATOR_PROFILE_LINKS } from '../../utils/helpers';
 
 export const OperatorDossierModal: React.FC = () => {
   const { operatorModalOpen, setOperatorModalOpen, setLicenseModalOpen, soundEnabled } = useCtfStore();
@@ -46,12 +47,7 @@ export const OperatorDossierModal: React.FC = () => {
 
   if (!operatorModalOpen) return null;
 
-  const links = {
-    portfolio: 'https://xXDNDXx.github.io/',
-    linkedin: 'https://www.linkedin.com/in/daniel-dayan-a66322352/',
-    github: 'https://github.com/xXDNDXx',
-    writeups: 'https://xxdndxx.gitbook.io/thm-writeups/'
-  };
+  const links = CREATOR_PROFILE_LINKS;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto">
@@ -147,15 +143,26 @@ export const OperatorDossierModal: React.FC = () => {
               </div>
             </div>
 
-            <a
-              href={links.portfolio}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto px-4 py-2.5 rounded-xl font-black text-xs bg-cyber-emerald hover:bg-cyber-emerald/90 text-black shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 flex-shrink-0"
-            >
-              <span>LAUNCH PORTFOLIO</span>
-              <ExternalLink className="w-3.5 h-3.5 stroke-[2.5]" />
-            </a>
+            <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto flex-shrink-0">
+              <a
+                href={links.coffee}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto px-3.5 py-2.5 rounded-xl font-black text-xs bg-[#FFDD00] hover:bg-[#FFDD00]/90 text-black shadow-[0_0_15px_rgba(255,221,0,0.35)] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-1.5 flex-shrink-0"
+              >
+                <Coffee className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>BUY ME A COFFEE</span>
+              </a>
+              <a
+                href={links.portfolio}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto px-4 py-2.5 rounded-xl font-black text-xs bg-cyber-emerald hover:bg-cyber-emerald/90 text-black shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 flex-shrink-0"
+              >
+                <span>LAUNCH PORTFOLIO</span>
+                <ExternalLink className="w-3.5 h-3.5 stroke-[2.5]" />
+              </a>
+            </div>
           </div>
 
           {/* 4-Column External Tactical Resource Grid */}
@@ -275,6 +282,45 @@ export const OperatorDossierModal: React.FC = () => {
                 >
                   {copiedField === 'writeups' ? <Check className="w-3.5 h-3.5 text-cyber-emerald" /> : <Copy className="w-3.5 h-3.5" />}
                 </button>
+              </div>
+
+              {/* Buy Me a Coffee Operator Sponsor Card */}
+              <div className="sm:col-span-2 p-3.5 rounded-xl bg-gradient-to-r from-[#FFDD00]/15 via-cyber-card to-cyber-bg border border-[#FFDD00]/40 hover:border-[#FFDD00] transition-all group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-[0_0_15px_rgba(255,221,0,0.1)]">
+                <a
+                  href={links.coffee}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 min-w-0 flex-1"
+                >
+                  <div className="w-9 h-9 rounded-xl bg-[#FFDD00]/20 border border-[#FFDD00]/50 flex items-center justify-center text-[#FFDD00] group-hover:scale-110 transition-transform flex-shrink-0">
+                    <Coffee className="w-4.5 h-4.5" />
+                  </div>
+                  <div className="truncate">
+                    <div className="font-bold text-white group-hover:text-[#FFDD00] transition-colors flex items-center gap-1.5 text-xs">
+                      <span>Buy Me a Coffee // Sponsor Daniel Dayan</span>
+                      <ExternalLink className="w-3 h-3 text-cyber-muted opacity-60" />
+                    </div>
+                    <div className="text-[10px] text-cyber-muted truncate">buymeacoffee.com/xxdndxx • Support open-source offensive security tools & research</div>
+                  </div>
+                </a>
+                <div className="flex items-center gap-1.5 w-full sm:w-auto justify-end flex-shrink-0">
+                  <button
+                    onClick={(e) => handleCopyLink(e, links.coffee, 'coffee')}
+                    className="p-1.5 rounded-lg bg-cyber-bg hover:bg-[#FFDD00]/25 text-cyber-muted hover:text-[#FFDD00] border border-cyber-border hover:border-[#FFDD00]/50 transition-all flex-shrink-0"
+                    title="Copy Buy Me a Coffee URL"
+                  >
+                    {copiedField === 'coffee' ? <Check className="w-3.5 h-3.5 text-cyber-emerald" /> : <Copy className="w-3.5 h-3.5" />}
+                  </button>
+                  <a
+                    href={links.coffee}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3.5 py-1.5 rounded-lg bg-[#FFDD00] hover:bg-[#FFDD00]/90 text-black font-extrabold text-[11px] shadow-[0_0_10px_rgba(255,221,0,0.3)] hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5"
+                  >
+                    <Coffee className="w-3.5 h-3.5" />
+                    <span>SPONSOR</span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
