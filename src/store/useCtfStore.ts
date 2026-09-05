@@ -368,8 +368,8 @@ export const mergeMachinesWithCatalog = (storedMachines?: Machine[]): Machine[] 
             certifications: Array.from(new Set([...(catalogMachine.certifications || []), ...(m.certifications || [])])) as any,
           });
         }
-      } else {
-        // Custom user-added machine
+      } else if (m.isCustom || (m.id && m.id.startsWith('custom-'))) {
+        // Genuine custom user-added machine ONLY (prunes stale non-catalog educational rooms)
         map.set(m.id, m);
       }
     });
@@ -1009,26 +1009,28 @@ export const useCtfStore = create<CtfStoreState>()(
     }),
     {
       name: 'specter_ctf_store_v3',
-      version: 3,
+      version: 4,
       storage: createJSONStorage(() => localStorage),
       migrate: (persistedState: any) => {
         const state = persistedState || {};
-        if (!state.appBrand || state.appBrand === 'rootvector') {
-          state.appBrand = 'specter';
+        if (!state.appBrand || state.appBrand === 'rootvector' || state.appBrand === 'specter') {
+          state.appBrand = 'zerobox';
         }
         return {
           ...state,
+          appBrand: 'zerobox',
           machines: mergeMachinesWithCatalog(state.machines),
         };
       },
       merge: (persistedState: any, currentState: CtfStoreState) => {
         const persisted = (persistedState as Partial<CtfStoreState>) || {};
-        if (!persisted.appBrand || persisted.appBrand === 'rootvector') {
-          persisted.appBrand = 'specter';
+        if (!persisted.appBrand || persisted.appBrand === 'rootvector' || persisted.appBrand === 'specter') {
+          persisted.appBrand = 'zerobox';
         }
         return {
           ...currentState,
           ...persisted,
+          appBrand: (!persisted.appBrand || persisted.appBrand === 'rootvector' || persisted.appBrand === 'specter') ? 'zerobox' : persisted.appBrand,
           machines: mergeMachinesWithCatalog(persisted.machines),
         };
       },

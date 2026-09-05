@@ -517,7 +517,7 @@ export const Header: React.FC = () => {
       </div>
 
       {/* Tier 2: Tactical Operations Strip (Combat HUD, Automations, Add Box & Payload Vars) */}
-      <div className="w-full px-4 xl:px-6 py-1.5 bg-cyber-card/40 flex items-center justify-between gap-3 overflow-x-auto scrollbar-none text-xs font-mono">
+      <div className="w-full px-3 xl:px-5 py-1 bg-cyber-card/40 flex items-center justify-between gap-2 overflow-x-hidden text-xs font-mono">
         
         {/* Left: Active Target HUD / Quick Selector & Action Buttons */}
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -648,11 +648,11 @@ export const Header: React.FC = () => {
           {/* Tactical Automation Hub Button */}
           <button
             onClick={() => setReconAutomationModalOpen(true)}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/40 hover:bg-cyber-cyan hover:text-black font-mono text-xs font-semibold transition-all shadow-glow-cyan/20"
+            className="flex items-center gap-1 px-2 py-1 rounded-md bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/40 hover:bg-cyber-cyan hover:text-black font-mono text-xs font-semibold transition-all shadow-glow-cyan/20"
             title="Open Tactical Automation Hub (Multi-Format Scan Importer & Payload Crafter)"
           >
             <Zap className="w-3.5 h-3.5" />
-            <span>Scan & Payloads</span>
+            <span className="hidden sm:inline">Scans</span>
           </button>
 
           {/* Sharable Operator Flex Card Button */}
@@ -661,21 +661,21 @@ export const Header: React.FC = () => {
               setFlexCardModalOpen(true);
               if (soundEnabled) playCyberSound('click');
             }}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-purple-500/15 text-purple-300 border border-purple-500/40 hover:bg-purple-500 hover:text-white font-mono text-xs font-semibold transition-all shadow-glow-purple/20"
+            className="flex items-center gap-1 px-2 py-1 rounded-md bg-purple-500/15 text-purple-300 border border-purple-500/40 hover:bg-purple-500 hover:text-white font-mono text-xs font-semibold transition-all shadow-glow-purple/20"
             title="Generate and Share Verified Operator Scorecard (Flex Card PNG)"
           >
             <Award className="w-3.5 h-3.5 text-purple-400" />
-            <span className="hidden sm:inline">Flex Card</span>
+            <span className="hidden sm:inline">Flex</span>
           </button>
 
           {/* Quick Add Custom Machine Button */}
           <button
             onClick={() => setNewMachineModalOpen(true)}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/40 hover:bg-cyber-emerald hover:text-black font-mono text-xs font-semibold transition-all shadow-sm"
+            className="flex items-center gap-1 px-2 py-1 rounded-md bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/40 hover:bg-cyber-emerald hover:text-black font-mono text-xs font-semibold transition-all shadow-sm"
             title="Deploy Custom Lab Box"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Add Box</span>
+            <span className="hidden sm:inline">Box</span>
           </button>
 
           {/* Tactical Keyboard Shortcuts Button */}
@@ -693,24 +693,13 @@ export const Header: React.FC = () => {
           </button>
         </div>
 
-        {/* Center: Live Mission Telemetry Status (Only on wide screens to prevent overflow) */}
-        <div className="hidden 2xl:flex items-center gap-2 px-3 py-1 rounded-lg bg-cyber-card/60 border border-cyber-border/70 text-[11px] text-cyber-muted font-mono flex-shrink-0">
-          <span className="flex items-center gap-1.5 text-cyber-emerald font-bold">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyber-emerald animate-pulse shadow-glow-emerald" />
-            <span>MISSION TELEMETRY:</span>
-          </span>
-          <span>TARGET: <strong className="text-white">{activeMachine ? activeMachine.name : 'STANDBY (NO TARGET)'}</strong></span>
-          <span className="text-cyber-border">|</span>
-          <span>PLATFORM: <strong className="text-cyber-cyan">{activeMachine ? activeMachine.platform : 'HTB / THM'}</strong></span>
-          <span className="text-cyber-border">|</span>
-          <span>DIFFICULTY: <strong className="text-cyber-amber">{activeMachine ? activeMachine.difficulty : 'N/A'}</strong></span>
-        </div>
+
 
         {/* Right: Live Variable Injection Hub (LHOST, LPORT, TARGET) */}
         <div className="hidden sm:flex items-center gap-1.5 bg-cyber-card/80 border border-cyber-border/80 rounded-lg p-1 px-2 font-mono text-xs flex-shrink-0">
           <span className="text-[10px] uppercase font-semibold text-cyber-cyan tracking-wider flex items-center gap-1">
             <Server className="w-3 h-3" />
-            <span className="hidden xl:inline">PAYLOAD VARS:</span>
+            <span className="hidden lg:inline">VARS:</span>
           </span>
 
           {/* LHOST */}
@@ -724,7 +713,7 @@ export const Header: React.FC = () => {
               type="text"
               value={globalVars.lhost}
               onChange={(e) => setGlobalVars({ lhost: e.target.value })}
-              className="w-20 bg-transparent text-white font-mono text-[11px] focus:outline-none"
+              className="w-16 bg-transparent text-white font-mono text-[11px] focus:outline-none"
               placeholder="10.10.14.x"
             />
             <button
@@ -787,7 +776,7 @@ export const Header: React.FC = () => {
               data-testid="header-target-ip-input"
               value={globalVars.targetIp}
               onChange={(e) => setGlobalVars({ targetIp: e.target.value })}
-              className="w-20 bg-transparent text-cyber-emerald font-mono text-[11px] font-semibold focus:outline-none"
+              className="w-16 bg-transparent text-cyber-emerald font-mono text-[11px] font-semibold focus:outline-none"
               placeholder="10.10.10.x"
             />
             <button
