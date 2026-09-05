@@ -754,6 +754,9 @@ export const Header: React.FC = () => {
             <span className="text-[10px] text-cyber-muted font-bold">L:</span>
             <input
               type="text"
+              id="header-lhost-input"
+              name="header-lhost"
+              aria-label="Attacker IP LHOST"
               value={globalVars.lhost}
               onChange={(e) => setGlobalVars({ lhost: e.target.value })}
               className="w-16 bg-transparent text-white font-mono text-[11px] focus:outline-none"
@@ -785,6 +788,9 @@ export const Header: React.FC = () => {
             <span className="text-[10px] text-cyber-muted font-bold">P:</span>
             <input
               type="text"
+              id="header-lport-input"
+              name="header-lport"
+              aria-label="Attacker Port LPORT"
               value={globalVars.lport}
               onChange={(e) => setGlobalVars({ lport: e.target.value })}
               className="w-10 bg-transparent text-white font-mono text-[11px] focus:outline-none"
@@ -816,6 +822,9 @@ export const Header: React.FC = () => {
             <span className="text-[10px] text-cyber-muted font-bold">T:</span>
             <input
               type="text"
+              id="header-target-ip-input"
+              name="header-target-ip"
+              aria-label="Target IP Address"
               data-testid="header-target-ip-input"
               value={globalVars.targetIp}
               onChange={(e) => setGlobalVars({ targetIp: e.target.value })}

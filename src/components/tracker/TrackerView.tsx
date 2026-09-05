@@ -364,6 +364,9 @@ export const TrackerView: React.FC = () => {
             <Search className="absolute left-3 top-2.5 w-4 h-4 text-cyber-muted" />
             <input
               type="text"
+              id="tracker-search-input"
+              name="tracker-search-input"
+              aria-label="Search targets by name, IP, OS, or CVE"
               value={filters.searchQuery}
               onChange={(e) => setFilters({ searchQuery: e.target.value })}
               placeholder="Search by target name, IP (10.10.x), OS, exploit vector, or CVE..."
@@ -410,6 +413,9 @@ export const TrackerView: React.FC = () => {
             <ArrowUpDown className="w-3.5 h-3.5 text-cyber-cyan" />
             <span className="text-[10px] uppercase font-bold text-cyber-muted">Sort:</span>
             <select
+              id="tracker-sort-select"
+              name="tracker-sort-select"
+              aria-label="Sort targets"
               value={filters.sortBy || 'default'}
               onChange={(e) => setFilters({ sortBy: e.target.value as any })}
               className="bg-transparent text-white text-xs font-semibold focus:outline-none cursor-pointer"
@@ -744,6 +750,9 @@ export const TrackerView: React.FC = () => {
             <div className="flex items-center gap-1.5">
               <span className="text-cyber-muted text-[10px] uppercase font-bold">Difficulty:</span>
               <select
+                id="tracker-difficulty-select"
+                name="tracker-difficulty-select"
+                aria-label="Filter difficulty"
                 value={filters.selectedDifficulty}
                 onChange={(e) => setFilters({ selectedDifficulty: e.target.value as Difficulty | 'ALL' })}
                 className="bg-cyber-bg border border-cyber-border px-2 py-1 rounded text-xs text-white focus:outline-none focus:border-cyber-cyan"
@@ -760,6 +769,9 @@ export const TrackerView: React.FC = () => {
             <div className="flex items-center gap-1.5">
               <span className="text-cyber-muted text-[10px] uppercase font-bold">Attack Tag:</span>
               <select
+                id="tracker-attack-tag-select"
+                name="tracker-attack-tag-select"
+                aria-label="Filter attack tag"
                 onChange={(e) => {
                   if (e.target.value && !filters.selectedTags.includes(e.target.value)) {
                     setFilters({ selectedTags: [...filters.selectedTags, e.target.value] });
