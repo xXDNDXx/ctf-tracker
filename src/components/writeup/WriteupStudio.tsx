@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { 
   FileText, 
@@ -12,16 +12,20 @@ import {
   Eye,
   BookOpen,
   FolderGit2,
-  Printer
+  Printer,
+  X,
+  Search,
+  Plus
 } from 'lucide-react';
 import { useCtfStore } from '../../store/useCtfStore';
 import { Machine } from '../../types';
-import { playCyberSound } from '../../utils/helpers';
+import { playCyberSound, interpolateCommand, safeCopyToClipboard } from '../../utils/helpers';
 import { PentestReportModal } from './PentestReportModal';
+import { CPTS_NOTES, CptsNoteEntry, searchCptsNotes, getRecommendedNotesForMachine } from '../../utils/obsidianManualUtils';
 
 export const WriteupStudio: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { machines, writeupMachineId, setWriteupMachineId, updateMachine, soundEnabled } = useCtfStore();
+  const { machines, writeupMachineId, setWriteupMachineId, updateMachine, soundEnabled, globalVars } = useCtfStore();
 
   useEffect(() => {
     if (id && machines.some((m) => m.id === id)) {
@@ -34,6 +38,41 @@ export const WriteupStudio: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [editorContent, setEditorContent] = useState('');
+  const [cptsDrawerOpen, setCptsDrawerOpen] = useState(false);
+  const [cptsSearch, setCptsSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [copiedCmd, setCopiedCmd] = useState<string | null>(null);
+
+  // Debounce search query by 150ms to maintain 120 FPS
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(cptsSearch);
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [cptsSearch]);
+
+  // Capped at top 20 matches as mandated by Fable Advisor
+  const matchingNotes = useMemo(() => {
+    if (!debouncedSearch.trim()) {
+      return selectedMachine ? getRecommendedNotesForMachine(selectedMachine, 20) : CPTS_NOTES.slice(0, 20);
+    }
+    return searchCptsNotes(debouncedSearch, 'ALL').slice(0, 20);
+  }, [debouncedSearch, selectedMachine]);
+
+  const handleInsertNote = (note: CptsNoteEntry) => {
+    if (!selectedMachine) return;
+    const targetVars = { ...globalVars, targetIp: selectedMachine.ip || globalVars.targetIp };
+    const cmdsFormatted = note.commands && note.commands.length > 0
+      ? `\n\`\`\`bash\n# ${note.title}\n${note.commands.map(c => interpolateCommand(c, targetVars)).join('\n')}\n\`\`\`\n`
+      : '';
+
+    const snippet = `\n\n---\n\n### 📚 CPTS Field Manual: ${note.title}\n> **Category:** ${note.category} | **Difficulty:** ${note.difficulty}\n> ${note.summary || note.subCategory}\n${cmdsFormatted}`;
+
+    const updated = editorContent + snippet;
+    setEditorContent(updated);
+    updateMachine(selectedMachine.id, { writeupMarkdown: updated });
+    if (soundEnabled) playCyberSound('root');
+  };
 
   // Generate standardized template with YAML frontmatter for Obsidian / GitBook
   const generateTemplate = (m: Machine): string => {
@@ -355,6 +394,19 @@ cat /root/root.txt
           </button>
 
           <button
+            onClick={() => setCptsDrawerOpen(prev => !prev)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold transition-all shadow-sm ${
+              cptsDrawerOpen
+                ? 'bg-purple-500 text-black border-purple-400 shadow-purple-500/30'
+                : 'bg-purple-950/30 border-purple-500/40 text-purple-300 hover:bg-purple-900/40 hover:text-white'
+            }`}
+            title="Toggle CPTS Field Manual Quick Reference Drawer"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>Field Manual ({matchingNotes.length})</span>
+          </button>
+
+          <button
             onClick={() => setReportModalOpen(true)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyber-card border border-cyber-cyan/40 hover:border-cyber-cyan text-cyber-cyan hover:bg-cyber-cyan/10 text-xs font-bold transition-all shadow-glow-cyan/20"
             title="Generate print-ready Executive Penetration Testing Report"
@@ -390,6 +442,94 @@ cat /root/root.txt
           </button>
         </div>
       </div>
+
+      {/* CPTS Field Manual Quick Reference Drawer */}
+      {cptsDrawerOpen && (
+        <div className="p-4 rounded-xl border border-purple-500/40 bg-cyber-card/95 shadow-2xl space-y-3 font-mono">
+          <div className="flex items-center justify-between border-b border-cyber-border pb-2.5">
+            <div className="flex items-center gap-2">
+              <BookOpen className="w-4 h-4 text-purple-400" />
+              <span className="font-bold text-white text-xs tracking-wider">
+                CPTS FIELD MANUAL // QUICK REFERENCE & INSERT
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono">
+                {matchingNotes.length} MATCHES (MAX 20)
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setCptsDrawerOpen(false)}
+              className="p-1 rounded text-cyber-muted hover:text-white"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Quick Search Bar */}
+          <div className="relative">
+            <Search className="w-3.5 h-3.5 text-cyber-muted absolute left-3 top-2.5" />
+            <input
+              type="text"
+              value={cptsSearch}
+              onChange={(e) => setCptsSearch(e.target.value)}
+              placeholder="Search field manual notes & commands (e.g. kerberoast, suid, lfi, bloodhound)..."
+              className="w-full bg-cyber-bg border border-cyber-border rounded-lg pl-8 pr-3 py-1.5 text-xs text-white placeholder-cyber-muted focus:outline-none focus:border-purple-400"
+            />
+          </div>
+
+          {/* Matching Notes Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-72 overflow-y-auto pr-1">
+            {matchingNotes.length === 0 ? (
+              <div className="col-span-full p-4 text-center text-xs text-cyber-muted">
+                No matching field manual notes found.
+              </div>
+            ) : (
+              matchingNotes.map((note) => (
+                <div
+                  key={note.id}
+                  className="p-3 rounded-lg bg-cyber-bg border border-cyber-border hover:border-purple-500/50 transition-all space-y-2 flex flex-col justify-between"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="font-bold text-white text-xs truncate" title={note.title}>
+                        {note.title}
+                      </span>
+                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 flex-shrink-0 font-mono">
+                        {note.difficulty}
+                      </span>
+                    </div>
+                    <div className="text-[10px] text-cyber-muted line-clamp-2">
+                      {note.summary || note.subCategory}
+                    </div>
+                  </div>
+
+                  {note.commands && note.commands.length > 0 && (
+                    <div className="p-1.5 rounded bg-black/50 border border-cyber-border/70 font-mono text-[10px] text-cyber-cyan truncate">
+                      {interpolateCommand(note.commands[0], { ...globalVars, targetIp: selectedMachine?.ip || globalVars.targetIp })}
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-between gap-2 pt-1 border-t border-cyber-border/50">
+                    <span className="text-[9px] text-cyber-muted font-mono truncate">
+                      {note.category}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleInsertNote(note)}
+                      className="flex items-center gap-1 px-2.5 py-1 rounded bg-purple-500/20 hover:bg-purple-500 hover:text-black border border-purple-500/40 text-purple-300 text-[10px] font-bold transition-all"
+                      title="Insert this note and commands into active writeup"
+                    >
+                      <Plus className="w-3 h-3" />
+                      <span>Insert</span>
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Dual-Pane Editor Workspace */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch min-h-[calc(100vh-250px)]">

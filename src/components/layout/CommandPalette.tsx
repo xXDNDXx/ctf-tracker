@@ -305,7 +305,7 @@ export const CommandPalette: React.FC = () => {
             <span>Navigate: <kbd className="bg-cyber-card px-1 py-0.5 rounded">↑</kbd> <kbd className="bg-cyber-card px-1 py-0.5 rounded">↓</kbd></span>
             <span>Select: <kbd className="bg-cyber-card px-1 py-0.5 rounded">Enter</kbd></span>
           </div>
-          <span>SPECTER CTF PALETTE</span>
+          <span>ZEROBOX TACTICAL PALETTE</span>
         </div>
       </div>
     </div>

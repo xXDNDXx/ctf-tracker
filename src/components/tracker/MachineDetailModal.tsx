@@ -29,11 +29,13 @@ import {
   CheckCircle2,
   BookOpen,
   Sparkles,
-  ShieldCheck
+  ShieldCheck,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { useCtfStore, BRAND_THEMES } from '../../store/useCtfStore';
 import { PipelineStatus, Difficulty } from '../../types';
-import { formatSeconds, playCyberSound, triggerRootCelebration, safeCopyToClipboard, sanitizeExternalUrl } from '../../utils/helpers';
+import { formatSeconds, playCyberSound, triggerRootCelebration, safeCopyToClipboard, sanitizeExternalUrl, interpolateCommand } from '../../utils/helpers';
 import { ChecklistWorkspace } from '../checklist/ChecklistWorkspace';
 import { PlatformBadge } from '../common/PlatformBadge';
 import { OsBadge } from '../common/OsBadge';
@@ -64,6 +66,7 @@ export const MachineDetailModal: React.FC = () => {
     deleteMachine,
     setReconAutomationModalOpen,
     setAssignIpMachineId,
+    globalVars,
   } = useCtfStore();
 
   const navigate = useNavigate();
@@ -77,6 +80,7 @@ export const MachineDetailModal: React.FC = () => {
   const [showHint, setShowHint] = useState(false);
   const [newTagInput, setNewTagInput] = useState('');
   const [activeModalTab, setActiveModalTab] = useState<'overview' | 'checklist' | 'report' | 'walkthrough'>('overview');
+  const [expandedNotes, setExpandedNotes] = useState<Record<string, boolean>>({});
 
   const machine = machines.find((m) => m.id === selectedMachineId);
   const isActiveTarget = Boolean(machine && activeTargetId === machine.id);
@@ -1051,46 +1055,108 @@ During the security assessment of target host ${machine.name} (${machine.ip}), s
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                {recommendedNotes.map((note) => (
-                  <div
-                    key={note.id}
-                    className="p-2.5 rounded-lg bg-cyber-card border border-cyber-border hover:border-purple-500/50 transition-all space-y-1.5"
-                  >
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="text-xs font-bold text-white truncate max-w-[210px]" title={note.title}>
-                        {note.title}
-                      </span>
-                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 flex-shrink-0 font-mono">
-                        {note.difficulty}
-                      </span>
-                    </div>
-                    <div className="text-[10px] text-cyber-muted line-clamp-2 font-sans">
-                      {note.summary || note.subCategory}
-                    </div>
-                    {note.commands && note.commands.length > 0 && (
-                      <div className="pt-1">
-                        <div className="flex items-center justify-between gap-2 p-1.5 rounded bg-black/50 border border-cyber-border/70 font-mono text-[10px]">
-                          <code className="text-cyber-cyan truncate flex-1">
-                            {note.commands[0]}
-                          </code>
-                          <button
-                            type="button"
-                            onClick={async () => {
-                              await safeCopyToClipboard(note.commands[0]);
-                              setCopiedCommand(note.commands[0]);
-                              setTimeout(() => setCopiedCommand(null), 2000);
-                              if (soundEnabled) playCyberSound('copy');
-                            }}
-                            className="px-1.5 py-0.5 rounded text-[9px] bg-cyber-bg hover:bg-cyber-cyan hover:text-black text-cyber-muted transition-colors flex-shrink-0 font-bold"
-                            title="Copy command"
-                          >
-                            {copiedCommand === note.commands[0] ? '✓ COPIED' : 'COPY'}
-                          </button>
+                {recommendedNotes.map((note) => {
+                  const isExpanded = Boolean(expandedNotes[note.id]);
+                  const targetVars = { ...globalVars, targetIp: machine.ip || globalVars.targetIp };
+                  const extraCommandsCount = note.commands ? note.commands.length - 1 : 0;
+
+                  return (
+                    <div
+                      key={note.id}
+                      className="p-2.5 rounded-lg bg-cyber-card border border-cyber-border hover:border-purple-500/50 transition-all space-y-1.5"
+                    >
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="text-xs font-bold text-white truncate max-w-[210px]" title={note.title}>
+                          {note.title}
+                        </span>
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                          <span className="text-[9px] px-1.5 py-0.2 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 font-mono">
+                            {note.difficulty}
+                          </span>
+                          {note.commands && note.commands.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => setExpandedNotes(prev => ({ ...prev, [note.id]: !prev[note.id] }))}
+                              className="text-[9px] text-cyber-cyan hover:underline flex items-center gap-0.5"
+                              title="Toggle all commands"
+                            >
+                              {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                              <span>{note.commands.length} cmds</span>
+                            </button>
+                          )}
                         </div>
                       </div>
-                    )}
-                  </div>
-                ))}
+
+                      <div className="text-[10px] text-cyber-muted line-clamp-2 font-sans">
+                        {note.summary || note.subCategory}
+                      </div>
+
+                      {note.commands && note.commands.length > 0 && (
+                        <div className="space-y-1.5 pt-1">
+                          {/* First command (always visible) */}
+                          {(() => {
+                            const interpolated0 = interpolateCommand(note.commands[0], targetVars);
+                            return (
+                              <div className="flex items-center justify-between gap-2 p-1.5 rounded bg-black/50 border border-cyber-border/70 font-mono text-[10px]">
+                                <code className="text-cyber-cyan truncate flex-1 select-all" title={interpolated0}>
+                                  {interpolated0}
+                                </code>
+                                <button
+                                  type="button"
+                                  onClick={async () => {
+                                    await safeCopyToClipboard(interpolated0);
+                                    setCopiedCommand(interpolated0);
+                                    setTimeout(() => setCopiedCommand(null), 2000);
+                                    if (soundEnabled) playCyberSound('copy');
+                                  }}
+                                  className="px-1.5 py-0.5 rounded text-[9px] bg-cyber-bg hover:bg-cyber-cyan hover:text-black text-cyber-muted transition-colors flex-shrink-0 font-bold"
+                                  title="Copy command"
+                                >
+                                  {copiedCommand === interpolated0 ? '✓ COPIED' : 'COPY'}
+                                </button>
+                              </div>
+                            );
+                          })()}
+
+                          {/* Remaining commands when expanded */}
+                          {isExpanded && note.commands.slice(1).map((cmd, cIdx) => {
+                            const interpolated = interpolateCommand(cmd, targetVars);
+                            return (
+                              <div key={cIdx} className="flex items-center justify-between gap-2 p-1.5 rounded bg-black/40 border border-purple-900/40 font-mono text-[10px]">
+                                <code className="text-purple-300 truncate flex-1 select-all" title={interpolated}>
+                                  {interpolated}
+                                </code>
+                                <button
+                                  type="button"
+                                  onClick={async () => {
+                                    await safeCopyToClipboard(interpolated);
+                                    setCopiedCommand(interpolated);
+                                    setTimeout(() => setCopiedCommand(null), 2000);
+                                    if (soundEnabled) playCyberSound('copy');
+                                  }}
+                                  className="px-1.5 py-0.5 rounded text-[9px] bg-cyber-bg hover:bg-purple-400 hover:text-black text-purple-300 transition-colors flex-shrink-0 font-bold"
+                                  title="Copy command"
+                                >
+                                  {copiedCommand === interpolated ? '✓ COPIED' : 'COPY'}
+                                </button>
+                              </div>
+                            );
+                          })}
+
+                          {extraCommandsCount > 0 && !isExpanded && (
+                            <button
+                              type="button"
+                              onClick={() => setExpandedNotes(prev => ({ ...prev, [note.id]: true }))}
+                              className="text-[9px] text-cyber-muted hover:text-purple-300 transition-colors flex items-center gap-1 font-mono"
+                            >
+                              <span>+ {extraCommandsCount} more commands from this note...</span>
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}

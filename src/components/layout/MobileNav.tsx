@@ -204,7 +204,7 @@ export const MobileNav: React.FC = () => {
                   <CyberLogo size="md" />
                   <div>
                     <div className="font-bold text-white text-xs tracking-wider">
-                      SPECTER CTF // MOBILE
+                      ZEROBOX // MOBILE
                     </div>
                     <div className="text-[10px] text-cyber-muted">Tactical CTF & Lab Suite</div>
                   </div>
@@ -455,7 +455,7 @@ export const MobileNav: React.FC = () => {
 
               {/* Drawer Footer */}
               <div className="p-3 border-t border-cyber-border bg-cyber-bg text-center text-[10px] text-cyber-muted">
-                SPECTER CTF SUITE • MOBILE OPERATING SYSTEM
+                ZEROBOX SUITE • MOBILE OPERATING SYSTEM
               </div>
             </motion.div>
           </div>

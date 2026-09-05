@@ -25,11 +25,11 @@ export const CyberLogo: React.FC<CyberLogoProps> = ({
       className={`relative flex-shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-105 ${containerSizeMap[size]} ${
         glow ? 'drop-shadow-[0_0_14px_rgba(56,189,248,0.65)] group-hover:drop-shadow-[0_0_24px_rgba(56,189,248,0.95)]' : ''
       } ${className}`}
-      title="SPECTER CTF // OPEN BLUE BOX"
+      title="ZEROBOX // TACTICAL CYBER OPERATIONS"
     >
       <img
         src={logoImg}
-        alt="Specter CTF Open Blue Box"
+        alt="ZeroBox Tactical Cyber Operations"
         className="w-full h-full object-contain select-none filter transition-all duration-300"
       />
     </div>

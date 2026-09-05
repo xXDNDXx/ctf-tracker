@@ -17,16 +17,33 @@ if (fs.existsSync(distIndex)) {
   fs.copyFileSync(distIndex, dist404);
 }
 
-// 2. Mirror dist to docs/ directory for GitHub Pages "Deploy from docs" mode
+// 2. Clean stale JS/CSS in docs/assets and root assets
+const cleanStaleAssets = (targetDir, validFiles) => {
+  if (!fs.existsSync(targetDir)) return;
+  const files = fs.readdirSync(targetDir);
+  for (const file of files) {
+    if ((file.endsWith('.js') || file.endsWith('.css')) && !validFiles.has(file)) {
+      try {
+        fs.unlinkSync(path.join(targetDir, file));
+      } catch (e) {}
+    }
+  }
+};
+
+const distAssetsDir = path.join(distDir, 'assets');
+const validAssetFiles = new Set(fs.existsSync(distAssetsDir) ? fs.readdirSync(distAssetsDir) : []);
+
+// Mirror dist to docs/ directory for GitHub Pages "Deploy from docs" mode
 fs.cpSync(distDir, docsDir, { recursive: true, force: true });
+cleanStaleAssets(path.join(docsDir, 'assets'), validAssetFiles);
 console.log('✓ Mirrored dist to docs/ for GitHub Pages compatibility');
 
 // 3. Mirror dist/assets to root assets/ so if GitHub Pages serves main root, assets resolve
 const rootAssetsDir = path.join(rootDir, 'assets');
-const distAssetsDir = path.join(distDir, 'assets');
 if (fs.existsSync(distAssetsDir)) {
   fs.cpSync(distAssetsDir, rootAssetsDir, { recursive: true, force: true });
-  console.log('✓ Mirrored assets/ to root');
+  cleanStaleAssets(rootAssetsDir, validAssetFiles);
+  console.log('✓ Mirrored assets/ to root and cleaned stale chunks');
 }
 
 // 4. Copy 404.html to root

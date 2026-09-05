@@ -20,16 +20,31 @@ export function formatDurationHuman(seconds: number): string {
 }
 
 export function interpolateCommand(template: string, vars: GlobalVariables): string {
+  if (!template) return '';
   let result = template;
-  result = result.replace(/\{TARGET_IP\}/g, vars.targetIp || '10.10.10.X');
-  result = result.replace(/\{LHOST\}/g, vars.lhost || '10.10.14.X');
-  result = result.replace(/\{LPORT\}/g, vars.lport || '4444');
-  result = result.replace(/\{INTERFACE\}/g, vars.interface || 'tun0');
+  const target = vars.targetIp || '10.10.10.X';
+  const lhost = vars.lhost || '10.10.14.X';
+  const lport = vars.lport || '4444';
+  const iface = vars.interface || 'tun0';
+
+  // Standard curly tokens
+  result = result.replace(/\{(?:TARGET_IP|TARGET|IP)\}/gi, target);
+  result = result.replace(/\{LHOST\}/gi, lhost);
+  result = result.replace(/\{LPORT\}/gi, lport);
+  result = result.replace(/\{INTERFACE\}/gi, iface);
+
+  // Obsidian Field Manual angle tokens (<IP>, <TARGET>, <TARGET_IP>, <LHOST>, <LPORT>)
+  result = result.replace(/<(?:TARGET_IP|TARGET|IP|Target-IP)>/gi, target);
+  result = result.replace(/<LHOST>/gi, lhost);
+  result = result.replace(/<LPORT>/gi, lport);
+  result = result.replace(/<INTERFACE>/gi, iface);
 
   if (vars.customVars) {
     Object.entries(vars.customVars).forEach(([key, val]) => {
       const reg = new RegExp(`\\{${key}\\}`, 'g');
       result = result.replace(reg, val);
+      const regAngle = new RegExp(`<${key}>`, 'gi');
+      result = result.replace(regAngle, val);
     });
   }
   return result;

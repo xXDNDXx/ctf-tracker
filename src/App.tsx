@@ -212,8 +212,11 @@ const MainAppContent: React.FC = () => {
                   <Route path="/cheatsheets" element={<CheatsheetView />} />
                   <Route path="/writeup" element={<WriteupStudio />} />
                   <Route path="/writeup/:id" element={<WriteupStudio />} />
+                  <Route path="/writeups" element={<Navigate to="/writeup" replace />} />
+                  <Route path="/cheatsheet" element={<Navigate to="/cheatsheets" replace />} />
                   <Route path="/analytics" element={<AnalyticsView />} />
                   <Route path="/exam" element={<ExamSimulatorPage />} />
+                  <Route path="/exam-simulator" element={<Navigate to="/exam" replace />} />
                   <Route path="*" element={<Navigate to="/tracker" replace />} />
                 </Routes>
               </Suspense>

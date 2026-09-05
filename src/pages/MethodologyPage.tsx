@@ -143,7 +143,7 @@ export const MethodologyPage: React.FC = () => {
 
   // Export Full Methodology as Obsidian/GitBook Markdown
   const handleExportFullMarkdown = () => {
-    let md = `# SPECTER CTF // UNIVERSAL 8-PHASE PENETRATION TESTING PLAYBOOK\n\n`;
+    let md = `# ZEROBOX // UNIVERSAL 8-PHASE PENETRATION TESTING PLAYBOOK\n\n`;
     md += `*Standardized Offensive Methodology & Service Branch Execution Framework*\n\n`;
     md += `**Target IP:** \`${globalVars.targetIp || '10.10.10.X'}\` | **Attacker Host:** \`${globalVars.lhost || '10.10.14.X'}\` | **LPORT:** \`${globalVars.lport || '4444'}\`\n\n`;
     md += `---\n\n`;
