@@ -17,6 +17,7 @@ import { NewMachineModal } from './components/tracker/NewMachineModal';
 import { PentestReportModal } from './components/writeup/PentestReportModal';
 import { OperatorDossierModal } from './components/common/OperatorDossierModal';
 import { LicenseModal } from './components/common/LicenseModal';
+import { OperatorFlexCardModal } from './components/common/OperatorFlexCardModal';
 import { QuickAssignIpModal } from './components/common/QuickAssignIpModal';
 import { KeyboardShortcutsModal } from './components/common/KeyboardShortcutsModal';
 import { useTacticalHotkeys } from './hooks/useTacticalHotkeys';
@@ -181,6 +182,9 @@ const MainAppContent: React.FC = () => {
 
       {/* ZeroBox Legal & Non-Commercial License Modal */}
       <LicenseModal />
+
+      {/* Operator Sharable Holographic Flex Card Modal */}
+      <OperatorFlexCardModal />
 
       {/* Tactical Keyboard Shortcuts & Hotkeys Modal */}
       <KeyboardShortcutsModal />

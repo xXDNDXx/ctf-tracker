@@ -43,6 +43,7 @@ import { EditableIpBadge } from '../common/EditableIpBadge';
 import { CategoryBadge } from '../common/CategoryBadge';
 import { classifyMachine, VULN_CATEGORIES } from '../../utils/categoryUtils';
 import { getRecommendedNotesForMachine } from '../../utils/obsidianManualUtils';
+import { QuickCommandsTab } from './QuickCommandsTab';
 
 export const MachineDetailModal: React.FC = () => {
   const {
@@ -79,7 +80,7 @@ export const MachineDetailModal: React.FC = () => {
   const [copiedWalkthrough, setCopiedWalkthrough] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [newTagInput, setNewTagInput] = useState('');
-  const [activeModalTab, setActiveModalTab] = useState<'overview' | 'checklist' | 'report' | 'walkthrough'>('overview');
+  const [activeModalTab, setActiveModalTab] = useState<'overview' | 'checklist' | 'commands' | 'report' | 'walkthrough'>('overview');
   const [expandedNotes, setExpandedNotes] = useState<Record<string, boolean>>({});
 
   const machine = machines.find((m) => m.id === selectedMachineId);
@@ -340,6 +341,17 @@ During the security assessment of target host ${machine.name} (${machine.ip}), s
             <span>OVERVIEW & FLAGS</span>
           </button>
           <button
+            onClick={() => setActiveModalTab('commands')}
+            className={`flex items-center gap-1.5 py-2.5 px-4 font-bold text-xs border-b-2 transition-all ${
+              activeModalTab === 'commands'
+                ? 'border-cyber-amber text-cyber-amber bg-cyber-amber/10'
+                : 'border-transparent text-cyber-muted hover:text-white'
+            }`}
+          >
+            <Zap className="w-3.5 h-3.5 text-cyber-amber" />
+            <span>⚡ ATTACK ARSENAL</span>
+          </button>
+          <button
             onClick={() => setActiveModalTab('checklist')}
             className={`flex items-center gap-1.5 py-2.5 px-4 font-bold text-xs border-b-2 transition-all ${
               activeModalTab === 'checklist'
@@ -386,7 +398,9 @@ During the security assessment of target host ${machine.name} (${machine.ip}), s
 
         {/* Modal Body (Scrollable Center Workspace) */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-5 text-xs scrollbar-thin">
-          {activeModalTab === 'checklist' ? (
+          {activeModalTab === 'commands' ? (
+            <QuickCommandsTab machine={machine} />
+          ) : activeModalTab === 'checklist' ? (
             <ChecklistWorkspace machine={machine} onOpenInWriteup={handleOpenInWriteup} />
           ) : activeModalTab === 'report' ? (
             <div className="space-y-6">

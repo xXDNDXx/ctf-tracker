@@ -25,6 +25,7 @@ export function useTacticalHotkeys() {
     setReconAutomationModalOpen,
     setShortcutsModalOpen,
     setBackupModalOpen,
+    setFlexCardModalOpen,
     cheatsheets,
     soundEnabled,
     zoomIn,
@@ -40,6 +41,7 @@ export function useTacticalHotkeys() {
         setCommandPaletteOpen(false);
         setReconAutomationModalOpen(false);
         setBackupModalOpen(false);
+        setFlexCardModalOpen(false);
         if (selectedMachineId) {
           setSelectedMachineId(null);
         }
@@ -245,6 +247,7 @@ export function useTacticalHotkeys() {
     setReconAutomationModalOpen,
     setShortcutsModalOpen,
     setBackupModalOpen,
+    setFlexCardModalOpen,
     cheatsheets,
     soundEnabled,
     zoomIn,

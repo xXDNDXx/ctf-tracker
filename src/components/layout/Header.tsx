@@ -27,7 +27,8 @@ import {
   Keyboard,
   Scale,
   Globe,
-  ShieldCheck
+  ShieldCheck,
+  Award
 } from 'lucide-react';
 import { CyberLogo } from '../common/CyberLogo';
 import { PlatformIcon } from '../common/PlatformBadge';
@@ -140,6 +141,7 @@ export const Header: React.FC = () => {
     setReconAutomationModalOpen,
     setOperatorModalOpen,
     setLicenseModalOpen,
+    setFlexCardModalOpen,
     setShortcutsModalOpen,
     uiScale,
     cycleUiScale,
@@ -168,6 +170,7 @@ export const Header: React.FC = () => {
       setReconAutomationModalOpen: s.setReconAutomationModalOpen,
       setOperatorModalOpen: s.setOperatorModalOpen,
       setLicenseModalOpen: s.setLicenseModalOpen,
+      setFlexCardModalOpen: s.setFlexCardModalOpen,
       setShortcutsModalOpen: s.setShortcutsModalOpen,
       uiScale: s.uiScale,
       cycleUiScale: s.cycleUiScale,
@@ -650,6 +653,19 @@ export const Header: React.FC = () => {
           >
             <Zap className="w-3.5 h-3.5" />
             <span>Scan & Payloads</span>
+          </button>
+
+          {/* Sharable Operator Flex Card Button */}
+          <button
+            onClick={() => {
+              setFlexCardModalOpen(true);
+              if (soundEnabled) playCyberSound('click');
+            }}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-purple-500/15 text-purple-300 border border-purple-500/40 hover:bg-purple-500 hover:text-white font-mono text-xs font-semibold transition-all shadow-glow-purple/20"
+            title="Generate and Share Verified Operator Scorecard (Flex Card PNG)"
+          >
+            <Award className="w-3.5 h-3.5 text-purple-400" />
+            <span className="hidden sm:inline">Flex Card</span>
           </button>
 
           {/* Quick Add Custom Machine Button */}

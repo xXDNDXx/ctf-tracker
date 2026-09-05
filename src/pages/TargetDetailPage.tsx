@@ -18,7 +18,8 @@ import {
   Star, 
   Tag, 
   ListChecks, 
-  AlertCircle 
+  AlertCircle,
+  Zap
 } from 'lucide-react';
 import { useCtfStore } from '../store/useCtfStore';
 import { Difficulty, PipelineStatus } from '../types';
@@ -27,6 +28,7 @@ import { formatSeconds, playCyberSound, triggerRootCelebration, sanitizeExternal
 import { PlatformBadge } from '../components/common/PlatformBadge';
 import { OsBadge } from '../components/common/OsBadge';
 import { EditableIpBadge } from '../components/common/EditableIpBadge';
+import { QuickCommandsTab } from '../components/tracker/QuickCommandsTab';
 
 export const TargetDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -49,7 +51,7 @@ export const TargetDetailPage: React.FC = () => {
 
   const machine = machines.find((m) => m.id === id);
 
-  const [activeTab, setActiveTab] = useState<'checklist' | 'overview'>('checklist');
+  const [activeTab, setActiveTab] = useState<'checklist' | 'overview' | 'commands'>('checklist');
   const [showUserFlag, setShowUserFlag] = useState(false);
   const [showRootFlag, setShowRootFlag] = useState(false);
   const [copiedUser, setCopiedUser] = useState(false);
@@ -238,6 +240,17 @@ export const TargetDetailPage: React.FC = () => {
           <Crosshair className="w-4 h-4" />
           <span>FLAGS VAULT & INTEL OVERVIEW</span>
         </button>
+        <button
+          onClick={() => setActiveTab('commands')}
+          className={`flex items-center gap-2 py-3 px-5 font-bold text-xs border-b-2 transition-all ${
+            activeTab === 'commands'
+              ? 'border-cyber-amber text-cyber-amber bg-cyber-amber/5'
+              : 'border-transparent text-cyber-muted hover:text-white'
+          }`}
+        >
+          <Zap className="w-4 h-4 text-cyber-amber" />
+          <span>⚡ ATTACK ARSENAL</span>
+        </button>
       </div>
 
       {/* Main Tab Stage */}
@@ -249,6 +262,10 @@ export const TargetDetailPage: React.FC = () => {
             navigate('/writeup');
           }} 
         />
+      ) : activeTab === 'commands' ? (
+        <div className="p-4 sm:p-6 rounded-b-xl border border-t-0 border-cyber-border bg-cyber-card">
+          <QuickCommandsTab machine={machine} />
+        </div>
       ) : (
         <div className="p-6 rounded-b-xl border border-t-0 border-cyber-border bg-cyber-card space-y-6">
           

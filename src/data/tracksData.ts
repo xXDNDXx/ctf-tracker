@@ -20,7 +20,9 @@ export const PRACTICE_TRACKS: PracticeTrack[] = [
     description: 'The definitive OffSec Certified Professional machine list curated by TJ_Null.',
     badgeColor: 'border-cyber-emerald/40 bg-cyber-emerald/10 text-cyber-emerald',
     accentColor: '#10B981',
-    filterFn: (m) => m.certifications.includes('OSCP'),
+    filterFn: (m) => 
+      m.certifications.includes('OSCP') || 
+      m.tags.some(t => ['oscp', 'tjnull', 'tj-null', 'offsec', 'pwk', 'pen-200'].includes(t.toLowerCase())),
   },
   {
     id: 'cpts-path',
@@ -32,7 +34,7 @@ export const PRACTICE_TRACKS: PracticeTrack[] = [
     accentColor: '#06B6D4',
     filterFn: (m) => 
       m.certifications.includes('CPTS') || 
-      m.tags.some(t => ['cpts', 'htb academy', 'academy', 'pivoting'].includes(t.toLowerCase())),
+      m.tags.some(t => ['cpts', 'htb academy', 'academy', 'pivoting', 'trophy room'].includes(t.toLowerCase())),
   },
   {
     id: 'crto-ad',

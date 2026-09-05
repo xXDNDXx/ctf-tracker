@@ -18,6 +18,7 @@ import {
   ChevronDown,
   ChevronUp,
   Target,
+  Trophy,
   Zap,
   ArrowUpDown,
   Eye,
@@ -590,6 +591,58 @@ export const TrackerView: React.FC = () => {
                 <span>🛡️ ONLY AD</span>
                 <span className="text-[9px] px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 ml-0.5">
                   {categoryCounts['AD_TOTAL'] || 0}
+                </span>
+              </button>
+
+              {/* Preset: TJ NULL (OSCP 2024) */}
+              <button
+                type="button"
+                onClick={() => {
+                  const isTjNull = filters.selectedTrack === 'tjnull-oscp';
+                  if (isTjNull) {
+                    setFilters({ selectedTrack: 'ALL' });
+                  } else {
+                    setFilters({ selectedTrack: 'tjnull-oscp', selectedVulnCategory: 'ALL', selectedCategory: 'ALL', excludeActiveDirectory: false });
+                  }
+                  if (soundEnabled) playCyberSound('click');
+                }}
+                className={`px-2.5 py-1 rounded text-[11px] border font-mono font-bold transition-all flex items-center gap-1.5 ${
+                  filters.selectedTrack === 'tjnull-oscp'
+                    ? 'bg-emerald-500/25 text-emerald-300 border-emerald-400 shadow-glow-emerald/30 ring-1 ring-emerald-500/50 font-extrabold'
+                    : 'bg-cyber-bg border-emerald-500/30 text-emerald-400/80 hover:text-emerald-300 hover:border-emerald-400'
+                }`}
+                title="Filter machines on TJ_Null's legendary OSCP 2024 syllabus"
+              >
+                <Target className="w-3.5 h-3.5 text-emerald-400" />
+                <span>🎯 TJ NULL (OSCP)</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 ml-0.5">
+                  {trackStats['tjnull-oscp']?.total || 0}
+                </span>
+              </button>
+
+              {/* Preset: CPTS TROPHY ROOM */}
+              <button
+                type="button"
+                onClick={() => {
+                  const isCpts = filters.selectedTrack === 'cpts-path';
+                  if (isCpts) {
+                    setFilters({ selectedTrack: 'ALL' });
+                  } else {
+                    setFilters({ selectedTrack: 'cpts-path', selectedVulnCategory: 'ALL', selectedCategory: 'ALL', excludeActiveDirectory: false });
+                  }
+                  if (soundEnabled) playCyberSound('click');
+                }}
+                className={`px-2.5 py-1 rounded text-[11px] border font-mono font-bold transition-all flex items-center gap-1.5 ${
+                  filters.selectedTrack === 'cpts-path'
+                    ? 'bg-cyan-500/25 text-cyan-300 border-cyan-400 shadow-glow-cyan/30 ring-1 ring-cyan-500/50 font-extrabold'
+                    : 'bg-cyber-bg border-cyan-500/30 text-cyan-400/80 hover:text-cyan-300 hover:border-cyan-400'
+                }`}
+                title="Filter machines on HTB Academy CPTS (Certified Penetration Testing Specialist) Trophy Room"
+              >
+                <Trophy className="w-3.5 h-3.5 text-cyan-400" />
+                <span>🏆 CPTS TROPHY ROOM</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 ml-0.5">
+                  {trackStats['cpts-path']?.total || 0}
                 </span>
               </button>
 

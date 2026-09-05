@@ -145,6 +145,8 @@ interface CtfStoreState {
   setOperatorModalOpen: (open: boolean) => void;
   licenseModalOpen: boolean;
   setLicenseModalOpen: (open: boolean) => void;
+  flexCardModalOpen: boolean;
+  setFlexCardModalOpen: (open: boolean) => void;
   shortcutsModalOpen: boolean;
   setShortcutsModalOpen: (open: boolean) => void;
   setMobileMenuOpen: (open: boolean) => void;
@@ -159,6 +161,7 @@ interface CtfStoreState {
 
   // Machine Actions
   updateMachineStatus: (id: string, status: PipelineStatus) => void;
+  batchUpdateMachineStatus: (updates: { machineId: string; status: PipelineStatus }[]) => void;
   updateMachine: (id: string, updates: Partial<Machine>) => void;
   addCustomMachine: (machine: Omit<Machine, 'id' | 'createdAt' | 'updatedAt'>) => void;
   deleteMachine: (id: string) => void;
@@ -400,6 +403,7 @@ export const useCtfStore = create<CtfStoreState>()(
       reconAutomationModalOpen: false,
       operatorModalOpen: false,
       licenseModalOpen: false,
+      flexCardModalOpen: false,
       shortcutsModalOpen: false,
       mobileMenuOpen: false,
       assignIpMachineId: null,
@@ -422,6 +426,7 @@ export const useCtfStore = create<CtfStoreState>()(
       setReconAutomationModalOpen: (open) => set({ reconAutomationModalOpen: open }),
       setOperatorModalOpen: (open) => set({ operatorModalOpen: open }),
       setLicenseModalOpen: (open) => set({ licenseModalOpen: open }),
+      setFlexCardModalOpen: (open) => set({ flexCardModalOpen: open }),
       setShortcutsModalOpen: (open) => set({ shortcutsModalOpen: open }),
       setMobileMenuOpen: (open) => set({ mobileMenuOpen: open }),
       setAssignIpMachineId: (id) => set({ assignIpMachineId: id }),
@@ -501,6 +506,33 @@ export const useCtfStore = create<CtfStoreState>()(
             activitySessions: sessions,
             isTimerRunning: shouldStopTimer ? false : state.isTimerRunning,
           };
+        });
+      },
+
+      batchUpdateMachineStatus: (updates) => {
+        if (!updates || updates.length === 0) return;
+        const updateMap = new Map(updates.map(u => [u.machineId, u.status]));
+        const now = new Date().toISOString();
+        set((state) => {
+          const updated = state.machines.map((m) => {
+            const targetStatus = updateMap.get(m.id);
+            if (!targetStatus) return m;
+
+            // Invariant: Never downgrade Daniel Dayan's existing completed machines
+            if (m.status === 'completed' && targetStatus !== 'completed') return m;
+
+            const isPwned = targetStatus === 'root' || targetStatus === 'completed';
+            const isFoothold = targetStatus === 'foothold';
+
+            return {
+              ...m,
+              status: targetStatus,
+              rootPwnedAt: isPwned ? (m.rootPwnedAt || now) : m.rootPwnedAt,
+              userPwnedAt: (isPwned || isFoothold) ? (m.userPwnedAt || now) : m.userPwnedAt,
+              updatedAt: now,
+            };
+          });
+          return { machines: updated };
         });
       },
 
