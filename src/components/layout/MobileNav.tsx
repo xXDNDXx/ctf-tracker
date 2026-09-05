@@ -256,6 +256,9 @@ export const MobileNav: React.FC = () => {
                       }`}>
                         <input
                           type="text"
+                          id="mobile-lhost-input"
+                          name="mobile-lhost"
+                          aria-label="Attacker Host LHOST"
                           value={globalVars.lhost}
                           onChange={(e) => setGlobalVars({ lhost: e.target.value })}
                           className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
@@ -288,6 +291,9 @@ export const MobileNav: React.FC = () => {
                       }`}>
                         <input
                           type="text"
+                          id="mobile-lport-input"
+                          name="mobile-lport"
+                          aria-label="Attacker Port LPORT"
                           value={globalVars.lport}
                           onChange={(e) => setGlobalVars({ lport: e.target.value })}
                           className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"

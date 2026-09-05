@@ -298,6 +298,9 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
             <span className="text-cyber-muted text-[10px]">LHOST:</span>
             <input
               type="text"
+              id="cheatsheet-lhost-input"
+              name="cheatsheet-lhost"
+              aria-label="Attacker Host LHOST"
               value={globalVars.lhost}
               onChange={(e) => setGlobalVars({ lhost: e.target.value })}
               className="w-28 bg-cyber-card px-2 py-1 rounded border border-cyber-border text-white text-xs focus:outline-none focus:border-cyber-cyan transition-all"
@@ -308,6 +311,9 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
             <span className="text-cyber-muted text-[10px]">LPORT:</span>
             <input
               type="text"
+              id="cheatsheet-lport-input"
+              name="cheatsheet-lport"
+              aria-label="Attacker Port LPORT"
               value={globalVars.lport}
               onChange={(e) => setGlobalVars({ lport: e.target.value })}
               className="w-16 bg-cyber-card px-2 py-1 rounded border border-cyber-border text-white text-xs focus:outline-none focus:border-cyber-cyan transition-all"
@@ -318,6 +324,9 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
             <span className="text-cyber-muted text-[10px]">TARGET:</span>
             <input
               type="text"
+              id="cheatsheet-target-input"
+              name="cheatsheet-target"
+              aria-label="Target IP Address"
               value={globalVars.targetIp}
               onChange={(e) => setGlobalVars({ targetIp: e.target.value })}
               className="w-28 bg-cyber-card px-2 py-1 rounded border border-cyber-border text-cyber-emerald font-bold text-xs focus:outline-none focus:border-cyber-emerald transition-all"
@@ -483,6 +492,9 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
               <Search className="absolute left-3 top-2.5 w-4 h-4 text-cyber-muted" />
               <input
                 type="text"
+                id="cheatsheet-search-input"
+                name="cheatsheet-search"
+                aria-label="Search cheatsheets and field manual notes"
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
@@ -1216,11 +1228,13 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
 
             <form onSubmit={handleCreateCustom} className="space-y-3 text-xs">
               <div>
-                <label className="block text-cyber-muted uppercase tracking-wider mb-1 font-semibold">
+                <label htmlFor="custom-snippet-title" className="block text-cyber-muted uppercase tracking-wider mb-1 font-semibold">
                   Command Title *
                 </label>
                 <input
                   type="text"
+                  id="custom-snippet-title"
+                  name="custom-snippet-title"
                   required
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
@@ -1230,10 +1244,12 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
               </div>
 
               <div>
-                <label className="block text-cyber-muted uppercase tracking-wider mb-1 font-semibold">
+                <label htmlFor="custom-snippet-category" className="block text-cyber-muted uppercase tracking-wider mb-1 font-semibold">
                   Category
                 </label>
                 <select
+                  id="custom-snippet-category"
+                  name="custom-snippet-category"
                   value={newCategory}
                   onChange={(e) => setNewCategory(e.target.value)}
                   className="w-full bg-cyber-bg px-3 py-2 rounded-lg border border-cyber-border text-white focus:outline-none focus:border-cyber-cyan"
@@ -1249,11 +1265,13 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
               </div>
 
               <div>
-                <label className="block text-cyber-muted uppercase tracking-wider mb-1 font-semibold">
+                <label htmlFor="custom-snippet-desc" className="block text-cyber-muted uppercase tracking-wider mb-1 font-semibold">
                   Description
                 </label>
                 <input
                   type="text"
+                  id="custom-snippet-desc"
+                  name="custom-snippet-desc"
                   value={newDesc}
                   onChange={(e) => setNewDesc(e.target.value)}
                   placeholder="Brief note on exploit parameters..."
@@ -1262,10 +1280,12 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
               </div>
 
               <div>
-                <label className="block text-cyber-muted uppercase tracking-wider mb-1 font-semibold">
+                <label htmlFor="custom-snippet-template" className="block text-cyber-muted uppercase tracking-wider mb-1 font-semibold">
                   Command Template (Supports &#123;TARGET_IP&#125;, &#123;LHOST&#125;, &#123;LPORT&#125;) *
                 </label>
                 <textarea
+                  id="custom-snippet-template"
+                  name="custom-snippet-template"
                   rows={3}
                   required
                   value={newTemplate}
@@ -1276,11 +1296,13 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
               </div>
 
               <div>
-                <label className="block text-cyber-muted uppercase tracking-wider mb-1 font-semibold">
+                <label htmlFor="custom-snippet-tags" className="block text-cyber-muted uppercase tracking-wider mb-1 font-semibold">
                   Tags (Comma-separated)
                 </label>
                 <input
                   type="text"
+                  id="custom-snippet-tags"
+                  name="custom-snippet-tags"
                   value={newTags}
                   onChange={(e) => setNewTags(e.target.value)}
                   placeholder="rce, python, cve-2023-xxxx"
