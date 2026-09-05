@@ -18,7 +18,8 @@ import {
   Layers,
   Compass,
   FileText,
-  Languages
+  Languages,
+  ArrowRightLeft
 } from 'lucide-react';
 import { useCtfStore } from '../../store/useCtfStore';
 import { 
@@ -86,8 +87,18 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
   // Reverse shell builder state (inspired by 0dayCTF/reverse-shell-generator)
   const [selectedRevShellIdx, setSelectedRevShellIdx] = useState(0);
   const [revShellOsFilter, setRevShellOsFilter] = useState<'All' | 'Linux' | 'Windows'>('All');
-  const [revShellListenerType, setRevShellListenerType] = useState<'nc' | 'rlwrap' | 'ncat' | 'rustcat' | 'socat'>('nc');
-  const [revShellEncoding, setRevShellEncoding] = useState<'raw' | 'url' | 'base64'>('raw');
+  const [revShellSelectedShell, setRevShellSelectedShell] = useState<string>('/bin/bash');
+  const [revShellListenerType, setRevShellListenerType] = useState<
+    'nc' | 'rlwrap' | 'ncat' | 'ncat-ssl' | 'rustcat' | 'pwncat' | 'socat' | 'powercat' | 'windows-nc'
+  >('nc');
+  const [revShellEncoding, setRevShellEncoding] = useState<'raw' | 'url' | 'double-url' | 'base64'>('raw');
+  const [notesTextDirection, setNotesTextDirection] = useState<'auto' | 'rtl' | 'ltr'>('auto');
+
+  const handleIncrementPort = () => {
+    const current = parseInt(globalVars.lport, 10) || 4444;
+    setGlobalVars({ lport: String(current + 1) });
+    if (soundEnabled) playCyberSound('flag');
+  };
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -152,8 +163,14 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
   const cptsCategories = useMemo(() => getCptsCategories(), []);
 
   const filteredCptsNotes = useMemo(() => {
-    return searchCptsNotes(searchQuery, selectedCptsCategory);
-  }, [searchQuery, selectedCptsCategory]);
+    let list = searchCptsNotes(searchQuery, selectedCptsCategory);
+    if (cptsLangMode === 'en') {
+      list = list.filter(n => (n.titleEn && n.titleEn.length > 2) || (n.enSummary && n.enSummary.length > 2) || !/[\u0590-\u05FF]/.test(n.title));
+    } else if (cptsLangMode === 'he') {
+      list = list.filter(n => /[\u0590-\u05FF]/.test(n.title + ' ' + (n.heSummary || '') + ' ' + (n.summary || '')));
+    }
+    return list;
+  }, [searchQuery, selectedCptsCategory, cptsLangMode]);
 
   const visibleCptsNotes = useMemo(() => {
     return filteredCptsNotes.slice(0, cptsLimit);
@@ -173,7 +190,7 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
 
   const activeRevShell = availableRevShells[selectedRevShellIdx] || availableRevShells[0] || REVERSE_SHELL_TEMPLATES[0];
 
-  // Dynamic Listener Command based on selected listener type
+  // Dynamic Listener Command based on selected listener type (0dayCTF suite)
   const computedListenerCmd = useMemo(() => {
     const port = globalVars.lport || '4444';
     switch (revShellListenerType) {
@@ -181,21 +198,32 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
         return `rlwrap nc -lvnp ${port}`;
       case 'ncat':
         return `ncat -lvnp ${port}`;
+      case 'ncat-ssl':
+        return `ncat --ssl -lvnp ${port}`;
       case 'rustcat':
         return `rcat -lp ${port}`;
+      case 'pwncat':
+        return `pwncat-cs -lp ${port}`;
       case 'socat':
         return `socat file:\`tty\`,raw,echo=0 TCP-L:${port}`;
+      case 'powercat':
+        return `powercat -l -p ${port}`;
+      case 'windows-nc':
+        return `nc.exe -lvnp ${port}`;
       case 'nc':
       default:
         return `nc -lvnp ${port}`;
     }
   }, [revShellListenerType, globalVars.lport]);
 
-  // Compute final payload with optional encoding
+  // Compute final payload with optional encoding & dynamic shell replacement
   const computedPayloadCmd = useMemo(() => {
     let base = interpolateCommand(activeRevShell.command, globalVars);
+    base = base.replace(/{shell}/g, revShellSelectedShell);
     if (revShellEncoding === 'url') {
       return encodeURIComponent(base);
+    } else if (revShellEncoding === 'double-url') {
+      return encodeURIComponent(encodeURIComponent(base));
     } else if (revShellEncoding === 'base64') {
       try {
         return btoa(base);
@@ -204,7 +232,7 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
       }
     }
     return base;
-  }, [activeRevShell, globalVars, revShellEncoding]);
+  }, [activeRevShell, globalVars, revShellEncoding, revShellSelectedShell]);
 
   return (
     <div className="space-y-6 w-full font-mono pb-12">
@@ -523,28 +551,58 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                         ))}
                       </div>
 
+                      {/* Shell Binary Selector (0dayCTF style) */}
+                      <div className="flex items-center gap-1 bg-cyber-bg p-0.5 rounded border border-cyber-border text-[10px]">
+                        <span className="text-[9px] text-cyber-muted px-1">SHELL:</span>
+                        {(['/bin/bash', '/bin/sh', '/bin/zsh', 'powershell', 'cmd.exe'] as const).map(sh => (
+                          <button
+                            key={sh}
+                            type="button"
+                            onClick={() => setRevShellSelectedShell(sh)}
+                            className={`px-1.5 py-0.5 rounded font-mono transition-all ${
+                              revShellSelectedShell === sh
+                                ? 'bg-purple-600 text-white font-bold shadow-sm'
+                                : 'text-cyber-muted hover:text-white'
+                            }`}
+                          >
+                            {sh.replace('/bin/', '')}
+                          </button>
+                        ))}
+                      </div>
+
                       {/* Encoding Selector */}
                       <div className="flex items-center gap-1 bg-cyber-bg p-0.5 rounded border border-cyber-border text-[10px]">
-                        {(['raw', 'url', 'base64'] as const).map(enc => (
+                        {(['raw', 'url', 'double-url', 'base64'] as const).map(enc => (
                           <button
                             key={enc}
                             type="button"
                             data-testid={`revshell-enc-${enc}`}
                             onClick={() => setRevShellEncoding(enc)}
-                            className={`px-2 py-0.5 rounded font-bold uppercase transition-all ${
+                            className={`px-1.5 py-0.5 rounded font-bold uppercase transition-all ${
                               revShellEncoding === enc
                                 ? 'bg-cyber-amber text-black'
                                 : 'text-cyber-muted hover:text-white'
                             }`}
                           >
-                            {enc.toUpperCase()}
+                            {enc === 'double-url' ? '2X URL' : enc.toUpperCase()}
                           </button>
                         ))}
                       </div>
 
-                      <span className="text-[10px] text-cyber-cyan uppercase font-semibold px-2 py-0.5 rounded bg-cyber-cyan/10 border border-cyber-cyan/30">
-                        {globalVars.lhost}:{globalVars.lport}
-                      </span>
+                      {/* Target Host:Port with +1 Port Increment */}
+                      <div className="flex items-center gap-1">
+                        <span className="text-[10px] text-cyber-cyan uppercase font-semibold px-2 py-0.5 rounded bg-cyber-cyan/10 border border-cyber-cyan/30">
+                          {globalVars.lhost}:{globalVars.lport}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={handleIncrementPort}
+                          className="px-1.5 py-0.5 rounded bg-cyber-bg border border-cyber-cyan/40 text-[10px] text-cyber-cyan hover:bg-cyber-cyan hover:text-black font-bold transition-all"
+                          title="Increment listening port by 1 (revshells style)"
+                        >
+                          +1 PORT
+                        </button>
+                      </div>
                     </div>
                   </div>
 
@@ -612,9 +670,23 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                           <span className="text-[10px] uppercase font-bold text-cyber-muted">
                             ATTACKER LISTENER COMMAND
                           </span>
-                          <div className="flex items-center gap-1 text-[9px] font-mono">
-                            {(['nc', 'rlwrap', 'ncat', 'rustcat', 'socat'] as const).map(lt => (
+                          <div className="flex items-center gap-1 text-[9px] font-mono flex-wrap">
+                            {(['nc', 'rlwrap', 'ncat', 'ncat-ssl', 'rustcat', 'pwncat', 'socat', 'powercat', 'windows-nc'] as const).map(lt => (
                               <button
+                                key={lt}
+                                type="button"
+                                onClick={() => setRevShellListenerType(lt)}
+                                className={`px-1.5 py-0.2 rounded transition-all ${
+                                  revShellListenerType === lt
+                                    ? 'bg-cyber-emerald text-black font-bold'
+                                    : 'text-cyber-muted hover:text-white bg-black/40'
+                                }`}
+                              >
+                                {lt}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
                                 key={lt}
                                 type="button"
                                 onClick={() => setRevShellListenerType(lt)}
