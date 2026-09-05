@@ -2,6 +2,36 @@ import cptsNotesData from '../data/cptsNotesIndex.json';
 import { Machine } from '../types';
 import { classifyMachine } from './categoryUtils';
 
+export interface ObsidianCallout {
+  type: 'abstract' | 'tip' | 'warning' | 'danger' | 'example' | 'note' | 'important' | 'cite' | 'success' | 'info' | 'question';
+  title: string;
+  content: string;
+  isFoldable?: boolean;
+  isFoldedByDefault?: boolean;
+}
+
+export interface ObsidianTocItem {
+  level: number;
+  text: string;
+  id: string;
+  isHebrew: boolean;
+}
+
+export interface ObsidianChecklistItem {
+  text: string;
+  checked: boolean;
+  raw: string;
+}
+
+export interface ParsedObsidianNote {
+  hebrewSection?: string;
+  englishSection: string;
+  callouts: ObsidianCallout[];
+  checklist: ObsidianChecklistItem[];
+  tableOfContents: ObsidianTocItem[];
+  outgoingWikilinks: string[];
+}
+
 export interface CptsNoteEntry {
   id: string;
   title: string;
@@ -14,6 +44,8 @@ export interface CptsNoteEntry {
   subCategory: string;
   tags: string[];
   difficulty: string;
+  noteType?: string;
+  dateModified?: string;
   summary: string;
   enSummary?: string;
   heSummary?: string;
@@ -22,9 +54,194 @@ export interface CptsNoteEntry {
   hasHebrew?: boolean;
   commands: string[];
   relPath: string;
+  filename?: string;
+  outgoingWikilinks?: string[];
+  backlinks?: string[];
+  rawMarkdown?: string;
 }
 
-export const CPTS_NOTES: CptsNoteEntry[] = cptsNotesData as CptsNoteEntry[];
+interface CptsRawPayload {
+  notes?: CptsNoteEntry[];
+  wikilinkMap?: Record<string, string>;
+}
+
+const rawData = cptsNotesData as unknown as CptsRawPayload | CptsNoteEntry[];
+export const CPTS_NOTES: CptsNoteEntry[] = Array.isArray(rawData) ? rawData : (rawData.notes || []);
+export const WIKILINK_MAP: Record<string, string> = Array.isArray(rawData) ? {} : (rawData.wikilinkMap || {});
+
+/**
+ * Fast lookup of a note by its unique ID
+ */
+export function getNoteById(id: string): CptsNoteEntry | undefined {
+  return CPTS_NOTES.find((n) => n.id === id);
+}
+
+/**
+ * Resolves an Obsidian wikilink (e.g. "07 Kerberos (88)", "1 Nmap", "ffuf")
+ * to the corresponding note in the CPTS Field Manual.
+ */
+export function resolveWikilink(rawTarget: string): { targetNoteId?: string; label: string; exists: boolean } {
+  if (!rawTarget) return { label: '', exists: false };
+  const target = rawTarget.trim();
+  const lower = target.toLowerCase();
+  const stripped = lower.replace(/^\d+[\s_.-]*/, '').trim();
+
+  // 1. Direct check in precomputed wikilinkMap
+  if (WIKILINK_MAP[lower]) {
+    return { targetNoteId: WIKILINK_MAP[lower], label: target, exists: true };
+  }
+  if (stripped && WIKILINK_MAP[stripped]) {
+    return { targetNoteId: WIKILINK_MAP[stripped], label: target, exists: true };
+  }
+
+  // 2. Slug check
+  const slug = lower.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  if (WIKILINK_MAP[slug]) {
+    return { targetNoteId: WIKILINK_MAP[slug], label: target, exists: true };
+  }
+  if (WIKILINK_MAP[`cpts-${slug}`]) {
+    return { targetNoteId: WIKILINK_MAP[`cpts-${slug}`], label: target, exists: true };
+  }
+
+  // 3. Fallback linear search
+  const found = CPTS_NOTES.find(n => 
+    (n.filename && n.filename.toLowerCase() === lower) ||
+    n.title.toLowerCase() === lower ||
+    n.titleEn.toLowerCase() === lower ||
+    (n.titleHe && n.titleHe === target) ||
+    (n.filename && n.filename.replace(/^\d+[\s_.-]*/, '').toLowerCase() === stripped) ||
+    n.id === `cpts-${slug}`
+  );
+
+  if (found) {
+    return { targetNoteId: found.id, label: target, exists: true };
+  }
+
+  return { label: target, exists: false };
+}
+
+/**
+ * Retrieves all notes that reference the given note ID (backlinks)
+ */
+export function getBacklinksForNote(noteId: string): CptsNoteEntry[] {
+  const current = getNoteById(noteId);
+  if (current && current.backlinks && current.backlinks.length > 0) {
+    return current.backlinks
+      .map(bId => getNoteById(bId))
+      .filter((n): n is CptsNoteEntry => Boolean(n));
+  }
+  return [];
+}
+
+/**
+ * On-the-fly zero-dependency parser for an authentic Obsidian note
+ */
+export function parseObsidianNote(rawMarkdown: string): ParsedObsidianNote {
+  if (!rawMarkdown) {
+    return { englishSection: '', callouts: [], checklist: [], tableOfContents: [], outgoingWikilinks: [] };
+  }
+
+  // 1. Extract Hebrew section if present
+  let hebrewSection: string | undefined;
+  const hebrewUpgradeMatch = rawMarkdown.match(/<!--\s*CPTS-HEBREW-UPGRADE:START\s*-->([\s\S]*?)<!--\s*CPTS-HEBREW-UPGRADE:END\s*-->/);
+  if (hebrewUpgradeMatch) {
+    hebrewSection = hebrewUpgradeMatch[1].trim();
+  } else {
+    // Check for "## כרטיס עבודה עברי"
+    const hebrewCardMatch = rawMarkdown.match(/(##\s*כרטיס עבודה עברי[\s\S]*?)(?=\n##\s*1|\n##\s*\[|\n---|\n#\s+[^#]|$)/);
+    if (hebrewCardMatch) {
+      hebrewSection = hebrewCardMatch[1].trim();
+    }
+  }
+
+  // 2. Extract English / Technical methodology section
+  // Strip frontmatter and Hebrew upgrade block for clean English technical view
+  let englishSection = rawMarkdown
+    .replace(/^---[\s\S]*?---\n*/, '')
+    .replace(/<!--\s*CPTS-HEBREW-UPGRADE:START\s*-->[\s\S]*?<!--\s*CPTS-HEBREW-UPGRADE:END\s*-->\n*/, '')
+    .trim();
+
+  // 3. Extract Callouts
+  const callouts: ObsidianCallout[] = [];
+  const calloutRegex = /^>\s*\[!([a-zA-Z_-]+)\]([+-])?\s*(.*?)$((?:\n>\s*.*)*)/gm;
+  let cMatch;
+  while ((cMatch = calloutRegex.exec(rawMarkdown)) !== null) {
+    const rawType = cMatch[1].toLowerCase();
+    const foldChar = cMatch[2];
+    const title = cMatch[3].trim();
+    const bodyLines = cMatch[4]
+      ? cMatch[4].split('\n').map(l => l.replace(/^>\s?/, '')).join('\n').trim()
+      : '';
+
+    let type: ObsidianCallout['type'] = 'note';
+    if (rawType === 'abstract' || rawType === 'summary' || rawType === 'tldr') type = 'abstract';
+    else if (rawType === 'tip' || rawType === 'hint') type = 'tip';
+    else if (rawType === 'warning' || rawType === 'caution' || rawType === 'attention') type = 'warning';
+    else if (rawType === 'danger' || rawType === 'bug' || rawType === 'failure' || rawType === 'error') type = 'danger';
+    else if (rawType === 'example' || rawType === 'meta') type = 'example';
+    else if (rawType === 'important') type = 'important';
+    else if (rawType === 'cite' || rawType === 'quote') type = 'cite';
+    else if (rawType === 'success' || rawType === 'check' || rawType === 'done') type = 'success';
+    else if (rawType === 'info') type = 'info';
+    else if (rawType === 'question' || rawType === 'help' || rawType === 'faq') type = 'question';
+
+    callouts.push({
+      type,
+      title: title || type.toUpperCase(),
+      content: bodyLines,
+      isFoldable: foldChar === '+' || foldChar === '-',
+      isFoldedByDefault: foldChar === '-'
+    });
+  }
+
+  // 4. Extract Checklists
+  const checklist: ObsidianChecklistItem[] = [];
+  const checkRegex = /^-\s*\[([ xX])\]\s*(.+)$/gm;
+  let chkMatch;
+  while ((chkMatch = checkRegex.exec(rawMarkdown)) !== null) {
+    checklist.push({
+      checked: chkMatch[1].toLowerCase() === 'x',
+      text: chkMatch[2].trim(),
+      raw: chkMatch[0]
+    });
+  }
+
+  // 5. Extract Table of Contents from headings
+  const tableOfContents: ObsidianTocItem[] = [];
+  const headingRegex = /^(#{1,4})\s+(.+)$/gm;
+  let hMatch;
+  while ((hMatch = headingRegex.exec(rawMarkdown)) !== null) {
+    const level = hMatch[1].length;
+    const text = hMatch[2].trim().replace(/\{#[^}]+\}/g, '').trim();
+    if (text.startsWith('---') || text.startsWith('===')) continue;
+    const isHebrew = /[\u0590-\u05FF]/.test(text);
+    const id = text.toLowerCase().replace(/[^a-z0-9\u0590-\u05FF]+/g, '-').replace(/^-+|-+$/g, '');
+    tableOfContents.push({ level, text, id, isHebrew });
+  }
+
+  // 6. Outgoing wikilinks
+  const outgoingWikilinks: string[] = [];
+  const linkRegex = /\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|([^\]]+))?\]\]/g;
+  let lMatch;
+  const seenLinks = new Set<string>();
+  while ((lMatch = linkRegex.exec(rawMarkdown)) !== null) {
+    const target = lMatch[1].trim();
+    if (target && !seenLinks.has(target)) {
+      seenLinks.add(target);
+      outgoingWikilinks.push(target);
+    }
+  }
+
+  return {
+    hebrewSection,
+    englishSection,
+    callouts,
+    checklist,
+    tableOfContents,
+    outgoingWikilinks
+  };
+}
+
 
 const CANONICAL_CATEGORY_RANKS: Record<string, number> = {
   'Methodology & Exam Playbooks': 0,

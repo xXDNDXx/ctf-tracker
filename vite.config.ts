@@ -25,10 +25,15 @@ export default defineConfig({
         entryFileNames: 'assets/[name]-[hash].js',
         chunkFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]',
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom'],
-          'vendor-ui': ['framer-motion', 'lucide-react', 'clsx', 'tailwind-merge'],
-          'vendor-utils': ['zustand', 'canvas-confetti'],
+        manualChunks(id) {
+          if (id.includes('cptsNotesIndex.json')) {
+            return 'cpts-vault-data';
+          }
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('zustand')) return 'vendor-framework';
+            if (id.includes('framer-motion') || id.includes('lucide-react') || id.includes('clsx') || id.includes('tailwind-merge')) return 'vendor-ui';
+            if (id.includes('canvas-confetti')) return 'vendor-utils';
+          }
         }
       }
     }

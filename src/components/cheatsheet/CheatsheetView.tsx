@@ -41,8 +41,10 @@ import {
   getCptsCategories, 
   getCategoryTopicGroups,
   parseSubCategory,
-  searchCptsNotes 
+  searchCptsNotes,
+  getNoteById
 } from '../../utils/obsidianManualUtils';
+import { ObsidianNoteViewer } from './ObsidianNoteViewer';
 
 export type CptsLanguageMode = 'bilingual' | 'en' | 'he';
 export type CptsDisplayLayout = 'cards' | 'quick-index' | 'grouped';
@@ -88,12 +90,25 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
   const [searchQuery, setSearchQuery] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  // Sync viewMode when route changes
+  const [activeObsidianNote, setActiveObsidianNote] = useState<CptsNoteEntry | null>(null);
+
+  // Sync viewMode and activeObsidianNote when route or search query changes
   useEffect(() => {
     if (defaultMode) {
       setViewMode(defaultMode);
     } else if (location.pathname.includes('note') || location.pathname.includes('manual') || location.search.includes('manual') || location.search.includes('cpts')) {
       setViewMode('cpts-manual');
+    }
+
+    // Check for direct note opening via query parameter, e.g. ?note=cpts-...
+    const params = new URLSearchParams(location.search);
+    const noteParam = params.get('note');
+    if (noteParam) {
+      const found = getNoteById(noteParam);
+      if (found) {
+        setActiveObsidianNote(found);
+        setViewMode('cpts-manual');
+      }
     }
   }, [defaultMode, location.pathname, location.search]);
 
@@ -1072,27 +1087,44 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                                     (n.tools && n.tools.some((t) => t.toLowerCase().includes(q)))
                                   );
                                 })
-                                .slice(0, 40)
-                                .map((note) => (
-                                  <button
-                                    key={note.id}
-                                    type="button"
-                                    onClick={() => handleJumpToNote(note)}
-                                    className="w-full px-2 py-1.5 rounded hover:bg-purple-900/40 text-left transition-all group flex flex-col"
-                                  >
-                                    <div className="flex items-center justify-between gap-1">
-                                      <span className="text-white text-xs font-bold group-hover:text-purple-300 truncate flex-1">
-                                        {note.titleEn || note.title}
-                                      </span>
-                                      <span className="text-[9px] font-mono px-1 rounded bg-black/40 text-purple-400 flex-shrink-0">
-                                        {note.category.split(' ')[0]}
-                                      </span>
-                                    </div>
-                                    <span className="text-[10px] text-cyber-muted truncate">
-                                      {note.subCategory || note.category}
-                                    </span>
-                                  </button>
-                                ))}
+                                 .slice(0, 40)
+                                 .map((note) => (
+                                   <div
+                                     key={note.id}
+                                     className="flex items-center gap-1 w-full rounded hover:bg-purple-900/40 transition-all p-1 group"
+                                   >
+                                     <button
+                                       type="button"
+                                       onClick={() => {
+                                         setJumpDropdownOpen(false);
+                                         setActiveObsidianNote(note);
+                                         if (soundEnabled) playCyberSound('root');
+                                       }}
+                                       className="flex-1 text-left px-1.5 py-1 rounded transition-all flex flex-col min-w-0 cursor-pointer"
+                                       title="Open full Obsidian note"
+                                     >
+                                       <div className="flex items-center justify-between gap-1">
+                                         <span className="text-white text-xs font-bold group-hover:text-purple-300 truncate flex-1">
+                                           {note.titleEn || note.title}
+                                         </span>
+                                         <span className="text-[9px] font-mono px-1 rounded bg-black/40 text-purple-400 flex-shrink-0">
+                                           {note.category.split(' ')[0]}
+                                         </span>
+                                       </div>
+                                       <span className="text-[10px] text-cyber-muted truncate block">
+                                         {note.subCategory || note.category}
+                                       </span>
+                                     </button>
+                                     <button
+                                       type="button"
+                                       onClick={() => handleJumpToNote(note)}
+                                       className="px-2 py-1 rounded bg-black/50 border border-purple-500/30 text-purple-300 hover:text-white hover:bg-purple-900/60 text-[10px] font-mono flex-shrink-0 cursor-pointer"
+                                       title="Scroll to note in page"
+                                     >
+                                       Jump
+                                     </button>
+                                   </div>
+                                 ))}
                             </div>
                           </div>
                         </>
@@ -1375,15 +1407,26 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                                   {/* Title & Objective */}
                                   <td className="py-2.5 px-3">
                                     <div dir={isRtl ? 'rtl' : 'ltr'} className={isRtl ? 'text-right' : 'text-left'}>
-                                      <span className="font-bold text-white text-xs hover:text-purple-300 transition-colors">
-                                        {cptsLangMode === 'en'
-                                          ? note.titleEn || note.title
-                                          : cptsLangMode === 'he'
-                                          ? note.titleHe || note.title
-                                          : note.titleEn || note.title}
-                                      </span>
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          if (soundEnabled) playCyberSound('click');
+                                          setActiveObsidianNote(note);
+                                        }}
+                                        className="font-bold text-white text-xs hover:text-purple-300 transition-colors inline-flex items-center gap-1.5 cursor-pointer text-left"
+                                        title="Open authentic Obsidian note"
+                                      >
+                                        <BookOpen className="w-3 h-3 text-purple-400 flex-shrink-0" />
+                                        <span>
+                                          {cptsLangMode === 'en'
+                                            ? note.titleEn || note.title
+                                            : cptsLangMode === 'he'
+                                            ? note.titleHe || note.title
+                                            : note.titleEn || note.title}
+                                        </span>
+                                      </button>
                                       {cptsLangMode === 'bilingual' && note.titleHe && note.titleHe !== (note.titleEn || note.title) && (
-                                        <div className="text-[10px] text-purple-300/80 font-sans mt-0.5">
+                                        <div className="text-[10px] text-purple-300/80 font-sans mt-0.5" dir="rtl">
                                           {note.titleHe}
                                         </div>
                                       )}
@@ -1430,32 +1473,46 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                                     )}
                                   </td>
 
-                                  {/* Quick Action: Copy All */}
+                                  {/* Quick Action: Open Note & Copy All */}
                                   <td className="py-2.5 px-3 text-right pr-4">
-                                    {note.commands && note.commands.length > 0 && (
+                                    <div className="flex items-center justify-end gap-1.5">
                                       <button
                                         type="button"
-                                        onClick={() => handleCopyAllNoteCommands(note)}
-                                        className={`px-2 py-1 rounded text-[10px] font-semibold transition-all inline-flex items-center gap-1 ${
-                                          copiedId === `all-${note.id}`
-                                            ? 'bg-cyber-emerald/20 text-cyber-emerald border border-cyber-emerald'
-                                            : 'bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white hover:border-purple-400'
-                                        }`}
-                                        title="Copy all commands in note"
+                                        onClick={() => {
+                                          if (soundEnabled) playCyberSound('click');
+                                          setActiveObsidianNote(note);
+                                        }}
+                                        className="px-2 py-1 rounded text-[10px] font-semibold bg-purple-950/50 border border-purple-800/50 text-purple-300 hover:text-white hover:bg-purple-900/60 transition-all inline-flex items-center gap-1 cursor-pointer"
+                                        title="Open Obsidian personal note"
                                       >
-                                        {copiedId === `all-${note.id}` ? (
-                                          <>
-                                            <Check className="w-3 h-3 text-cyber-emerald" />
-                                            <span>Copied</span>
-                                          </>
-                                        ) : (
-                                          <>
-                                            <Copy className="w-3 h-3" />
-                                            <span>Copy All</span>
-                                          </>
-                                        )}
+                                        <BookOpen className="w-2.5 h-2.5" />
+                                        <span>Note</span>
                                       </button>
-                                    )}
+                                      {note.commands && note.commands.length > 0 && (
+                                        <button
+                                          type="button"
+                                          onClick={() => handleCopyAllNoteCommands(note)}
+                                          className={`px-2 py-1 rounded text-[10px] font-semibold transition-all inline-flex items-center gap-1 cursor-pointer ${
+                                            copiedId === `all-${note.id}`
+                                              ? 'bg-cyber-emerald/20 text-cyber-emerald border border-cyber-emerald'
+                                              : 'bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white hover:border-purple-400'
+                                          }`}
+                                          title="Copy all commands in note"
+                                        >
+                                          {copiedId === `all-${note.id}` ? (
+                                            <>
+                                              <Check className="w-3 h-3 text-cyber-emerald" />
+                                              <span>Copied</span>
+                                            </>
+                                          ) : (
+                                            <>
+                                              <Copy className="w-3 h-3" />
+                                              <span>Copy All</span>
+                                            </>
+                                          )}
+                                        </button>
+                                      )}
+                                    </div>
                                   </td>
                                 </tr>
 
@@ -1579,32 +1636,57 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                                   >
                                     <div className="flex items-start justify-between gap-3">
                                       <div className="space-y-1 flex-1 min-w-0">
-                                        <div className="font-bold text-white text-xs group-hover:text-purple-300 transition-colors">
-                                          {cptsLangMode === 'en'
-                                            ? note.titleEn || note.title
-                                            : cptsLangMode === 'he'
-                                            ? note.titleHe || note.title
-                                            : note.titleEn || note.title}
-                                        </div>
-                                        {cptsLangMode === 'bilingual' && note.titleHe && note.titleHe !== (note.titleEn || note.title) && (
-                                          <div className="text-[10px] text-purple-300 font-sans" dir="rtl">
-                                            {note.titleHe}
-                                          </div>
-                                        )}
-                                        <p className="text-[11px] text-cyber-muted line-clamp-2">
-                                          {note.enSummary || note.summary || note.heSummary}
-                                        </p>
-                                      </div>
-                                      {note.commands && note.commands.length > 0 && (
-                                        <button
-                                          type="button"
-                                          onClick={() => handleCopyAllNoteCommands(note)}
-                                          className="px-2 py-1 rounded text-[10px] font-semibold bg-cyber-bg border border-cyber-border text-purple-300 hover:text-white hover:border-purple-400 transition-all flex items-center gap-1 flex-shrink-0"
-                                        >
-                                          <Copy className="w-3 h-3" />
-                                          <span>Copy All ({note.commands.length})</span>
-                                        </button>
-                                      )}
+                                         <button
+                                           type="button"
+                                           onClick={() => {
+                                             if (soundEnabled) playCyberSound('click');
+                                             setActiveObsidianNote(note);
+                                           }}
+                                           className="font-bold text-white text-xs group-hover:text-purple-300 transition-colors text-left cursor-pointer inline-flex items-center gap-1.5"
+                                           title="Open authentic Obsidian note"
+                                         >
+                                           <BookOpen className="w-3 h-3 text-purple-400 flex-shrink-0" />
+                                           <span>
+                                             {cptsLangMode === 'en'
+                                               ? note.titleEn || note.title
+                                               : cptsLangMode === 'he'
+                                               ? note.titleHe || note.title
+                                               : note.titleEn || note.title}
+                                           </span>
+                                         </button>
+                                         {cptsLangMode === 'bilingual' && note.titleHe && note.titleHe !== (note.titleEn || note.title) && (
+                                           <div className="text-[10px] text-purple-300 font-sans" dir="rtl">
+                                             {note.titleHe}
+                                           </div>
+                                         )}
+                                         <p className="text-[11px] text-cyber-muted line-clamp-2">
+                                           {note.enSummary || note.summary || note.heSummary}
+                                         </p>
+                                       </div>
+                                       <div className="flex items-center gap-1.5 flex-shrink-0">
+                                         <button
+                                           type="button"
+                                           onClick={() => {
+                                             if (soundEnabled) playCyberSound('click');
+                                             setActiveObsidianNote(note);
+                                           }}
+                                           className="px-2 py-1 rounded text-[10px] font-semibold bg-purple-950/60 border border-purple-500/40 text-purple-300 hover:text-white hover:bg-purple-900/80 transition-all flex items-center gap-1 cursor-pointer"
+                                           title="Open Obsidian personal note"
+                                         >
+                                           <BookOpen className="w-2.5 h-2.5" />
+                                           <span>Note</span>
+                                         </button>
+                                         {note.commands && note.commands.length > 0 && (
+                                           <button
+                                             type="button"
+                                             onClick={() => handleCopyAllNoteCommands(note)}
+                                             className="px-2 py-1 rounded text-[10px] font-semibold bg-cyber-bg border border-cyber-border text-purple-300 hover:text-white hover:border-purple-400 transition-all flex items-center gap-1 cursor-pointer"
+                                           >
+                                             <Copy className="w-3 h-3" />
+                                             <span>Copy All ({note.commands.length})</span>
+                                           </button>
+                                         )}
+                                       </div>
                                     </div>
 
                                     {/* Commands preview */}
@@ -1670,15 +1752,33 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                               {/* Titles based on cptsLangMode */}
                               {cptsLangMode === 'en' ? (
                                 <div>
-                                  <span className="font-bold text-white text-sm group-hover:text-purple-300 transition-colors">
-                                    {note.titleEn || note.title}
-                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      if (soundEnabled) playCyberSound('click');
+                                      setActiveObsidianNote(note);
+                                    }}
+                                    className="font-bold text-white text-sm group-hover:text-purple-300 transition-colors text-left cursor-pointer inline-flex items-center gap-1.5"
+                                    title="Open authentic Obsidian note"
+                                  >
+                                    <BookOpen className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
+                                    <span>{note.titleEn || note.title}</span>
+                                  </button>
                                 </div>
                               ) : cptsLangMode === 'he' ? (
                                 <div className="text-right" dir="rtl">
-                                  <span className="font-bold text-white text-sm group-hover:text-purple-300 transition-colors font-sans">
-                                    {note.titleHe || note.title}
-                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      if (soundEnabled) playCyberSound('click');
+                                      setActiveObsidianNote(note);
+                                    }}
+                                    className="font-bold text-white text-sm group-hover:text-purple-300 transition-colors font-sans cursor-pointer inline-flex items-center gap-1.5"
+                                    title="פתח רשימות אישיות מקיפות"
+                                  >
+                                    <BookOpen className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
+                                    <span>{note.titleHe || note.title}</span>
+                                  </button>
                                   {note.titleEn && note.titleEn !== (note.titleHe || note.title) && (
                                     <div className="text-[11px] text-cyber-muted font-mono mt-0.5 text-left" dir="ltr">
                                       EN: {note.titleEn}
@@ -1688,9 +1788,18 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                               ) : (
                                 /* Bilingual Title */
                                 <div className="space-y-0.5">
-                                  <div className="font-bold text-white text-sm group-hover:text-purple-300 transition-colors">
-                                    {note.titleEn || note.title}
-                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      if (soundEnabled) playCyberSound('click');
+                                      setActiveObsidianNote(note);
+                                    }}
+                                    className="font-bold text-white text-sm group-hover:text-purple-300 transition-colors text-left cursor-pointer inline-flex items-center gap-1.5"
+                                    title="Open authentic Obsidian note"
+                                  >
+                                    <BookOpen className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
+                                    <span>{note.titleEn || note.title}</span>
+                                  </button>
                                   {note.titleHe && note.titleHe !== (note.titleEn || note.title) && (
                                     <div className="text-xs text-purple-300 font-sans font-medium text-right" dir="rtl">
                                       {note.titleHe}
@@ -1782,31 +1891,45 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                               )}
                             </div>
 
-                            {/* Quick Action: Copy All Commands in Note */}
-                            {note.commands && note.commands.length > 1 && (
+                            {/* Actions: Open Obsidian Note & Copy All Commands */}
+                            <div className="flex items-center gap-1.5 flex-shrink-0">
                               <button
                                 type="button"
-                                onClick={() => handleCopyAllNoteCommands(note)}
-                                className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold flex-shrink-0 transition-all ${
-                                  copiedId === `all-${note.id}`
-                                    ? 'bg-cyber-emerald/20 text-cyber-emerald border border-cyber-emerald shadow-glow-emerald/30'
-                                    : 'bg-cyber-bg border border-cyber-border text-purple-300 hover:border-purple-400 hover:text-white'
-                                }`}
-                                title="Copy all commands in this note to clipboard"
+                                onClick={() => {
+                                  if (soundEnabled) playCyberSound('click');
+                                  setActiveObsidianNote(note);
+                                }}
+                                className="flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold bg-purple-950/60 border border-purple-500/40 text-purple-300 hover:text-white hover:bg-purple-900/80 hover:border-purple-400 transition-all cursor-pointer shadow-sm"
+                                title="Open full authentic Obsidian personal note"
                               >
-                                {copiedId === `all-${note.id}` ? (
-                                  <>
-                                    <Check className="w-3.5 h-3.5 text-cyber-emerald" />
-                                    <span>All Copied!</span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <Copy className="w-3.5 h-3.5" />
-                                    <span>Copy All ({note.commands.length})</span>
-                                  </>
-                                )}
+                                <BookOpen className="w-3.5 h-3.5 text-purple-400" />
+                                <span>Open Note</span>
                               </button>
-                            )}
+                              {note.commands && note.commands.length > 1 && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleCopyAllNoteCommands(note)}
+                                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold flex-shrink-0 transition-all cursor-pointer ${
+                                    copiedId === `all-${note.id}`
+                                      ? 'bg-cyber-emerald/20 text-cyber-emerald border border-cyber-emerald shadow-glow-emerald/30'
+                                      : 'bg-cyber-bg border border-cyber-border text-purple-300 hover:border-purple-400 hover:text-white'
+                                  }`}
+                                  title="Copy all commands in this note to clipboard"
+                                >
+                                  {copiedId === `all-${note.id}` ? (
+                                    <>
+                                      <Check className="w-3.5 h-3.5 text-cyber-emerald" />
+                                      <span>All Copied!</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Copy className="w-3.5 h-3.5" />
+                                      <span>Copy All ({note.commands.length})</span>
+                                    </>
+                                  )}
+                                </button>
+                              )}
+                            </div>
                           </div>
 
                           {/* Note Commands Container (Always LTR for code) */}
@@ -2021,6 +2144,23 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
             </form>
           </motion.div>
         </div>
+      )}
+
+      {/* Authentic Obsidian Personal Note Viewer Modal */}
+      {activeObsidianNote && (
+        <ObsidianNoteViewer
+          note={activeObsidianNote}
+          globalVars={globalVars}
+          soundEnabled={soundEnabled}
+          onClose={() => setActiveObsidianNote(null)}
+          onNavigateToNote={(noteId) => {
+            const found = getNoteById(noteId);
+            if (found) {
+              setActiveObsidianNote(found);
+            }
+          }}
+          defaultLanguage={cptsLangMode}
+        />
       )}
     </div>
   );

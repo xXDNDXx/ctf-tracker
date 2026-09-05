@@ -1,4 +1,4 @@
-/**
+﻿/**
  * index-cpts-notes.cjs
  * Build-time ingestion bridge for Daniel Dayan's Obsidian CPTS Field Manual notes.
  * Scans local vault C:\Users\DANIEL\Documents\cpts-field-manual (or fallback)
@@ -8,6 +8,9 @@
  *  - Clean parsed summaries (EN & HE) free of raw markdown callout markers and tables
  *  - Sanitized executable command extraction (no tables, no wikilinks, no diagrams)
  *  - Extracted tactical metadata (stage, tools, difficulty)
+ *  - Single-source-of-truth rawMarkdown for high-fidelity Obsidian rendering
+ *  - Bidirectional wikilink graph (outgoing links & backlinks)
+ *  - Fast wikilinkMap for O(1) link resolution by filename, title, or slug
  */
 
 const fs = require('fs');
@@ -106,17 +109,32 @@ function extractCommands(content) {
   const codeBlockRegex = /```(?:bash|sh|powershell|cmd|python|text)?\s*\n([\s\S]*?)```/g;
   let match;
   let cbCount = 0;
-  while ((match = codeBlockRegex.exec(content)) !== null && cbCount < 6) {
+  while ((match = codeBlockRegex.exec(content)) !== null && cbCount < 8) {
     cbCount++;
     const codeLines = match[1].split('\n');
     for (const cl of codeLines) {
       addCmd(cl);
-      if (commands.length >= 8) break;
+      if (commands.length >= 10) break;
     }
-    if (commands.length >= 8) break;
+    if (commands.length >= 10) break;
   }
 
   return commands;
+}
+
+function extractOutgoingWikilinks(content) {
+  const links = [];
+  const linkRegex = /\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|([^\]]+))?\]\]/g;
+  let match;
+  const seen = new Set();
+  while ((match = linkRegex.exec(content)) !== null) {
+    const target = match[1].trim();
+    if (target && !seen.has(target)) {
+      seen.add(target);
+      links.push(target);
+    }
+  }
+  return links;
 }
 
 function indexVault() {
@@ -127,7 +145,7 @@ function indexVault() {
       return;
     }
     console.log(`[*] Generating minimal fallback index...`);
-    fs.writeFileSync(OUTPUT_FILE, '[]', 'utf8');
+    fs.writeFileSync(OUTPUT_FILE, JSON.stringify({ notes: [], wikilinkMap: {} }, null, 2), 'utf8');
     return;
   }
 
@@ -144,6 +162,7 @@ function indexVault() {
   });
 
   const notes = [];
+  const wikilinkMap = {}; // mapping various query tokens -> note.id
 
   for (let idx = 0; idx < allMarkdownFiles.length; idx++) {
     const fullPath = allMarkdownFiles[idx];
@@ -159,6 +178,8 @@ function indexVault() {
     let fmTitle = filename;
     let tags = [];
     let difficulty = 'Intermediate';
+    let noteType = 'Master_Note';
+    let dateModified = '';
 
     // YAML Frontmatter parsing
     if (content.startsWith('---')) {
@@ -174,6 +195,10 @@ function indexVault() {
             tags = raw.split(',').map((t) => t.trim().replace(/^['"]|['"]$/g, '')).filter(Boolean);
           } else if (line.startsWith('difficulty:')) {
             difficulty = line.replace('difficulty:', '').trim();
+          } else if (line.startsWith('type:')) {
+            noteType = line.replace('type:', '').trim();
+          } else if (line.startsWith('date_modified:')) {
+            dateModified = line.replace('date_modified:', '').trim();
           }
         }
       }
@@ -247,7 +272,6 @@ function indexVault() {
     }
 
     if (!enSummary) {
-      // Body scanning for clean English paragraph
       const strippedForSummary = content
         .replace(/^---[\s\S]*?---/, '')
         .replace(/<!--[\s\S]*?-->/g, '')
@@ -280,10 +304,31 @@ function indexVault() {
     const { category, rank } = getCategoryInfo(relPath);
 
     const slug = cleanSlug(titleEn) || cleanSlug(filename) || `note-${idx}`;
+    const noteId = `cpts-${slug}`;
     const hasHebrew = /[\u0590-\u05FF]/.test(content);
+    const outgoingWikilinks = extractOutgoingWikilinks(content);
+
+    // Register all resolution aliases in wikilinkMap
+    const aliases = [
+      filename.toLowerCase(),
+      filename.replace(/^\d+[\s_.-]*/, '').trim().toLowerCase(),
+      titleEn.toLowerCase(),
+      titleEn.replace(/^\d+[\s_.-]*/, '').trim().toLowerCase(),
+      slug,
+      noteId
+    ];
+    if (titleHe) {
+      aliases.push(titleHe.toLowerCase());
+    }
+
+    for (const a of aliases) {
+      if (a && !wikilinkMap[a]) {
+        wikilinkMap[a] = noteId;
+      }
+    }
 
     notes.push({
-      id: `cpts-${slug}`,
+      id: noteId,
       title: titleEn,
       titleEn,
       titleHe: titleHe || undefined,
@@ -294,6 +339,8 @@ function indexVault() {
       subCategory,
       tags,
       difficulty,
+      noteType: noteType || 'Master_Note',
+      dateModified: dateModified || undefined,
       summary,
       enSummary,
       heSummary: heSummary || undefined,
@@ -302,13 +349,39 @@ function indexVault() {
       hasHebrew,
       commands,
       relPath,
+      filename,
+      outgoingWikilinks,
+      backlinks: [], // computed below
+      rawMarkdown: content,
     });
+  }
+
+  // Compute backlinks graph
+  const noteIdSet = new Set(notes.map(n => n.id));
+  const noteMapById = new Map(notes.map(n => [n.id, n]));
+
+  for (const note of notes) {
+    for (const rawTarget of note.outgoingWikilinks) {
+      const normTarget = rawTarget.trim().toLowerCase();
+      const strippedTarget = normTarget.replace(/^\d+[\s_.-]*/, '').trim();
+      const targetId = wikilinkMap[normTarget] || wikilinkMap[strippedTarget] || wikilinkMap[cleanSlug(normTarget)];
+      if (targetId && targetId !== note.id && noteMapById.has(targetId)) {
+        const targetNote = noteMapById.get(targetId);
+        if (!targetNote.backlinks.includes(note.id)) {
+          targetNote.backlinks.push(note.id);
+        }
+      }
+    }
   }
 
   // Ensure output directory exists
   fs.mkdirSync(path.dirname(OUTPUT_FILE), { recursive: true });
-  fs.writeFileSync(OUTPUT_FILE, JSON.stringify(notes, null, 2), 'utf8');
-  console.log(`[+] Indexed ${notes.length} Obsidian CPTS notes in canonical attack lifecycle order into ${path.relative(process.cwd(), OUTPUT_FILE)}`);
+  const payload = {
+    notes,
+    wikilinkMap
+  };
+  fs.writeFileSync(OUTPUT_FILE, JSON.stringify(payload, null, 2), 'utf8');
+  console.log(`[+] Successfully indexed ${notes.length} Obsidian notes with ${Object.keys(wikilinkMap).length} wikilink aliases into ${path.relative(process.cwd(), OUTPUT_FILE)}`);
 }
 
 indexVault();
