@@ -167,18 +167,6 @@ export const UserMenu: React.FC = () => {
   if (!isAuthenticated || !user) {
     return (
       <div className="flex items-center gap-2 font-mono text-xs">
-        {/* Visible 1-Click Sync All Solves Button */}
-        <button
-          onClick={handleForceSyncHtbSolves}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl font-bold text-xs bg-cyber-amber/20 hover:bg-cyber-amber/30 text-cyber-amber border border-cyber-amber/60 hover:border-cyber-amber transition-all shadow-[0_0_12px_rgba(245,158,11,0.25)] group"
-          title="Force sync your 45 Hack The Box + 18 TryHackMe solves into completed column"
-        >
-          <Sparkles className="w-3.5 h-3.5 text-cyber-amber group-hover:scale-110 transition-transform" />
-          <span className="hidden xl:inline">⚡ SYNC 63 SOLVES (45 HTB + 18 THM)</span>
-          <span className="hidden sm:inline xl:hidden">⚡ 63 PWNS</span>
-          <span className="sm:hidden">⚡ 63</span>
-        </button>
-
         <button
           onClick={handleLaunchGoogleSignIn}
           className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white hover:bg-gray-100 text-gray-800 font-bold transition-all shadow-md border border-gray-300 group"
@@ -215,19 +203,8 @@ export const UserMenu: React.FC = () => {
   // ==========================================
   return (
     <div className="relative font-mono text-xs">
-      {/* Header Button Group: Sync 45 Solves + 1-Click Save + Google Profile Badge */}
+      {/* Header Button Group: 1-Click Save + Google Profile Badge */}
       <div className="flex items-center gap-1.5 bg-cyber-card/90 border border-cyber-border rounded-xl p-1 shadow-sm">
-        {/* Visible 1-Click Sync All Solves Button */}
-        <button
-          onClick={handleForceSyncHtbSolves}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-bold text-[11px] bg-cyber-amber/20 hover:bg-cyber-amber/30 text-cyber-amber border border-cyber-amber/60 hover:border-cyber-amber transition-all shadow-[0_0_10px_rgba(245,158,11,0.25)] group flex-shrink-0"
-          title="Force sync your 45 Hack The Box + 18 TryHackMe solves into completed column"
-        >
-          <Sparkles className="w-3.5 h-3.5 text-cyber-amber group-hover:scale-110 transition-transform flex-shrink-0" />
-          <span className="hidden xl:inline">⚡ SYNC 63 SOLVES (45 HTB + 18 THM)</span>
-          <span className="hidden sm:inline xl:hidden">⚡ 63 PWNS</span>
-          <span className="sm:hidden">⚡ 63</span>
-        </button>
 
         {/* Instant 1-Click Quick Save Button */}
         <button
