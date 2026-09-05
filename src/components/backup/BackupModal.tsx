@@ -16,10 +16,14 @@ import {
   CheckCircle,
   FileText,
   Flame,
-  ShieldAlert
+  ShieldAlert,
+  ChevronDown,
+  ChevronUp,
+  Terminal,
+  HelpCircle
 } from 'lucide-react';
 import { useCtfStore } from '../../store/useCtfStore';
-import { playCyberSound, triggerRootCelebration } from '../../utils/helpers';
+import { playCyberSound, triggerRootCelebration, safeCopyToClipboard } from '../../utils/helpers';
 import { generateObsidianVaultZip } from '../../utils/obsidianVaultExporter';
 import { extractCandidateNames, matchCandidateNamesToCatalog } from '../../utils/bulkPwnImporter';
 import { PipelineStatus } from '../../types';
@@ -50,6 +54,24 @@ export const BackupModal: React.FC = () => {
   const [bulkInputText, setBulkInputText] = useState('');
   const [targetStatus, setTargetStatus] = useState<PipelineStatus>('completed');
   const [bulkApplied, setBulkApplied] = useState(false);
+  const [showExportGuide, setShowExportGuide] = useState(false);
+  const [copiedSnippet, setCopiedSnippet] = useState<'htb' | 'thm' | null>(null);
+
+  const handleCopyHtbSnippet = async () => {
+    const code = `copy(Array.from(document.querySelectorAll('a[href*="/machines/"]')).map(e => e.innerText.trim()).filter(n => n.length > 2 && !n.includes('\\n')).filter((v, i, a) => a.indexOf(v) === i).join('\\n')); console.log('Copied HTB machines to clipboard!');`;
+    await safeCopyToClipboard(code);
+    setCopiedSnippet('htb');
+    setTimeout(() => setCopiedSnippet(null), 2000);
+    if (soundEnabled) playCyberSound('copy');
+  };
+
+  const handleCopyThmSnippet = async () => {
+    const code = `copy(Array.from(document.querySelectorAll('div, a, span')).map(e => e.innerText.trim()).filter(t => t.length > 2 && t.length < 30 && !t.includes('\\n')).filter((v, i, a) => a.indexOf(v) === i).join('\\n')); console.log('Copied THM rooms to clipboard!');`;
+    await safeCopyToClipboard(code);
+    setCopiedSnippet('thm');
+    setTimeout(() => setCopiedSnippet(null), 2000);
+    if (soundEnabled) playCyberSound('copy');
+  };
 
   // Compute parsed candidates and matches
   const candidates = useMemo(() => extractCandidateNames(bulkInputText), [bulkInputText]);
@@ -396,6 +418,91 @@ export const BackupModal: React.FC = () => {
                   Paste a list of machines you have already solved on <strong>Hack The Box</strong> or <strong>TryHackMe</strong> (comma separated, line-by-line, or exported CSV). 
                   ZeroBox will match them against the catalog of 945 targets and automatically mark them as solved in seconds.
                 </p>
+              </div>
+
+              {/* Collapsible Help Accordion: How to grab solves from HTB / THM */}
+              <div className="rounded-xl border border-cyber-border bg-cyber-bg/70 overflow-hidden text-xs">
+                <button
+                  type="button"
+                  onClick={() => setShowExportGuide(!showExportGuide)}
+                  className="w-full flex items-center justify-between p-2.5 px-3.5 hover:bg-cyber-card/60 transition-colors text-left"
+                >
+                  <div className="flex items-center gap-2">
+                    <HelpCircle className="w-4 h-4 text-cyber-cyan" />
+                    <span className="font-bold text-white text-[11px]">
+                      💡 HOW TO GRAB YOUR SOLVES FROM HTB OR THM (IN 5 SECONDS)
+                    </span>
+                  </div>
+                  {showExportGuide ? (
+                    <ChevronUp className="w-4 h-4 text-cyber-muted" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-cyber-muted" />
+                  )}
+                </button>
+
+                {showExportGuide && (
+                  <div className="p-3.5 pt-0 space-y-3 border-t border-cyber-border/60 bg-[#080d1a]/80 text-[11px]">
+                    {/* Method 1 */}
+                    <div className="space-y-1">
+                      <div className="font-bold text-cyber-emerald flex items-center gap-1">
+                        <span>1. The Simple Way (No Code // Highlight & Copy)</span>
+                      </div>
+                      <p className="text-cyber-muted leading-relaxed">
+                        • <strong className="text-white">Hack The Box:</strong> Go to <em>Profile → Activity</em> (or <em>Labs → Machines → State: Owned</em>), select the machine names with your cursor, copy, and paste below.<br />
+                        • <strong className="text-white">TryHackMe:</strong> Open <em>tryhackme.com/p/YOUR_USERNAME</em>, scroll to <em>Rooms Completed</em>, highlight the text, and paste below.
+                      </p>
+                    </div>
+
+                    {/* Method 2: Browser Console Snippets */}
+                    <div className="space-y-2">
+                      <div className="font-bold text-cyber-cyan flex items-center gap-1">
+                        <Terminal className="w-3.5 h-3.5" />
+                        <span>2. The 5-Second 1-Liner (DevTools Console)</span>
+                      </div>
+                      <p className="text-cyber-muted">
+                        Press <kbd className="px-1 py-0.5 rounded bg-cyber-card border border-cyber-border text-white text-[10px]">F12</kbd> on HTB or THM, click <strong>Console</strong>, and paste one of these snippets. It will copy all your solved machines directly to your clipboard:
+                      </p>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-mono">
+                        {/* HTB Box */}
+                        <div className="p-2.5 rounded-lg bg-cyber-bg border border-cyber-border space-y-1.5">
+                          <div className="flex items-center justify-between">
+                            <span className="text-cyber-emerald font-bold text-[10px]">HACK THE BOX SNIPPET</span>
+                            <button
+                              type="button"
+                              onClick={handleCopyHtbSnippet}
+                              className="px-2 py-0.5 rounded bg-cyber-card border border-cyber-border hover:border-cyber-emerald text-cyber-muted hover:text-white text-[10px] flex items-center gap-1 transition-all"
+                            >
+                              {copiedSnippet === 'htb' ? <Check className="w-3 h-3 text-cyber-emerald" /> : <Copy className="w-3 h-3" />}
+                              <span>{copiedSnippet === 'htb' ? 'Copied!' : 'Copy Script'}</span>
+                            </button>
+                          </div>
+                          <pre className="text-[10px] text-cyber-muted overflow-x-auto p-1.5 rounded bg-black/40 border border-cyber-border/40 whitespace-pre-wrap break-all">
+                            copy(Array.from(document.querySelectorAll('a[href*="/machines/"]')).map(e=&gt;e.innerText.trim()).filter(n=&gt;n.length&gt;2&amp;&amp;!n.includes('\n')).filter((v,i,a)=&gt;a.indexOf(v)===i).join('\n'))
+                          </pre>
+                        </div>
+
+                        {/* THM Box */}
+                        <div className="p-2.5 rounded-lg bg-cyber-bg border border-cyber-border space-y-1.5">
+                          <div className="flex items-center justify-between">
+                            <span className="text-cyber-crimson font-bold text-[10px]">TRYHACKME SNIPPET</span>
+                            <button
+                              type="button"
+                              onClick={handleCopyThmSnippet}
+                              className="px-2 py-0.5 rounded bg-cyber-card border border-cyber-border hover:border-cyber-crimson text-cyber-muted hover:text-white text-[10px] flex items-center gap-1 transition-all"
+                            >
+                              {copiedSnippet === 'thm' ? <Check className="w-3 h-3 text-cyber-emerald" /> : <Copy className="w-3 h-3" />}
+                              <span>{copiedSnippet === 'thm' ? 'Copied!' : 'Copy Script'}</span>
+                            </button>
+                          </div>
+                          <pre className="text-[10px] text-cyber-muted overflow-x-auto p-1.5 rounded bg-black/40 border border-cyber-border/40 whitespace-pre-wrap break-all">
+                            copy(Array.from(document.querySelectorAll('div, a, span')).map(e=&gt;e.innerText.trim()).filter(t=&gt;t.length&gt;2&amp;&amp;t.length&lt;30&amp;&amp;!t.includes('\n')).filter((v,i,a)=&gt;a.indexOf(v)===i).join('\n'))
+                          </pre>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Target Status Selector */}
