@@ -5,20 +5,41 @@ import { classifyMachine } from './categoryUtils';
 export interface CptsNoteEntry {
   id: string;
   title: string;
+  titleEn: string;
+  titleHe?: string;
   category: string;
+  categoryOrder?: number;
+  order?: number;
   rawCategory: string;
   subCategory: string;
   tags: string[];
   difficulty: string;
   summary: string;
+  enSummary?: string;
+  heSummary?: string;
+  stage?: string;
+  tools?: string[];
+  hasHebrew?: boolean;
   commands: string[];
   relPath: string;
 }
 
 export const CPTS_NOTES: CptsNoteEntry[] = cptsNotesData as CptsNoteEntry[];
 
+const CANONICAL_CATEGORY_RANKS: Record<string, number> = {
+  'Methodology & Exam Playbooks': 0,
+  'Information Gathering & Recon': 1,
+  'Pre-Exploitation & Vuln Analysis': 2,
+  'Offensive Exploitation': 3,
+  'Post-Exploitation & PrivEsc': 4,
+  'Lateral Movement & Pivoting': 5,
+  'NetExec Arsenal': 6,
+  'General Methodology': 7,
+};
+
 /**
- * Get aggregated category counts across the 414 field manual notes
+ * Get aggregated category counts across the 414 field manual notes,
+ * sorted in canonical offensive lifecycle order (00 Methodology -> 01 Recon -> ... -> 06 NetExec)
  */
 export function getCptsCategories(): { category: string; count: number }[] {
   const counts: Record<string, number> = {};
@@ -27,7 +48,12 @@ export function getCptsCategories(): { category: string; count: number }[] {
   }
   return Object.entries(counts)
     .map(([category, count]) => ({ category, count }))
-    .sort((a, b) => b.count - a.count);
+    .sort((a, b) => {
+      const orderA = CANONICAL_CATEGORY_RANKS[a.category] ?? 99;
+      const orderB = CANONICAL_CATEGORY_RANKS[b.category] ?? 99;
+      if (orderA !== orderB) return orderA - orderB;
+      return b.count - a.count;
+    });
 }
 
 /**
@@ -39,7 +65,7 @@ export function getNotesByCategory(category: string): CptsNoteEntry[] {
 }
 
 /**
- * Fast search across note titles, tags, summaries, and commands
+ * Fast search across note titles (EN & HE), tags, summaries, and commands
  */
 export function searchCptsNotes(query: string, category: string = 'ALL'): CptsNoteEntry[] {
   const q = query.trim().toLowerCase();
@@ -51,9 +77,15 @@ export function searchCptsNotes(query: string, category: string = 'ALL'): CptsNo
 
   return pool.filter((n) => {
     if (n.title.toLowerCase().includes(q)) return true;
+    if (n.titleEn && n.titleEn.toLowerCase().includes(q)) return true;
+    if (n.titleHe && n.titleHe.toLowerCase().includes(q)) return true;
     if (n.subCategory.toLowerCase().includes(q)) return true;
     if (n.tags.some((t) => t.toLowerCase().includes(q))) return true;
     if (n.summary.toLowerCase().includes(q)) return true;
+    if (n.enSummary && n.enSummary.toLowerCase().includes(q)) return true;
+    if (n.heSummary && n.heSummary.toLowerCase().includes(q)) return true;
+    if (n.stage && n.stage.toLowerCase().includes(q)) return true;
+    if (n.tools && n.tools.some((t) => t.toLowerCase().includes(q))) return true;
     if (n.commands.some((c) => c.toLowerCase().includes(q))) return true;
     return false;
   });

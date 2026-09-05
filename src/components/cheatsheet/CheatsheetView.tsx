@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Terminal, 
@@ -16,7 +17,8 @@ import {
   ChevronUp,
   Layers,
   Compass,
-  FileText
+  FileText,
+  Languages
 } from 'lucide-react';
 import { useCtfStore } from '../../store/useCtfStore';
 import { 
@@ -31,7 +33,14 @@ import {
   searchCptsNotes 
 } from '../../utils/obsidianManualUtils';
 
-export const CheatsheetView: React.FC = () => {
+export type CptsLanguageMode = 'bilingual' | 'en' | 'he';
+
+interface CheatsheetViewProps {
+  defaultMode?: 'tactical' | 'cpts-manual';
+}
+
+export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) => {
+  const location = useLocation();
   const {
     cheatsheets,
     globalVars,
@@ -42,13 +51,29 @@ export const CheatsheetView: React.FC = () => {
     soundEnabled,
   } = useCtfStore();
 
-  const [viewMode, setViewMode] = useState<'tactical' | 'cpts-manual'>('tactical');
+  const isManualRoute = defaultMode === 'cpts-manual' || 
+    location.pathname.includes('note') || 
+    location.pathname.includes('manual') || 
+    location.search.includes('manual') || 
+    location.search.includes('cpts');
+
+  const [viewMode, setViewMode] = useState<'tactical' | 'cpts-manual'>(isManualRoute ? 'cpts-manual' : 'tactical');
+  const [cptsLangMode, setCptsLangMode] = useState<CptsLanguageMode>('bilingual');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedCptsCategory, setSelectedCptsCategory] = useState('ALL');
   const [cptsLimit, setCptsLimit] = useState(30);
   const [expandedNotes, setExpandedNotes] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  // Sync viewMode when route changes
+  useEffect(() => {
+    if (defaultMode) {
+      setViewMode(defaultMode);
+    } else if (location.pathname.includes('note') || location.pathname.includes('manual') || location.search.includes('manual') || location.search.includes('cpts')) {
+      setViewMode('cpts-manual');
+    }
+  }, [defaultMode, location.pathname, location.search]);
 
   // New Custom Command Form Modal state
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
@@ -58,8 +83,11 @@ export const CheatsheetView: React.FC = () => {
   const [newTemplate, setNewTemplate] = useState('');
   const [newTags, setNewTags] = useState('');
 
-  // Reverse shell builder state
+  // Reverse shell builder state (inspired by 0dayCTF/reverse-shell-generator)
   const [selectedRevShellIdx, setSelectedRevShellIdx] = useState(0);
+  const [revShellOsFilter, setRevShellOsFilter] = useState<'All' | 'Linux' | 'Windows'>('All');
+  const [revShellListenerType, setRevShellListenerType] = useState<'nc' | 'rlwrap' | 'ncat' | 'rustcat' | 'socat'>('nc');
+  const [revShellEncoding, setRevShellEncoding] = useState<'raw' | 'url' | 'base64'>('raw');
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -135,9 +163,48 @@ export const CheatsheetView: React.FC = () => {
     return filteredCptsNotes.reduce((sum, n) => sum + (n.commands ? n.commands.length : 0), 0);
   }, [filteredCptsNotes]);
 
-  const activeRevShell = REVERSE_SHELL_TEMPLATES[selectedRevShellIdx] || REVERSE_SHELL_TEMPLATES[0];
-  const interpolatedRevShellCmd = interpolateCommand(activeRevShell.command, globalVars);
-  const interpolatedListenerCmd = interpolateCommand(activeRevShell.listener, globalVars);
+  // Filtered reverse shells by OS
+  const availableRevShells = useMemo(() => {
+    if (revShellOsFilter === 'All') return REVERSE_SHELL_TEMPLATES;
+    return REVERSE_SHELL_TEMPLATES.filter(
+      t => t.platform === 'Both' || t.platform === revShellOsFilter
+    );
+  }, [revShellOsFilter]);
+
+  const activeRevShell = availableRevShells[selectedRevShellIdx] || availableRevShells[0] || REVERSE_SHELL_TEMPLATES[0];
+
+  // Dynamic Listener Command based on selected listener type
+  const computedListenerCmd = useMemo(() => {
+    const port = globalVars.lport || '4444';
+    switch (revShellListenerType) {
+      case 'rlwrap':
+        return `rlwrap nc -lvnp ${port}`;
+      case 'ncat':
+        return `ncat -lvnp ${port}`;
+      case 'rustcat':
+        return `rcat -lp ${port}`;
+      case 'socat':
+        return `socat file:\`tty\`,raw,echo=0 TCP-L:${port}`;
+      case 'nc':
+      default:
+        return `nc -lvnp ${port}`;
+    }
+  }, [revShellListenerType, globalVars.lport]);
+
+  // Compute final payload with optional encoding
+  const computedPayloadCmd = useMemo(() => {
+    let base = interpolateCommand(activeRevShell.command, globalVars);
+    if (revShellEncoding === 'url') {
+      return encodeURIComponent(base);
+    } else if (revShellEncoding === 'base64') {
+      try {
+        return btoa(base);
+      } catch (e) {
+        return base;
+      }
+    }
+    return base;
+  }, [activeRevShell, globalVars, revShellEncoding]);
 
   return (
     <div className="space-y-6 w-full font-mono pb-12">
@@ -330,8 +397,9 @@ export const CheatsheetView: React.FC = () => {
                   </span>
                 </motion.button>
 
-                {cptsCategories.map((cat) => {
+                {cptsCategories.map((cat, idx) => {
                   const isSelected = selectedCptsCategory === cat.category;
+                  const stageNum = String(idx).padStart(2, '0');
                   return (
                     <motion.button
                       whileHover={{ x: 3 }}
@@ -347,7 +415,12 @@ export const CheatsheetView: React.FC = () => {
                           : 'text-cyber-muted hover:text-white hover:bg-cyber-bg'
                       }`}
                     >
-                      <span className="truncate pr-1">{cat.category}</span>
+                      <div className="flex items-center gap-1.5 truncate pr-1">
+                        <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-purple-950/60 border border-purple-800/40 text-purple-400">
+                          {stageNum}
+                        </span>
+                        <span className="truncate">{cat.category}</span>
+                      </div>
                       <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/40 border border-cyber-border flex-shrink-0">
                         {cat.count}
                       </span>
@@ -408,7 +481,7 @@ export const CheatsheetView: React.FC = () => {
           {/* VIEW MODE 1: TACTICAL CHEATSHEETS */}
           {viewMode === 'tactical' && (
             <>
-              {/* DEDICATED REVERSE SHELL GENERATOR (Shown when category is 'revshell' or 'all') */}
+              {/* DEDICATED REVERSE SHELL GENERATOR (Enhanced with 0dayCTF/reverse-shell-generator capabilities) */}
               {(selectedCategory === 'all' || selectedCategory === 'revshell') && !searchQuery && (
                 <motion.div 
                   initial={{ opacity: 0, y: 15 }}
@@ -416,21 +489,68 @@ export const CheatsheetView: React.FC = () => {
                   transition={{ duration: 0.3 }}
                   className="p-4 rounded-xl border border-cyber-cyan/40 bg-cyber-card shadow-lg shadow-glow-cyan/10 space-y-3"
                 >
-                  <div className="flex items-center justify-between border-b border-cyber-border pb-2.5">
+                  <div className="flex items-center justify-between border-b border-cyber-border pb-2.5 flex-wrap gap-2">
                     <div className="flex items-center gap-2">
                       <Radio className="w-4 h-4 text-cyber-cyan animate-pulse" />
                       <span className="font-bold text-white text-sm tracking-wide">
                         LIVE REVERSE SHELL GENERATOR
                       </span>
+                      <span className="text-[10px] text-cyber-muted">
+                        (revshells engine)
+                      </span>
                     </div>
-                    <span className="text-[10px] text-cyber-cyan uppercase font-semibold px-2 py-0.5 rounded bg-cyber-cyan/10 border border-cyber-cyan/30">
-                      TUNED: {globalVars.lhost}:{globalVars.lport}
-                    </span>
+
+                    <div className="flex items-center gap-2 flex-wrap text-xs">
+                      {/* OS Platform Selector */}
+                      <div className="flex items-center gap-1 bg-cyber-bg p-0.5 rounded border border-cyber-border text-[10px]">
+                        {(['All', 'Linux', 'Windows'] as const).map(os => (
+                          <button
+                            key={os}
+                            type="button"
+                            data-testid={`revshell-os-${os.toLowerCase()}`}
+                            onClick={() => {
+                              setRevShellOsFilter(os);
+                              setSelectedRevShellIdx(0);
+                            }}
+                            className={`px-2 py-0.5 rounded font-bold transition-all ${
+                              revShellOsFilter === os
+                                ? 'bg-cyber-cyan text-black'
+                                : 'text-cyber-muted hover:text-white'
+                            }`}
+                          >
+                            {os.toUpperCase()}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Encoding Selector */}
+                      <div className="flex items-center gap-1 bg-cyber-bg p-0.5 rounded border border-cyber-border text-[10px]">
+                        {(['raw', 'url', 'base64'] as const).map(enc => (
+                          <button
+                            key={enc}
+                            type="button"
+                            data-testid={`revshell-enc-${enc}`}
+                            onClick={() => setRevShellEncoding(enc)}
+                            className={`px-2 py-0.5 rounded font-bold uppercase transition-all ${
+                              revShellEncoding === enc
+                                ? 'bg-cyber-amber text-black'
+                                : 'text-cyber-muted hover:text-white'
+                            }`}
+                          >
+                            {enc.toUpperCase()}
+                          </button>
+                        ))}
+                      </div>
+
+                      <span className="text-[10px] text-cyber-cyan uppercase font-semibold px-2 py-0.5 rounded bg-cyber-cyan/10 border border-cyber-cyan/30">
+                        {globalVars.lhost}:{globalVars.lport}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Language / Payload Selector Pills */}
                   <div className="flex flex-wrap gap-1.5">
-                    {REVERSE_SHELL_TEMPLATES.map((tmpl, idx) => (
+                    {availableRevShells.map((tmpl, idx) => (
                       <motion.button
                         whileHover={{ scale: 1.04 }}
                         whileTap={{ scale: 0.96 }}
@@ -451,13 +571,20 @@ export const CheatsheetView: React.FC = () => {
                   <div className="space-y-2.5 pt-1">
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-[10px] uppercase font-bold text-cyber-muted">
-                          PAYLOAD ({activeRevShell.language} - {activeRevShell.platform})
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] uppercase font-bold text-cyber-muted">
+                            PAYLOAD ({activeRevShell.language} - {activeRevShell.platform})
+                          </span>
+                          {revShellEncoding !== 'raw' && (
+                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyber-amber/20 border border-cyber-amber/40 text-cyber-amber font-mono uppercase">
+                              {revShellEncoding} encoded
+                            </span>
+                          )}
+                        </div>
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          onClick={() => handleCopy(interpolatedRevShellCmd, 'revshell-payload')}
+                          onClick={() => handleCopy(computedPayloadCmd, 'revshell-payload')}
                           className="flex items-center gap-1 text-[11px] text-cyber-cyan hover:underline font-semibold"
                         >
                           {copiedId === 'revshell-payload' ? (
@@ -474,20 +601,38 @@ export const CheatsheetView: React.FC = () => {
                         </motion.button>
                       </div>
                       <pre className="p-3 rounded-lg bg-cyber-code border border-cyber-border text-xs text-white overflow-x-auto whitespace-pre-wrap break-all select-all font-mono">
-                        {interpolatedRevShellCmd}
+                        {computedPayloadCmd}
                       </pre>
                     </div>
 
-                    {/* Netcat / Listener Box */}
+                    {/* Attacker Listener Box with Listener Switcher */}
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-[10px] uppercase font-bold text-cyber-muted">
-                          ATTACKER LISTENER COMMAND
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] uppercase font-bold text-cyber-muted">
+                            ATTACKER LISTENER COMMAND
+                          </span>
+                          <div className="flex items-center gap-1 text-[9px] font-mono">
+                            {(['nc', 'rlwrap', 'ncat', 'rustcat', 'socat'] as const).map(lt => (
+                              <button
+                                key={lt}
+                                type="button"
+                                onClick={() => setRevShellListenerType(lt)}
+                                className={`px-1.5 py-0.2 rounded transition-all ${
+                                  revShellListenerType === lt
+                                    ? 'bg-cyber-emerald text-black font-bold'
+                                    : 'text-cyber-muted hover:text-white bg-black/40'
+                                }`}
+                              >
+                                {lt}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          onClick={() => handleCopy(interpolatedListenerCmd, 'revshell-listener')}
+                          onClick={() => handleCopy(computedListenerCmd, 'revshell-listener')}
                           className="flex items-center gap-1 text-[11px] text-cyber-emerald hover:underline font-semibold"
                         >
                           {copiedId === 'revshell-listener' ? (
@@ -504,7 +649,7 @@ export const CheatsheetView: React.FC = () => {
                         </motion.button>
                       </div>
                       <pre className="p-2.5 rounded-lg bg-cyber-code border border-cyber-border text-xs text-cyber-emerald overflow-x-auto whitespace-pre-wrap select-all font-mono">
-                        {interpolatedListenerCmd}
+                        {computedListenerCmd}
                       </pre>
                     </div>
 
@@ -642,9 +787,9 @@ export const CheatsheetView: React.FC = () => {
           {/* VIEW MODE 2: CPTS FIELD MANUAL (SLICED INCREMENTAL RENDERING AT 120 FPS) */}
           {viewMode === 'cpts-manual' && (
             <div className="space-y-4">
-              {/* Field Manual HUD Header */}
+              {/* Field Manual HUD Header with 3-Way Bilingual Switcher */}
               <div className="p-3.5 rounded-xl border border-purple-500/30 bg-purple-950/20 flex flex-wrap items-center justify-between gap-3 text-xs">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <BookOpen className="w-4 h-4 text-purple-400" />
                   <span className="text-white font-bold tracking-wide">
                     DANIEL DAYAN'S CPTS FIELD MANUAL
@@ -653,6 +798,54 @@ export const CheatsheetView: React.FC = () => {
                     {selectedCptsCategory === 'ALL' ? 'ALL 414 NOTES' : selectedCptsCategory.toUpperCase()}
                   </span>
                 </div>
+
+                {/* 3-Way Language Selector */}
+                <div className="flex items-center gap-1 bg-cyber-bg/90 p-1 rounded-lg border border-purple-500/30 text-xs">
+                  <span className="text-[10px] text-purple-400 font-semibold px-1.5 flex items-center gap-1">
+                    <Languages className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">LANG:</span>
+                  </span>
+                  <button
+                    type="button"
+                    data-testid="cpts-lang-bilingual"
+                    onClick={() => setCptsLangMode('bilingual')}
+                    className={`px-2 py-0.5 rounded text-xs font-bold transition-all flex items-center gap-1 ${
+                      cptsLangMode === 'bilingual'
+                        ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
+                        : 'text-cyber-muted hover:text-white'
+                    }`}
+                    title="Display English and Hebrew side-by-side"
+                  >
+                    <span>🌐 Bilingual</span>
+                  </button>
+                  <button
+                    type="button"
+                    data-testid="cpts-lang-en"
+                    onClick={() => setCptsLangMode('en')}
+                    className={`px-2 py-0.5 rounded text-xs font-bold transition-all flex items-center gap-1 ${
+                      cptsLangMode === 'en'
+                        ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
+                        : 'text-cyber-muted hover:text-white'
+                    }`}
+                    title="English only"
+                  >
+                    <span>🇬🇧 EN</span>
+                  </button>
+                  <button
+                    type="button"
+                    data-testid="cpts-lang-he"
+                    onClick={() => setCptsLangMode('he')}
+                    className={`px-2 py-0.5 rounded text-xs font-bold transition-all flex items-center gap-1 ${
+                      cptsLangMode === 'he'
+                        ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
+                        : 'text-cyber-muted hover:text-white'
+                    }`}
+                    title="עברית בלבד"
+                  >
+                    <span>🇮🇱 עברית</span>
+                  </button>
+                </div>
+
                 <div className="text-[11px] text-cyber-muted font-mono">
                   Showing <strong className="text-purple-300">{visibleCptsNotes.length}</strong> of <strong className="text-white">{filteredCptsNotes.length}</strong> notes (<strong className="text-cyber-cyan">{totalCptsCommands}</strong> total commands)
                 </div>
@@ -677,23 +870,96 @@ export const CheatsheetView: React.FC = () => {
                       >
                         {/* Note Header */}
                         <div className="flex items-start justify-between gap-3">
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-bold text-white text-sm group-hover:text-purple-300 transition-colors">
-                                {note.title}
-                              </span>
+                          <div className="space-y-2 flex-1 min-w-0">
+                            {/* Titles based on cptsLangMode */}
+                            {cptsLangMode === 'en' ? (
+                              <div>
+                                <span className="font-bold text-white text-sm group-hover:text-purple-300 transition-colors">
+                                  {note.titleEn || note.title}
+                                </span>
+                              </div>
+                            ) : cptsLangMode === 'he' ? (
+                              <div className="text-right" dir="rtl">
+                                <span className="font-bold text-white text-sm group-hover:text-purple-300 transition-colors font-sans">
+                                  {note.titleHe || note.title}
+                                </span>
+                                {note.titleEn && note.titleEn !== (note.titleHe || note.title) && (
+                                  <div className="text-[11px] text-cyber-muted font-mono mt-0.5 text-left" dir="ltr">
+                                    EN: {note.titleEn}
+                                  </div>
+                                )}
+                              </div>
+                            ) : (
+                              /* Bilingual Title */
+                              <div className="space-y-0.5">
+                                <div className="font-bold text-white text-sm group-hover:text-purple-300 transition-colors">
+                                  {note.titleEn || note.title}
+                                </div>
+                                {note.titleHe && note.titleHe !== (note.titleEn || note.title) && (
+                                  <div className="text-xs text-purple-300 font-sans font-medium text-right" dir="rtl">
+                                    {note.titleHe}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+
+                            {/* Badges: Stage, Category, Difficulty, Tools */}
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              {note.stage && (
+                                <span className="text-[9px] px-2 py-0.5 rounded bg-blue-500/15 text-blue-300 border border-blue-500/30 font-mono font-semibold">
+                                  🎯 Stage: {note.stage}
+                                </span>
+                              )}
                               <span className="text-[9px] px-2 py-0.5 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 font-mono">
                                 {note.category}
                               </span>
                               <span className="text-[9px] px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border text-cyber-muted font-mono">
                                 {note.difficulty}
                               </span>
+                              {note.tools && note.tools.map((t) => (
+                                <span
+                                  key={t}
+                                  className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-mono"
+                                >
+                                  🔧 {t}
+                                </span>
+                              ))}
                             </div>
 
-                            <div className="text-[11px] text-cyber-muted line-clamp-2 leading-relaxed font-sans">
-                              {note.summary || note.subCategory}
-                            </div>
+                            {/* Summaries based on cptsLangMode */}
+                            {cptsLangMode === 'en' ? (
+                              <div className="text-[11px] text-cyber-muted leading-relaxed font-sans">
+                                {note.enSummary || note.summary || note.subCategory}
+                              </div>
+                            ) : cptsLangMode === 'he' ? (
+                              <div className="text-[11px] text-purple-200/90 leading-relaxed font-sans text-right" dir="rtl">
+                                {note.heSummary || note.summary || note.subCategory}
+                              </div>
+                            ) : (
+                              /* Bilingual dual summary cards */
+                              note.heSummary && note.enSummary && note.heSummary !== note.enSummary ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px] leading-relaxed pt-1">
+                                  <div className="p-2.5 rounded-lg bg-black/40 border border-white/5 font-sans text-gray-300 space-y-1">
+                                    <div className="flex items-center gap-1 text-[9px] font-mono font-bold text-cyber-muted uppercase tracking-wider">
+                                      <span>🇬🇧 ENGLISH INTEL</span>
+                                    </div>
+                                    <p className="line-clamp-3">{note.enSummary}</p>
+                                  </div>
+                                  <div className="p-2.5 rounded-lg bg-purple-950/20 border border-purple-500/20 font-sans text-purple-200 space-y-1 text-right" dir="rtl">
+                                    <div className="flex items-center justify-between gap-1 text-[9px] font-mono font-bold text-purple-400 uppercase tracking-wider" dir="ltr">
+                                      <span>🇮🇱 HEBREW INTEL (מטרה מעשית)</span>
+                                    </div>
+                                    <p className="line-clamp-3">{note.heSummary}</p>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="text-[11px] text-cyber-muted leading-relaxed font-sans">
+                                  {note.summary || note.enSummary || note.heSummary || note.subCategory}
+                                </div>
+                              )
+                            )}
 
+                            {/* Tags */}
                             {note.tags && note.tags.length > 0 && (
                               <div className="flex flex-wrap gap-1 pt-0.5">
                                 {note.tags.map((t) => (

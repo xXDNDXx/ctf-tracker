@@ -61,9 +61,11 @@ export const Sidebar: React.FC = () => {
     {
       id: 'cheatsheet',
       path: '/cheatsheets',
-      label: 'Offensive Cheatsheets',
+      label: 'Field Manual & Cheats',
       icon: Terminal,
-      sublabel: 'RevShells & Payloads',
+      sublabel: '414 Notes · 1,574 Cmds',
+      badge: '414 Notes',
+      badgeColor: 'text-purple-300 bg-purple-950/40 border-purple-800/50',
     },
     {
       id: 'writeup',

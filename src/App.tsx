@@ -125,7 +125,7 @@ const MainAppContent: React.FC = () => {
     const path = location.pathname;
     if (path.startsWith('/methodology')) {
       setActiveTab('methodology');
-    } else if (path.startsWith('/cheatsheets')) {
+    } else if (path.startsWith('/cheatsheets') || path.startsWith('/notes') || path.startsWith('/field-manual') || path.startsWith('/cpts')) {
       setActiveTab('cheatsheet');
     } else if (path.startsWith('/writeup')) {
       setActiveTab('writeup');
@@ -218,10 +218,14 @@ const MainAppContent: React.FC = () => {
                   <Route path="/target/:id" element={<TargetDetailPage />} />
                   <Route path="/methodology" element={<MethodologyPage />} />
                   <Route path="/cheatsheets" element={<CheatsheetView />} />
+                  <Route path="/cheatsheet" element={<Navigate to="/cheatsheets" replace />} />
+                  <Route path="/notes" element={<CheatsheetView defaultMode="cpts-manual" />} />
+                  <Route path="/field-manual" element={<CheatsheetView defaultMode="cpts-manual" />} />
+                  <Route path="/cpts" element={<CheatsheetView defaultMode="cpts-manual" />} />
+                  <Route path="/cpts-manual" element={<CheatsheetView defaultMode="cpts-manual" />} />
                   <Route path="/writeup" element={<WriteupStudio />} />
                   <Route path="/writeup/:id" element={<WriteupStudio />} />
                   <Route path="/writeups" element={<Navigate to="/writeup" replace />} />
-                  <Route path="/cheatsheet" element={<Navigate to="/cheatsheets" replace />} />
                   <Route path="/analytics" element={<AnalyticsView />} />
                   <Route path="/exam" element={<ExamSimulatorPage />} />
                   <Route path="/exam-simulator" element={<Navigate to="/exam" replace />} />
