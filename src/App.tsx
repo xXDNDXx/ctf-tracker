@@ -20,6 +20,7 @@ import { LicenseModal } from './components/common/LicenseModal';
 import { OperatorFlexCardModal } from './components/common/OperatorFlexCardModal';
 import { QuickAssignIpModal } from './components/common/QuickAssignIpModal';
 import { KeyboardShortcutsModal } from './components/common/KeyboardShortcutsModal';
+import { ThemeRippleOverlay } from './components/common/ThemeRippleOverlay';
 import { useTacticalHotkeys } from './hooks/useTacticalHotkeys';
 import { useCtfStore, mergeMachinesWithCatalog } from './store/useCtfStore';
 
@@ -30,6 +31,7 @@ const AnalyticsView = lazy(() => import('./components/analytics/AnalyticsView').
 const TargetDetailPage = lazy(() => import('./pages/TargetDetailPage').then(m => ({ default: m.TargetDetailPage })));
 const MethodologyPage = lazy(() => import('./pages/MethodologyPage').then(m => ({ default: m.MethodologyPage })));
 const ExamSimulatorPage = lazy(() => import('./pages/ExamSimulatorPage').then(m => ({ default: m.ExamSimulatorPage })));
+const ThemeShowcaseDemo = lazy(() => import('./components/common/ThemeShowcaseDemo').then(m => ({ default: m.ThemeShowcaseDemo })));
 
 const CyberRouteLoader: React.FC = () => (
   <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4 font-mono">
@@ -139,9 +141,12 @@ const MainAppContent: React.FC = () => {
   }, [location.pathname, setActiveTab]);
 
   return (
-    <div className="min-h-screen bg-cyber-bg text-cyber-text flex flex-col font-mono selection:bg-cyber-emerald selection:text-black relative">
+    <div className="min-h-screen bg-slate-50 dark:bg-cyber-bg text-slate-900 dark:text-cyber-text flex flex-col font-mono selection:bg-cyber-emerald selection:text-black relative transition-colors duration-300">
       {/* Top glowing laser scroll progress bar */}
       <ScrollProgressBar />
+
+      {/* Global Liquid Theme Transition Ripple Overlay */}
+      <ThemeRippleOverlay />
 
       {/* Floating Tactical Thruster Back to Top */}
       <BackToTopButton />
@@ -198,7 +203,7 @@ const MainAppContent: React.FC = () => {
         <Sidebar />
 
         {/* Dynamic Main Stage View with Cyber Grid Backdrop */}
-        <main ref={setScrollElement} className="flex-1 overflow-y-auto p-3 pb-24 sm:p-4 md:p-6 md:pb-6 relative bg-cyber-bg">
+        <main ref={setScrollElement} className="flex-1 overflow-y-auto p-3 pb-24 sm:p-4 md:p-6 md:pb-6 relative bg-slate-50/70 dark:bg-cyber-bg transition-colors duration-300">
           {/* Isolated Parallax Backdrop (Zero Root Re-Renders on Scroll) */}
           <ParallaxBackdrop />
 
@@ -229,6 +234,9 @@ const MainAppContent: React.FC = () => {
                   <Route path="/analytics" element={<AnalyticsView />} />
                   <Route path="/exam" element={<ExamSimulatorPage />} />
                   <Route path="/exam-simulator" element={<Navigate to="/exam" replace />} />
+                  <Route path="/theme-demo" element={<ThemeShowcaseDemo />} />
+                  <Route path="/theme" element={<ThemeShowcaseDemo />} />
+                  <Route path="/dark-mode" element={<ThemeShowcaseDemo />} />
                   <Route path="*" element={<Navigate to="/tracker" replace />} />
                 </Routes>
               </Suspense>

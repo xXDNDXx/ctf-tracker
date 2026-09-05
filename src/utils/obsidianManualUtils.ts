@@ -155,10 +155,11 @@ export function parseObsidianNote(rawMarkdown: string): ParsedObsidianNote {
   }
 
   // 2. Extract English / Technical methodology section
-  // Strip frontmatter and Hebrew upgrade block for clean English technical view
+  // Strip frontmatter, Hebrew upgrade blocks, and Hebrew card blocks for clean English technical view
   let englishSection = rawMarkdown
     .replace(/^---[\s\S]*?---\n*/, '')
     .replace(/<!--\s*CPTS-HEBREW-UPGRADE:START\s*-->[\s\S]*?<!--\s*CPTS-HEBREW-UPGRADE:END\s*-->\n*/, '')
+    .replace(/##\s*כרטיס עבודה עברי[\s\S]*?(?=\n##\s*1|\n##\s*\[|\n---|\n#\s+[^#]|$)/, '')
     .trim();
 
   // 3. Extract Callouts

@@ -33,8 +33,8 @@ import {
 import { interpolateCommand, playCyberSound } from '../../utils/helpers';
 import { GlobalVariables } from '../../types';
 
-export type ObsidianViewMode = 'reading' | 'dual' | 'raw';
-export type ObsidianNoteLanguage = 'bilingual' | 'en' | 'he';
+export type ObsidianViewMode = 'reading' | 'raw';
+export type ObsidianNoteLanguage = 'en' | 'he';
 
 interface ObsidianNoteViewerProps {
   note: CptsNoteEntry;
@@ -51,7 +51,7 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
   soundEnabled,
   onClose,
   onNavigateToNote,
-  defaultLanguage = 'bilingual',
+  defaultLanguage = 'en',
 }) => {
   const [viewMode, setViewMode] = useState<ObsidianViewMode>('reading');
   const [langMode, setLangMode] = useState<ObsidianNoteLanguage>(defaultLanguage);
@@ -68,6 +68,15 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
   const backlinks = useMemo(() => {
     return getBacklinksForNote(note.id);
   }, [note.id]);
+
+  // Filter callouts to match active language only
+  const visibleCallouts = useMemo(() => {
+    if (!parsed.callouts || parsed.callouts.length === 0) return [];
+    return parsed.callouts.filter((c) => {
+      const hasHeb = /[\u0590-\u05FF]/.test(c.title + ' ' + c.content);
+      return langMode === 'he' ? hasHeb : !hasHeb;
+    });
+  }, [parsed.callouts, langMode]);
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -563,18 +572,6 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
               </button>
               <button
                 type="button"
-                onClick={() => setViewMode('dual')}
-                className={'px-2.5 py-1 rounded transition-colors cursor-pointer ' + (
-                  viewMode === 'dual'
-                    ? 'bg-purple-600 text-white font-bold shadow-sm'
-                    : 'text-cyber-muted hover:text-white'
-                )}
-                title="Side-by-side English and Hebrew view"
-              >
-                Dual View
-              </button>
-              <button
-                type="button"
                 onClick={() => setViewMode('raw')}
                 className={'px-2.5 py-1 rounded transition-colors cursor-pointer ' + (
                   viewMode === 'raw'
@@ -590,39 +587,29 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
             <div className="flex items-center p-0.5 rounded-lg bg-black/50 border border-purple-900/40 text-[11px] font-mono">
               <button
                 type="button"
-                onClick={() => setLangMode('bilingual')}
-                className={'px-2 py-1 rounded transition-colors cursor-pointer ' + (
-                  langMode === 'bilingual'
-                    ? 'bg-purple-600 text-white font-bold shadow-sm'
-                    : 'text-cyber-muted hover:text-white'
-                )}
-                title="Bilingual mode"
-              >
-                Dual
-              </button>
-              <button
-                type="button"
+                data-testid="modal-lang-en"
                 onClick={() => setLangMode('en')}
-                className={'px-2 py-1 rounded transition-colors cursor-pointer ' + (
+                className={'px-2.5 py-1 rounded transition-colors cursor-pointer ' + (
                   langMode === 'en'
                     ? 'bg-purple-600 text-white font-bold shadow-sm'
                     : 'text-cyber-muted hover:text-white'
                 )}
-                title="English notes"
+                title="English technical playbook only"
               >
-                EN
+                🇬🇧 EN
               </button>
               <button
                 type="button"
+                data-testid="modal-lang-he"
                 onClick={() => setLangMode('he')}
-                className={'px-2 py-1 rounded transition-colors cursor-pointer ' + (
+                className={'px-2.5 py-1 rounded transition-colors cursor-pointer ' + (
                   langMode === 'he'
                     ? 'bg-purple-600 text-white font-bold shadow-sm'
                     : 'text-cyber-muted hover:text-white'
                 )}
-                title="Hebrew notes"
+                title="רשימות אישיות בעברית בלבד"
               >
-                עב
+                🇮🇱 עב
               </button>
             </div>
 
@@ -682,15 +669,15 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
           <div className="p-4 sm:p-5 rounded-xl border border-purple-900/40 bg-black/40 space-y-3 shadow-inner">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
               <div className="space-y-1">
-                <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
-                  <span className="text-purple-400">🛡️</span>
-                  <span>{note.titleEn || note.title}</span>
+                <h1
+                  className={`text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2 ${
+                    langMode === 'he' ? 'font-sans text-right' : 'font-mono text-left'
+                  }`}
+                  dir={langMode === 'he' ? 'rtl' : 'ltr'}
+                >
+                  <span className="text-purple-400 flex-shrink-0">🛡️</span>
+                  <span>{langMode === 'he' ? (note.titleHe || note.title) : (note.titleEn || note.title)}</span>
                 </h1>
-                {note.titleHe && note.titleHe !== (note.titleEn || note.title) && (
-                  <div className="text-sm font-bold text-purple-300 font-sans" dir="rtl">
-                    {note.titleHe}
-                  </div>
-                )}
               </div>
 
               <div className="flex items-center gap-1.5 flex-wrap">
@@ -765,54 +752,15 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
             </div>
           )}
 
-          {viewMode === 'dual' && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="p-5 rounded-xl border border-purple-900/30 bg-cyber-bg/40 space-y-4">
-                <div className="flex items-center justify-between pb-2 border-b border-purple-900/40">
-                  <div className="flex items-center gap-2 text-xs font-bold font-mono text-purple-300">
-                    <span>ENGLISH TACTICAL METHODOLOGY</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-cyber-muted">LTR Execution</span>
-                </div>
-                {parsed.callouts && parsed.callouts.length > 0 && (
-                  <div className="space-y-2">
-                    {parsed.callouts.slice(0, 3).map((callout, idx) => renderCallout(callout, idx))}
-                  </div>
-                )}
-                <div className="text-gray-300 text-xs leading-relaxed">
-                  {renderMarkdownBody(parsed.englishSection, false)}
-                </div>
-              </div>
-
-              <div className="p-5 rounded-xl border border-purple-500/30 bg-purple-950/10 space-y-4" dir="rtl">
-                <div className="flex items-center justify-between pb-2 border-b border-purple-900/40" dir="ltr">
-                  <span className="text-[10px] font-mono text-purple-400">RTL Personal Notes</span>
-                  <div className="flex items-center gap-2 text-xs font-bold font-sans text-purple-300">
-                    <span>כרטיס עבודה עברי (רשימות אישיות)</span>
-                  </div>
-                </div>
-                {parsed.hebrewSection ? (
-                  <div className="text-gray-200 text-xs leading-relaxed">
-                    {renderMarkdownBody(parsed.hebrewSection, true)}
-                  </div>
-                ) : (
-                  <div className="p-6 text-center text-cyber-muted text-xs font-sans">
-                    רשימות עבריות לפי מתודולוגיית התקיפה המלאה.
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
           {viewMode === 'reading' && (
             <div className="space-y-6">
-              {parsed.callouts && parsed.callouts.length > 0 && (
+              {visibleCallouts && visibleCallouts.length > 0 && (
                 <div className="space-y-2">
-                  {parsed.callouts.map((c, idx) => renderCallout(c, idx))}
+                  {visibleCallouts.map((c, idx) => renderCallout(c, idx))}
                 </div>
               )}
 
-              {(langMode === 'bilingual' || langMode === 'he') && parsed.hebrewSection && (
+              {langMode === 'he' ? (
                 <div className="p-4 sm:p-5 rounded-xl border border-purple-500/40 bg-purple-950/20 space-y-3" dir="rtl">
                   <div className="flex items-center justify-between pb-2 border-b border-purple-900/40" dir="ltr">
                     <span className="text-[10px] font-mono text-purple-400">DANIEL DAYAN PERSONAL FIELD CARD</span>
@@ -821,12 +769,30 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
                     </h3>
                   </div>
                   <div className="text-gray-200 text-xs leading-relaxed font-sans">
-                    {renderMarkdownBody(parsed.hebrewSection, true)}
+                    {parsed.hebrewSection ? (
+                      renderMarkdownBody(parsed.hebrewSection, true)
+                    ) : (
+                      <div className="space-y-4 text-right">
+                        <p className="text-purple-200 font-medium text-sm leading-relaxed">
+                          {note.heSummary || note.summary}
+                        </p>
+                        {note.commands && note.commands.length > 0 && (
+                          <div className="pt-2">
+                            <span className="text-[10px] font-mono text-purple-400">פקודות תקיפה מבצעיות:</span>
+                            <div className="space-y-2 mt-2" dir="ltr">
+                              {note.commands.map((cmd, idx) => (
+                                <div key={idx} className="p-2.5 rounded-lg bg-black/60 border border-purple-900/50 font-mono text-xs text-cyber-cyan select-all">
+                                  {interpolateCommand(cmd, globalVars)}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
-              )}
-
-              {(langMode === 'bilingual' || langMode === 'en') && (
+              ) : (
                 <div className="p-4 sm:p-5 rounded-xl border border-cyber-border bg-cyber-bg/40 space-y-4">
                   <div className="flex items-center justify-between pb-2 border-b border-purple-900/30">
                     <h3 className="text-xs font-bold text-cyber-cyan font-mono flex items-center gap-2">

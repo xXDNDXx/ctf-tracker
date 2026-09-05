@@ -99,7 +99,7 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside
-      className={`hidden md:flex relative flex-col border-r border-cyber-border bg-cyber-bg transition-all duration-300 z-30 ${
+      className={`hidden md:flex relative flex-col border-r border-slate-200 dark:border-cyber-border bg-white/95 dark:bg-cyber-bg text-slate-900 dark:text-cyber-text transition-all duration-300 z-30 ${
         collapsed ? 'w-16' : 'w-72'
       }`}
     >

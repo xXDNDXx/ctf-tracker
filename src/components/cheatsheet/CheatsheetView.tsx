@@ -46,7 +46,7 @@ import {
 } from '../../utils/obsidianManualUtils';
 import { ObsidianNoteViewer } from './ObsidianNoteViewer';
 
-export type CptsLanguageMode = 'bilingual' | 'en' | 'he';
+export type CptsLanguageMode = 'en' | 'he';
 export type CptsDisplayLayout = 'cards' | 'quick-index' | 'grouped';
 
 interface CheatsheetViewProps {
@@ -72,7 +72,7 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
     location.search.includes('cpts');
 
   const [viewMode, setViewMode] = useState<'tactical' | 'cpts-manual'>(isManualRoute ? 'cpts-manual' : 'tactical');
-  const [cptsLangMode, setCptsLangMode] = useState<CptsLanguageMode>('bilingual');
+  const [cptsLangMode, setCptsLangMode] = useState<CptsLanguageMode>('en');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedCptsCategory, setSelectedCptsCategory] = useState('ALL');
   const [selectedCptsSubCategory, setSelectedCptsSubCategory] = useState<string>('ALL');
@@ -199,14 +199,8 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
   const cptsCategories = useMemo(() => getCptsCategories(), []);
 
   const filteredCptsNotes = useMemo(() => {
-    let list = searchCptsNotes(searchQuery, selectedCptsCategory, selectedCptsSubCategory);
-    if (cptsLangMode === 'en') {
-      list = list.filter(n => (n.titleEn && n.titleEn.length > 2) || (n.enSummary && n.enSummary.length > 2) || !/[\u0590-\u05FF]/.test(n.title));
-    } else if (cptsLangMode === 'he') {
-      list = list.filter(n => /[\u0590-\u05FF]/.test(n.title + ' ' + (n.heSummary || '') + ' ' + (n.summary || '')));
-    }
-    return list;
-  }, [searchQuery, selectedCptsCategory, selectedCptsSubCategory, cptsLangMode]);
+    return searchCptsNotes(searchQuery, selectedCptsCategory, selectedCptsSubCategory);
+  }, [searchQuery, selectedCptsCategory, selectedCptsSubCategory]);
 
   const activeCategoryTopicGroups = useMemo(() => {
     return getCategoryTopicGroups(selectedCptsCategory);
@@ -1174,46 +1168,39 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                       </button>
                     </div>
 
-                    {/* 3-Way Language Selector */}
+                    {/* 2-Way Language Selector: English or Hebrew */}
                     <div className="flex items-center gap-1 bg-cyber-bg/90 p-1 rounded-lg border border-purple-500/30 text-xs">
                       <button
                         type="button"
-                        data-testid="cpts-lang-bilingual"
-                        onClick={() => setCptsLangMode('bilingual')}
-                        className={`px-2 py-0.5 rounded text-xs font-bold transition-all flex items-center gap-1 ${
-                          cptsLangMode === 'bilingual'
-                            ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
-                            : 'text-cyber-muted hover:text-white'
-                        }`}
-                        title="Display English and Hebrew side-by-side"
-                      >
-                        <span>🌐 Bilingual</span>
-                      </button>
-                      <button
-                        type="button"
                         data-testid="cpts-lang-en"
-                        onClick={() => setCptsLangMode('en')}
-                        className={`px-2 py-0.5 rounded text-xs font-bold transition-all flex items-center gap-1 ${
+                        onClick={() => {
+                          if (soundEnabled) playCyberSound('click');
+                          setCptsLangMode('en');
+                        }}
+                        className={`px-2.5 py-1 rounded text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                           cptsLangMode === 'en'
                             ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
                             : 'text-cyber-muted hover:text-white'
                         }`}
-                        title="English only"
+                        title="English notes only"
                       >
                         <span>🇬🇧 EN</span>
                       </button>
                       <button
                         type="button"
                         data-testid="cpts-lang-he"
-                        onClick={() => setCptsLangMode('he')}
-                        className={`px-2 py-0.5 rounded text-xs font-bold transition-all flex items-center gap-1 ${
+                        onClick={() => {
+                          if (soundEnabled) playCyberSound('click');
+                          setCptsLangMode('he');
+                        }}
+                        className={`px-2.5 py-1 rounded text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                           cptsLangMode === 'he'
                             ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
                             : 'text-cyber-muted hover:text-white'
                         }`}
                         title="עברית בלבד"
                       >
-                        <span>🇮🇱 עברית</span>
+                        <span>🇮🇱 עב</span>
                       </button>
                     </div>
 
@@ -1414,24 +1401,25 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                                           setActiveObsidianNote(note);
                                         }}
                                         className="font-bold text-white text-xs hover:text-purple-300 transition-colors inline-flex items-center gap-1.5 cursor-pointer text-left"
-                                        title="Open authentic Obsidian note"
+                                        title={cptsLangMode === 'he' ? "פתח הערה באובסידיאן" : "Open authentic Obsidian note"}
+                                        dir={cptsLangMode === 'he' ? 'rtl' : 'ltr'}
                                       >
                                         <BookOpen className="w-3 h-3 text-purple-400 flex-shrink-0" />
                                         <span>
-                                          {cptsLangMode === 'en'
-                                            ? note.titleEn || note.title
-                                            : cptsLangMode === 'he'
+                                          {cptsLangMode === 'he'
                                             ? note.titleHe || note.title
                                             : note.titleEn || note.title}
                                         </span>
                                       </button>
-                                      {cptsLangMode === 'bilingual' && note.titleHe && note.titleHe !== (note.titleEn || note.title) && (
-                                        <div className="text-[10px] text-purple-300/80 font-sans mt-0.5" dir="rtl">
-                                          {note.titleHe}
-                                        </div>
-                                      )}
-                                      <div className="text-[10px] text-cyber-muted truncate max-w-md mt-0.5">
-                                        {note.enSummary || note.summary || note.heSummary}
+                                      <div
+                                        className={`text-[10px] text-cyber-muted truncate max-w-md mt-0.5 ${
+                                          cptsLangMode === 'he' ? 'font-sans text-right' : 'text-left'
+                                        }`}
+                                        dir={cptsLangMode === 'he' ? 'rtl' : 'ltr'}
+                                      >
+                                        {cptsLangMode === 'he'
+                                          ? note.heSummary || note.summary || note.subCategory
+                                          : note.enSummary || note.summary || note.subCategory}
                                       </div>
                                     </div>
                                   </td>
@@ -1642,26 +1630,27 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                                              if (soundEnabled) playCyberSound('click');
                                              setActiveObsidianNote(note);
                                            }}
-                                           className="font-bold text-white text-xs group-hover:text-purple-300 transition-colors text-left cursor-pointer inline-flex items-center gap-1.5"
-                                           title="Open authentic Obsidian note"
-                                         >
-                                           <BookOpen className="w-3 h-3 text-purple-400 flex-shrink-0" />
-                                           <span>
-                                             {cptsLangMode === 'en'
-                                               ? note.titleEn || note.title
-                                               : cptsLangMode === 'he'
-                                               ? note.titleHe || note.title
-                                               : note.titleEn || note.title}
-                                           </span>
-                                         </button>
-                                         {cptsLangMode === 'bilingual' && note.titleHe && note.titleHe !== (note.titleEn || note.title) && (
-                                           <div className="text-[10px] text-purple-300 font-sans" dir="rtl">
-                                             {note.titleHe}
-                                           </div>
-                                         )}
-                                         <p className="text-[11px] text-cyber-muted line-clamp-2">
-                                           {note.enSummary || note.summary || note.heSummary}
-                                         </p>
+                                            className="font-bold text-white text-xs group-hover:text-purple-300 transition-colors cursor-pointer inline-flex items-center gap-1.5"
+                                            title={cptsLangMode === 'he' ? "פתח הערה באובסידיאן" : "Open authentic Obsidian note"}
+                                            dir={cptsLangMode === 'he' ? 'rtl' : 'ltr'}
+                                          >
+                                            <BookOpen className="w-3 h-3 text-purple-400 flex-shrink-0" />
+                                            <span>
+                                              {cptsLangMode === 'he'
+                                                ? note.titleHe || note.title
+                                                : note.titleEn || note.title}
+                                            </span>
+                                          </button>
+                                          <p
+                                            className={`text-[11px] text-cyber-muted line-clamp-2 ${
+                                              cptsLangMode === 'he' ? 'font-sans text-right' : 'text-left'
+                                            }`}
+                                            dir={cptsLangMode === 'he' ? 'rtl' : 'ltr'}
+                                          >
+                                            {cptsLangMode === 'he'
+                                              ? note.heSummary || note.summary || note.subCategory
+                                              : note.enSummary || note.summary || note.subCategory}
+                                          </p>
                                        </div>
                                        <div className="flex items-center gap-1.5 flex-shrink-0">
                                          <button
@@ -1749,23 +1738,8 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                           {/* Note Header */}
                           <div className="flex items-start justify-between gap-3">
                             <div className="space-y-2 flex-1 min-w-0">
-                              {/* Titles based on cptsLangMode */}
-                              {cptsLangMode === 'en' ? (
-                                <div>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      if (soundEnabled) playCyberSound('click');
-                                      setActiveObsidianNote(note);
-                                    }}
-                                    className="font-bold text-white text-sm group-hover:text-purple-300 transition-colors text-left cursor-pointer inline-flex items-center gap-1.5"
-                                    title="Open authentic Obsidian note"
-                                  >
-                                    <BookOpen className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
-                                    <span>{note.titleEn || note.title}</span>
-                                  </button>
-                                </div>
-                              ) : cptsLangMode === 'he' ? (
+                              {/* Title based on cptsLangMode - ONLY ONE, NEVER BOTH */}
+                              {cptsLangMode === 'he' ? (
                                 <div className="text-right" dir="rtl">
                                   <button
                                     type="button"
@@ -1779,15 +1753,9 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                                     <BookOpen className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
                                     <span>{note.titleHe || note.title}</span>
                                   </button>
-                                  {note.titleEn && note.titleEn !== (note.titleHe || note.title) && (
-                                    <div className="text-[11px] text-cyber-muted font-mono mt-0.5 text-left" dir="ltr">
-                                      EN: {note.titleEn}
-                                    </div>
-                                  )}
                                 </div>
                               ) : (
-                                /* Bilingual Title */
-                                <div className="space-y-0.5">
+                                <div>
                                   <button
                                     type="button"
                                     onClick={() => {
@@ -1800,11 +1768,6 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                                     <BookOpen className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
                                     <span>{note.titleEn || note.title}</span>
                                   </button>
-                                  {note.titleHe && note.titleHe !== (note.titleEn || note.title) && (
-                                    <div className="text-xs text-purple-300 font-sans font-medium text-right" dir="rtl">
-                                      {note.titleHe}
-                                    </div>
-                                  )}
                                 </div>
                               )}
 
@@ -1837,43 +1800,15 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                                   ))}
                               </div>
 
-                              {/* Summaries based on cptsLangMode */}
-                              {cptsLangMode === 'en' ? (
-                                <div className="text-[11px] text-cyber-muted leading-relaxed font-sans">
-                                  {note.enSummary || note.summary || note.subCategory}
-                                </div>
-                              ) : cptsLangMode === 'he' ? (
+                              {/* Summaries based on cptsLangMode - ONLY ONE, NEVER BOTH */}
+                              {cptsLangMode === 'he' ? (
                                 <div className="text-[11px] text-purple-200/90 leading-relaxed font-sans text-right" dir="rtl">
                                   {note.heSummary || note.summary || note.subCategory}
                                 </div>
                               ) : (
-                                /* Bilingual dual summary cards */
-                                note.heSummary && note.enSummary && note.heSummary !== note.enSummary ? (
-                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px] leading-relaxed pt-1">
-                                    <div className="p-2.5 rounded-lg bg-black/40 border border-white/5 font-sans text-gray-300 space-y-1">
-                                      <div className="flex items-center gap-1 text-[9px] font-mono font-bold text-cyber-muted uppercase tracking-wider">
-                                        <span>🇬🇧 ENGLISH INTEL</span>
-                                      </div>
-                                      <p className="line-clamp-3">{note.enSummary}</p>
-                                    </div>
-                                    <div
-                                      className="p-2.5 rounded-lg bg-purple-950/20 border border-purple-500/20 font-sans text-purple-200 space-y-1 text-right"
-                                      dir="rtl"
-                                    >
-                                      <div
-                                        className="flex items-center justify-between gap-1 text-[9px] font-mono font-bold text-purple-400 uppercase tracking-wider"
-                                        dir="ltr"
-                                      >
-                                        <span>🇮🇱 HEBREW INTEL (מטרה מעשית)</span>
-                                      </div>
-                                      <p className="line-clamp-3">{note.heSummary}</p>
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <div className="text-[11px] text-cyber-muted leading-relaxed font-sans">
-                                    {note.summary || note.enSummary || note.heSummary || note.subCategory}
-                                  </div>
-                                )
+                                <div className="text-[11px] text-cyber-muted leading-relaxed font-sans text-left" dir="ltr">
+                                  {note.enSummary || note.summary || note.subCategory}
+                                </div>
                               )}
 
                               {/* Tags */}

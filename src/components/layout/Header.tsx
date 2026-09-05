@@ -37,6 +37,7 @@ import { PlatformIcon } from '../common/PlatformBadge';
 import { EditableIpBadge } from '../common/EditableIpBadge';
 import { playCyberSound, formatSeconds, triggerRootCelebration, safeCopyToClipboard, CREATOR_PROFILE_LINKS } from '../../utils/helpers';
 import { UserMenu } from '../auth/UserMenu';
+import { ThemeToggle } from '../common/ThemeToggle';
 
 const BRAND_THEMES = [
   { id: 'zerobox', namePrefix: 'ZERO', nameSuffix: 'BOX', suffixColor: 'text-cyber-cyan', tagline: 'Tactical Cyber Operations Suite' },
@@ -254,10 +255,10 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-cyber-border bg-cyber-bg/95 backdrop-blur-md transition-colors">
+    <header className="sticky top-0 z-40 border-b border-slate-200 dark:border-cyber-border bg-white/95 dark:bg-cyber-bg/95 text-slate-900 dark:text-cyber-text backdrop-blur-md transition-colors">
       
       {/* Tier 1: Primary Bar (Brand on Left, Centered Global Search, Tools & Profile on Right) */}
-      <div className="w-full px-4 xl:px-6 py-2 border-b border-cyber-border/40 flex items-center justify-between gap-3">
+      <div className="w-full px-4 xl:px-6 py-2 border-b border-slate-200/60 dark:border-cyber-border/40 flex items-center justify-between gap-3">
         
         {/* Left: Brand Identity */}
         <div className="flex items-center gap-3">
@@ -478,8 +479,9 @@ export const Header: React.FC = () => {
 
         {/* Right: Tactical Toggles & GOOGLE PROFILE (PERMANENTLY PINNED TOP RIGHT) */}
         <div className="flex items-center gap-2">
-          {/* Tactical Utilities (CRT, Sound, Backup) */}
-          <div className="hidden sm:flex items-center gap-1 border-r border-cyber-border/80 pr-2">
+          {/* Tactical Utilities (Theme, CRT, Sound, Backup) */}
+          <div className="hidden sm:flex items-center gap-1.5 border-r border-cyber-border/80 pr-2">
+            <ThemeToggle size="sm" soundEnabled={soundEnabled} />
             <button
               onClick={toggleCrtOverlay}
               className={`p-1.5 rounded-md border transition-all ${
