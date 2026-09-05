@@ -687,20 +687,6 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                             ))}
                           </div>
                         </div>
-                                key={lt}
-                                type="button"
-                                onClick={() => setRevShellListenerType(lt)}
-                                className={`px-1.5 py-0.2 rounded transition-all ${
-                                  revShellListenerType === lt
-                                    ? 'bg-cyber-emerald text-black font-bold'
-                                    : 'text-cyber-muted hover:text-white bg-black/40'
-                                }`}
-                              >
-                                {lt}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
@@ -918,6 +904,50 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                   </button>
                 </div>
 
+                {/* RTL / LTR Direction Selector */}
+                <div className="flex items-center gap-1 bg-cyber-bg/90 p-1 rounded-lg border border-purple-500/30 text-xs">
+                  <span className="text-[10px] text-purple-400 font-semibold px-1.5 flex items-center gap-1">
+                    <ArrowRightLeft className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">DIR:</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setNotesTextDirection('auto')}
+                    className={`px-2 py-0.5 rounded text-xs font-bold transition-all ${
+                      notesTextDirection === 'auto'
+                        ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
+                        : 'text-cyber-muted hover:text-white'
+                    }`}
+                    title="Auto direction based on language"
+                  >
+                    <span>Auto</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setNotesTextDirection('ltr')}
+                    className={`px-2 py-0.5 rounded text-xs font-bold transition-all ${
+                      notesTextDirection === 'ltr'
+                        ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
+                        : 'text-cyber-muted hover:text-white'
+                    }`}
+                    title="Force Left-to-Right layout"
+                  >
+                    <span>LTR ➔</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setNotesTextDirection('rtl')}
+                    className={`px-2 py-0.5 rounded text-xs font-bold transition-all ${
+                      notesTextDirection === 'rtl'
+                        ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
+                        : 'text-cyber-muted hover:text-white'
+                    }`}
+                    title="Force Right-to-Left layout (עברית)"
+                  >
+                    <span>⬅️ RTL</span>
+                  </button>
+                </div>
+
                 <div className="text-[11px] text-cyber-muted font-mono">
                   Showing <strong className="text-purple-300">{visibleCptsNotes.length}</strong> of <strong className="text-white">{filteredCptsNotes.length}</strong> notes (<strong className="text-cyber-cyan">{totalCptsCommands}</strong> total commands)
                 </div>
@@ -934,11 +964,15 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                     const isNoteExpanded = Boolean(expandedNotes[note.id]);
                     const commandsToShow = isNoteExpanded ? note.commands : (note.commands ? note.commands.slice(0, 2) : []);
                     const extraCommandsCount = note.commands ? Math.max(0, note.commands.length - 2) : 0;
+                    const isRtlCard = notesTextDirection === 'rtl' || (notesTextDirection === 'auto' && cptsLangMode === 'he');
 
                     return (
                       <div
                         key={note.id}
-                        className="p-4 rounded-xl border border-cyber-border bg-cyber-card hover:border-purple-500/50 hover:shadow-lg transition-all space-y-3 group"
+                        dir={isRtlCard ? 'rtl' : 'ltr'}
+                        className={`p-4 rounded-xl border border-cyber-border bg-cyber-card hover:border-purple-500/50 hover:shadow-lg transition-all space-y-3 group ${
+                          isRtlCard ? 'text-right' : 'text-left'
+                        }`}
                       >
                         {/* Note Header */}
                         <div className="flex items-start justify-between gap-3">
@@ -1073,9 +1107,9 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                           )}
                         </div>
 
-                        {/* Note Commands Container */}
+                        {/* Note Commands Container (Always LTR for code) */}
                         {note.commands && note.commands.length > 0 && (
-                          <div className="space-y-2 pt-1 border-t border-cyber-border/60">
+                          <div className="space-y-2 pt-1 border-t border-cyber-border/60 text-left" dir="ltr">
                             {commandsToShow.map((cmd, cIdx) => {
                               const interpolated = interpolateCommand(cmd, globalVars);
                               const cmdId = `${note.id}-${cIdx}`;
