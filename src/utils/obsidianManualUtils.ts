@@ -64,15 +64,89 @@ export function getNotesByCategory(category: string): CptsNoteEntry[] {
   return CPTS_NOTES.filter((n) => n.category === category);
 }
 
+export interface CptsTopicLeaf {
+  leaf: string;
+  rawSub: string;
+  count: number;
+}
+
+export interface CptsTopicGroup {
+  group: string;
+  count: number;
+  leaves: CptsTopicLeaf[];
+}
+
+export function cleanSubCategorySegment(s: string): string {
+  return s.replace(/^\d+[\s_.-]*/, '').replace(/_/g, ' ').trim();
+}
+
+export function parseSubCategory(sub?: string): { group: string; leaf: string; full: string } {
+  if (!sub) return { group: 'Overview & Index', leaf: 'General Notes', full: '' };
+  const parts = sub.split(' / ').map(cleanSubCategorySegment).filter(Boolean);
+  const group = parts[0] || 'Overview';
+  const leaf = parts.slice(1).join(' > ') || group;
+  return { group, leaf, full: sub };
+}
+
 /**
- * Fast search across note titles (EN & HE), tags, summaries, and commands
+ * Get hierarchical topic groups for a category (or across all notes)
  */
-export function searchCptsNotes(query: string, category: string = 'ALL'): CptsNoteEntry[] {
+export function getCategoryTopicGroups(category: string = 'ALL'): CptsTopicGroup[] {
+  const pool = category === 'ALL' ? CPTS_NOTES : CPTS_NOTES.filter((n) => n.category === category);
+  const groupMap: Record<string, { group: string; count: number; leafMap: Record<string, CptsTopicLeaf> }> = {};
+
+  for (const n of pool) {
+    const { group, leaf, full } = parseSubCategory(n.subCategory);
+    if (!groupMap[group]) {
+      groupMap[group] = { group, count: 0, leafMap: {} };
+    }
+    groupMap[group].count++;
+    if (!groupMap[group].leafMap[leaf]) {
+      groupMap[group].leafMap[leaf] = { leaf, rawSub: full, count: 0 };
+    }
+    groupMap[group].leafMap[leaf].count++;
+  }
+
+  return Object.values(groupMap)
+    .map((g) => ({
+      group: g.group,
+      count: g.count,
+      leaves: Object.values(g.leafMap).sort((a, b) => b.count - a.count),
+    }))
+    .sort((a, b) => b.count - a.count);
+}
+
+/**
+ * Fast search and filter across note titles (EN & HE), subcategories, topic groups, tags, summaries, and commands
+ */
+export function searchCptsNotes(
+  query: string, 
+  category: string = 'ALL',
+  subCategoryFilter?: string | null
+): CptsNoteEntry[] {
   const q = query.trim().toLowerCase();
   let pool = CPTS_NOTES;
+
   if (category && category !== 'ALL') {
     pool = pool.filter((n) => n.category === category);
   }
+
+  if (subCategoryFilter && subCategoryFilter !== 'ALL') {
+    const filterLower = subCategoryFilter.toLowerCase();
+    pool = pool.filter((n) => {
+      if (!n.subCategory) {
+        return filterLower === 'overview & index' || filterLower === 'general notes' || filterLower === '';
+      }
+      const { group, leaf } = parseSubCategory(n.subCategory);
+      return (
+        n.subCategory.toLowerCase() === filterLower ||
+        group.toLowerCase() === filterLower ||
+        leaf.toLowerCase() === filterLower ||
+        n.subCategory.toLowerCase().includes(filterLower)
+      );
+    });
+  }
+
   if (!q) return pool;
 
   return pool.filter((n) => {

@@ -15,11 +15,18 @@ import {
   Sparkles,
   ChevronDown,
   ChevronUp,
+  ChevronRight,
   Layers,
   Compass,
   FileText,
   Languages,
-  ArrowRightLeft
+  ArrowRightLeft,
+  Folder,
+  FolderOpen,
+  Table,
+  LayoutList,
+  Zap,
+  Filter
 } from 'lucide-react';
 import { useCtfStore } from '../../store/useCtfStore';
 import { 
@@ -30,11 +37,15 @@ import { interpolateCommand, playCyberSound } from '../../utils/helpers';
 import { 
   CPTS_NOTES, 
   CptsNoteEntry, 
+  CptsTopicGroup,
   getCptsCategories, 
+  getCategoryTopicGroups,
+  parseSubCategory,
   searchCptsNotes 
 } from '../../utils/obsidianManualUtils';
 
 export type CptsLanguageMode = 'bilingual' | 'en' | 'he';
+export type CptsDisplayLayout = 'cards' | 'quick-index' | 'grouped';
 
 interface CheatsheetViewProps {
   defaultMode?: 'tactical' | 'cpts-manual';
@@ -62,6 +73,16 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
   const [cptsLangMode, setCptsLangMode] = useState<CptsLanguageMode>('bilingual');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedCptsCategory, setSelectedCptsCategory] = useState('ALL');
+  const [selectedCptsSubCategory, setSelectedCptsSubCategory] = useState<string>('ALL');
+  const [expandedSidebarCategories, setExpandedSidebarCategories] = useState<Record<string, boolean>>({
+    '01 Information Gathering & Recon': true,
+  });
+  const [cptsDisplayLayout, setCptsDisplayLayout] = useState<CptsDisplayLayout>('cards');
+  const [expandedIndexRows, setExpandedIndexRows] = useState<Record<string, boolean>>({});
+  const [collapsedGroupSections, setCollapsedGroupSections] = useState<Record<string, boolean>>({});
+  const [jumpDropdownOpen, setJumpDropdownOpen] = useState(false);
+  const [jumpSearchQuery, setJumpSearchQuery] = useState('');
+  const [highlightedNoteId, setHighlightedNoteId] = useState<string | null>(null);
   const [cptsLimit, setCptsLimit] = useState(30);
   const [expandedNotes, setExpandedNotes] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState('');
@@ -163,14 +184,39 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
   const cptsCategories = useMemo(() => getCptsCategories(), []);
 
   const filteredCptsNotes = useMemo(() => {
-    let list = searchCptsNotes(searchQuery, selectedCptsCategory);
+    let list = searchCptsNotes(searchQuery, selectedCptsCategory, selectedCptsSubCategory);
     if (cptsLangMode === 'en') {
       list = list.filter(n => (n.titleEn && n.titleEn.length > 2) || (n.enSummary && n.enSummary.length > 2) || !/[\u0590-\u05FF]/.test(n.title));
     } else if (cptsLangMode === 'he') {
       list = list.filter(n => /[\u0590-\u05FF]/.test(n.title + ' ' + (n.heSummary || '') + ' ' + (n.summary || '')));
     }
     return list;
-  }, [searchQuery, selectedCptsCategory, cptsLangMode]);
+  }, [searchQuery, selectedCptsCategory, selectedCptsSubCategory, cptsLangMode]);
+
+  const activeCategoryTopicGroups = useMemo(() => {
+    return getCategoryTopicGroups(selectedCptsCategory);
+  }, [selectedCptsCategory]);
+
+  const activeTopicLeaves = useMemo(() => {
+    if (selectedCptsSubCategory === 'ALL') return [];
+    const group = activeCategoryTopicGroups.find(g => g.group === selectedCptsSubCategory);
+    return group ? group.leaves : [];
+  }, [activeCategoryTopicGroups, selectedCptsSubCategory]);
+
+  const groupedCptsNotes = useMemo(() => {
+    if (cptsDisplayLayout !== 'grouped') return [];
+    const map: Record<string, CptsNoteEntry[]> = {};
+    for (const note of filteredCptsNotes) {
+      const { group } = parseSubCategory(note.subCategory);
+      if (!map[group]) map[group] = [];
+      map[group].push(note);
+    }
+    return Object.entries(map).map(([group, notes]) => ({
+      group,
+      count: notes.length,
+      notes
+    })).sort((a, b) => b.count - a.count);
+  }, [filteredCptsNotes, cptsDisplayLayout]);
 
   const visibleCptsNotes = useMemo(() => {
     return filteredCptsNotes.slice(0, cptsLimit);
@@ -179,6 +225,44 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
   const totalCptsCommands = useMemo(() => {
     return filteredCptsNotes.reduce((sum, n) => sum + (n.commands ? n.commands.length : 0), 0);
   }, [filteredCptsNotes]);
+
+  const handleJumpToNote = (note: CptsNoteEntry) => {
+    setJumpDropdownOpen(false);
+    setJumpSearchQuery('');
+    setHighlightedNoteId(note.id);
+    if (soundEnabled) playCyberSound('root');
+
+    // If note is in another category or subcategory, switch so it is visible
+    if (selectedCptsCategory !== 'ALL' && selectedCptsCategory !== note.category) {
+      setSelectedCptsCategory(note.category);
+      setSelectedCptsSubCategory('ALL');
+    } else if (selectedCptsSubCategory !== 'ALL') {
+      const { group } = parseSubCategory(note.subCategory);
+      if (selectedCptsSubCategory !== group) {
+        setSelectedCptsSubCategory('ALL');
+      }
+    }
+
+    // Ensure note is within pagination window
+    setCptsLimit((prev) => Math.max(prev, 60));
+
+    // Auto expand row if in quick-index mode
+    if (cptsDisplayLayout === 'quick-index') {
+      setExpandedIndexRows((prev) => ({ ...prev, [note.id]: true }));
+    }
+
+    // Scroll smoothly to element
+    setTimeout(() => {
+      const el = document.getElementById(`cpts-note-${note.id}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 150);
+
+    setTimeout(() => {
+      setHighlightedNoteId(null);
+    }, 3000);
+  };
 
   // Filtered reverse shells by OS
   const availableRevShells = useMemo(() => {
@@ -420,48 +504,109 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                   whileTap={{ scale: 0.98 }}
                   onClick={() => {
                     setSelectedCptsCategory('ALL');
+                    setSelectedCptsSubCategory('ALL');
                     setCptsLimit(30);
                   }}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-all text-left ${
-                    selectedCptsCategory === 'ALL'
+                    selectedCptsCategory === 'ALL' && selectedCptsSubCategory === 'ALL'
                       ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold shadow-md'
                       : 'text-cyber-muted hover:text-white hover:bg-cyber-bg'
                   }`}
                 >
-                  <span>All Field Notes</span>
+                  <div className="flex items-center gap-2">
+                    <BookOpen className="w-3.5 h-3.5 text-purple-400" />
+                    <span>All Field Notes</span>
+                  </div>
                   <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/40 border border-cyber-border">
                     {CPTS_NOTES.length}
                   </span>
                 </motion.button>
 
                 {cptsCategories.map((cat, idx) => {
-                  const isSelected = selectedCptsCategory === cat.category;
+                  const isCatSelected = selectedCptsCategory === cat.category;
+                  const isExpanded = Boolean(expandedSidebarCategories[cat.category]);
                   const stageNum = String(idx).padStart(2, '0');
+                  const topicGroups = isExpanded ? getCategoryTopicGroups(cat.category) : [];
+
                   return (
-                    <motion.button
-                      whileHover={{ x: 3 }}
-                      whileTap={{ scale: 0.98 }}
-                      key={cat.category}
-                      onClick={() => {
-                        setSelectedCptsCategory(cat.category);
-                        setCptsLimit(30);
-                      }}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-all text-left ${
-                        isSelected
-                          ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold shadow-md'
-                          : 'text-cyber-muted hover:text-white hover:bg-cyber-bg'
-                      }`}
-                    >
-                      <div className="flex items-center gap-1.5 truncate pr-1">
-                        <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-purple-950/60 border border-purple-800/40 text-purple-400">
-                          {stageNum}
+                    <div key={cat.category} className="space-y-0.5">
+                      <div
+                        onClick={() => {
+                          setSelectedCptsCategory(cat.category);
+                          setSelectedCptsSubCategory('ALL');
+                          setCptsLimit(30);
+                          setExpandedSidebarCategories((prev) => ({
+                            ...prev,
+                            [cat.category]: !prev[cat.category],
+                          }));
+                        }}
+                        className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs transition-all text-left cursor-pointer group select-none ${
+                          isCatSelected && selectedCptsSubCategory === 'ALL'
+                            ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold shadow-md'
+                            : isCatSelected
+                            ? 'bg-purple-950/40 text-purple-200 border border-purple-800/40 font-semibold'
+                            : 'text-cyber-muted hover:text-white hover:bg-cyber-bg border border-transparent'
+                        }`}
+                      >
+                        <div className="flex items-center gap-1.5 truncate pr-1 flex-1 min-w-0">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setExpandedSidebarCategories((prev) => ({
+                                ...prev,
+                                [cat.category]: !prev[cat.category],
+                              }));
+                            }}
+                            className="p-0.5 rounded hover:bg-purple-900/50 text-purple-400 focus:outline-none transition-colors"
+                            title={isExpanded ? 'Collapse topic folders' : 'Expand topic folders'}
+                          >
+                            {isExpanded ? (
+                              <ChevronDown className="w-3.5 h-3.5" />
+                            ) : (
+                              <ChevronRight className="w-3.5 h-3.5" />
+                            )}
+                          </button>
+                          <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-purple-950/60 border border-purple-800/40 text-purple-400">
+                            {stageNum}
+                          </span>
+                          <span className="truncate">{cat.category}</span>
+                        </div>
+                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/40 border border-cyber-border flex-shrink-0">
+                          {cat.count}
                         </span>
-                        <span className="truncate">{cat.category}</span>
                       </div>
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/40 border border-cyber-border flex-shrink-0">
-                        {cat.count}
-                      </span>
-                    </motion.button>
+
+                      {/* Indented Subcategory Topic Folders */}
+                      {isExpanded && topicGroups.length > 0 && (
+                        <div className="pl-3 pr-1 py-0.5 space-y-0.5 border-l-2 border-purple-500/30 ml-4 animate-fade-in">
+                          {topicGroups.map((tg) => {
+                            const isTopicActive = isCatSelected && selectedCptsSubCategory === tg.group;
+                            return (
+                              <button
+                                key={tg.group}
+                                type="button"
+                                onClick={() => {
+                                  setSelectedCptsCategory(cat.category);
+                                  setSelectedCptsSubCategory(tg.group);
+                                  setCptsLimit(30);
+                                }}
+                                className={`w-full flex items-center justify-between px-2 py-1 rounded text-[11px] transition-all text-left ${
+                                  isTopicActive
+                                    ? 'bg-purple-600/30 text-purple-200 border border-purple-400/40 font-bold shadow-sm'
+                                    : 'text-cyber-muted hover:text-white hover:bg-cyber-bg/70'
+                                }`}
+                              >
+                                <span className="truncate pr-1">📁 {tg.group}</span>
+                                <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-black/40 text-purple-300">
+                                  {tg.count}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
                   );
                 })}
 
@@ -854,346 +999,892 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
             </>
           )}
 
-          {/* VIEW MODE 2: CPTS FIELD MANUAL (SLICED INCREMENTAL RENDERING AT 120 FPS) */}
+          {/* VIEW MODE 2: CPTS FIELD MANUAL (HIERARCHICAL TOPIC NAVIGATION & ANTI-SCROLL MODES) */}
           {viewMode === 'cpts-manual' && (
             <div className="space-y-4">
-              {/* Field Manual HUD Header with 3-Way Bilingual Switcher */}
-              <div className="p-3.5 rounded-xl border border-purple-500/30 bg-purple-950/20 flex flex-wrap items-center justify-between gap-3 text-xs">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <BookOpen className="w-4 h-4 text-purple-400" />
-                  <span className="text-white font-bold tracking-wide">
-                    DANIEL DAYAN'S CPTS FIELD MANUAL
-                  </span>
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono">
-                    {selectedCptsCategory === 'ALL' ? 'ALL 414 NOTES' : selectedCptsCategory.toUpperCase()}
-                  </span>
+              {/* Field Manual HUD Header with Jump Dropdown, Layout Mode, and Bilingual Switcher */}
+              <div className="p-3.5 rounded-xl border border-purple-500/30 bg-purple-950/20 space-y-3 text-xs">
+                {/* HUD Top Bar */}
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <BookOpen className="w-4 h-4 text-purple-400" />
+                    <span className="text-white font-bold tracking-wide">
+                      DANIEL DAYAN'S CPTS FIELD MANUAL
+                    </span>
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono">
+                      {selectedCptsCategory === 'ALL' ? 'ALL 414 NOTES' : selectedCptsCategory.toUpperCase()}
+                    </span>
+                    {selectedCptsSubCategory !== 'ALL' && (
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-purple-600/30 border border-purple-400/40 text-purple-200 font-mono flex items-center gap-1">
+                        <span>📁 {selectedCptsSubCategory}</span>
+                        <button
+                          type="button"
+                          onClick={() => setSelectedCptsSubCategory('ALL')}
+                          className="hover:text-white text-purple-300 ml-1 font-bold"
+                          title="Clear subcategory filter"
+                        >
+                          ✕
+                        </button>
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Controls Capsule */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {/* Jump to Note Combobox */}
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setJumpDropdownOpen((prev) => !prev)}
+                        className="px-2.5 py-1 rounded-lg bg-cyber-bg border border-purple-500/40 text-purple-300 hover:text-white hover:border-purple-300 text-xs flex items-center gap-1.5 font-semibold transition-all shadow-sm"
+                        title="Quick search and jump to any note directly"
+                      >
+                        <Search className="w-3.5 h-3.5 text-purple-400" />
+                        <span>Jump to Note...</span>
+                        <ChevronDown className="w-3 h-3 text-purple-400" />
+                      </button>
+
+                      {jumpDropdownOpen && (
+                        <>
+                          <div
+                            className="fixed inset-0 z-40"
+                            onClick={() => setJumpDropdownOpen(false)}
+                          />
+                          <div className="absolute right-0 top-full mt-1.5 w-80 max-h-96 rounded-xl border border-purple-500/50 bg-cyber-card/95 backdrop-blur-md shadow-2xl p-2 z-50 space-y-2 animate-fade-in font-mono">
+                            <input
+                              type="text"
+                              autoFocus
+                              value={jumpSearchQuery}
+                              onChange={(e) => setJumpSearchQuery(e.target.value)}
+                              placeholder="Type note name, tag, or tool..."
+                              className="w-full bg-cyber-bg px-2.5 py-1.5 rounded-lg border border-purple-500/40 text-white text-xs focus:outline-none focus:border-purple-400"
+                            />
+                            <div className="max-h-72 overflow-y-auto space-y-1 divide-y divide-cyber-border/30">
+                              {(jumpSearchQuery.trim() ? CPTS_NOTES : filteredCptsNotes)
+                                .filter((n) => {
+                                  if (!jumpSearchQuery.trim()) return true;
+                                  const q = jumpSearchQuery.toLowerCase();
+                                  return (
+                                    n.title.toLowerCase().includes(q) ||
+                                    (n.titleEn && n.titleEn.toLowerCase().includes(q)) ||
+                                    (n.titleHe && n.titleHe.toLowerCase().includes(q)) ||
+                                    (n.subCategory && n.subCategory.toLowerCase().includes(q)) ||
+                                    (n.tools && n.tools.some((t) => t.toLowerCase().includes(q)))
+                                  );
+                                })
+                                .slice(0, 40)
+                                .map((note) => (
+                                  <button
+                                    key={note.id}
+                                    type="button"
+                                    onClick={() => handleJumpToNote(note)}
+                                    className="w-full px-2 py-1.5 rounded hover:bg-purple-900/40 text-left transition-all group flex flex-col"
+                                  >
+                                    <div className="flex items-center justify-between gap-1">
+                                      <span className="text-white text-xs font-bold group-hover:text-purple-300 truncate flex-1">
+                                        {note.titleEn || note.title}
+                                      </span>
+                                      <span className="text-[9px] font-mono px-1 rounded bg-black/40 text-purple-400 flex-shrink-0">
+                                        {note.category.split(' ')[0]}
+                                      </span>
+                                    </div>
+                                    <span className="text-[10px] text-cyber-muted truncate">
+                                      {note.subCategory || note.category}
+                                    </span>
+                                  </button>
+                                ))}
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Display Layout Switcher */}
+                    <div className="flex items-center gap-1 bg-cyber-bg/90 p-1 rounded-lg border border-purple-500/30 text-xs">
+                      <button
+                        type="button"
+                        onClick={() => setCptsDisplayLayout('cards')}
+                        className={`px-2 py-0.5 rounded text-xs font-bold transition-all flex items-center gap-1 ${
+                          cptsDisplayLayout === 'cards'
+                            ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
+                            : 'text-cyber-muted hover:text-white'
+                        }`}
+                        title="Detailed cards view with expanded summaries and code blocks"
+                      >
+                        <LayoutList className="w-3.5 h-3.5" />
+                        <span className="hidden sm:inline">Cards</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setCptsDisplayLayout('quick-index')}
+                        className={`px-2 py-0.5 rounded text-xs font-bold transition-all flex items-center gap-1 ${
+                          cptsDisplayLayout === 'quick-index'
+                            ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
+                            : 'text-cyber-muted hover:text-white'
+                        }`}
+                        title="Ultra-compact terminal index table - view 50+ notes without scrolling"
+                      >
+                        <Table className="w-3.5 h-3.5" />
+                        <span className="hidden sm:inline">Quick Index</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setCptsDisplayLayout('grouped')}
+                        className={`px-2 py-0.5 rounded text-xs font-bold transition-all flex items-center gap-1 ${
+                          cptsDisplayLayout === 'grouped'
+                            ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
+                            : 'text-cyber-muted hover:text-white'
+                        }`}
+                        title="Grouped by Obsidian topic folders"
+                      >
+                        <Folder className="w-3.5 h-3.5" />
+                        <span className="hidden sm:inline">Grouped</span>
+                      </button>
+                    </div>
+
+                    {/* 3-Way Language Selector */}
+                    <div className="flex items-center gap-1 bg-cyber-bg/90 p-1 rounded-lg border border-purple-500/30 text-xs">
+                      <button
+                        type="button"
+                        data-testid="cpts-lang-bilingual"
+                        onClick={() => setCptsLangMode('bilingual')}
+                        className={`px-2 py-0.5 rounded text-xs font-bold transition-all flex items-center gap-1 ${
+                          cptsLangMode === 'bilingual'
+                            ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
+                            : 'text-cyber-muted hover:text-white'
+                        }`}
+                        title="Display English and Hebrew side-by-side"
+                      >
+                        <span>🌐 Bilingual</span>
+                      </button>
+                      <button
+                        type="button"
+                        data-testid="cpts-lang-en"
+                        onClick={() => setCptsLangMode('en')}
+                        className={`px-2 py-0.5 rounded text-xs font-bold transition-all flex items-center gap-1 ${
+                          cptsLangMode === 'en'
+                            ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
+                            : 'text-cyber-muted hover:text-white'
+                        }`}
+                        title="English only"
+                      >
+                        <span>🇬🇧 EN</span>
+                      </button>
+                      <button
+                        type="button"
+                        data-testid="cpts-lang-he"
+                        onClick={() => setCptsLangMode('he')}
+                        className={`px-2 py-0.5 rounded text-xs font-bold transition-all flex items-center gap-1 ${
+                          cptsLangMode === 'he'
+                            ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
+                            : 'text-cyber-muted hover:text-white'
+                        }`}
+                        title="עברית בלבד"
+                      >
+                        <span>🇮🇱 עברית</span>
+                      </button>
+                    </div>
+
+                    {/* RTL / LTR Direction Selector */}
+                    <div className="flex items-center gap-1 bg-cyber-bg/90 p-1 rounded-lg border border-purple-500/30 text-xs">
+                      <button
+                        type="button"
+                        onClick={() => setNotesTextDirection('auto')}
+                        className={`px-2 py-0.5 rounded text-xs font-bold transition-all ${
+                          notesTextDirection === 'auto'
+                            ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
+                            : 'text-cyber-muted hover:text-white'
+                        }`}
+                        title="Auto direction based on language"
+                      >
+                        <span>Auto</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setNotesTextDirection('ltr')}
+                        className={`px-2 py-0.5 rounded text-xs font-bold transition-all ${
+                          notesTextDirection === 'ltr'
+                            ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
+                            : 'text-cyber-muted hover:text-white'
+                        }`}
+                        title="Force Left-to-Right layout"
+                      >
+                        <span>LTR ➔</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setNotesTextDirection('rtl')}
+                        className={`px-2 py-0.5 rounded text-xs font-bold transition-all ${
+                          notesTextDirection === 'rtl'
+                            ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
+                            : 'text-cyber-muted hover:text-white'
+                        }`}
+                        title="Force Right-to-Left layout (עברית)"
+                      >
+                        <span>⬅️ RTL</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
-                {/* 3-Way Language Selector */}
-                <div className="flex items-center gap-1 bg-cyber-bg/90 p-1 rounded-lg border border-purple-500/30 text-xs">
-                  <span className="text-[10px] text-purple-400 font-semibold px-1.5 flex items-center gap-1">
-                    <Languages className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">LANG:</span>
-                  </span>
-                  <button
-                    type="button"
-                    data-testid="cpts-lang-bilingual"
-                    onClick={() => setCptsLangMode('bilingual')}
-                    className={`px-2 py-0.5 rounded text-xs font-bold transition-all flex items-center gap-1 ${
-                      cptsLangMode === 'bilingual'
-                        ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
-                        : 'text-cyber-muted hover:text-white'
-                    }`}
-                    title="Display English and Hebrew side-by-side"
-                  >
-                    <span>🌐 Bilingual</span>
-                  </button>
-                  <button
-                    type="button"
-                    data-testid="cpts-lang-en"
-                    onClick={() => setCptsLangMode('en')}
-                    className={`px-2 py-0.5 rounded text-xs font-bold transition-all flex items-center gap-1 ${
-                      cptsLangMode === 'en'
-                        ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
-                        : 'text-cyber-muted hover:text-white'
-                    }`}
-                    title="English only"
-                  >
-                    <span>🇬🇧 EN</span>
-                  </button>
-                  <button
-                    type="button"
-                    data-testid="cpts-lang-he"
-                    onClick={() => setCptsLangMode('he')}
-                    className={`px-2 py-0.5 rounded text-xs font-bold transition-all flex items-center gap-1 ${
-                      cptsLangMode === 'he'
-                        ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
-                        : 'text-cyber-muted hover:text-white'
-                    }`}
-                    title="עברית בלבד"
-                  >
-                    <span>🇮🇱 עברית</span>
-                  </button>
-                </div>
+                {/* Top Interactive Topic Filter Chips Bar */}
+                {activeCategoryTopicGroups.length > 0 && (
+                  <div className="space-y-1.5 pt-1 border-t border-purple-900/30">
+                    <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
+                      <span className="text-[10px] text-purple-400 font-bold uppercase tracking-wider flex-shrink-0 flex items-center gap-1">
+                        <Filter className="w-3 h-3" />
+                        <span>TOPICS:</span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedCptsSubCategory('ALL');
+                          setCptsLimit(30);
+                        }}
+                        className={`px-2.5 py-0.5 rounded-full text-xs font-semibold flex-shrink-0 transition-all ${
+                          selectedCptsSubCategory === 'ALL'
+                            ? 'bg-purple-600 text-white shadow-sm'
+                            : 'bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white'
+                        }`}
+                      >
+                        ALL ({filteredCptsNotes.length})
+                      </button>
+                      {activeCategoryTopicGroups.map((tg) => {
+                        const isGroupActive = selectedCptsSubCategory === tg.group;
+                        return (
+                          <button
+                            key={tg.group}
+                            type="button"
+                            onClick={() => {
+                              setSelectedCptsSubCategory(isGroupActive ? 'ALL' : tg.group);
+                              setCptsLimit(30);
+                            }}
+                            className={`px-2.5 py-0.5 rounded-full text-xs font-semibold flex-shrink-0 transition-all flex items-center gap-1.5 ${
+                              isGroupActive
+                                ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40 border border-purple-400'
+                                : 'bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-purple-200 hover:border-purple-500/40'
+                            }`}
+                          >
+                            <span>📁 {tg.group}</span>
+                            <span className={`text-[9px] px-1 rounded-full ${isGroupActive ? 'bg-black/40 text-white' : 'bg-black/30 text-purple-300'}`}>
+                              {tg.count}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
 
-                {/* RTL / LTR Direction Selector */}
-                <div className="flex items-center gap-1 bg-cyber-bg/90 p-1 rounded-lg border border-purple-500/30 text-xs">
-                  <span className="text-[10px] text-purple-400 font-semibold px-1.5 flex items-center gap-1">
-                    <ArrowRightLeft className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">DIR:</span>
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setNotesTextDirection('auto')}
-                    className={`px-2 py-0.5 rounded text-xs font-bold transition-all ${
-                      notesTextDirection === 'auto'
-                        ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
-                        : 'text-cyber-muted hover:text-white'
-                    }`}
-                    title="Auto direction based on language"
-                  >
-                    <span>Auto</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setNotesTextDirection('ltr')}
-                    className={`px-2 py-0.5 rounded text-xs font-bold transition-all ${
-                      notesTextDirection === 'ltr'
-                        ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
-                        : 'text-cyber-muted hover:text-white'
-                    }`}
-                    title="Force Left-to-Right layout"
-                  >
-                    <span>LTR ➔</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setNotesTextDirection('rtl')}
-                    className={`px-2 py-0.5 rounded text-xs font-bold transition-all ${
-                      notesTextDirection === 'rtl'
-                        ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40'
-                        : 'text-cyber-muted hover:text-white'
-                    }`}
-                    title="Force Right-to-Left layout (עברית)"
-                  >
-                    <span>⬅️ RTL</span>
-                  </button>
-                </div>
+                    {/* Sub-Topic Leaf Pills */}
+                    {selectedCptsSubCategory !== 'ALL' && activeTopicLeaves.length > 1 && (
+                      <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 pl-6 scrollbar-thin">
+                        <span className="text-[9px] text-cyber-muted font-mono flex-shrink-0">
+                          SUB-LEAVES:
+                        </span>
+                        {activeTopicLeaves.map((leaf) => (
+                          <button
+                            key={leaf.leaf}
+                            type="button"
+                            onClick={() => {
+                              setSelectedCptsSubCategory(leaf.leaf);
+                              setCptsLimit(30);
+                            }}
+                            className="px-2 py-0.2 rounded text-[10px] font-mono bg-purple-950/40 border border-purple-800/40 text-purple-300 hover:text-white hover:border-purple-400 transition-all flex-shrink-0"
+                          >
+                            {leaf.leaf} ({leaf.count})
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
 
-                <div className="text-[11px] text-cyber-muted font-mono">
-                  Showing <strong className="text-purple-300">{visibleCptsNotes.length}</strong> of <strong className="text-white">{filteredCptsNotes.length}</strong> notes (<strong className="text-cyber-cyan">{totalCptsCommands}</strong> total commands)
+                {/* Telemetry Count */}
+                <div className="flex items-center justify-between text-[11px] text-cyber-muted font-mono pt-1">
+                  <div>
+                    Showing <strong className="text-purple-300">{visibleCptsNotes.length}</strong> of <strong className="text-white">{filteredCptsNotes.length}</strong> notes (<strong className="text-cyber-cyan">{totalCptsCommands}</strong> total commands)
+                  </div>
+                  {cptsDisplayLayout === 'quick-index' && (
+                    <span className="text-purple-400 text-[10px]">
+                      ⚡ Terminal Quick Index Active · 1-Click Inline Command Expansion
+                    </span>
+                  )}
                 </div>
               </div>
 
-              {/* Sliced List of Field Manual Notes (Pure CSS Hover, Zero Layout Shift) */}
-              <div className="space-y-3">
-                {visibleCptsNotes.length === 0 ? (
-                  <div className="p-8 text-center rounded-xl border border-dashed border-cyber-border bg-cyber-card/50 text-cyber-muted text-xs">
-                    No field manual notes matching "{searchQuery}".
-                  </div>
-                ) : (
-                  visibleCptsNotes.map((note) => {
-                    const isNoteExpanded = Boolean(expandedNotes[note.id]);
-                    const commandsToShow = isNoteExpanded ? note.commands : (note.commands ? note.commands.slice(0, 2) : []);
-                    const extraCommandsCount = note.commands ? Math.max(0, note.commands.length - 2) : 0;
-                    const isRtlCard = notesTextDirection === 'rtl' || (notesTextDirection === 'auto' && cptsLangMode === 'he');
+              {/* VIEW RENDERER 1: QUICK INDEX TABLE MODE (High-Density Anti-Scroll Table) */}
+              {cptsDisplayLayout === 'quick-index' && (
+                <div className="rounded-xl border border-cyber-border bg-cyber-card overflow-hidden shadow-lg">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs font-mono">
+                      <thead className="bg-cyber-bg/95 border-b border-cyber-border text-cyber-muted text-[10px] uppercase tracking-wider sticky top-0 z-10 backdrop-blur">
+                        <tr>
+                          <th className="py-2.5 px-3 w-12 text-center">#</th>
+                          <th className="py-2.5 px-3 w-48">TOPIC / FOLDER</th>
+                          <th className="py-2.5 px-3">TITLE / OBJECTIVE</th>
+                          <th className="py-2.5 px-3 w-28 text-center">STAGE / LEVEL</th>
+                          <th className="py-2.5 px-3 w-32 text-center">COMMANDS</th>
+                          <th className="py-2.5 px-3 w-28 text-right pr-4">ACTIONS</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-cyber-border/40">
+                        {visibleCptsNotes.length === 0 ? (
+                          <tr>
+                            <td colSpan={6} className="p-8 text-center text-cyber-muted text-xs">
+                              No field manual notes matching "{searchQuery}".
+                            </td>
+                          </tr>
+                        ) : (
+                          visibleCptsNotes.map((note, idx) => {
+                            const isRowExpanded = Boolean(expandedIndexRows[note.id]);
+                            const { group, leaf } = parseSubCategory(note.subCategory);
+                            const isHighlighted = highlightedNoteId === note.id;
+                            const isRtl = notesTextDirection === 'rtl' || (notesTextDirection === 'auto' && cptsLangMode === 'he');
 
-                    return (
-                      <div
-                        key={note.id}
-                        dir={isRtlCard ? 'rtl' : 'ltr'}
-                        className={`p-4 rounded-xl border border-cyber-border bg-cyber-card hover:border-purple-500/50 hover:shadow-lg transition-all space-y-3 group ${
-                          isRtlCard ? 'text-right' : 'text-left'
-                        }`}
-                      >
-                        {/* Note Header */}
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="space-y-2 flex-1 min-w-0">
-                            {/* Titles based on cptsLangMode */}
-                            {cptsLangMode === 'en' ? (
-                              <div>
-                                <span className="font-bold text-white text-sm group-hover:text-purple-300 transition-colors">
-                                  {note.titleEn || note.title}
-                                </span>
-                              </div>
-                            ) : cptsLangMode === 'he' ? (
-                              <div className="text-right" dir="rtl">
-                                <span className="font-bold text-white text-sm group-hover:text-purple-300 transition-colors font-sans">
-                                  {note.titleHe || note.title}
-                                </span>
-                                {note.titleEn && note.titleEn !== (note.titleHe || note.title) && (
-                                  <div className="text-[11px] text-cyber-muted font-mono mt-0.5 text-left" dir="ltr">
-                                    EN: {note.titleEn}
-                                  </div>
-                                )}
-                              </div>
-                            ) : (
-                              /* Bilingual Title */
-                              <div className="space-y-0.5">
-                                <div className="font-bold text-white text-sm group-hover:text-purple-300 transition-colors">
-                                  {note.titleEn || note.title}
-                                </div>
-                                {note.titleHe && note.titleHe !== (note.titleEn || note.title) && (
-                                  <div className="text-xs text-purple-300 font-sans font-medium text-right" dir="rtl">
-                                    {note.titleHe}
-                                  </div>
-                                )}
-                              </div>
-                            )}
-
-                            {/* Badges: Stage, Category, Difficulty, Tools */}
-                            <div className="flex items-center gap-1.5 flex-wrap">
-                              {note.stage && (
-                                <span className="text-[9px] px-2 py-0.5 rounded bg-blue-500/15 text-blue-300 border border-blue-500/30 font-mono font-semibold">
-                                  🎯 Stage: {note.stage}
-                                </span>
-                              )}
-                              <span className="text-[9px] px-2 py-0.5 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 font-mono">
-                                {note.category}
-                              </span>
-                              <span className="text-[9px] px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border text-cyber-muted font-mono">
-                                {note.difficulty}
-                              </span>
-                              {note.tools && note.tools.map((t) => (
-                                <span
-                                  key={t}
-                                  className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-mono"
+                            return (
+                              <React.Fragment key={note.id}>
+                                <tr
+                                  id={`cpts-note-${note.id}`}
+                                  className={`transition-colors hover:bg-purple-950/20 ${
+                                    isHighlighted
+                                      ? 'bg-purple-500/25 ring-1 ring-purple-400'
+                                      : idx % 2 === 0
+                                      ? 'bg-cyber-card/50'
+                                      : 'bg-cyber-bg/30'
+                                  }`}
                                 >
-                                  🔧 {t}
-                                </span>
-                              ))}
-                            </div>
+                                  {/* Sequential Index */}
+                                  <td className="py-2.5 px-3 text-center text-cyber-muted text-[11px] font-mono">
+                                    {String(idx + 1).padStart(2, '0')}
+                                  </td>
 
-                            {/* Summaries based on cptsLangMode */}
-                            {cptsLangMode === 'en' ? (
-                              <div className="text-[11px] text-cyber-muted leading-relaxed font-sans">
-                                {note.enSummary || note.summary || note.subCategory}
-                              </div>
-                            ) : cptsLangMode === 'he' ? (
-                              <div className="text-[11px] text-purple-200/90 leading-relaxed font-sans text-right" dir="rtl">
-                                {note.heSummary || note.summary || note.subCategory}
-                              </div>
-                            ) : (
-                              /* Bilingual dual summary cards */
-                              note.heSummary && note.enSummary && note.heSummary !== note.enSummary ? (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px] leading-relaxed pt-1">
-                                  <div className="p-2.5 rounded-lg bg-black/40 border border-white/5 font-sans text-gray-300 space-y-1">
-                                    <div className="flex items-center gap-1 text-[9px] font-mono font-bold text-cyber-muted uppercase tracking-wider">
-                                      <span>🇬🇧 ENGLISH INTEL</span>
+                                  {/* Topic Folder */}
+                                  <td className="py-2.5 px-3 font-mono">
+                                    <div
+                                      className="text-[11px] text-purple-300 font-semibold truncate max-w-[180px]"
+                                      title={note.subCategory || group}
+                                    >
+                                      📁 {group}
                                     </div>
-                                    <p className="line-clamp-3">{note.enSummary}</p>
-                                  </div>
-                                  <div className="p-2.5 rounded-lg bg-purple-950/20 border border-purple-500/20 font-sans text-purple-200 space-y-1 text-right" dir="rtl">
-                                    <div className="flex items-center justify-between gap-1 text-[9px] font-mono font-bold text-purple-400 uppercase tracking-wider" dir="ltr">
-                                      <span>🇮🇱 HEBREW INTEL (מטרה מעשית)</span>
+                                    {leaf && leaf !== group && (
+                                      <div className="text-[9px] text-cyber-muted truncate max-w-[180px]">
+                                        › {leaf}
+                                      </div>
+                                    )}
+                                  </td>
+
+                                  {/* Title & Objective */}
+                                  <td className="py-2.5 px-3">
+                                    <div dir={isRtl ? 'rtl' : 'ltr'} className={isRtl ? 'text-right' : 'text-left'}>
+                                      <span className="font-bold text-white text-xs hover:text-purple-300 transition-colors">
+                                        {cptsLangMode === 'en'
+                                          ? note.titleEn || note.title
+                                          : cptsLangMode === 'he'
+                                          ? note.titleHe || note.title
+                                          : note.titleEn || note.title}
+                                      </span>
+                                      {cptsLangMode === 'bilingual' && note.titleHe && note.titleHe !== (note.titleEn || note.title) && (
+                                        <div className="text-[10px] text-purple-300/80 font-sans mt-0.5">
+                                          {note.titleHe}
+                                        </div>
+                                      )}
+                                      <div className="text-[10px] text-cyber-muted truncate max-w-md mt-0.5">
+                                        {note.enSummary || note.summary || note.heSummary}
+                                      </div>
                                     </div>
-                                    <p className="line-clamp-3">{note.heSummary}</p>
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="text-[11px] text-cyber-muted leading-relaxed font-sans">
-                                  {note.summary || note.enSummary || note.heSummary || note.subCategory}
-                                </div>
-                              )
-                            )}
+                                  </td>
 
-                            {/* Tags */}
-                            {note.tags && note.tags.length > 0 && (
-                              <div className="flex flex-wrap gap-1 pt-0.5">
-                                {note.tags.map((t) => (
-                                  <span
-                                    key={t}
-                                    className="text-[9px] px-1.5 py-0.2 rounded bg-cyber-bg border border-cyber-border/70 text-cyber-cyan"
-                                  >
-                                    #{t}
-                                  </span>
-                                ))}
-                              </div>
-                            )}
-                          </div>
+                                  {/* Stage / Difficulty */}
+                                  <td className="py-2.5 px-3 text-center">
+                                    {note.stage ? (
+                                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/15 text-blue-300 border border-blue-500/30">
+                                        {note.stage}
+                                      </span>
+                                    ) : (
+                                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-cyber-bg border border-cyber-border text-cyber-muted">
+                                        {note.difficulty || 'Core'}
+                                      </span>
+                                    )}
+                                  </td>
 
-                          {/* Quick Action: Copy All Commands in Note */}
-                          {note.commands && note.commands.length > 1 && (
-                            <button
-                              type="button"
-                              onClick={() => handleCopyAllNoteCommands(note)}
-                              className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold flex-shrink-0 transition-all ${
-                                copiedId === `all-${note.id}`
-                                  ? 'bg-cyber-emerald/20 text-cyber-emerald border border-cyber-emerald shadow-glow-emerald/30'
-                                  : 'bg-cyber-bg border border-cyber-border text-purple-300 hover:border-purple-400 hover:text-white'
-                              }`}
-                              title="Copy all commands in this note to clipboard"
-                            >
-                              {copiedId === `all-${note.id}` ? (
-                                <>
-                                  <Check className="w-3.5 h-3.5 text-cyber-emerald" />
-                                  <span>All Copied!</span>
-                                </>
+                                  {/* Commands Count & Inline Toggle */}
+                                  <td className="py-2.5 px-3 text-center">
+                                    {note.commands && note.commands.length > 0 ? (
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          setExpandedIndexRows((prev) => ({ ...prev, [note.id]: !prev[note.id] }))
+                                        }
+                                        className={`px-2 py-1 rounded text-[11px] font-bold transition-all inline-flex items-center gap-1 ${
+                                          isRowExpanded
+                                            ? 'bg-purple-600 text-white shadow-sm'
+                                            : 'bg-purple-950/50 border border-purple-800/50 text-purple-300 hover:bg-purple-900/60'
+                                        }`}
+                                      >
+                                        <span>
+                                          {isRowExpanded ? '▴' : '▾'} {note.commands.length} cmd
+                                          {note.commands.length > 1 ? 's' : ''}
+                                        </span>
+                                      </button>
+                                    ) : (
+                                      <span className="text-cyber-muted text-[10px]">Doc only</span>
+                                    )}
+                                  </td>
+
+                                  {/* Quick Action: Copy All */}
+                                  <td className="py-2.5 px-3 text-right pr-4">
+                                    {note.commands && note.commands.length > 0 && (
+                                      <button
+                                        type="button"
+                                        onClick={() => handleCopyAllNoteCommands(note)}
+                                        className={`px-2 py-1 rounded text-[10px] font-semibold transition-all inline-flex items-center gap-1 ${
+                                          copiedId === `all-${note.id}`
+                                            ? 'bg-cyber-emerald/20 text-cyber-emerald border border-cyber-emerald'
+                                            : 'bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white hover:border-purple-400'
+                                        }`}
+                                        title="Copy all commands in note"
+                                      >
+                                        {copiedId === `all-${note.id}` ? (
+                                          <>
+                                            <Check className="w-3 h-3 text-cyber-emerald" />
+                                            <span>Copied</span>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <Copy className="w-3 h-3" />
+                                            <span>Copy All</span>
+                                          </>
+                                        )}
+                                      </button>
+                                    )}
+                                  </td>
+                                </tr>
+
+                                {/* Inline Expanded Terminal Commands */}
+                                {isRowExpanded && note.commands && note.commands.length > 0 && (
+                                  <tr className="bg-black/60 border-y border-purple-900/40">
+                                    <td colSpan={6} className="p-3 pl-10 pr-4 space-y-2">
+                                      <div className="flex items-center justify-between text-[10px] text-purple-400 font-bold border-b border-purple-900/30 pb-1">
+                                        <span>COMMANDS FOR: {note.titleEn || note.title}</span>
+                                        <span>{note.commands.length} EXECUTABLES</span>
+                                      </div>
+                                      <div className="space-y-1.5" dir="ltr">
+                                        {note.commands.map((cmd, cIdx) => {
+                                          const interpolated = interpolateCommand(cmd, globalVars);
+                                          const cmdId = `${note.id}-${cIdx}`;
+                                          const isCopied = copiedId === cmdId;
+                                          return (
+                                            <div
+                                              key={cIdx}
+                                              className="flex items-center justify-between gap-2 p-1.5 px-2 rounded bg-cyber-code border border-purple-900/30 text-xs font-mono"
+                                            >
+                                              <pre className="text-cyber-cyan overflow-x-auto whitespace-pre-wrap break-all flex-1 select-all">
+                                                {interpolated}
+                                              </pre>
+                                              <button
+                                                type="button"
+                                                onClick={() => handleCopy(interpolated, cmdId)}
+                                                className={`flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold flex-shrink-0 transition-all ${
+                                                  isCopied
+                                                    ? 'bg-cyber-emerald/20 text-cyber-emerald border border-cyber-emerald'
+                                                    : 'bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-cyan'
+                                                }`}
+                                              >
+                                                {isCopied ? (
+                                                  <Check className="w-2.5 h-2.5 text-cyber-emerald" />
+                                                ) : (
+                                                  <Copy className="w-2.5 h-2.5" />
+                                                )}
+                                                <span>{isCopied ? 'Copied' : 'Copy'}</span>
+                                              </button>
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+                                    </td>
+                                  </tr>
+                                )}
+                              </React.Fragment>
+                            );
+                          })
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* VIEW RENDERER 2: GROUPED VIEW (Accordion Folders by Topic) */}
+              {cptsDisplayLayout === 'grouped' && (
+                <div className="space-y-4">
+                  {groupedCptsNotes.length === 0 ? (
+                    <div className="p-8 text-center rounded-xl border border-dashed border-cyber-border bg-cyber-card/50 text-cyber-muted text-xs">
+                      No field manual notes matching "{searchQuery}".
+                    </div>
+                  ) : (
+                    groupedCptsNotes.map((grp) => {
+                      const isCollapsed = Boolean(collapsedGroupSections[grp.group]);
+                      return (
+                        <div
+                          key={grp.group}
+                          className="rounded-xl border border-purple-500/30 bg-cyber-card overflow-hidden shadow-md"
+                        >
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setCollapsedGroupSections((prev) => ({ ...prev, [grp.group]: !prev[grp.group] }))
+                            }
+                            className="w-full p-3 bg-purple-950/30 hover:bg-purple-900/40 border-b border-purple-900/30 flex items-center justify-between text-xs transition-colors"
+                          >
+                            <div className="flex items-center gap-2">
+                              {isCollapsed ? (
+                                <ChevronRight className="w-4 h-4 text-purple-400" />
                               ) : (
-                                <>
-                                  <Copy className="w-3.5 h-3.5" />
-                                  <span>Copy All ({note.commands.length})</span>
-                                </>
+                                <ChevronDown className="w-4 h-4 text-purple-400" />
                               )}
-                            </button>
+                              <span className="font-bold text-white text-sm">📁 {grp.group}</span>
+                              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-black/40 border border-purple-500/40 text-purple-300">
+                                {grp.count} notes
+                              </span>
+                            </div>
+                            <span className="text-[11px] text-cyber-muted font-mono">
+                              {isCollapsed ? 'Click to expand' : 'Click to collapse'}
+                            </span>
+                          </button>
+
+                          {!isCollapsed && (
+                            <div className="p-3 space-y-3">
+                              {grp.notes.map((note) => {
+                                const isNoteExpanded = Boolean(expandedNotes[note.id]);
+                                const commandsToShow = isNoteExpanded
+                                  ? note.commands
+                                  : note.commands
+                                  ? note.commands.slice(0, 2)
+                                  : [];
+                                const extraCommandsCount = note.commands
+                                  ? Math.max(0, note.commands.length - 2)
+                                  : 0;
+                                const isRtlCard =
+                                  notesTextDirection === 'rtl' ||
+                                  (notesTextDirection === 'auto' && cptsLangMode === 'he');
+                                const isHighlighted = highlightedNoteId === note.id;
+
+                                return (
+                                  <div
+                                    key={note.id}
+                                    id={`cpts-note-${note.id}`}
+                                    dir={isRtlCard ? 'rtl' : 'ltr'}
+                                    className={`p-3.5 rounded-xl border border-cyber-border bg-cyber-bg/40 hover:border-purple-500/50 hover:shadow-lg transition-all space-y-2.5 group ${
+                                      isRtlCard ? 'text-right' : 'text-left'
+                                    } ${isHighlighted ? 'ring-2 ring-purple-400 bg-purple-950/30' : ''}`}
+                                  >
+                                    <div className="flex items-start justify-between gap-3">
+                                      <div className="space-y-1 flex-1 min-w-0">
+                                        <div className="font-bold text-white text-xs group-hover:text-purple-300 transition-colors">
+                                          {cptsLangMode === 'en'
+                                            ? note.titleEn || note.title
+                                            : cptsLangMode === 'he'
+                                            ? note.titleHe || note.title
+                                            : note.titleEn || note.title}
+                                        </div>
+                                        {cptsLangMode === 'bilingual' && note.titleHe && note.titleHe !== (note.titleEn || note.title) && (
+                                          <div className="text-[10px] text-purple-300 font-sans" dir="rtl">
+                                            {note.titleHe}
+                                          </div>
+                                        )}
+                                        <p className="text-[11px] text-cyber-muted line-clamp-2">
+                                          {note.enSummary || note.summary || note.heSummary}
+                                        </p>
+                                      </div>
+                                      {note.commands && note.commands.length > 0 && (
+                                        <button
+                                          type="button"
+                                          onClick={() => handleCopyAllNoteCommands(note)}
+                                          className="px-2 py-1 rounded text-[10px] font-semibold bg-cyber-bg border border-cyber-border text-purple-300 hover:text-white hover:border-purple-400 transition-all flex items-center gap-1 flex-shrink-0"
+                                        >
+                                          <Copy className="w-3 h-3" />
+                                          <span>Copy All ({note.commands.length})</span>
+                                        </button>
+                                      )}
+                                    </div>
+
+                                    {/* Commands preview */}
+                                    {commandsToShow && commandsToShow.length > 0 && (
+                                      <div className="space-y-1 pt-1 text-left" dir="ltr">
+                                        {commandsToShow.map((cmd, cIdx) => {
+                                          const interpolated = interpolateCommand(cmd, globalVars);
+                                          return (
+                                            <div
+                                              key={cIdx}
+                                              className="p-1.5 px-2 rounded bg-cyber-code border border-cyber-border text-xs font-mono text-cyber-cyan truncate select-all"
+                                            >
+                                              {interpolated}
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
                           )}
                         </div>
+                      );
+                    })
+                  )}
+                </div>
+              )}
 
-                        {/* Note Commands Container (Always LTR for code) */}
-                        {note.commands && note.commands.length > 0 && (
-                          <div className="space-y-2 pt-1 border-t border-cyber-border/60 text-left" dir="ltr">
-                            {commandsToShow.map((cmd, cIdx) => {
-                              const interpolated = interpolateCommand(cmd, globalVars);
-                              const cmdId = `${note.id}-${cIdx}`;
-                              const isCopied = copiedId === cmdId;
+              {/* VIEW RENDERER 3: DETAILED CARDS MODE (Default) */}
+              {cptsDisplayLayout === 'cards' && (
+                <div className="space-y-3">
+                  {visibleCptsNotes.length === 0 ? (
+                    <div className="p-8 text-center rounded-xl border border-dashed border-cyber-border bg-cyber-card/50 text-cyber-muted text-xs">
+                      No field manual notes matching "{searchQuery}".
+                    </div>
+                  ) : (
+                    visibleCptsNotes.map((note) => {
+                      const isNoteExpanded = Boolean(expandedNotes[note.id]);
+                      const commandsToShow = isNoteExpanded
+                        ? note.commands
+                        : note.commands
+                        ? note.commands.slice(0, 2)
+                        : [];
+                      const extraCommandsCount = note.commands ? Math.max(0, note.commands.length - 2) : 0;
+                      const isRtlCard =
+                        notesTextDirection === 'rtl' || (notesTextDirection === 'auto' && cptsLangMode === 'he');
+                      const isHighlighted = highlightedNoteId === note.id;
 
-                              return (
-                                <div
-                                  key={cIdx}
-                                  className="flex items-center justify-between gap-2 p-2 rounded bg-cyber-code border border-cyber-border group-hover:border-purple-900/40 text-xs font-mono"
-                                >
-                                  <pre className="text-cyber-cyan overflow-x-auto whitespace-pre-wrap break-all flex-1 select-all" title={interpolated}>
-                                    {interpolated}
-                                  </pre>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleCopy(interpolated, cmdId)}
-                                    className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold flex-shrink-0 transition-all ${
-                                      isCopied
-                                        ? 'bg-cyber-emerald/20 text-cyber-emerald border border-cyber-emerald shadow-glow-emerald/30'
-                                        : 'bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-cyan'
-                                    }`}
-                                  >
-                                    {isCopied ? (
-                                      <>
-                                        <Check className="w-3 h-3 text-cyber-emerald" />
-                                        <span>Copied!</span>
-                                      </>
-                                    ) : (
-                                      <>
-                                        <Copy className="w-3 h-3" />
-                                        <span>Copy</span>
-                                      </>
-                                    )}
-                                  </button>
+                      return (
+                        <div
+                          key={note.id}
+                          id={`cpts-note-${note.id}`}
+                          dir={isRtlCard ? 'rtl' : 'ltr'}
+                          className={`p-4 rounded-xl border border-cyber-border bg-cyber-card hover:border-purple-500/50 hover:shadow-lg transition-all space-y-3 group ${
+                            isRtlCard ? 'text-right' : 'text-left'
+                          } ${isHighlighted ? 'ring-2 ring-purple-400 bg-purple-950/30' : ''}`}
+                        >
+                          {/* Note Header */}
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="space-y-2 flex-1 min-w-0">
+                              {/* Titles based on cptsLangMode */}
+                              {cptsLangMode === 'en' ? (
+                                <div>
+                                  <span className="font-bold text-white text-sm group-hover:text-purple-300 transition-colors">
+                                    {note.titleEn || note.title}
+                                  </span>
                                 </div>
-                              );
-                            })}
+                              ) : cptsLangMode === 'he' ? (
+                                <div className="text-right" dir="rtl">
+                                  <span className="font-bold text-white text-sm group-hover:text-purple-300 transition-colors font-sans">
+                                    {note.titleHe || note.title}
+                                  </span>
+                                  {note.titleEn && note.titleEn !== (note.titleHe || note.title) && (
+                                    <div className="text-[11px] text-cyber-muted font-mono mt-0.5 text-left" dir="ltr">
+                                      EN: {note.titleEn}
+                                    </div>
+                                  )}
+                                </div>
+                              ) : (
+                                /* Bilingual Title */
+                                <div className="space-y-0.5">
+                                  <div className="font-bold text-white text-sm group-hover:text-purple-300 transition-colors">
+                                    {note.titleEn || note.title}
+                                  </div>
+                                  {note.titleHe && note.titleHe !== (note.titleEn || note.title) && (
+                                    <div className="text-xs text-purple-300 font-sans font-medium text-right" dir="rtl">
+                                      {note.titleHe}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
 
-                            {/* Expand / Collapse for notes with >2 commands */}
-                            {extraCommandsCount > 0 && (
+                              {/* Badges: Stage, Category, SubCategory Topic, Difficulty, Tools */}
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                {note.stage && (
+                                  <span className="text-[9px] px-2 py-0.5 rounded bg-blue-500/15 text-blue-300 border border-blue-500/30 font-mono font-semibold">
+                                    🎯 Stage: {note.stage}
+                                  </span>
+                                )}
+                                <span className="text-[9px] px-2 py-0.5 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 font-mono">
+                                  {note.category}
+                                </span>
+                                {note.subCategory && (
+                                  <span className="text-[9px] px-2 py-0.5 rounded bg-purple-950/40 text-purple-300 border border-purple-800/40 font-mono">
+                                    📁 {parseSubCategory(note.subCategory).group}
+                                  </span>
+                                )}
+                                <span className="text-[9px] px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border text-cyber-muted font-mono">
+                                  {note.difficulty}
+                                </span>
+                                {note.tools &&
+                                  note.tools.map((t) => (
+                                    <span
+                                      key={t}
+                                      className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-mono"
+                                    >
+                                      🔧 {t}
+                                    </span>
+                                  ))}
+                              </div>
+
+                              {/* Summaries based on cptsLangMode */}
+                              {cptsLangMode === 'en' ? (
+                                <div className="text-[11px] text-cyber-muted leading-relaxed font-sans">
+                                  {note.enSummary || note.summary || note.subCategory}
+                                </div>
+                              ) : cptsLangMode === 'he' ? (
+                                <div className="text-[11px] text-purple-200/90 leading-relaxed font-sans text-right" dir="rtl">
+                                  {note.heSummary || note.summary || note.subCategory}
+                                </div>
+                              ) : (
+                                /* Bilingual dual summary cards */
+                                note.heSummary && note.enSummary && note.heSummary !== note.enSummary ? (
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px] leading-relaxed pt-1">
+                                    <div className="p-2.5 rounded-lg bg-black/40 border border-white/5 font-sans text-gray-300 space-y-1">
+                                      <div className="flex items-center gap-1 text-[9px] font-mono font-bold text-cyber-muted uppercase tracking-wider">
+                                        <span>🇬🇧 ENGLISH INTEL</span>
+                                      </div>
+                                      <p className="line-clamp-3">{note.enSummary}</p>
+                                    </div>
+                                    <div
+                                      className="p-2.5 rounded-lg bg-purple-950/20 border border-purple-500/20 font-sans text-purple-200 space-y-1 text-right"
+                                      dir="rtl"
+                                    >
+                                      <div
+                                        className="flex items-center justify-between gap-1 text-[9px] font-mono font-bold text-purple-400 uppercase tracking-wider"
+                                        dir="ltr"
+                                      >
+                                        <span>🇮🇱 HEBREW INTEL (מטרה מעשית)</span>
+                                      </div>
+                                      <p className="line-clamp-3">{note.heSummary}</p>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className="text-[11px] text-cyber-muted leading-relaxed font-sans">
+                                    {note.summary || note.enSummary || note.heSummary || note.subCategory}
+                                  </div>
+                                )
+                              )}
+
+                              {/* Tags */}
+                              {note.tags && note.tags.length > 0 && (
+                                <div className="flex flex-wrap gap-1 pt-0.5">
+                                  {note.tags.map((t) => (
+                                    <span
+                                      key={t}
+                                      className="text-[9px] px-1.5 py-0.2 rounded bg-cyber-bg border border-cyber-border/70 text-cyber-cyan"
+                                    >
+                                      #{t}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Quick Action: Copy All Commands in Note */}
+                            {note.commands && note.commands.length > 1 && (
                               <button
                                 type="button"
-                                onClick={() => setExpandedNotes(prev => ({ ...prev, [note.id]: !prev[note.id] }))}
-                                className="text-[10px] text-purple-400 hover:text-purple-300 font-bold flex items-center gap-1 pt-1"
+                                onClick={() => handleCopyAllNoteCommands(note)}
+                                className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold flex-shrink-0 transition-all ${
+                                  copiedId === `all-${note.id}`
+                                    ? 'bg-cyber-emerald/20 text-cyber-emerald border border-cyber-emerald shadow-glow-emerald/30'
+                                    : 'bg-cyber-bg border border-cyber-border text-purple-300 hover:border-purple-400 hover:text-white'
+                                }`}
+                                title="Copy all commands in this note to clipboard"
                               >
-                                {isNoteExpanded ? (
+                                {copiedId === `all-${note.id}` ? (
                                   <>
-                                    <ChevronUp className="w-3.5 h-3.5" />
-                                    <span>Collapse Extra Commands</span>
+                                    <Check className="w-3.5 h-3.5 text-cyber-emerald" />
+                                    <span>All Copied!</span>
                                   </>
                                 ) : (
                                   <>
-                                    <ChevronDown className="w-3.5 h-3.5" />
-                                    <span>+ View {extraCommandsCount} more command{extraCommandsCount > 1 ? 's' : ''} from this note</span>
+                                    <Copy className="w-3.5 h-3.5" />
+                                    <span>Copy All ({note.commands.length})</span>
                                   </>
                                 )}
                               </button>
                             )}
                           </div>
-                        )}
-                      </div>
-                    );
-                  })
-                )}
-              </div>
+
+                          {/* Note Commands Container (Always LTR for code) */}
+                          {note.commands && note.commands.length > 0 && (
+                            <div className="space-y-2 pt-1 border-t border-cyber-border/60 text-left" dir="ltr">
+                              {commandsToShow.map((cmd, cIdx) => {
+                                const interpolated = interpolateCommand(cmd, globalVars);
+                                const cmdId = `${note.id}-${cIdx}`;
+                                const isCopied = copiedId === cmdId;
+
+                                return (
+                                  <div
+                                    key={cIdx}
+                                    className="flex items-center justify-between gap-2 p-2 rounded bg-cyber-code border border-cyber-border group-hover:border-purple-900/40 text-xs font-mono"
+                                  >
+                                    <pre className="text-cyber-cyan overflow-x-auto whitespace-pre-wrap break-all flex-1 select-all" title={interpolated}>
+                                      {interpolated}
+                                    </pre>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleCopy(interpolated, cmdId)}
+                                      className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold flex-shrink-0 transition-all ${
+                                        isCopied
+                                          ? 'bg-cyber-emerald/20 text-cyber-emerald border border-cyber-emerald shadow-glow-emerald/30'
+                                          : 'bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-cyan'
+                                      }`}
+                                    >
+                                      {isCopied ? (
+                                        <>
+                                          <Check className="w-3 h-3 text-cyber-emerald" />
+                                          <span>Copied!</span>
+                                        </>
+                                      ) : (
+                                        <>
+                                          <Copy className="w-3 h-3" />
+                                          <span>Copy</span>
+                                        </>
+                                      )}
+                                    </button>
+                                  </div>
+                                );
+                              })}
+
+                              {/* Expand / Collapse for notes with >2 commands */}
+                              {extraCommandsCount > 0 && (
+                                <button
+                                  type="button"
+                                  onClick={() => setExpandedNotes((prev) => ({ ...prev, [note.id]: !prev[note.id] }))}
+                                  className="text-[10px] text-purple-400 hover:text-purple-300 font-bold flex items-center gap-1 pt-1"
+                                >
+                                  {isNoteExpanded ? (
+                                    <>
+                                      <ChevronUp className="w-3.5 h-3.5" />
+                                      <span>Collapse Extra Commands</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <ChevronDown className="w-3.5 h-3.5" />
+                                      <span>+ View {extraCommandsCount} more command{extraCommandsCount > 1 ? 's' : ''} from this note</span>
+                                    </>
+                                  )}
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              )}
 
               {/* Sliced Pagination Controls */}
               {visibleCptsNotes.length < filteredCptsNotes.length && (
                 <div className="p-4 rounded-xl border border-cyber-border bg-cyber-card flex flex-wrap items-center justify-center gap-3">
                   <button
                     type="button"
-                    onClick={() => setCptsLimit(prev => prev + 30)}
+                    onClick={() => setCptsLimit((prev) => prev + 30)}
                     className="px-5 py-2 rounded-lg bg-purple-500/20 border border-purple-500/50 hover:bg-purple-500 hover:text-black text-purple-300 font-bold text-xs transition-all shadow-md flex items-center gap-2"
                   >
                     <Sparkles className="w-3.5 h-3.5" />
