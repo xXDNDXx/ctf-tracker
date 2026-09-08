@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Tactical Light Mode - Crisp, High-Contrast Slate Palette */
+  --cyber-bg: 248 250 252;          /* #F8FAFC slate-50 */
+  --cyber-card: 255 255 255;        /* #FFFFFF pure white */
+  --cyber-card-hover: 241 245 249;  /* #F1F5F9 slate-100 */
+  --cyber-border: 226 232 240;      /* #E2E8F0 slate-200 */
+  --cyber-border-glow: 203 213 225; /* #CBD5E1 slate-300 */
+  --cyber-text: 15 23 42;           /* #0F172A slate-900 */
+  --cyber-muted: 100 116 139;       /* #64748B slate-500 */
+  --cyber-code: 241 245 249;        /* #F1F5F9 slate-100 */
+}
+
+.dark {
+  /* Tactical Cyber Dark Mode - Midnight Navy Matrix */
+  --cyber-bg: 11 15 25;             /* #0B0F19 */
+  --cyber-card: 17 24 39;           /* #111827 */
+  --cyber-card-hover: 22 31 51;     /* #161F33 */
+  --cyber-border: 31 41 55;         /* #1F2937 */
+  --cyber-border-glow: 55 65 81;    /* #374151 */
+  --cyber-text: 226 232 240;        /* #E2E8F0 */
+  --cyber-muted: 148 163 184;       /* #94A3B8 */
+  --cyber-code: 9 13 22;            /* #090D16 */
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-cyber-bg text-cyber-text antialiased;
+    font-family: 'JetBrains Mono', monospace;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: rgba(6, 182, 212, 0.25);
+    color: inherit;
+  }
+
+  button, [role="button"], [data-selectable="false"] {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+}
+
+/* Ultra-Smooth Theme Switching: Synchronously transition theme colors smoothly across the DOM */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition-property: background-color, border-color, color, box-shadow !important;
+  transition-duration: 200ms !important;
+  transition-timing-function: ease-out !important;
+  transition-delay: 0s !important;
+}
+
+/* Semantic Light Mode Adaptions */
+html:not(.dark) .text-white:not(.bg-cyan-600 *):not(.bg-cyan-600):not(.bg-purple-600 *):not(.bg-purple-600):not(.bg-purple-700 *):not(.bg-purple-700):not(.bg-emerald-600 *):not(.bg-emerald-600):not(.bg-rose-600 *):not(.bg-rose-600):not(.bg-blue-600 *):not(.bg-blue-600):not(.bg-red-500 *):not(.bg-red-500):not(.bg-red-600 *):not(.bg-red-600):not(.bg-slate-900 *):not(.bg-slate-900):not(.bg-slate-800 *):not(.bg-slate-800):not(.bg-black *):not(.bg-black):not(.bg-cyber-crimson *):not(.bg-cyber-purple *):not(.keep-white) {
+  color: rgb(var(--cyber-text));
+}
+
+html:not(.dark) .bg-black\/40,
+html:not(.dark) .bg-black\/50,
+html:not(.dark) .bg-black\/60,
+html:not(.dark) .bg-black\/70,
+html:not(.dark) .bg-black\/80 {
+  background-color: rgb(var(--cyber-code));
+}
+
+html:not(.dark) .border-gray-800,
+html:not(.dark) .border-gray-900 {
+  border-color: rgb(var(--cyber-border));
+}
+
+/* Custom Cyber Scrollbars with Neon Glow */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--cyber-bg));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--cyber-border));
+  border-radius: 3px;
+  transition: all 0.25s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #10B981;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.7);
+}
+
+/* Slow tactical rotation for crosshairs */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+/* 60/120 FPS Rendering & GPU Acceleration Optimization */
+.cyber-card-contain {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 260px;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Print Media Formatting & Background Isolation */
+@media print {
+  /* When a modal report is being printed, hide main app root */
+  body:has(#printable-pentest-report) #root {
+    display: none !important;
+  }
+
+  body:has(#printable-pentest-report) {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  body:has(#printable-pentest-report) .fixed.inset-0 {
+    position: static !important;
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  body:has(#printable-pentest-report) .fixed.inset-0 > div {
+    border: none !important;
+    box-shadow: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+    transform: none !important;
+  }
+
+  #printable-pentest-report {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 0 !important;
+  }
+}
