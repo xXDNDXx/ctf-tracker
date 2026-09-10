@@ -977,7 +977,7 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                   <button
                     type="button"
                     onClick={handleRestoreDeletedNotes}
-                    className="w-full p-1.5 px-2 rounded-lg bg-rose-950/30 border border-rose-800/40 hover:bg-rose-900/40 text-rose-300 text-[10px] font-bold flex items-center justify-between transition-colors cursor-pointer"
+                    className="w-full p-1.5 px-2 rounded-lg bg-rose-100 dark:bg-rose-950/30 border border-rose-300 dark:border-rose-800/40 hover:bg-rose-200 dark:hover:bg-rose-900/40 text-rose-900 dark:text-rose-300 text-[10px] font-bold flex items-center justify-between transition-colors cursor-pointer"
                     title="Click to restore all deleted field notes"
                   >
                     <span>↺ {deletedNoteIds.length} Deleted Notes</span>

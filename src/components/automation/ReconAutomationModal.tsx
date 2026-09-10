@@ -377,25 +377,25 @@ export const ReconAutomationModal: React.FC = () => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 15 }}
         transition={{ duration: 0.18 }}
-        className="w-full sm:max-w-5xl h-full sm:h-[92vh] max-h-none sm:max-h-[860px] flex flex-col rounded-none sm:rounded-2xl border-0 sm:border border-cyber-cyan/40 bg-cyber-card shadow-2xl overflow-hidden relative z-10"
+        className="w-full sm:max-w-5xl h-full sm:h-[92vh] max-h-none sm:max-h-[860px] flex flex-col rounded-none sm:rounded-2xl border-0 sm:border border-cyan-500/40 dark:border-cyber-cyan/40 bg-white dark:bg-cyber-card shadow-2xl overflow-hidden relative z-10"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="flex-shrink-0 flex items-center justify-between p-4 border-b border-cyber-border bg-cyber-bg/95 backdrop-blur-md">
+        <div className="flex-shrink-0 flex items-center justify-between p-4 border-b border-slate-200 dark:border-cyber-border bg-slate-50 dark:bg-cyber-bg/95 backdrop-blur-md">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-cyber-cyan/10 border border-cyber-cyan/40 flex items-center justify-center text-cyber-cyan shadow-[0_0_12px_rgba(6,182,212,0.3)]">
+            <div className="w-9 h-9 rounded-lg bg-cyan-100 dark:bg-cyber-cyan/10 border border-cyan-300 dark:border-cyber-cyan/40 flex items-center justify-center text-cyan-700 dark:text-cyber-cyan shadow-sm">
               <Zap className="w-5 h-5 animate-pulse" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-white tracking-wide">
+                <h2 className="text-base font-bold text-slate-900 dark:text-white tracking-wide">
                   ZEROBOX TACTICAL AUTOMATION HUB
                 </h2>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-cyber-cyan/10 border border-cyber-cyan/40 text-cyber-cyan font-bold">
+                <span className="text-[10px] px-2 py-0.5 rounded bg-cyan-100 dark:bg-cyber-cyan/10 border border-cyan-300 dark:border-cyber-cyan/40 text-cyan-800 dark:text-cyber-cyan font-bold">
                   MULTI-FORMAT SCAN & PAYLOAD CRAFTER
                 </span>
               </div>
-              <p className="text-[11px] text-cyber-muted">
+              <p className="text-[11px] text-slate-600 dark:text-cyber-muted">
                 Multi-format scan ingestion (XML, Nmap, Grepable, Rustscan), freeze-guarded auto-apply, and real-time bypass encoders.
               </p>
             </div>
@@ -404,16 +404,16 @@ export const ReconAutomationModal: React.FC = () => {
           <button
             onClick={() => setReconAutomationModalOpen(false)}
             aria-label="Close modal"
-            className="p-1.5 rounded-lg border border-cyber-border bg-cyber-bg text-cyber-muted hover:text-white hover:border-cyber-borderGlow transition-colors"
+            className="p-1.5 rounded-lg border border-slate-300 dark:border-cyber-border bg-white dark:bg-cyber-bg text-slate-500 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-cyber-card transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Target Machine Selection Bar */}
-        <div className="flex-shrink-0 px-4 py-2.5 bg-cyber-bg border-b border-cyber-border flex items-center justify-between gap-4 flex-wrap text-xs">
+        <div className="flex-shrink-0 px-4 py-2.5 bg-slate-100/80 dark:bg-cyber-bg border-b border-slate-200 dark:border-cyber-border flex items-center justify-between gap-4 flex-wrap text-xs">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-cyber-muted uppercase text-[10px] font-bold">TARGET WORKSPACE:</span>
+            <span className="text-slate-700 dark:text-cyber-muted uppercase text-[10px] font-bold">TARGET WORKSPACE:</span>
             <CyberSelect
               value={targetMachineId}
               onChange={setTargetMachineId}
@@ -427,12 +427,12 @@ export const ReconAutomationModal: React.FC = () => {
               searchPlaceholder="Search machine workspace..."
               variant="card"
               size="xs"
-              triggerClassName="py-1 px-2.5 bg-cyber-card border-cyber-border font-bold text-white max-w-[280px]"
+              triggerClassName="py-1 px-2.5 bg-white dark:bg-cyber-card border-slate-300 dark:border-cyber-border font-bold text-slate-900 dark:text-white max-w-[280px]"
             />
 
             {isTargetFrozen && (
-              <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded bg-amber-950/40 border border-amber-600/50 text-amber-300 font-semibold">
-                <Lock className="w-3 h-3 text-amber-400" />
+              <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-600/50 text-amber-900 dark:text-amber-300 font-semibold">
+                <Lock className="w-3 h-3 text-amber-600 dark:text-amber-400" />
                 <span>SOLVE FROZEN (IMMUTABLE)</span>
               </span>
             )}
@@ -442,14 +442,14 @@ export const ReconAutomationModal: React.FC = () => {
             <div className="flex items-center gap-2">
               <PlatformBadge platform={targetMachine.platform} size="sm" />
               <OsBadge os={targetMachine.os} size="xs" />
-              <span className="text-cyber-muted text-[11px] font-mono">{targetMachine.ip}</span>
+              <span className="text-slate-600 dark:text-cyber-muted text-[11px] font-mono">{targetMachine.ip}</span>
               <button
                 type="button"
                 onClick={() => {
                   setSelectedMachineId(targetMachine.id);
                   setReconAutomationModalOpen(false);
                 }}
-                className="px-2 py-0.5 rounded bg-cyber-card border border-cyber-border hover:border-cyber-cyan text-cyber-cyan font-bold text-[10px] flex items-center gap-1 transition-colors"
+                className="px-2 py-0.5 rounded bg-cyan-50 dark:bg-cyber-card border border-cyan-300 dark:border-cyber-border hover:border-cyan-500 text-cyan-800 dark:text-cyber-cyan font-bold text-[10px] flex items-center gap-1 transition-colors cursor-pointer"
                 title={`Open details and checklist for ${targetMachine.name}`}
               >
                 <ExternalLink className="w-3 h-3" />
@@ -461,16 +461,16 @@ export const ReconAutomationModal: React.FC = () => {
 
         {/* Auto-detected Target Match Prompt */}
         {autoMatchedTarget && (
-          <div className="flex-shrink-0 px-4 py-2 bg-cyber-cyan/10 border-b border-cyber-cyan/30 flex items-center justify-between gap-2 text-xs">
-            <div className="flex items-center gap-2 text-cyber-cyan">
-              <Radio className="w-4 h-4 animate-ping text-cyber-cyan" />
+          <div className="flex-shrink-0 px-4 py-2 bg-cyan-50 dark:bg-cyber-cyan/10 border-b border-cyan-200 dark:border-cyber-cyan/30 flex items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-2 text-cyan-800 dark:text-cyber-cyan">
+              <Radio className="w-4 h-4 animate-ping text-cyan-600 dark:text-cyber-cyan" />
               <span>
-                Detected IP <strong className="text-white font-mono">{parsedResults?.detectedIp}</strong> matches catalog target <strong className="text-white">{autoMatchedTarget.name}</strong> ({autoMatchedTarget.platform})
+                Detected IP <strong className="text-slate-900 dark:text-white font-mono">{parsedResults?.detectedIp}</strong> matches catalog target <strong className="text-slate-900 dark:text-white">{autoMatchedTarget.name}</strong> ({autoMatchedTarget.platform})
               </span>
             </div>
             <button
               onClick={() => setTargetMachineId(autoMatchedTarget.id)}
-              className="px-2.5 py-1 rounded bg-cyber-cyan text-black font-bold text-xs hover:bg-cyan-300 transition-colors shadow-sm flex items-center gap-1"
+              className="px-2.5 py-1 rounded bg-cyan-600 text-white font-bold text-xs hover:bg-cyan-500 transition-colors shadow-sm flex items-center gap-1 cursor-pointer"
             >
               <span>Switch to {autoMatchedTarget.name}</span>
               <ArrowRight className="w-3 h-3" />
@@ -479,19 +479,19 @@ export const ReconAutomationModal: React.FC = () => {
         )}
 
         {/* Navigation Tabs */}
-        <div className="flex-shrink-0 flex items-center border-b border-cyber-border bg-cyber-card px-4 pt-2 gap-2 text-xs">
+        <div className="flex-shrink-0 flex items-center border-b border-slate-200 dark:border-cyber-border bg-slate-100/70 dark:bg-cyber-card px-4 pt-2 gap-2 text-xs">
           <button
             onClick={() => setActiveTab('parser')}
-            className={`px-3 py-2 border-b-2 font-bold transition-all flex items-center gap-2 ${
+            className={`px-3 py-2 border-b-2 font-bold transition-all flex items-center gap-2 cursor-pointer ${
               activeTab === 'parser'
-                ? 'border-cyber-cyan text-cyber-cyan bg-cyber-cyan/5'
-                : 'border-transparent text-cyber-muted hover:text-white'
+                ? 'border-cyan-600 dark:border-cyber-cyan text-cyan-800 dark:text-cyber-cyan bg-cyan-50 dark:bg-cyber-cyan/5'
+                : 'border-transparent text-slate-600 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             <Terminal className="w-3.5 h-3.5" />
             <span>SCAN & NMAP IMPORTER</span>
             {parsedResults && parsedResults.ports.length > 0 && (
-              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-cyber-cyan/20 text-cyber-cyan font-bold">
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-cyan-100 dark:bg-cyber-cyan/20 text-cyan-800 dark:text-cyber-cyan font-bold">
                 {parsedResults.ports.length} ports
               </span>
             )}
@@ -499,25 +499,25 @@ export const ReconAutomationModal: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('payloads')}
-            className={`px-3 py-2 border-b-2 font-bold transition-all flex items-center gap-2 ${
+            className={`px-3 py-2 border-b-2 font-bold transition-all flex items-center gap-2 cursor-pointer ${
               activeTab === 'payloads'
-                ? 'border-cyber-emerald text-cyber-emerald bg-cyber-emerald/5'
-                : 'border-transparent text-cyber-muted hover:text-white'
+                ? 'border-emerald-600 dark:border-cyber-emerald text-emerald-800 dark:text-cyber-emerald bg-emerald-50 dark:bg-cyber-emerald/5'
+                : 'border-transparent text-slate-600 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             <Flame className="w-3.5 h-3.5" />
             <span>TACTICAL PAYLOAD CRAFTER</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-cyber-emerald/20 text-cyber-emerald font-bold">
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-100 dark:bg-cyber-emerald/20 text-emerald-800 dark:text-cyber-emerald font-bold">
               {tacticalPayloads.length}
             </span>
           </button>
 
           <button
             onClick={() => setActiveTab('rules')}
-            className={`px-3 py-2 border-b-2 font-bold transition-all flex items-center gap-2 ${
+            className={`px-3 py-2 border-b-2 font-bold transition-all flex items-center gap-2 cursor-pointer ${
               activeTab === 'rules'
-                ? 'border-purple-400 text-purple-400 bg-purple-950/20'
-                : 'border-transparent text-cyber-muted hover:text-white'
+                ? 'border-purple-600 dark:border-purple-400 text-purple-800 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/20'
+                : 'border-transparent text-slate-600 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             <Cpu className="w-3.5 h-3.5" />
@@ -533,28 +533,28 @@ export const ReconAutomationModal: React.FC = () => {
               {/* Controls bar */}
               <div className="flex items-center justify-between gap-2 flex-wrap">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-[10px] font-bold text-cyber-muted uppercase">LOAD SAMPLES:</span>
+                  <span className="text-[10px] font-bold text-slate-600 dark:text-cyber-muted uppercase">LOAD SAMPLES:</span>
                   <button
                     onClick={() => setScanText(SAMPLE_LINUX_SCAN)}
-                    className="px-2.5 py-1 rounded bg-cyber-bg border border-cyber-border text-cyber-cyan hover:border-cyber-cyan text-[11px] transition-colors flex items-center gap-1 font-semibold"
+                    className="px-2.5 py-1 rounded bg-cyan-50 dark:bg-cyber-bg border border-cyan-300 dark:border-cyber-border text-cyan-800 dark:text-cyber-cyan hover:border-cyan-500 text-[11px] transition-colors flex items-center gap-1 font-semibold cursor-pointer"
                   >
                     <Sparkles className="w-3 h-3" /> Linux Lame
                   </button>
                   <button
                     onClick={() => setScanText(SAMPLE_WINDOWS_AD_SCAN)}
-                    className="px-2.5 py-1 rounded bg-cyber-bg border border-cyber-border text-blue-400 hover:border-blue-400 text-[11px] transition-colors flex items-center gap-1 font-semibold"
+                    className="px-2.5 py-1 rounded bg-blue-50 dark:bg-cyber-bg border border-blue-300 dark:border-cyber-border text-blue-800 dark:text-blue-400 hover:border-blue-500 text-[11px] transition-colors flex items-center gap-1 font-semibold cursor-pointer"
                   >
                     <Sparkles className="w-3 h-3" /> Windows AD
                   </button>
                   <button
                     onClick={() => setScanText(SAMPLE_NMAP_XML)}
-                    className="px-2.5 py-1 rounded bg-cyber-bg border border-cyber-border text-emerald-400 hover:border-emerald-400 text-[11px] transition-colors flex items-center gap-1 font-semibold"
+                    className="px-2.5 py-1 rounded bg-emerald-50 dark:bg-cyber-bg border border-emerald-300 dark:border-cyber-border text-emerald-800 dark:text-emerald-400 hover:border-emerald-500 text-[11px] transition-colors flex items-center gap-1 font-semibold cursor-pointer"
                   >
                     <FileCode className="w-3 h-3" /> Nmap XML
                   </button>
                   <button
                     onClick={() => setScanText(SAMPLE_RUSTSCAN)}
-                    className="px-2.5 py-1 rounded bg-cyber-bg border border-cyber-border text-orange-400 hover:border-orange-400 text-[11px] transition-colors flex items-center gap-1 font-semibold"
+                    className="px-2.5 py-1 rounded bg-orange-50 dark:bg-cyber-bg border border-orange-300 dark:border-cyber-border text-orange-800 dark:text-orange-400 hover:border-orange-500 text-[11px] transition-colors flex items-center gap-1 font-semibold cursor-pointer"
                   >
                     <Sparkles className="w-3 h-3" /> Rustscan
                   </button>
@@ -573,15 +573,15 @@ export const ReconAutomationModal: React.FC = () => {
                   />
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-2.5 py-1 rounded bg-cyber-bg border border-cyber-border text-white hover:border-cyber-cyan text-[11px] flex items-center gap-1 transition-colors"
+                    className="px-2.5 py-1 rounded bg-slate-100 dark:bg-cyber-bg border border-slate-300 dark:border-cyber-border text-slate-800 dark:text-white hover:border-cyan-500 text-[11px] flex items-center gap-1 transition-colors cursor-pointer"
                   >
-                    <Upload className="w-3 h-3 text-cyber-cyan" /> Upload Scan
+                    <Upload className="w-3 h-3 text-cyan-600 dark:text-cyber-cyan" /> Upload Scan
                   </button>
 
                   {scanText && (
                     <button
                       onClick={() => setScanText('')}
-                      className="text-cyber-muted hover:text-cyber-crimson text-[11px] flex items-center gap-1 transition-colors ml-1"
+                      className="text-slate-500 dark:text-cyber-muted hover:text-rose-600 dark:hover:text-cyber-crimson text-[11px] flex items-center gap-1 transition-colors ml-1 cursor-pointer"
                     >
                       <RotateCcw className="w-3 h-3" /> Clear
                     </button>
@@ -596,7 +596,7 @@ export const ReconAutomationModal: React.FC = () => {
                 onDrop={handleDrop}
                 className={`relative rounded-xl transition-all ${
                   isDragging 
-                    ? 'ring-2 ring-cyber-cyan bg-cyber-cyan/10' 
+                    ? 'ring-2 ring-cyan-500 dark:ring-cyber-cyan bg-cyan-50 dark:bg-cyber-cyan/10' 
                     : ''
                 }`}
               >
@@ -608,7 +608,7 @@ export const ReconAutomationModal: React.FC = () => {
                   onChange={(e) => setScanText(e.target.value)}
                   placeholder="Paste or drag-and-drop raw scan logs here... Supports Nmap XML, Standard Nmap (.nmap), Grepable (.gnmap), Rustscan, and raw port lists."
                   rows={6}
-                  className="w-full bg-cyber-bg px-3.5 py-2.5 rounded-xl border border-cyber-border text-cyber-emerald font-mono text-xs focus:outline-none focus:border-cyber-cyan transition-all shadow-inner leading-relaxed"
+                  className="w-full bg-slate-900 dark:bg-cyber-bg px-3.5 py-2.5 rounded-xl border border-slate-700 dark:border-cyber-border text-emerald-400 dark:text-cyber-emerald font-mono text-xs focus:outline-none focus:border-cyan-500 dark:focus:border-cyber-cyan transition-all shadow-inner leading-relaxed"
                 />
 
                 {isDragging && (
@@ -623,56 +623,56 @@ export const ReconAutomationModal: React.FC = () => {
 
               {/* Format Badge & Metadata Bar */}
               {parsedResults && (
-                <div className="flex items-center justify-between gap-2 flex-wrap px-3 py-2 rounded-lg bg-cyber-bg border border-cyber-border text-[11px]">
+                <div className="flex items-center justify-between gap-2 flex-wrap px-3 py-2 rounded-lg bg-slate-100/80 dark:bg-cyber-bg border border-slate-200 dark:border-cyber-border text-[11px]">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-cyber-muted font-bold">DETECTED FORMAT:</span>
+                    <span className="text-slate-600 dark:text-cyber-muted font-bold">DETECTED FORMAT:</span>
                     <span className={`px-2 py-0.5 rounded font-bold uppercase text-[10px] ${
                       parsedResults.format === 'nmap-xml'
-                        ? 'bg-emerald-950/60 border border-emerald-500/60 text-emerald-400'
+                        ? 'bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-500/60 text-emerald-900 dark:text-emerald-400'
                         : parsedResults.format === 'rustscan'
-                        ? 'bg-orange-950/60 border border-orange-500/60 text-orange-400'
+                        ? 'bg-orange-100 dark:bg-orange-950/60 border border-orange-300 dark:border-orange-500/60 text-orange-900 dark:text-orange-400'
                         : parsedResults.format === 'gnmap'
-                        ? 'bg-purple-950/60 border border-purple-500/60 text-purple-400'
-                        : 'bg-cyan-950/60 border border-cyan-500/60 text-cyan-400'
+                        ? 'bg-purple-100 dark:bg-purple-950/60 border border-purple-300 dark:border-purple-500/60 text-purple-900 dark:text-purple-400'
+                        : 'bg-cyan-100 dark:bg-cyan-950/60 border border-cyan-300 dark:border-cyan-500/60 text-cyan-900 dark:text-cyan-400'
                     }`}>
                       {parsedResults.format}
                     </span>
 
                     {parsedResults.detectedIp && (
-                      <span className="px-2 py-0.5 rounded bg-cyber-card border border-cyber-border text-white font-mono">
+                      <span className="px-2 py-0.5 rounded bg-white dark:bg-cyber-card border border-slate-300 dark:border-cyber-border text-slate-900 dark:text-white font-mono">
                         IP: {parsedResults.detectedIp}
                       </span>
                     )}
 
                     {parsedResults.detectedHost && (
-                      <span className="px-2 py-0.5 rounded bg-cyber-card border border-cyber-border text-white">
+                      <span className="px-2 py-0.5 rounded bg-white dark:bg-cyber-card border border-slate-300 dark:border-cyber-border text-slate-900 dark:text-white">
                         HOST: {parsedResults.detectedHost}
                       </span>
                     )}
 
                     {parsedResults.detectedOs && (
-                      <span className="px-2 py-0.5 rounded bg-cyber-card border border-cyber-border text-white">
+                      <span className="px-2 py-0.5 rounded bg-white dark:bg-cyber-card border border-slate-300 dark:border-cyber-border text-slate-900 dark:text-white">
                         OS: {parsedResults.detectedOs}
                       </span>
                     )}
                   </div>
 
-                  <span className="text-cyber-muted">
-                    Found <strong className="text-white font-bold">{parsedResults.ports.length}</strong> open ports
+                  <span className="text-slate-600 dark:text-cyber-muted">
+                    Found <strong className="text-slate-900 dark:text-white font-bold">{parsedResults.ports.length}</strong> open ports
                   </span>
                 </div>
               )}
 
               {/* Frozen Solve Banner Warning */}
               {isTargetFrozen && parsedResults && (
-                <div className="p-3 rounded-xl bg-amber-950/30 border border-amber-500/50 flex items-start gap-3 text-xs">
-                  <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                <div className="p-3 rounded-xl bg-amber-100 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-500/50 flex items-start gap-3 text-xs">
+                  <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
                   <div className="space-y-1">
-                    <div className="font-bold text-amber-300">
+                    <div className="font-bold text-amber-900 dark:text-amber-300">
                       TARGET IS COMPLETED // MODIFICATION FROZEN
                     </div>
-                    <p className="text-amber-200/80 leading-relaxed text-[11px]">
-                      Target <strong className="text-white font-semibold">{targetMachine?.name}</strong> is one of Daniel Dayan's 63 completed solves. 
+                    <p className="text-amber-800 dark:text-amber-200/80 leading-relaxed text-[11px]">
+                      Target <strong className="text-slate-900 dark:text-white font-semibold">{targetMachine?.name}</strong> is one of Daniel Dayan's 63 completed solves. 
                       Solve statuses, flags, and checklist milestones are strictly frozen to preserve operational integrity. 
                       To apply this scan, please select an in-progress or backlog target from the dropdown above.
                     </p>
@@ -685,15 +685,15 @@ export const ReconAutomationModal: React.FC = () => {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="p-4 rounded-xl border border-cyber-cyan/30 bg-cyber-bg/70 space-y-3.5 shadow-lg"
+                  className="p-4 rounded-xl border border-cyan-500/30 dark:border-cyber-cyan/30 bg-slate-50/80 dark:bg-cyber-bg/70 space-y-3.5 shadow-lg"
                 >
-                  <div className="flex items-center justify-between border-b border-cyber-border/80 pb-2.5 flex-wrap gap-2">
+                  <div className="flex items-center justify-between border-b border-slate-200 dark:border-cyber-border/80 pb-2.5 flex-wrap gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-white text-sm">
+                      <span className="font-bold text-slate-900 dark:text-white text-sm">
                         DISCOVERED OPEN SERVICES ({parsedResults.ports.length})
                       </span>
                       {parsedResults.detectedOs && (
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-cyber-card border border-cyber-border text-cyber-muted">
+                        <span className="text-[10px] px-2 py-0.5 rounded bg-white dark:bg-cyber-card border border-slate-300 dark:border-cyber-border text-slate-700 dark:text-cyber-muted">
                           OS: {parsedResults.detectedOs}
                         </span>
                       )}
@@ -704,17 +704,17 @@ export const ReconAutomationModal: React.FC = () => {
                       disabled={isTargetFrozen || parsedResults.ports.length === 0}
                       onClick={handleApplyToMachine}
                       title={isTargetFrozen ? "Target is marked completed. Select an in-progress target." : undefined}
-                      className={`px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm ${
+                      className={`px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm cursor-pointer ${
                         isTargetFrozen
-                          ? 'bg-gray-800 text-gray-500 border border-gray-700 cursor-not-allowed opacity-60'
+                          ? 'bg-slate-200 dark:bg-gray-800 text-slate-500 dark:text-gray-500 border border-slate-300 dark:border-gray-700 cursor-not-allowed opacity-60'
                           : appliedSuccess
                           ? 'bg-cyber-emerald text-black shadow-glow-emerald'
-                          : 'bg-cyber-cyan text-black hover:bg-cyan-300 shadow-glow-cyan'
+                          : 'bg-cyan-600 hover:bg-cyan-500 dark:bg-cyber-cyan text-white dark:text-black dark:hover:bg-cyan-300 shadow-glow-cyan'
                       }`}
                     >
                       {isTargetFrozen ? (
                         <>
-                          <Lock className="w-3.5 h-3.5 text-gray-400" />
+                          <Lock className="w-3.5 h-3.5 text-slate-400 dark:text-gray-400" />
                           <span>FROZEN // SOLVE COMPLETED</span>
                         </>
                       ) : appliedSuccess ? (
@@ -737,7 +737,7 @@ export const ReconAutomationModal: React.FC = () => {
                           setSelectedMachineId(targetMachine.id);
                           setReconAutomationModalOpen(false);
                         }}
-                        className="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 text-xs font-bold flex items-center gap-1.5 transition-all animate-pulse"
+                        className="px-3 py-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-500/20 text-emerald-900 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/40 hover:bg-emerald-200 dark:hover:bg-emerald-500/30 text-xs font-bold flex items-center gap-1.5 transition-all animate-pulse cursor-pointer"
                       >
                         <span>View {targetMachine.name} Workspace</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -862,10 +862,10 @@ export const ReconAutomationModal: React.FC = () => {
                           if (soundEnabled) playCyberSound('click');
                         }}
                         title={enc.description}
-                        className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition-all flex items-center gap-1.5 ${
+                        className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                           isSelected
                             ? 'bg-cyber-emerald text-black shadow-glow-emerald/30 border border-cyber-emerald'
-                            : 'bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-borderGlow'
+                            : 'bg-slate-100 dark:bg-cyber-bg border border-slate-300 dark:border-cyber-border text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:border-cyan-500'
                         }`}
                       >
                         <span>{enc.badge}</span>
@@ -883,10 +883,10 @@ export const ReconAutomationModal: React.FC = () => {
                     <button
                       key={cat}
                       onClick={() => setPayloadCategory(cat)}
-                      className={`px-3 py-1 rounded text-xs font-bold transition-all ${
+                      className={`px-3 py-1 rounded text-xs font-bold transition-all cursor-pointer ${
                         payloadCategory === cat
-                          ? 'bg-cyber-cyan/15 border border-cyber-cyan text-cyber-cyan shadow-sm'
-                          : 'bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white'
+                          ? 'bg-cyan-100 dark:bg-cyber-cyan/15 border border-cyan-400 dark:border-cyber-cyan text-cyan-900 dark:text-cyber-cyan shadow-sm font-bold'
+                          : 'bg-slate-100 dark:bg-cyber-bg border border-slate-300 dark:border-cyber-border text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
                       {cat === 'all' && 'ALL PAYLOADS'}
@@ -900,7 +900,7 @@ export const ReconAutomationModal: React.FC = () => {
                 </div>
 
                 <div className="relative">
-                  <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-cyber-muted" />
+                  <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-cyber-muted" />
                   <input
                     id="recon-payload-search-input"
                     name="recon-payload-search"
@@ -909,7 +909,7 @@ export const ReconAutomationModal: React.FC = () => {
                     value={payloadSearch}
                     onChange={(e) => setPayloadSearch(e.target.value)}
                     placeholder="Search payloads..."
-                    className="pl-8 pr-3 py-1 rounded bg-cyber-bg border border-cyber-border text-white text-xs w-44 sm:w-56 focus:outline-none focus:border-cyber-cyan"
+                    className="pl-8 pr-3 py-1 rounded bg-white dark:bg-cyber-bg border border-slate-300 dark:border-cyber-border text-slate-900 dark:text-white text-xs w-44 sm:w-56 focus:outline-none focus:border-cyan-500 dark:focus:border-cyber-cyan"
                   />
                 </div>
               </div>
@@ -924,20 +924,20 @@ export const ReconAutomationModal: React.FC = () => {
                   return (
                     <div
                       key={item.id}
-                      className="p-3.5 rounded-xl border border-cyber-border bg-cyber-card space-y-2.5 shadow-sm hover:border-cyber-borderGlow transition-colors"
+                      className="p-3.5 rounded-xl border border-slate-200 dark:border-cyber-border bg-white dark:bg-cyber-card space-y-2.5 shadow-sm hover:border-cyan-400 dark:hover:border-cyber-borderGlow transition-colors"
                     >
                       <div className="flex items-center justify-between gap-2 flex-wrap">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-bold text-white text-xs">{item.title}</span>
-                          <span className="text-[9px] px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border text-cyber-cyan font-bold">
+                          <span className="font-bold text-slate-900 dark:text-white text-xs">{item.title}</span>
+                          <span className="text-[9px] px-2 py-0.5 rounded bg-slate-100 dark:bg-cyber-bg border border-slate-300 dark:border-cyber-border text-cyan-800 dark:text-cyber-cyan font-bold">
                             {item.subCategory}
                           </span>
                           <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold ${
                             item.os === 'Windows'
-                              ? 'text-blue-400 bg-blue-950/40 border border-blue-800/40'
+                              ? 'text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/40'
                               : item.os === 'Linux'
-                              ? 'text-cyber-emerald bg-emerald-950/40 border border-emerald-800/40'
-                              : 'text-purple-400 bg-purple-950/40 border border-purple-800/40'
+                              ? 'text-emerald-700 dark:text-cyber-emerald bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40'
+                              : 'text-purple-700 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800/40'
                           }`}>
                             {item.os}
                           </span>
@@ -946,12 +946,12 @@ export const ReconAutomationModal: React.FC = () => {
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => copyPayload(rawCmd, item.id + '-raw')}
-                            className="px-2.5 py-1 rounded bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-cyan text-[11px] flex items-center gap-1 transition-colors"
+                            className="px-2.5 py-1 rounded bg-slate-100 dark:bg-cyber-bg border border-slate-300 dark:border-cyber-border text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:border-cyan-500 text-[11px] flex items-center gap-1 transition-colors cursor-pointer"
                           >
                             {copiedPayloadKey === item.id + '-raw' ? (
                               <>
                                 <Check className="w-3 h-3 text-cyber-emerald" />
-                                <span className="text-cyber-emerald font-bold">COPIED RAW</span>
+                                <span className="text-emerald-700 dark:text-cyber-emerald font-bold">COPIED RAW</span>
                               </>
                             ) : (
                               <>
@@ -963,10 +963,10 @@ export const ReconAutomationModal: React.FC = () => {
 
                           <button
                             onClick={() => copyPayload(encodedCmd, item.id + '-enc')}
-                            className={`px-3 py-1 rounded text-[11px] flex items-center gap-1.5 transition-all font-bold ${
+                            className={`px-3 py-1 rounded text-[11px] flex items-center gap-1.5 transition-all font-bold cursor-pointer ${
                               copiedPayloadKey === item.id + '-enc'
                                 ? 'bg-cyber-emerald text-black shadow-glow-emerald'
-                                : 'bg-cyber-cyan/15 border border-cyber-cyan text-cyber-cyan hover:bg-cyber-cyan hover:text-black shadow-sm'
+                                : 'bg-cyan-100 dark:bg-cyber-cyan/15 border border-cyan-400 dark:border-cyber-cyan text-cyan-900 dark:text-cyber-cyan hover:bg-cyan-500 hover:text-white dark:hover:bg-cyber-cyan dark:hover:text-black shadow-sm'
                             }`}
                           >
                             {copiedPayloadKey === item.id + '-enc' ? (
@@ -986,11 +986,11 @@ export const ReconAutomationModal: React.FC = () => {
                         </div>
                       </div>
 
-                      <p className="text-[11px] text-cyber-muted leading-relaxed">
+                      <p className="text-[11px] text-slate-600 dark:text-cyber-muted leading-relaxed">
                         {item.description}
                       </p>
 
-                      <div className="p-2.5 rounded-lg bg-cyber-bg border border-cyber-border/70 text-cyber-emerald font-mono text-[11px] overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                      <div className="p-2.5 rounded-lg bg-slate-900 dark:bg-cyber-bg border border-slate-800 dark:border-cyber-border/70 text-emerald-400 dark:text-cyber-emerald font-mono text-[11px] overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                         {encodedCmd}
                       </div>
                     </div>
@@ -998,7 +998,7 @@ export const ReconAutomationModal: React.FC = () => {
                 })}
 
                 {filteredPayloads.length === 0 && (
-                  <div className="p-8 text-center text-cyber-muted rounded-xl bg-cyber-bg border border-cyber-border">
+                  <div className="p-8 text-center text-slate-500 dark:text-cyber-muted rounded-xl bg-slate-50 dark:bg-cyber-bg border border-slate-200 dark:border-cyber-border">
                     No tactical payloads match your query "{payloadSearch}".
                   </div>
                 )}
@@ -1009,73 +1009,73 @@ export const ReconAutomationModal: React.FC = () => {
           {/* TAB 3: EXPLOIT RULE ADVISOR */}
           {activeTab === 'rules' && (
             <div className="space-y-3">
-              <div className="p-3 rounded-xl bg-cyber-bg border border-cyber-border text-xs space-y-1">
-                <div className="font-bold text-white flex items-center gap-1.5">
-                  <ShieldAlert className="w-3.5 h-3.5 text-cyber-amber" />
+              <div className="p-3 rounded-xl bg-slate-100/80 dark:bg-cyber-bg border border-slate-200 dark:border-cyber-border text-xs space-y-1">
+                <div className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                  <ShieldAlert className="w-3.5 h-3.5 text-amber-500 dark:text-cyber-amber" />
                   <span>AUTOMATED EXPLOIT HEURISTICS & RULES</span>
                 </div>
-                <p className="text-cyber-muted text-[11px]">
+                <p className="text-slate-600 dark:text-cyber-muted text-[11px]">
                   These automatic heuristics map discovered ports and daemons directly to tactical exploitation avenues.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="p-3 rounded-xl bg-cyber-card border border-cyber-border space-y-1.5">
+                <div className="p-3 rounded-xl bg-white dark:bg-cyber-card border border-slate-200 dark:border-cyber-border space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-white text-xs">FTP Anonymous / Backdoor</span>
-                    <span className="text-[10px] text-cyber-emerald font-mono">PORT 21</span>
+                    <span className="font-bold text-slate-900 dark:text-white text-xs">FTP Anonymous / Backdoor</span>
+                    <span className="text-[10px] text-emerald-700 dark:text-cyber-emerald font-mono font-bold">PORT 21</span>
                   </div>
-                  <p className="text-[11px] text-cyber-muted">
+                  <p className="text-[11px] text-slate-600 dark:text-cyber-muted">
                     Attempts anonymous:anonymous login. Flags vsftpd 2.3.4 smiley trigger.
                   </p>
                 </div>
 
-                <div className="p-3 rounded-xl bg-cyber-card border border-cyber-border space-y-1.5">
+                <div className="p-3 rounded-xl bg-white dark:bg-cyber-card border border-slate-200 dark:border-cyber-border space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-white text-xs">Apache Path Traversal</span>
-                    <span className="text-[10px] text-cyber-emerald font-mono">PORT 80/443</span>
+                    <span className="font-bold text-slate-900 dark:text-white text-xs">Apache Path Traversal</span>
+                    <span className="text-[10px] text-emerald-700 dark:text-cyber-emerald font-mono font-bold">PORT 80/443</span>
                   </div>
-                  <p className="text-[11px] text-cyber-muted">
+                  <p className="text-[11px] text-slate-600 dark:text-cyber-muted">
                     Flags Apache 2.4.49 / 2.4.50 for CVE-2021-41773 traversal tests with curl.
                   </p>
                 </div>
 
-                <div className="p-3 rounded-xl bg-cyber-card border border-cyber-border space-y-1.5">
+                <div className="p-3 rounded-xl bg-white dark:bg-cyber-card border border-slate-200 dark:border-cyber-border space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-white text-xs">SMB EternalBlue / Null Session</span>
-                    <span className="text-[10px] text-cyber-emerald font-mono">PORT 445</span>
+                    <span className="font-bold text-slate-900 dark:text-white text-xs">SMB EternalBlue / Null Session</span>
+                    <span className="text-[10px] text-emerald-700 dark:text-cyber-emerald font-mono font-bold">PORT 445</span>
                   </div>
-                  <p className="text-[11px] text-cyber-muted">
+                  <p className="text-[11px] text-slate-600 dark:text-cyber-muted">
                     Executes SMB anonymous IPC$ checks and flags MS17-010 on Windows Server 2008/2012.
                   </p>
                 </div>
 
-                <div className="p-3 rounded-xl bg-cyber-card border border-cyber-border space-y-1.5">
+                <div className="p-3 rounded-xl bg-white dark:bg-cyber-card border border-slate-200 dark:border-cyber-border space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-white text-xs">Kerberoasting / AS-REP Roasting</span>
-                    <span className="text-[10px] text-cyber-emerald font-mono">PORT 88</span>
+                    <span className="font-bold text-slate-900 dark:text-white text-xs">Kerberoasting / AS-REP Roasting</span>
+                    <span className="text-[10px] text-emerald-700 dark:text-cyber-emerald font-mono font-bold">PORT 88</span>
                   </div>
-                  <p className="text-[11px] text-cyber-muted">
+                  <p className="text-[11px] text-slate-600 dark:text-cyber-muted">
                     Automates kerbrute user enumeration and Impacket GetNPUsers hash dumping.
                   </p>
                 </div>
 
-                <div className="p-3 rounded-xl bg-cyber-card border border-cyber-border space-y-1.5">
+                <div className="p-3 rounded-xl bg-white dark:bg-cyber-card border border-slate-200 dark:border-cyber-border space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-white text-xs">WinRM Remote Shell</span>
-                    <span className="text-[10px] text-cyber-emerald font-mono">PORT 5985/5986</span>
+                    <span className="font-bold text-slate-900 dark:text-white text-xs">WinRM Remote Shell</span>
+                    <span className="text-[10px] text-emerald-700 dark:text-cyber-emerald font-mono font-bold">PORT 5985/5986</span>
                   </div>
-                  <p className="text-[11px] text-cyber-muted">
+                  <p className="text-[11px] text-slate-600 dark:text-cyber-muted">
                     Instant evil-winrm interactive PowerShell session using captured credentials or hashes.
                   </p>
                 </div>
 
-                <div className="p-3 rounded-xl bg-cyber-card border border-cyber-border space-y-1.5">
+                <div className="p-3 rounded-xl bg-white dark:bg-cyber-card border border-slate-200 dark:border-cyber-border space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-white text-xs">MSSQL xp_cmdshell</span>
-                    <span className="text-[10px] text-cyber-emerald font-mono">PORT 1433</span>
+                    <span className="font-bold text-slate-900 dark:text-white text-xs">MSSQL xp_cmdshell</span>
+                    <span className="text-[10px] text-emerald-700 dark:text-cyber-emerald font-mono font-bold">PORT 1433</span>
                   </div>
-                  <p className="text-[11px] text-cyber-muted">
+                  <p className="text-[11px] text-slate-600 dark:text-cyber-muted">
                     Tests mssqlclient.py connection, linked database servers, and xp_cmdshell command execution.
                   </p>
                 </div>
@@ -1085,14 +1085,14 @@ export const ReconAutomationModal: React.FC = () => {
         </div>
 
         {/* Modal Footer */}
-        <div className="flex-shrink-0 p-3 px-4 border-t border-cyber-border bg-cyber-bg flex items-center justify-between text-xs">
-          <span className="text-[11px] text-cyber-muted">
-            Press <kbd className="px-1.5 py-0.5 rounded bg-cyber-card border border-cyber-border text-white">ESC</kbd> to close
+        <div className="flex-shrink-0 p-3 px-4 border-t border-slate-200 dark:border-cyber-border bg-slate-50 dark:bg-cyber-bg flex items-center justify-between text-xs">
+          <span className="text-[11px] text-slate-500 dark:text-cyber-muted">
+            Press <kbd className="px-1.5 py-0.5 rounded bg-white dark:bg-cyber-card border border-slate-300 dark:border-cyber-border text-slate-800 dark:text-white">ESC</kbd> to close
           </span>
 
           <button
             onClick={() => setReconAutomationModalOpen(false)}
-            className="px-4 py-1.5 rounded-lg bg-cyber-card border border-cyber-border text-white hover:border-cyber-borderGlow transition-colors"
+            className="px-4 py-1.5 rounded-lg bg-slate-100 dark:bg-cyber-card border border-slate-300 dark:border-cyber-border text-slate-800 dark:text-white hover:bg-slate-200 dark:hover:border-cyber-borderGlow transition-colors cursor-pointer"
           >
             Close
           </button>

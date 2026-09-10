@@ -143,7 +143,7 @@ const EditableIpBadgeComponent: React.FC<EditableIpBadgeProps> = ({
         <button
           type="button"
           onClick={handleSave}
-          className={`${sizeClasses.button} rounded bg-cyber-emerald/20 text-cyber-emerald hover:bg-cyber-emerald hover:text-black transition-all`}
+          className={`${sizeClasses.button} rounded bg-emerald-100 dark:bg-cyber-emerald/20 border border-emerald-300 dark:border-transparent text-emerald-800 dark:text-cyber-emerald hover:bg-emerald-500 hover:text-white dark:hover:text-black transition-all`}
           title="Save IP (Enter)"
           aria-label="Save IP"
         >
@@ -152,7 +152,7 @@ const EditableIpBadgeComponent: React.FC<EditableIpBadgeProps> = ({
         <button
           type="button"
           onClick={handleCancel}
-          className={`${sizeClasses.button} rounded bg-cyber-crimson/20 text-cyber-crimson hover:bg-cyber-crimson hover:text-white transition-all`}
+          className={`${sizeClasses.button} rounded bg-rose-100 dark:bg-cyber-crimson/20 border border-rose-300 dark:border-transparent text-rose-800 dark:text-cyber-crimson hover:bg-rose-500 hover:text-white transition-all`}
           title="Cancel (Esc)"
           aria-label="Cancel editing IP"
         >

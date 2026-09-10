@@ -559,7 +559,7 @@ export const TrackerView: React.FC = () => {
             {filters.selectedTrack !== 'ALL' && (
               <button
                 onClick={() => setFilters({ selectedTrack: 'ALL' })}
-                className="text-[10px] text-cyber-cyan hover:underline flex items-center gap-1"
+                className="text-[10px] text-cyan-700 dark:text-cyber-cyan hover:underline flex items-center gap-1"
               >
                 <span>Clear Track</span>
                 <span>✕</span>
@@ -567,7 +567,7 @@ export const TrackerView: React.FC = () => {
             )}
             <button
               onClick={toggleTracksCollapsed}
-              className="p-1 px-2 rounded-md bg-cyber-bg hover:bg-cyber-card border border-cyber-border text-cyber-muted hover:text-white transition-all flex items-center gap-1 text-[10px]"
+              className="p-1 px-2 rounded-md bg-white dark:bg-cyber-bg hover:bg-slate-100 dark:hover:bg-cyber-card border border-slate-200 dark:border-cyber-border text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white transition-all flex items-center gap-1 text-[10px]"
               title={tracksCollapsed ? 'Expand Pathways' : 'Collapse Pathways to save vertical space'}
             >
               {tracksCollapsed ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}

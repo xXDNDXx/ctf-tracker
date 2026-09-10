@@ -479,44 +479,44 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
         </div>
 
         {/* Legend */}
-        <div className="hidden lg:flex items-center gap-3 px-3 py-1.5 rounded-xl bg-cyber-bg/90 border border-cyber-border shadow-md backdrop-blur-md text-[10px]">
+        <div className="hidden lg:flex items-center gap-3 px-3 py-1.5 rounded-xl bg-white/90 dark:bg-cyber-bg/90 border border-slate-200 dark:border-cyber-border shadow-md backdrop-blur-md text-[10px]">
           <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-cyber-emerald shadow-[0_0_8px_#10B981]" />
-            <span className="text-cyber-emerald font-bold">Root / Pwned</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 dark:bg-cyber-emerald shadow-[0_0_8px_#10B981]" />
+            <span className="text-emerald-700 dark:text-cyber-emerald font-bold">Root / Pwned</span>
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-cyber-amber shadow-[0_0_8px_#F59E0B]" />
-            <span className="text-cyber-amber font-bold">Foothold</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 dark:bg-cyber-amber shadow-[0_0_8px_#F59E0B]" />
+            <span className="text-amber-700 dark:text-cyber-amber font-bold">Foothold</span>
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-cyber-cyan shadow-[0_0_8px_#06B6D4]" />
-            <span className="text-cyber-muted">Scoped / Standby</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 dark:bg-cyber-cyan shadow-[0_0_8px_#06B6D4]" />
+            <span className="text-slate-600 dark:text-cyber-muted">Scoped / Standby</span>
           </span>
         </div>
       </div>
 
       {/* Floating Canvas Navigation Toolbar */}
-      <div className="absolute top-4 right-4 z-20 flex items-center gap-1.5 bg-cyber-bg/90 border border-cyber-border p-1 rounded-xl shadow-lg backdrop-blur-md">
-        <span className="text-[10px] font-bold text-cyber-muted px-2 select-none">
+      <div className="absolute top-4 right-4 z-20 flex items-center gap-1.5 bg-white/95 dark:bg-cyber-bg/90 border border-slate-200 dark:border-cyber-border p-1 rounded-xl shadow-lg backdrop-blur-md">
+        <span className="text-[10px] font-bold text-slate-600 dark:text-cyber-muted px-2 select-none">
           {Math.round(scale * 100)}%
         </span>
         <button
           onClick={() => handleZoom(0.18)}
-          className="p-2 rounded-lg hover:bg-cyber-card text-cyber-muted hover:text-white transition-colors"
+          className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-cyber-card text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white transition-colors"
           title="Zoom In (or Wheel Up)"
         >
           <ZoomIn className="w-4 h-4" />
         </button>
         <button
           onClick={() => handleZoom(-0.18)}
-          className="p-2 rounded-lg hover:bg-cyber-card text-cyber-muted hover:text-white transition-colors"
+          className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-cyber-card text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white transition-colors"
           title="Zoom Out (or Wheel Down)"
         >
           <ZoomOut className="w-4 h-4" />
         </button>
         <button
           onClick={handleResetView}
-          className="p-2 rounded-lg hover:bg-cyber-card text-cyber-muted hover:text-white transition-colors"
+          className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-cyber-card text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white transition-colors"
           title="Center / Reset View"
         >
           <RotateCcw className="w-4 h-4" />
@@ -524,7 +524,7 @@ export const GraphView: React.FC<GraphViewProps> = ({ filteredMachines }) => {
         <button
           onClick={() => setIsFullscreen(!isFullscreen)}
           className={`p-2 rounded-lg transition-colors ${
-            isFullscreen ? 'bg-cyber-cyan text-black font-bold' : 'hover:bg-cyber-card text-cyber-muted hover:text-white'
+            isFullscreen ? 'bg-cyan-600 dark:bg-cyber-cyan text-white dark:text-black font-bold' : 'hover:bg-slate-100 dark:hover:bg-cyber-card text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white'
           }`}
           title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen Attack Topology'}
         >

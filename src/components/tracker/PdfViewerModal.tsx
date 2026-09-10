@@ -294,11 +294,11 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({
             ) : pdfUrl && pdfRecord ? (
               <div className="flex-1 flex flex-col h-full">
                 {/* PDF Action Toolbar */}
-                <div className="flex items-center justify-between px-4 py-2 bg-slate-950/60 border-b border-cyber-border text-xs">
+                <div className="flex items-center justify-between px-4 py-2 bg-slate-100 dark:bg-slate-950/60 border-b border-slate-200 dark:border-cyber-border text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="text-emerald-400 font-bold">{pdfRecord.filename}</span>
-                    <span className="text-cyber-muted text-[11px]">({formatBytes(pdfRecord.size)})</span>
-                    <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 border border-slate-700">
+                    <span className="text-emerald-700 dark:text-emerald-400 font-bold">{pdfRecord.filename}</span>
+                    <span className="text-slate-500 dark:text-cyber-muted text-[11px]">({formatBytes(pdfRecord.size)})</span>
+                    <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400 border border-slate-300 dark:border-slate-700">
                       Offline Persistent
                     </span>
                   </div>
@@ -307,37 +307,37 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({
                     <a
                       href={pdfUrl}
                       download={pdfRecord.filename}
-                      className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 flex items-center gap-1.5 transition-colors"
+                      className="px-2.5 py-1 rounded bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 flex items-center gap-1.5 transition-colors"
                       title="Download PDF to disk"
                     >
-                      <Download className="w-3.5 h-3.5 text-cyber-cyan" />
+                      <Download className="w-3.5 h-3.5 text-cyan-600 dark:text-cyber-cyan" />
                       <span>Download</span>
                     </a>
 
                     <button
                       type="button"
                       onClick={() => window.open(pdfUrl, '_blank')}
-                      className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 flex items-center gap-1.5 transition-colors"
+                      className="px-2.5 py-1 rounded bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 flex items-center gap-1.5 transition-colors"
                       title="Open in external browser window"
                     >
-                      <ExternalLink className="w-3.5 h-3.5 text-cyber-cyan" />
+                      <ExternalLink className="w-3.5 h-3.5 text-cyan-600 dark:text-cyber-cyan" />
                       <span>Popout</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 flex items-center gap-1.5 transition-colors"
+                      className="px-2.5 py-1 rounded bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 flex items-center gap-1.5 transition-colors"
                       title="Replace existing PDF"
                     >
-                      <Upload className="w-3.5 h-3.5 text-amber-400" />
+                      <Upload className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                       <span>Replace</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={handleDelete}
-                      className="p-1.5 rounded bg-slate-800 hover:bg-rose-900/40 border border-slate-700 hover:border-rose-600 text-slate-400 hover:text-rose-400 transition-colors"
+                      className="p-1.5 rounded bg-white dark:bg-slate-800 hover:bg-rose-100 dark:hover:bg-rose-900/40 border border-slate-300 dark:border-slate-700 hover:border-rose-400 dark:hover:border-rose-600 text-slate-600 dark:text-slate-400 hover:text-rose-700 dark:hover:text-rose-400 transition-colors"
                       title="Delete from local database"
                     >
                       <Trash2 className="w-3.5 h-3.5" />

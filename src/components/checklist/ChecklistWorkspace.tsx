@@ -304,17 +304,17 @@ export const ChecklistWorkspace: React.FC<ChecklistWorkspaceProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={handleExportMarkdown}
-              className="flex items-center gap-1 px-2.5 py-1 rounded bg-cyber-card border border-cyber-border hover:border-cyber-cyan text-white text-[11px] transition-all"
+              className="flex items-center gap-1 px-2.5 py-1 rounded bg-white dark:bg-cyber-card border border-slate-200 dark:border-cyber-border hover:border-cyan-500 text-slate-800 dark:text-white text-[11px] transition-all"
               title="Copy Obsidian / GitBook formatted Markdown checklist"
             >
               {copiedMarkdown ? (
                 <>
-                  <Check className="w-3 h-3 text-cyber-emerald" />
-                  <span className="text-cyber-emerald font-bold">Copied!</span>
+                  <Check className="w-3 h-3 text-emerald-600 dark:text-cyber-emerald" />
+                  <span className="text-emerald-700 dark:text-cyber-emerald font-bold">Copied!</span>
                 </>
               ) : (
                 <>
-                  <Copy className="w-3 h-3 text-cyber-cyan" />
+                  <Copy className="w-3 h-3 text-cyan-600 dark:text-cyber-cyan" />
                   <span>Copy Markdown</span>
                 </>
               )}
@@ -322,7 +322,7 @@ export const ChecklistWorkspace: React.FC<ChecklistWorkspaceProps> = ({
 
             <button
               onClick={handleDownloadMarkdown}
-              className="p-1 rounded bg-cyber-card border border-cyber-border hover:border-cyber-emerald text-cyber-muted hover:text-white transition-colors"
+              className="p-1 rounded bg-white dark:bg-cyber-card border border-slate-200 dark:border-cyber-border hover:border-emerald-500 text-slate-600 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white transition-colors"
               title="Download .md checklist file"
             >
               <Download className="w-3.5 h-3.5" />
@@ -335,7 +335,7 @@ export const ChecklistWorkspace: React.FC<ChecklistWorkspaceProps> = ({
                   if (soundEnabled) playCyberSound('root');
                 }
               }}
-              className="p-1 rounded bg-cyber-card border border-cyber-border text-cyber-muted hover:text-cyber-crimson transition-colors"
+              className="p-1 rounded bg-white dark:bg-cyber-card border border-slate-200 dark:border-cyber-border text-slate-600 dark:text-cyber-muted hover:text-rose-600 dark:hover:text-cyber-crimson transition-colors"
               title="Reset Checklist Progress"
             >
               <RotateCcw className="w-3.5 h-3.5" />
@@ -519,11 +519,11 @@ export const ChecklistWorkspace: React.FC<ChecklistWorkspaceProps> = ({
               value={customPortInput}
               onChange={(e) => setCustomPortInput(e.target.value)}
               placeholder="Custom Port..."
-              className="w-24 bg-cyber-bg px-2 py-0.5 rounded border border-cyber-border text-white text-xs focus:outline-none focus:border-cyber-cyan"
+              className="w-24 bg-white dark:bg-cyber-bg px-2 py-0.5 rounded border border-slate-300 dark:border-cyber-border text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-cyber-muted text-xs focus:outline-none focus:border-cyan-500"
             />
             <button
               type="submit"
-              className="p-1 rounded bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white"
+              className="p-1 rounded bg-white dark:bg-cyber-bg border border-slate-300 dark:border-cyber-border text-slate-600 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white"
               title="Add Port"
             >
               <Plus className="w-3 h-3" />

@@ -133,22 +133,22 @@ export const QuickAssignIpModal: React.FC = () => {
         transition={{ duration: 0.15 }}
         onClick={(e) => e.stopPropagation()}
         data-testid="quick-assign-ip-modal"
-        className="w-full max-w-lg rounded-2xl border border-cyber-cyan/50 bg-cyber-card/95 shadow-2xl overflow-hidden shadow-glow-cyan/20 relative"
+        className="w-full max-w-lg rounded-2xl border border-cyan-500/40 dark:border-cyber-cyan/50 bg-white dark:bg-cyber-card/95 shadow-2xl overflow-hidden relative"
       >
         {/* Header Strip */}
-        <div className="flex items-center justify-between border-b border-cyber-border p-4 bg-cyber-bg/90">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-cyber-border p-4 bg-slate-50 dark:bg-cyber-bg/90">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-cyber-cyan/10 border border-cyber-cyan/40 flex items-center justify-center text-cyber-cyan">
+            <div className="w-7 h-7 rounded-lg bg-cyan-100 dark:bg-cyber-cyan/10 border border-cyan-300 dark:border-cyber-cyan/40 flex items-center justify-center text-cyan-700 dark:text-cyber-cyan">
               <Crosshair className="w-4 h-4" />
             </div>
             <div>
-              <h3 id="quick-assign-ip-title" className="text-sm font-bold text-white tracking-wide flex items-center gap-1.5">
+              <h3 id="quick-assign-ip-title" className="text-sm font-bold text-slate-900 dark:text-white tracking-wide flex items-center gap-1.5">
                 <span>ASSIGN SPAWNED TARGET IP</span>
-                <span className="text-[10px] px-1.5 py-0.2 rounded bg-cyber-cyan/20 text-cyber-cyan font-semibold border border-cyber-cyan/30">
+                <span className="text-[10px] px-1.5 py-0.2 rounded bg-cyan-100 dark:bg-cyber-cyan/20 text-cyan-800 dark:text-cyber-cyan font-semibold border border-cyan-300 dark:border-cyber-cyan/30">
                   LIVE INSTANCE
                 </span>
               </h3>
-              <div className="text-[11px] text-cyber-muted">
+              <div className="text-[11px] text-slate-600 dark:text-cyber-muted">
                 Each spawned CTF box receives a unique dynamic IP address.
               </div>
             </div>
@@ -156,7 +156,7 @@ export const QuickAssignIpModal: React.FC = () => {
 
           <button
             onClick={handleClose}
-            className="p-1 rounded text-cyber-muted hover:text-white transition-colors"
+            className="p-1 rounded text-slate-500 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-cyber-bg transition-colors"
             title="Close (Esc)"
           >
             <X className="w-4 h-4" />
@@ -165,24 +165,24 @@ export const QuickAssignIpModal: React.FC = () => {
 
         {/* Target Profile Card */}
         <div className="p-4 sm:p-5 space-y-4">
-          <div className="p-3 rounded-xl bg-cyber-bg border border-cyber-border flex items-center justify-between">
+          <div className="p-3 rounded-xl bg-slate-50 dark:bg-cyber-bg border border-slate-200 dark:border-cyber-border flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <PlatformBadge platform={machine.platform} size="md" />
               <div>
-                <div className="text-sm font-bold text-white flex items-center gap-2">
+                <div className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                   <span>{machine.name}</span>
                   <OsBadge os={machine.os} size="xs" />
                 </div>
-                <div className="text-[11px] text-cyber-muted mt-0.5">
-                  Current Placeholder: <code className="text-cyber-amber font-mono">{machine.ip}</code>
+                <div className="text-[11px] text-slate-600 dark:text-cyber-muted mt-0.5">
+                  Current Placeholder: <code className="text-amber-700 dark:text-cyber-amber font-mono font-bold">{machine.ip}</code>
                 </div>
               </div>
             </div>
 
             <span className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase ${
-              machine.difficulty === 'Easy' ? 'bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30' :
-              machine.difficulty === 'Medium' ? 'bg-cyber-amber/10 text-cyber-amber border border-cyber-amber/30' :
-              'bg-cyber-crimson/10 text-cyber-crimson border border-cyber-crimson/30'
+              machine.difficulty === 'Easy' ? 'bg-emerald-100 dark:bg-cyber-emerald/10 text-emerald-800 dark:text-cyber-emerald border border-emerald-300 dark:border-cyber-emerald/30' :
+              machine.difficulty === 'Medium' ? 'bg-amber-100 dark:bg-cyber-amber/10 text-amber-800 dark:text-cyber-amber border border-amber-300 dark:border-cyber-amber/30' :
+              'bg-rose-100 dark:bg-cyber-crimson/10 text-rose-800 dark:text-cyber-crimson border border-rose-300 dark:border-cyber-crimson/30'
             }`}>
               {machine.difficulty}
             </span>
@@ -190,12 +190,12 @@ export const QuickAssignIpModal: React.FC = () => {
 
           {/* Input Field */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-bold text-cyber-cyan uppercase tracking-wider flex items-center justify-between">
+            <label className="text-[11px] font-bold text-cyan-800 dark:text-cyber-cyan uppercase tracking-wider flex items-center justify-between">
               <span>Enter Spawned Target IP:</span>
               <button
                 type="button"
                 onClick={handlePaste}
-                className="text-cyber-muted hover:text-cyber-cyan flex items-center gap-1 text-[10px] normal-case"
+                className="text-slate-600 dark:text-cyber-muted hover:text-cyan-700 dark:hover:text-cyber-cyan flex items-center gap-1 text-[10px] normal-case"
               >
                 <Clipboard className="w-3 h-3" /> Paste from Clipboard
               </button>
@@ -214,15 +214,15 @@ export const QuickAssignIpModal: React.FC = () => {
                   if (errorMsg) setErrorMsg('');
                 }}
                 placeholder={machine.platform === 'HTB' ? 'e.g. 10.10.11.234 or 10.129.x.x' : 'e.g. 10.10.185.92'}
-                className="w-full bg-cyber-bg px-3.5 py-2.5 rounded-xl border border-cyber-border focus:border-cyber-cyan text-white text-base font-mono font-bold focus:outline-none shadow-inner pr-10"
+                className="w-full bg-slate-50 dark:bg-cyber-bg px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-cyber-border focus:border-cyan-500 dark:focus:border-cyber-cyan text-slate-900 dark:text-white text-base font-mono font-bold focus:outline-none shadow-inner pr-10"
               />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-cyber-muted text-xs">
-                <Globe className="w-4 h-4 text-cyber-cyan/70" />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-cyber-muted text-xs">
+                <Globe className="w-4 h-4 text-cyan-600 dark:text-cyber-cyan/70" />
               </div>
             </div>
 
             {errorMsg && (
-              <div className="text-[11px] text-cyber-crimson font-semibold">
+              <div className="text-[11px] text-rose-600 dark:text-cyber-crimson font-semibold">
                 {errorMsg}
               </div>
             )}
@@ -230,7 +230,7 @@ export const QuickAssignIpModal: React.FC = () => {
 
           {/* Quick Subnet Prefills */}
           <div className="space-y-1.5">
-            <div className="text-[10px] text-cyber-muted uppercase font-semibold">
+            <div className="text-[10px] text-slate-600 dark:text-cyber-muted uppercase font-semibold">
               Quick Subnet Prefix:
             </div>
             <div className="flex flex-wrap gap-1.5">
@@ -239,21 +239,21 @@ export const QuickAssignIpModal: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => handlePreFill('10.10.11.')}
-                    className="px-2 py-1 rounded bg-cyber-bg border border-cyber-border hover:border-cyber-cyan text-cyber-muted hover:text-white text-xs transition-colors"
+                    className="px-2 py-1 rounded bg-slate-100 dark:bg-cyber-bg border border-slate-300 dark:border-cyber-border hover:border-cyan-500 text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white text-xs transition-colors cursor-pointer"
                   >
                     10.10.11. (Modern)
                   </button>
                   <button
                     type="button"
                     onClick={() => handlePreFill('10.129.')}
-                    className="px-2 py-1 rounded bg-cyber-bg border border-cyber-border hover:border-cyber-cyan text-cyber-muted hover:text-white text-xs transition-colors"
+                    className="px-2 py-1 rounded bg-slate-100 dark:bg-cyber-bg border border-slate-300 dark:border-cyber-border hover:border-cyan-500 text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white text-xs transition-colors cursor-pointer"
                   >
                     10.129. (Starting Point / Labs)
                   </button>
                   <button
                     type="button"
                     onClick={() => handlePreFill('10.10.10.')}
-                    className="px-2 py-1 rounded bg-cyber-bg border border-cyber-border hover:border-cyber-cyan text-cyber-muted hover:text-white text-xs transition-colors"
+                    className="px-2 py-1 rounded bg-slate-100 dark:bg-cyber-bg border border-slate-300 dark:border-cyber-border hover:border-cyan-500 text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white text-xs transition-colors cursor-pointer"
                   >
                     10.10.10. (Retired Classic)
                   </button>
@@ -263,7 +263,7 @@ export const QuickAssignIpModal: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => handlePreFill('10.10.')}
-                    className="px-2 py-1 rounded bg-cyber-bg border border-cyber-border hover:border-cyber-cyan text-cyber-muted hover:text-white text-xs transition-colors"
+                    className="px-2 py-1 rounded bg-slate-100 dark:bg-cyber-bg border border-slate-300 dark:border-cyber-border hover:border-cyan-500 text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white text-xs transition-colors cursor-pointer"
                   >
                     10.10. (TryHackMe Subnet)
                   </button>
@@ -274,11 +274,11 @@ export const QuickAssignIpModal: React.FC = () => {
         </div>
 
         {/* Footer Actions */}
-        <div className="border-t border-cyber-border p-3.5 sm:p-4 bg-cyber-bg/95 flex items-center justify-between">
+        <div className="border-t border-slate-200 dark:border-cyber-border p-3.5 sm:p-4 bg-slate-50 dark:bg-cyber-bg/95 flex items-center justify-between">
           <button
             type="button"
             onClick={handleClose}
-            className="px-3 py-1.5 rounded-lg border border-cyber-border text-cyber-muted hover:text-white text-xs transition-colors"
+            className="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-cyber-border text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-cyber-bg text-xs transition-colors cursor-pointer"
           >
             Keep {machine.ip}
           </button>

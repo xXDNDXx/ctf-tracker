@@ -434,12 +434,12 @@ export const MobileNav: React.FC = () => {
                     ENVIRONMENT & THEME
                   </div>
                   {/* Theme Switcher (Real Moon / Radiant Sun) */}
-                  <div className="p-3 rounded-lg border border-cyber-border bg-cyber-bg flex items-center justify-between">
+                  <div className="p-3 rounded-lg border border-slate-200 dark:border-cyber-border bg-slate-50 dark:bg-cyber-bg flex items-center justify-between">
                     <div>
-                      <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                      <div className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
                         <span>Celestial Theme</span>
                       </div>
-                      <div className="text-[10px] text-cyber-muted">Real Moon / Radiant Sun</div>
+                      <div className="text-[10px] text-slate-500 dark:text-cyber-muted">Real Moon / Radiant Sun</div>
                     </div>
                     <ThemeToggle size="sm" showLabel />
                   </div>
@@ -449,8 +449,8 @@ export const MobileNav: React.FC = () => {
                       onClick={toggleCrtOverlay}
                       className={`p-2.5 rounded-lg border flex items-center gap-2 text-left transition-colors ${
                         crtOverlay 
-                          ? 'bg-cyber-cyan/15 border-cyber-cyan text-cyber-cyan font-bold' 
-                          : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-white'
+                          ? 'bg-cyan-100 dark:bg-cyber-cyan/15 border-cyan-400 dark:border-cyber-cyan text-cyan-900 dark:text-cyber-cyan font-bold' 
+                          : 'bg-slate-50 dark:bg-cyber-bg border-slate-200 dark:border-cyber-border text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
                       <Tv className="w-4 h-4" />
@@ -461,8 +461,8 @@ export const MobileNav: React.FC = () => {
                       onClick={toggleSound}
                       className={`p-2.5 rounded-lg border flex items-center gap-2 text-left transition-colors ${
                         soundEnabled 
-                          ? 'bg-cyber-emerald/15 border-cyber-emerald text-cyber-emerald font-bold' 
-                          : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-white'
+                          ? 'bg-emerald-100 dark:bg-cyber-emerald/15 border-emerald-400 dark:border-cyber-emerald text-emerald-900 dark:text-cyber-emerald font-bold' 
+                          : 'bg-slate-50 dark:bg-cyber-bg border-slate-200 dark:border-cyber-border text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
                       {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
@@ -473,7 +473,7 @@ export const MobileNav: React.FC = () => {
 
                 {/* 4. Brand Theme Selector */}
                 <div className="space-y-1.5">
-                  <div className="text-[10px] uppercase font-bold text-cyber-muted px-1">
+                  <div className="text-[10px] uppercase font-bold text-slate-500 dark:text-cyber-muted px-1">
                     THEME PALETTE
                   </div>
                   <div className="grid grid-cols-2 gap-1.5">
@@ -486,8 +486,8 @@ export const MobileNav: React.FC = () => {
                         }}
                         className={`p-2 rounded-lg border text-left flex items-center gap-1.5 transition-colors ${
                           appBrand === theme.id
-                            ? 'bg-cyber-emerald/10 border-cyber-emerald text-cyber-emerald font-bold'
-                            : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-white'
+                            ? 'bg-emerald-100 dark:bg-cyber-emerald/10 border-emerald-400 dark:border-cyber-emerald text-emerald-900 dark:text-cyber-emerald font-bold'
+                            : 'bg-slate-50 dark:bg-cyber-bg border-slate-200 dark:border-cyber-border text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white'
                         }`}
                       >
                         <span className={`w-2 h-2 rounded-full ${theme.suffixColor.replace('text-', 'bg-')}`} />
@@ -498,15 +498,15 @@ export const MobileNav: React.FC = () => {
                 </div>
 
                 {/* 5. Creator & Support Card */}
-                <div className="p-3 rounded-xl bg-gradient-to-br from-cyber-card via-cyber-bg to-[#0d1527] border border-cyber-border/80 space-y-2">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200/50 dark:from-cyber-card dark:via-cyber-bg dark:to-[#0d1527] border border-slate-200 dark:border-cyber-border/80 space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-md bg-cyber-emerald/20 border border-cyber-emerald/50 flex items-center justify-center text-cyber-emerald text-[10px] font-black">
+                      <div className="w-6 h-6 rounded-md bg-emerald-100 dark:bg-cyber-emerald/20 border border-emerald-300 dark:border-cyber-emerald/50 flex items-center justify-center text-emerald-800 dark:text-cyber-emerald text-[10px] font-black">
                         DD
                       </div>
                       <div>
-                        <div className="text-white font-bold text-xs">Daniel Dayan</div>
-                        <div className="text-[10px] text-cyber-muted">@xXDNDXx • Creator & Architect</div>
+                        <div className="text-slate-900 dark:text-white font-bold text-xs">Daniel Dayan</div>
+                        <div className="text-[10px] text-slate-500 dark:text-cyber-muted">@xXDNDXx • Creator & Architect</div>
                       </div>
                     </div>
                     <button
@@ -514,7 +514,7 @@ export const MobileNav: React.FC = () => {
                         setMobileMenuOpen(false);
                         setOperatorModalOpen(true);
                       }}
-                      className="text-[10px] text-cyber-emerald hover:underline font-bold"
+                      className="text-[10px] text-emerald-700 dark:text-cyber-emerald hover:underline font-bold"
                     >
                       Dossier ↗
                     </button>
@@ -525,7 +525,7 @@ export const MobileNav: React.FC = () => {
                       href={CREATOR_PROFILE_LINKS.coffee}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 rounded-lg bg-[#FFDD00]/15 hover:bg-[#FFDD00]/25 border border-[#FFDD00]/40 text-[#FFDD00] hover:text-white flex items-center justify-center gap-1.5 font-bold text-[11px] transition-all"
+                      className="p-2 rounded-lg bg-amber-100 dark:bg-[#FFDD00]/15 hover:bg-amber-200 dark:hover:bg-[#FFDD00]/25 border border-amber-300 dark:border-[#FFDD00]/40 text-amber-900 dark:text-[#FFDD00] hover:text-amber-950 dark:hover:text-white flex items-center justify-center gap-1.5 font-bold text-[11px] transition-all"
                     >
                       <Coffee className="w-3.5 h-3.5" />
                       <span>Buy a Coffee</span>
@@ -535,9 +535,9 @@ export const MobileNav: React.FC = () => {
                         setMobileMenuOpen(false);
                         setLicenseModalOpen(true);
                       }}
-                      className="p-2 rounded-lg bg-cyber-card hover:bg-cyber-card/80 border border-cyber-border text-gray-300 hover:text-white flex items-center justify-center gap-1 text-[11px] font-bold transition-all"
+                      className="p-2 rounded-lg bg-white dark:bg-cyber-card hover:bg-slate-100 dark:hover:bg-cyber-card/80 border border-slate-300 dark:border-cyber-border text-slate-800 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white flex items-center justify-center gap-1 text-[11px] font-bold transition-all"
                     >
-                      <Scale className="w-3.5 h-3.5 text-cyber-amber" />
+                      <Scale className="w-3.5 h-3.5 text-amber-600 dark:text-cyber-amber" />
                       <span>License</span>
                     </button>
                   </div>

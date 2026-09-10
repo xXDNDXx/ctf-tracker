@@ -122,24 +122,24 @@ export const LicenseModal: React.FC = () => {
           initial={{ scale: 0.95, opacity: 0, y: 15 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.95, opacity: 0, y: 15 }}
-          className="relative w-full max-w-3xl my-auto bg-[#0d121f] border border-cyber-amber/50 rounded-2xl shadow-[0_0_50px_rgba(245,158,11,0.25)] text-gray-200 overflow-hidden z-10 flex flex-col max-h-[90vh] font-mono text-xs"
+          className="relative w-full max-w-3xl my-auto bg-white dark:bg-[#0d121f] border border-amber-500/50 dark:border-cyber-amber/50 rounded-2xl shadow-[0_0_50px_rgba(245,158,11,0.25)] text-slate-900 dark:text-gray-200 overflow-hidden z-10 flex flex-col max-h-[90vh] font-mono text-xs"
         >
           {/* Top Tactical Terminal Header */}
-          <div className="px-5 py-3.5 bg-[#080c14] border-b border-cyber-border/80 flex items-center justify-between select-none">
+          <div className="px-5 py-3.5 bg-slate-50 dark:bg-[#080c14] border-b border-slate-200 dark:border-cyber-border/80 flex items-center justify-between select-none">
             <div className="flex items-center gap-2.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-cyber-amber animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
-              <Scale className="w-4 h-4 text-cyber-amber" />
-              <span id="license-modal-title" className="font-bold text-cyber-amber tracking-wider uppercase">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500 dark:bg-cyber-amber animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
+              <Scale className="w-4 h-4 text-amber-600 dark:text-cyber-amber" />
+              <span id="license-modal-title" className="font-bold text-amber-800 dark:text-cyber-amber tracking-wider uppercase">
                 ZEROBOX // LEGAL & INTELLECTUAL PROPERTY COVENANT
               </span>
-              <span className="px-2 py-0.5 rounded text-[9px] font-black bg-cyber-amber/20 text-cyber-amber border border-cyber-amber/40">
+              <span className="px-2 py-0.5 rounded text-[9px] font-black bg-amber-100 dark:bg-cyber-amber/20 text-amber-900 dark:text-cyber-amber border border-amber-300 dark:border-cyber-amber/40">
                 ZNSL-1.0
               </span>
             </div>
 
             <button
               onClick={() => setLicenseModalOpen(false)}
-              className="p-1.5 rounded-lg text-cyber-muted hover:text-white hover:bg-cyber-card transition-all"
+              className="p-1.5 rounded-lg text-slate-600 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-cyber-card transition-all"
               title="Close License (ESC)"
             >
               <X className="w-4 h-4" />
@@ -149,21 +149,21 @@ export const LicenseModal: React.FC = () => {
           {/* Scrollable Content */}
           <div className="overflow-y-auto p-5 sm:p-6 space-y-5">
             {/* Hero Header Card */}
-            <div className="p-4 sm:p-5 rounded-xl bg-gradient-to-br from-cyber-card/90 via-cyber-bg to-[#1a150c] border border-cyber-amber/40 relative overflow-hidden shadow-lg">
+            <div className="p-4 sm:p-5 rounded-xl bg-gradient-to-br from-amber-50/70 via-slate-50 to-amber-100/40 dark:from-cyber-card/90 dark:via-cyber-bg dark:to-[#1a150c] border border-amber-300 dark:border-cyber-amber/40 relative overflow-hidden shadow-lg">
               <div className="absolute top-0 right-0 w-48 h-48 bg-cyber-amber/10 rounded-full blur-3xl pointer-events-none" />
               
               <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-5 h-5 text-cyber-amber" />
-                    <h3 className="text-base sm:text-lg font-black text-white tracking-wide">
+                    <ShieldCheck className="w-5 h-5 text-amber-600 dark:text-cyber-amber" />
+                    <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-wide">
                       ZeroBox Source-Available Non-Commercial License
                     </h3>
                   </div>
-                  <div className="text-cyber-muted text-[11px]">
-                    Copyright © 2026 <strong className="text-cyber-emerald">Daniel Dayan</strong> (<span className="text-cyber-cyan">@xXDNDXx</span>). All Rights Reserved.
+                  <div className="text-slate-600 dark:text-cyber-muted text-[11px]">
+                    Copyright © 2026 <strong className="text-emerald-800 dark:text-cyber-emerald">Daniel Dayan</strong> (<span className="text-cyan-800 dark:text-cyber-cyan">@xXDNDXx</span>). All Rights Reserved.
                   </div>
-                  <p className="text-gray-300 text-[11px] leading-relaxed pt-1 max-w-xl">
+                  <p className="text-slate-700 dark:text-gray-300 text-[11px] leading-relaxed pt-1 max-w-xl">
                     ZeroBox is engineered as a free, transparent offensive cybersecurity platform for personal study and educational preparation. 
                     Commercial monetization, unauthorized public re-publishing, reselling, or removing author attribution is strictly forbidden.
                   </p>
@@ -171,7 +171,7 @@ export const LicenseModal: React.FC = () => {
 
                 <button
                   onClick={handleOpenCreatorDossier}
-                  className="px-3 py-2 rounded-xl bg-cyber-emerald/15 hover:bg-cyber-emerald/25 border border-cyber-emerald/40 hover:border-cyber-emerald text-cyber-emerald hover:text-white transition-all font-bold flex items-center gap-2 flex-shrink-0"
+                  className="px-3 py-2 rounded-xl bg-emerald-100 dark:bg-cyber-emerald/15 hover:bg-emerald-200 dark:hover:bg-cyber-emerald/25 border border-emerald-300 dark:border-cyber-emerald/40 hover:border-emerald-500 dark:hover:border-cyber-emerald text-emerald-900 dark:text-cyber-emerald hover:text-emerald-950 dark:hover:text-white transition-all font-bold flex items-center gap-2 flex-shrink-0"
                   title="View Author Dossier & Verified Links"
                 >
                   <UserCheck className="w-3.5 h-3.5" />
@@ -183,52 +183,52 @@ export const LicenseModal: React.FC = () => {
             {/* Permissions Matrix: Allowed vs Prohibited */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               {/* ALLOWED */}
-              <div className="p-4 rounded-xl bg-cyber-card/70 border border-cyber-emerald/40 space-y-2.5">
-                <div className="flex items-center gap-2 text-cyber-emerald font-bold text-xs uppercase tracking-wider pb-1 border-b border-cyber-emerald/20">
+              <div className="p-4 rounded-xl bg-emerald-50/40 dark:bg-cyber-card/70 border border-emerald-300 dark:border-cyber-emerald/40 space-y-2.5">
+                <div className="flex items-center gap-2 text-emerald-800 dark:text-cyber-emerald font-bold text-xs uppercase tracking-wider pb-1 border-b border-emerald-200 dark:border-cyber-emerald/20">
                   <CheckCircle2 className="w-4 h-4" />
                   <span>✅ PERMITTED USES (NON-COMMERCIAL)</span>
                 </div>
-                <ul className="space-y-2 text-[11px] text-gray-300">
+                <ul className="space-y-2 text-[11px] text-slate-700 dark:text-gray-300">
                   <li className="flex items-start gap-2">
-                    <span className="text-cyber-emerald font-bold mt-0.5">•</span>
+                    <span className="text-emerald-600 dark:text-cyber-emerald font-bold mt-0.5">•</span>
                     <span><strong>Personal Learning:</strong> Run, compile, and use locally for individual CTF practice and penetration testing labs (HTB, THM, OffSec).</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-cyber-emerald font-bold mt-0.5">•</span>
+                    <span className="text-emerald-600 dark:text-cyber-emerald font-bold mt-0.5">•</span>
                     <span><strong>Source Code Inspection:</strong> Clone and inspect code for academic research, security auditing, and educational study.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-cyber-emerald font-bold mt-0.5">•</span>
+                    <span className="text-emerald-600 dark:text-cyber-emerald font-bold mt-0.5">•</span>
                     <span><strong>Open Contributions:</strong> Submit bug reports, feature suggestions, and upstream PRs to Daniel Dayan's official repository.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-cyber-emerald font-bold mt-0.5">•</span>
+                    <span className="text-emerald-600 dark:text-cyber-emerald font-bold mt-0.5">•</span>
                     <span><strong>Offline Personal Use:</strong> Keep private local backups and customized offline configurations for your own study.</span>
                   </li>
                 </ul>
               </div>
 
               {/* FORBIDDEN */}
-              <div className="p-4 rounded-xl bg-cyber-card/70 border border-cyber-crimson/40 space-y-2.5">
-                <div className="flex items-center gap-2 text-cyber-crimson font-bold text-xs uppercase tracking-wider pb-1 border-b border-cyber-crimson/20">
+              <div className="p-4 rounded-xl bg-rose-50/40 dark:bg-cyber-card/70 border border-rose-300 dark:border-cyber-crimson/40 space-y-2.5">
+                <div className="flex items-center gap-2 text-rose-800 dark:text-cyber-crimson font-bold text-xs uppercase tracking-wider pb-1 border-b border-rose-200 dark:border-cyber-crimson/20">
                   <XCircle className="w-4 h-4" />
                   <span>❌ STRICTLY PROHIBITED (VIOLATIONS)</span>
                 </div>
-                <ul className="space-y-2 text-[11px] text-gray-300">
+                <ul className="space-y-2 text-[11px] text-slate-700 dark:text-gray-300">
                   <li className="flex items-start gap-2">
-                    <span className="text-cyber-crimson font-bold mt-0.5">•</span>
+                    <span className="text-rose-600 dark:text-cyber-crimson font-bold mt-0.5">•</span>
                     <span><strong>No Selling / Monetization:</strong> You may NOT sell, rent, license, or charge money/fees for this software in any form.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-cyber-crimson font-bold mt-0.5">•</span>
+                    <span className="text-rose-600 dark:text-cyber-crimson font-bold mt-0.5">•</span>
                     <span><strong>No Paid Course Bundling:</strong> You may NOT bundle ZeroBox into paid bootcamps, commercial academies, or paywalled services.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-cyber-crimson font-bold mt-0.5">•</span>
+                    <span className="text-rose-600 dark:text-cyber-crimson font-bold mt-0.5">•</span>
                     <span><strong>No Public Re-Publishing:</strong> You may NOT host public SaaS mirrors, re-publish, or claim authorship under another brand.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-cyber-crimson font-bold mt-0.5">•</span>
+                    <span className="text-rose-600 dark:text-cyber-crimson font-bold mt-0.5">•</span>
                     <span><strong>No Stripping Attribution:</strong> You may NOT remove Daniel Dayan's name, portfolio links, or copyright notices.</span>
                   </li>
                 </ul>
@@ -237,21 +237,21 @@ export const LicenseModal: React.FC = () => {
 
             {/* Full Legal Text Scrollable Box */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-[10px] text-cyber-muted uppercase tracking-wider">
+              <div className="flex items-center justify-between text-[10px] text-slate-600 dark:text-cyber-muted uppercase tracking-wider">
                 <div className="flex items-center gap-1.5 font-bold">
-                  <Terminal className="w-3 h-3 text-cyber-amber" />
+                  <Terminal className="w-3 h-3 text-amber-600 dark:text-cyber-amber" />
                   <span>COMPLETE LEGAL TEXT COVENANT</span>
                 </div>
 
                 <button
                   onClick={handleCopyLicense}
-                  className="flex items-center gap-1 px-2.5 py-1 rounded bg-cyber-card border border-cyber-border hover:border-cyber-amber text-cyber-muted hover:text-white transition-all"
+                  className="flex items-center gap-1 px-2.5 py-1 rounded bg-white dark:bg-cyber-card border border-slate-300 dark:border-cyber-border hover:border-amber-500 text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white transition-all"
                   title="Copy complete license text to clipboard"
                 >
                   {copied ? (
                     <>
-                      <Check className="w-3 h-3 text-cyber-emerald" />
-                      <span className="text-cyber-emerald font-bold">COPIED!</span>
+                      <Check className="w-3 h-3 text-emerald-600 dark:text-cyber-emerald" />
+                      <span className="text-emerald-700 dark:text-cyber-emerald font-bold">COPIED!</span>
                     </>
                   ) : (
                     <>
@@ -262,28 +262,28 @@ export const LicenseModal: React.FC = () => {
                 </button>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-black/60 border border-cyber-border/70 text-[10px] font-mono text-gray-400 overflow-x-auto max-h-44 scrollbar-thin select-all leading-relaxed whitespace-pre-wrap">
+              <div className="p-3.5 rounded-xl bg-slate-100 dark:bg-black/60 border border-slate-300 dark:border-cyber-border/70 text-[10px] font-mono text-slate-800 dark:text-gray-400 overflow-x-auto max-h-44 scrollbar-thin select-all leading-relaxed whitespace-pre-wrap">
                 {FULL_LICENSE_TEXT}
               </div>
             </div>
 
             {/* Direct Official Author Links */}
-            <div className="p-3 rounded-xl bg-[#080c14] border border-cyber-border/80 flex flex-wrap items-center justify-between gap-2 text-[11px]">
+            <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#080c14] border border-slate-200 dark:border-cyber-border/80 flex flex-wrap items-center justify-between gap-2 text-[11px]">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyber-emerald" />
-                <span className="text-gray-400">Official Author Verified Channels:</span>
+                <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-cyber-emerald" />
+                <span className="text-slate-600 dark:text-gray-400">Official Author Verified Channels:</span>
               </div>
               <div className="flex items-center gap-2">
                 <a
                   href={CREATOR_PROFILE_LINKS.portfolio}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-cyber-emerald hover:underline font-bold flex items-center gap-1"
+                  className="text-emerald-700 dark:text-cyber-emerald hover:underline font-bold flex items-center gap-1"
                 >
                   <span>Portfolio</span>
                   <ExternalLink className="w-3 h-3" />
                 </a>
-                <span className="text-cyber-border">•</span>
+                <span className="text-slate-300 dark:text-cyber-border">•</span>
                 <a
                   href={CREATOR_PROFILE_LINKS.linkedin}
                   target="_blank"
@@ -293,22 +293,22 @@ export const LicenseModal: React.FC = () => {
                   <span>LinkedIn</span>
                   <ExternalLink className="w-3 h-3" />
                 </a>
-                <span className="text-cyber-border">•</span>
+                <span className="text-slate-300 dark:text-cyber-border">•</span>
                 <a
                   href={CREATOR_PROFILE_LINKS.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white hover:underline font-bold flex items-center gap-1"
+                  className="text-slate-800 dark:text-white hover:underline font-bold flex items-center gap-1"
                 >
                   <span>GitHub</span>
                   <ExternalLink className="w-3 h-3" />
                 </a>
-                <span className="text-cyber-border">•</span>
+                <span className="text-slate-300 dark:text-cyber-border">•</span>
                 <a
                   href={CREATOR_PROFILE_LINKS.coffee}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#FFDD00] hover:underline font-bold flex items-center gap-1"
+                  className="text-amber-700 dark:text-[#FFDD00] hover:underline font-bold flex items-center gap-1"
                 >
                   <Coffee className="w-3 h-3" />
                   <span>Buy Me a Coffee</span>
@@ -319,23 +319,23 @@ export const LicenseModal: React.FC = () => {
           </div>
 
           {/* Footer Bar */}
-          <div className="px-5 py-3 bg-[#080c14] border-t border-cyber-border/80 flex items-center justify-between gap-3">
-            <span className="text-[10px] text-cyber-muted">
+          <div className="px-5 py-3 bg-slate-50 dark:bg-[#080c14] border-t border-slate-200 dark:border-cyber-border/80 flex items-center justify-between gap-3">
+            <span className="text-[10px] text-slate-500 dark:text-cyber-muted">
               Enforced by applicable national and international copyright law.
             </span>
 
             <div className="flex items-center gap-2">
               <button
                 onClick={handleCopyLicense}
-                className="px-3 py-1.5 rounded-lg text-xs font-bold bg-cyber-card hover:bg-cyber-card/80 text-gray-200 border border-cyber-border transition-all flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-cyber-card hover:bg-slate-100 dark:hover:bg-cyber-card/80 text-slate-800 dark:text-gray-200 border border-slate-300 dark:border-cyber-border transition-all flex items-center gap-1.5"
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-cyber-emerald" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-cyber-emerald" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>{copied ? 'Copied' : 'Copy License'}</span>
               </button>
 
               <button
                 onClick={() => setLicenseModalOpen(false)}
-                className="px-4 py-1.5 rounded-lg text-xs font-bold bg-cyber-amber hover:bg-cyber-amber/90 text-black shadow-[0_0_12px_rgba(245,158,11,0.3)] transition-all"
+                className="px-4 py-1.5 rounded-lg text-xs font-bold bg-amber-500 hover:bg-amber-400 text-black shadow-[0_0_12px_rgba(245,158,11,0.3)] transition-all"
               >
                 Understood & Agree
               </button>

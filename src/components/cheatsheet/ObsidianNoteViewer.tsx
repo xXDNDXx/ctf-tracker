@@ -1039,7 +1039,7 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
             <button
               type="button"
               onClick={handleCopyRawMarkdown}
-              className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded bg-black/60 border border-cyber-border text-cyber-muted hover:text-white hover:border-purple-400 text-xs font-semibold transition-all cursor-pointer"
+              className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded bg-slate-100 dark:bg-black/60 border border-slate-300 dark:border-cyber-border text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:border-purple-400 text-xs font-semibold transition-all cursor-pointer"
               title="Copy raw markdown to paste into your Obsidian vault"
             >
               {copiedId === 'raw-md-' + note.id ? (
@@ -1077,16 +1077,16 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
             <button
               type="button"
               onClick={() => setIsFullscreen((prev) => !prev)}
-              className="p-1.5 rounded-lg bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white hover:border-purple-400 transition-all cursor-pointer"
+              className="p-1.5 rounded-lg bg-slate-100 dark:bg-cyber-bg border border-slate-300 dark:border-cyber-border text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:border-purple-400 transition-all cursor-pointer"
               title={isFullscreen ? 'Restore window' : 'Fullscreen'}
             >
-              {isFullscreen ? <Minimize2 className="w-4 h-4 text-purple-400" /> : <Maximize2 className="w-4 h-4" />}
+              {isFullscreen ? <Minimize2 className="w-4 h-4 text-purple-600 dark:text-purple-400" /> : <Maximize2 className="w-4 h-4" />}
             </button>
 
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-lg bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white hover:border-rose-500/50 hover:bg-rose-950/30 transition-all cursor-pointer"
+              className="p-1.5 rounded-lg bg-slate-100 dark:bg-cyber-bg border border-slate-300 dark:border-cyber-border text-slate-700 dark:text-cyber-muted hover:text-rose-600 dark:hover:text-white hover:border-rose-400 dark:hover:border-rose-500/50 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-all cursor-pointer"
               title="Close note (Esc)"
             >
               <X className="w-4 h-4" />
@@ -1375,7 +1375,7 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-4 py-2 bg-cyber-bg/95 border-t border-purple-900/40 text-[11px] font-mono text-cyber-muted">
+        <div className="flex items-center justify-between px-4 py-2 bg-slate-50 dark:bg-cyber-bg/95 border-t border-slate-200 dark:border-purple-900/40 text-[11px] font-mono text-slate-600 dark:text-cyber-muted">
           <div className="flex items-center gap-3">
             <span>ID: {note.id}</span>
             <span className="hidden sm:inline">&middot;</span>
@@ -1386,7 +1386,7 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="text-purple-400 hover:text-white font-bold transition-colors cursor-pointer"
+              className="text-purple-700 dark:text-purple-400 hover:text-purple-900 dark:hover:text-white font-bold transition-colors cursor-pointer"
             >
               Close
             </button>

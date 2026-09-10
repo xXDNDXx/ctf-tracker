@@ -601,7 +601,7 @@ ${credsSection}
 
           <button
             onClick={() => setImportModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyber-card border border-cyber-cyan/40 hover:border-cyber-cyan text-cyber-cyan hover:bg-cyber-cyan/10 text-xs font-bold active:scale-[0.98] transition-all shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-50 dark:bg-cyber-card border border-cyan-300 dark:border-cyber-cyan/40 hover:border-cyan-500 dark:hover:border-cyber-cyan text-cyan-900 dark:text-cyber-cyan hover:bg-cyan-100 dark:hover:bg-cyber-cyan/10 text-xs font-bold active:scale-[0.98] transition-all shadow-sm"
             title="Import scans (Nmap, XML, Rustscan), markdown files, or sync machine data"
           >
             <Upload className="w-3.5 h-3.5" />
@@ -612,8 +612,8 @@ ${credsSection}
             onClick={handleQuickSync}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold transition-all shadow-sm ${
               syncSuccess
-                ? 'bg-cyber-emerald/20 border-cyber-emerald text-cyber-emerald'
-                : 'bg-cyber-card border-cyber-border hover:border-cyber-purple text-cyber-purple hover:bg-cyber-purple/10'
+                ? 'bg-emerald-100 dark:bg-cyber-emerald/20 border-emerald-400 dark:border-cyber-emerald text-emerald-900 dark:text-cyber-emerald'
+                : 'bg-slate-100 dark:bg-cyber-card border-slate-300 dark:border-cyber-border hover:border-purple-500 text-purple-900 dark:text-cyber-purple hover:bg-purple-50 dark:hover:bg-cyber-purple/10'
             }`}
             title="1-Click synchronize open ports, credentials, field notes, and CVEs into active writeup"
           >
@@ -623,7 +623,7 @@ ${credsSection}
 
           <button
             onClick={handleResetToTemplate}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white text-xs transition-colors"
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-cyber-bg border border-slate-300 dark:border-cyber-border text-slate-600 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white text-xs transition-colors"
             title="Reset to fresh pentest template"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -632,12 +632,12 @@ ${credsSection}
 
           <button
             onClick={handleCopyMarkdown}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-cyber-card border border-cyber-border hover:border-cyber-cyan text-white text-xs font-semibold transition-all"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-cyber-card border border-slate-300 dark:border-cyber-border hover:border-cyan-500 text-slate-900 dark:text-white text-xs font-semibold transition-all"
           >
             {copied ? (
               <>
-                <Check className="w-3.5 h-3.5 text-cyber-emerald" />
-                <span className="text-cyber-emerald">Copied!</span>
+                <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-cyber-emerald" />
+                <span className="text-emerald-700 dark:text-cyber-emerald font-bold">Copied!</span>
               </>
             ) : (
               <>
@@ -651,8 +651,8 @@ ${credsSection}
             onClick={() => setCptsDrawerOpen(prev => !prev)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold transition-all shadow-sm ${
               cptsDrawerOpen
-                ? 'bg-purple-500 text-black border-purple-400 shadow-purple-500/30'
-                : 'bg-purple-950/30 border-purple-500/40 text-purple-300 hover:bg-purple-900/40 hover:text-white'
+                ? 'bg-purple-600 dark:bg-purple-500 text-white dark:text-black border-purple-500 dark:border-purple-400 shadow-purple-500/30'
+                : 'bg-purple-100 dark:bg-purple-950/30 border-purple-300 dark:border-purple-500/40 text-purple-900 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-900/40 hover:text-purple-950 dark:hover:text-white'
             }`}
             title="Toggle Field Manual Quick Reference Drawer"
           >
@@ -665,16 +665,16 @@ ${credsSection}
               setCvssModalOpen(true);
               if (soundEnabled) playCyberSound('click');
             }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-950/30 border border-purple-500/40 text-purple-300 hover:bg-purple-900/40 hover:text-white text-xs font-bold transition-all shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-100 dark:bg-purple-950/30 border border-purple-300 dark:border-purple-500/40 text-purple-900 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-900/40 hover:text-purple-950 dark:hover:text-white text-xs font-bold transition-all shadow-sm"
             title="Calculate and Insert CVSS 3.1 Base Score & Vector String"
           >
-            <ShieldAlert className="w-3.5 h-3.5 text-purple-400" />
+            <ShieldAlert className="w-3.5 h-3.5 text-purple-700 dark:text-purple-400" />
             <span>+ CVSS 3.1</span>
           </button>
 
           <button
             onClick={() => setReportModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyber-card border border-cyber-cyan/40 hover:border-cyber-cyan text-cyber-cyan hover:bg-cyber-cyan/10 text-xs font-bold transition-all shadow-glow-cyan/20"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-50 dark:bg-cyber-card border border-cyan-300 dark:border-cyber-cyan/40 hover:border-cyan-500 dark:hover:border-cyber-cyan text-cyan-900 dark:text-cyber-cyan hover:bg-cyan-100 dark:hover:bg-cyber-cyan/10 text-xs font-bold transition-all shadow-sm"
             title="Generate print-ready Executive Penetration Testing Report"
           >
             <Printer className="w-3.5 h-3.5" />
@@ -705,7 +705,7 @@ ${credsSection}
                 updateMachine(selectedMachine.id, { writeupMarkdown: updated });
                 if (soundEnabled) playCyberSound('engage');
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyber-emerald/15 border border-cyber-emerald/40 hover:border-cyber-emerald text-cyber-emerald hover:bg-cyber-emerald hover:text-black text-xs font-bold transition-all shadow-sm"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-100 dark:bg-cyber-emerald/15 border border-emerald-300 dark:border-cyber-emerald/40 hover:border-emerald-500 text-emerald-900 dark:text-cyber-emerald hover:bg-emerald-600 hover:text-white dark:hover:bg-cyber-emerald dark:hover:text-black text-xs font-bold transition-all shadow-sm"
               title="Append official Hack The Box Walkthrough & Intelligence to this writeup"
             >
               <Sparkles className="w-3.5 h-3.5" />
@@ -725,14 +725,14 @@ ${credsSection}
 
       {/* Field Manual Quick Reference Drawer */}
       {cptsDrawerOpen && (
-        <div className="p-4 rounded-xl border border-purple-500/40 bg-cyber-card/95 shadow-2xl space-y-3 font-mono">
-          <div className="flex items-center justify-between border-b border-cyber-border pb-2.5">
+        <div className="p-4 rounded-xl border border-purple-300 dark:border-purple-500/40 bg-white dark:bg-cyber-card/95 shadow-2xl space-y-3 font-mono">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-cyber-border pb-2.5">
             <div className="flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-purple-400" />
-              <span className="font-bold text-white text-xs tracking-wider">
+              <BookOpen className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+              <span className="font-bold text-slate-900 dark:text-white text-xs tracking-wider">
                 TACTICAL INTEL // QUICK REFERENCE & INSERT
               </span>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono">
+              <span className="text-[10px] px-2 py-0.5 rounded bg-purple-100 dark:bg-purple-500/20 text-purple-900 dark:text-purple-300 border border-purple-200 dark:border-transparent font-mono">
                 {matchingNotes.length} MATCHES (MAX 20)
               </span>
             </div>
@@ -740,7 +740,7 @@ ${credsSection}
             <button
               type="button"
               onClick={() => setCptsDrawerOpen(false)}
-              className="p-1 rounded text-cyber-muted hover:text-white"
+              className="p-1 rounded text-slate-400 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white"
             >
               <X className="w-4 h-4" />
             </button>
@@ -748,7 +748,7 @@ ${credsSection}
 
           {/* Quick Search Bar */}
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-cyber-muted absolute left-3 top-2.5" />
+            <Search className="w-3.5 h-3.5 text-slate-400 dark:text-cyber-muted absolute left-3 top-2.5" />
             <input
               type="text"
               id="writeup-notes-search"
@@ -757,50 +757,50 @@ ${credsSection}
               value={cptsSearch}
               onChange={(e) => setCptsSearch(e.target.value)}
               placeholder="Search field manual notes & commands (e.g. kerberoast, suid, lfi, bloodhound)..."
-              className="w-full bg-cyber-bg border border-cyber-border rounded-lg pl-8 pr-3 py-1.5 text-xs text-white placeholder-cyber-muted focus:outline-none focus:border-purple-400"
+              className="w-full bg-slate-50 dark:bg-cyber-bg border border-slate-200 dark:border-cyber-border rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-cyber-muted focus:outline-none focus:border-purple-500"
             />
           </div>
 
           {/* Matching Notes Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-72 overflow-y-auto pr-1">
             {matchingNotes.length === 0 ? (
-              <div className="col-span-full p-4 text-center text-xs text-cyber-muted">
+              <div className="col-span-full p-4 text-center text-xs text-slate-500 dark:text-cyber-muted">
                 No matching field manual notes found.
               </div>
             ) : (
               matchingNotes.map((note) => (
                 <div
                   key={note.id}
-                  className="p-3 rounded-lg bg-cyber-bg border border-cyber-border hover:border-purple-500/50 transition-all space-y-2 flex flex-col justify-between"
+                  className="p-3 rounded-lg bg-slate-50 dark:bg-cyber-bg border border-slate-200 dark:border-cyber-border hover:border-purple-500/50 transition-all space-y-2 flex flex-col justify-between"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center justify-between gap-1">
-                      <span className="font-bold text-white text-xs truncate" title={note.title}>
+                      <span className="font-bold text-slate-900 dark:text-white text-xs truncate" title={note.title}>
                         {note.title}
                       </span>
-                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 flex-shrink-0 font-mono">
+                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-purple-100 dark:bg-purple-500/15 text-purple-900 dark:text-purple-300 border border-purple-200 dark:border-purple-500/30 flex-shrink-0 font-mono">
                         {note.difficulty}
                       </span>
                     </div>
-                    <div className="text-[10px] text-cyber-muted line-clamp-2">
+                    <div className="text-[10px] text-slate-500 dark:text-cyber-muted line-clamp-2">
                       {note.summary || note.subCategory}
                     </div>
                   </div>
 
                   {note.commands && note.commands.length > 0 && (
-                    <div className="p-1.5 rounded bg-black/50 border border-cyber-border/70 font-mono text-[10px] text-cyber-cyan truncate">
+                    <div className="p-1.5 rounded bg-slate-900 dark:bg-black/50 border border-slate-800 dark:border-cyber-border/70 font-mono text-[10px] text-cyan-300 dark:text-cyber-cyan truncate">
                       {interpolateCommand(note.commands[0], { ...globalVars, targetIp: selectedMachine?.ip || globalVars.targetIp })}
                     </div>
                   )}
 
-                  <div className="flex items-center justify-between gap-2 pt-1 border-t border-cyber-border/50">
-                    <span className="text-[9px] text-cyber-muted font-mono truncate">
+                  <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-200 dark:border-cyber-border/50">
+                    <span className="text-[9px] text-slate-500 dark:text-cyber-muted font-mono truncate">
                       {note.category}
                     </span>
                     <button
                       type="button"
                       onClick={() => handleInsertNote(note)}
-                      className="flex items-center gap-1 px-2.5 py-1 rounded bg-purple-500/20 hover:bg-purple-500 hover:text-black border border-purple-500/40 text-purple-300 text-[10px] font-bold transition-all"
+                      className="flex items-center gap-1 px-2.5 py-1 rounded bg-purple-100 dark:bg-purple-500/20 hover:bg-purple-600 hover:text-white dark:hover:bg-purple-500 dark:hover:text-black border border-purple-300 dark:border-purple-500/40 text-purple-900 dark:text-purple-300 text-[10px] font-bold transition-all"
                       title="Insert this note and commands into active writeup"
                     >
                       <Plus className="w-3 h-3" />
@@ -818,12 +818,12 @@ ${credsSection}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch min-h-[calc(100vh-250px)]">
         
         {/* Left Pane: Raw Markdown Editor */}
-        <div className="flex flex-col rounded-xl border border-cyber-border bg-cyber-card overflow-hidden shadow-lg relative">
-          <div className="flex items-center justify-between border-b border-cyber-border px-4 py-2.5 bg-cyber-bg/70 text-xs">
-            <span className="font-bold text-white flex items-center gap-2">
-              <Code className="w-4 h-4 text-cyber-cyan" /> RAW MARKDOWN (YAML & BODY)
+        <div className="flex flex-col rounded-xl border border-slate-200 dark:border-cyber-border bg-white dark:bg-cyber-card overflow-hidden shadow-lg relative">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-cyber-border px-4 py-2.5 bg-slate-50 dark:bg-cyber-bg/70 text-xs">
+            <span className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Code className="w-4 h-4 text-cyan-600 dark:text-cyber-cyan" /> RAW MARKDOWN (YAML & BODY)
             </span>
-            <span className="text-[10px] text-cyber-muted">
+            <span className="text-[10px] text-slate-500 dark:text-cyber-muted">
               {editorContent.length} chars · {editorContent.split('\n').length} lines
             </span>
           </div>
@@ -838,12 +838,12 @@ ${credsSection}
             onDrop={handleEditorDrop}
           >
             {isEditorDragging && (
-              <div className="absolute inset-0 bg-cyber-cyan/15 backdrop-blur-sm border-2 border-dashed border-cyber-cyan z-20 flex flex-col items-center justify-center pointer-events-none p-4 text-center">
-                <Upload className="w-8 h-8 text-cyber-cyan animate-bounce mb-2" />
-                <span className="text-white text-xs font-bold uppercase tracking-wider">
+              <div className="absolute inset-0 bg-cyan-500/10 dark:bg-cyber-cyan/15 backdrop-blur-sm border-2 border-dashed border-cyan-500 dark:border-cyber-cyan z-20 flex flex-col items-center justify-center pointer-events-none p-4 text-center">
+                <Upload className="w-8 h-8 text-cyan-600 dark:text-cyber-cyan animate-bounce mb-2" />
+                <span className="text-slate-900 dark:text-white text-xs font-bold uppercase tracking-wider">
                   Drop Scan (Nmap / XML / Rustscan) or Markdown File
                 </span>
-                <span className="text-cyber-muted text-[10px] mt-1">
+                <span className="text-slate-600 dark:text-cyber-muted text-[10px] mt-1">
                   Recon intelligence and notes will automatically parse and merge into this writeup
                 </span>
               </div>
@@ -857,24 +857,24 @@ ${credsSection}
               onChange={handleEditorChange}
               onBlur={handleEditorBlur}
               placeholder="Write your penetration testing report, paste scans, or drop files here..."
-              className="flex-1 w-full p-4 bg-cyber-bg text-cyber-text font-mono text-xs focus:outline-none resize-none leading-relaxed overflow-y-auto"
+              className="flex-1 w-full p-4 bg-slate-50 dark:bg-cyber-bg text-slate-900 dark:text-cyber-text font-mono text-xs focus:outline-none resize-none leading-relaxed overflow-y-auto"
               spellCheck={false}
             />
           </div>
         </div>
 
         {/* Right Pane: Live Rendered Preview */}
-        <div className="flex flex-col rounded-xl border border-cyber-border bg-cyber-card overflow-hidden shadow-lg">
-          <div className="flex items-center justify-between border-b border-cyber-border px-4 py-2.5 bg-cyber-bg/70 text-xs">
-            <span className="font-bold text-white flex items-center gap-2">
-              <Eye className="w-4 h-4 text-cyber-emerald" /> LIVE RENDERED PREVIEW
+        <div className="flex flex-col rounded-xl border border-slate-200 dark:border-cyber-border bg-white dark:bg-cyber-card overflow-hidden shadow-lg">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-cyber-border px-4 py-2.5 bg-slate-50 dark:bg-cyber-bg/70 text-xs">
+            <span className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Eye className="w-4 h-4 text-emerald-600 dark:text-cyber-emerald" /> LIVE RENDERED PREVIEW
             </span>
-            <span className="text-[10px] text-cyber-emerald font-semibold flex items-center gap-1">
+            <span className="text-[10px] text-emerald-700 dark:text-cyber-emerald font-semibold flex items-center gap-1">
               <BookOpen className="w-3 h-3" /> OBSIDIAN PREVIEW
             </span>
           </div>
 
-          <div className="flex-1 p-5 overflow-y-auto max-h-[calc(100vh-280px)] bg-cyber-card/40">
+          <div className="flex-1 p-5 overflow-y-auto max-h-[calc(100vh-280px)] bg-slate-50/50 dark:bg-cyber-card/40">
             {renderMarkdownPreview(editorContent)}
           </div>
         </div>
