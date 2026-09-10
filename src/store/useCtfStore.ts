@@ -117,7 +117,7 @@ interface CtfStoreState {
   
   // UI States
   appBrand: string;
-  activeTab: 'tracker' | 'cheatsheet' | 'field-manual' | 'writeup' | 'analytics' | 'methodology' | 'exam' | 'warroom';
+  activeTab: 'tracker' | 'cheatsheet' | 'field-manual' | 'writeup' | 'analytics' | 'methodology' | 'exam';
   viewMode: ViewMode;
   selectedMachineId: string | null;
   writeupMachineId: string | null;
@@ -141,7 +141,7 @@ interface CtfStoreState {
 
   // Actions
   setAppBrand: (brandId: string) => void;
-  setActiveTab: (tab: 'tracker' | 'cheatsheet' | 'field-manual' | 'writeup' | 'analytics' | 'methodology' | 'exam' | 'warroom') => void;
+  setActiveTab: (tab: 'tracker' | 'cheatsheet' | 'field-manual' | 'writeup' | 'analytics' | 'methodology' | 'exam') => void;
   setViewMode: (mode: ViewMode) => void;
   setSelectedMachineId: (id: string | null) => void;
   setWriteupMachineId: (id: string | null) => void;
@@ -240,11 +240,12 @@ interface CtfStoreState {
   currentProfileId: string;
   loadProfileData: (profileId: string) => void;
   saveProfileData: (profileId?: string) => void;
-  exportBackup: (options?: { redactSecrets?: boolean }) => string;
+  exportBackup: (options?: { redactSecrets?: boolean; scope?: 'all' | 'targets' | 'cheatsheets' | 'notes' }) => string;
   exportEncryptedBackup: (password: string) => Promise<Blob>;
   importBackup: (jsonStr: string) => boolean;
   importEncryptedBackup: (fileBuffer: ArrayBuffer, password: string) => Promise<boolean>;
   resetAllProgress: () => void;
+  panicWipeActiveSession: () => void;
 }
 
 const DEFAULT_GLOBAL_VARS: GlobalVariables = {
@@ -361,7 +362,7 @@ export const mergeMachinesWithCatalog = (storedMachines?: Machine[], userSolvesR
           map.set(catalogMachine.id, {
             ...catalogMachine,
             ...m,
-            status: m.status || 'unsolved',
+            status: mStatus,
             userFlag: m.userFlag,
             rootFlag: m.rootFlag,
             userPwnedAt: isFootholdOrAbove || hasUserFlag ? m.userPwnedAt : undefined,
@@ -546,6 +547,28 @@ export const createMachineStatusUpdate = (
   };
 };
 
+export const mergeCheatsheetsWithInitial = (storedCheatsheets?: CheatsheetCommand[]): CheatsheetCommand[] => {
+  const map = new Map<string, CheatsheetCommand>();
+  INITIAL_CHEATSHEET.forEach((c) => map.set(c.id, { ...c }));
+
+  if (Array.isArray(storedCheatsheets) && storedCheatsheets.length > 0) {
+    storedCheatsheets.forEach((c) => {
+      if (!c || typeof c !== 'object') return;
+      const initial = c.id ? map.get(c.id) : undefined;
+      if (initial) {
+        map.set(initial.id, {
+          ...initial,
+          isStarred: Boolean(c.isStarred),
+        });
+      } else if (c.isCustom) {
+        map.set(c.id, c);
+      }
+    });
+  }
+
+  return Array.from(map.values());
+};
+
 const initialProfileId = getInitialProfileId();
 const initialProfileData = loadInitialProfileData(initialProfileId);
 
@@ -555,7 +578,7 @@ export const useCtfStore = create<CtfStoreState>()(
       machines: mergeMachinesWithCatalog(initialProfileData?.machines, Boolean(initialProfileData?.userSolvesReset)),
       activeTargetId: initialProfileData?.activeTargetId || null,
       globalVars: initialProfileData?.globalVars || DEFAULT_GLOBAL_VARS,
-      cheatsheets: initialProfileData?.cheatsheets || INITIAL_CHEATSHEET,
+      cheatsheets: mergeCheatsheetsWithInitial(initialProfileData?.cheatsheets),
       activitySessions: initialProfileData?.activitySessions || [],
       currentProfileId: initialProfileId,
       customNotes: initialProfileData?.customNotes || [],
@@ -1297,9 +1320,11 @@ export const useCtfStore = create<CtfStoreState>()(
         get().saveProfileData(targetId);
       },
 
-      exportBackup: (options?: { redactSecrets?: boolean }) => {
+      exportBackup: (options?: { redactSecrets?: boolean; scope?: 'all' | 'targets' | 'cheatsheets' | 'notes' }) => {
         const state = get();
         const shouldRedact = options?.redactSecrets ?? true;
+        const scope = options?.scope || 'all';
+
         let exportMachines = state.machines;
         if (state.activeTargetId && state.activeTimerSeconds > 0) {
           exportMachines = state.machines.map((m) =>
@@ -1350,26 +1375,37 @@ export const useCtfStore = create<CtfStoreState>()(
           }));
         }
 
-        const exportData = {
-          version: '2.0.0',
+        const exportData: Record<string, any> = {
+          version: '2.1.0',
           exportedAt: new Date().toISOString(),
           isRedacted: shouldRedact,
-          machines: exportMachines,
-          globalVars: exportGlobalVars,
-          cheatsheets: state.cheatsheets,
-          activitySessions: state.activitySessions,
-          customNotes: state.customNotes,
-          deletedNoteIds: state.deletedNoteIds,
-          userSolvesReset: state.userSolvesReset,
-          userNotes: state.userNotes || [],
-          userWikilinkMap: state.userWikilinkMap || {},
+          scope,
         };
+
+        if (scope === 'all' || scope === 'targets') {
+          exportData.machines = exportMachines;
+          exportData.globalVars = exportGlobalVars;
+          exportData.userSolvesReset = state.userSolvesReset;
+          exportData.activitySessions = state.activitySessions;
+        }
+
+        if (scope === 'all' || scope === 'cheatsheets') {
+          exportData.cheatsheets = state.cheatsheets;
+          exportData.customNotes = state.customNotes;
+          exportData.deletedNoteIds = state.deletedNoteIds;
+        }
+
+        if (scope === 'all' || scope === 'notes') {
+          exportData.userNotes = state.userNotes || [];
+          exportData.userWikilinkMap = state.userWikilinkMap || {};
+        }
+
         return JSON.stringify(exportData, null, 2);
       },
 
       exportEncryptedBackup: async (password: string) => {
         // Mode B: Full Secure Backup - strictly unredacted, encrypted with AES-256-GCM + PBKDF2 (600k rounds)
-        const plainJson = get().exportBackup({ redactSecrets: false });
+        const plainJson = get().exportBackup({ redactSecrets: false, scope: 'all' });
         const encryptedBuffer = await encryptPayload(plainJson, password);
         return new Blob([encryptedBuffer], { type: 'application/octet-stream' });
       },
@@ -1379,49 +1415,68 @@ export const useCtfStore = create<CtfStoreState>()(
           const data = JSON.parse(jsonStr);
           if (!data || typeof data !== 'object' || Array.isArray(data)) return false;
 
-          const rawMachines = Array.isArray(data.machines) ? data.machines : null;
-          if (rawMachines) {
-            // Strict Schema Validation: ensure entries are valid machine objects with string IDs
-            const validMachines = rawMachines.filter((m: any) => {
-              return m && typeof m === 'object' && typeof m.id === 'string' && m.id.trim().length > 0;
-            });
-            if (validMachines.length === 0) return false;
+          const scope = data.scope || 'all';
 
-            const userSolvesReset = Boolean(data.userSolvesReset);
-            const normalizedMachines = mergeMachinesWithCatalog(
-              validMachines.map((m: any) => ({
-                ...m,
-                id: String(m.id).trim(),
-                name: typeof m.name === 'string' ? m.name : 'Unknown Target',
-                platform: (m.platform === 'HTB' || m.platform === 'THM' || m.platform === 'Other') ? m.platform : 'Other',
-                tags: Array.isArray(m?.tags) ? m.tags.filter((t: any) => typeof t === 'string') : [],
-                openPorts: Array.isArray(m?.openPorts) ? m.openPorts.map((p: any) => parseInt(p, 10)).filter((p: number) => !isNaN(p) && p >= 1 && p <= 65535) : [],
-                checklist: m?.checklist && typeof m.checklist === 'object' ? m.checklist : {},
-                credentials: Array.isArray(m?.credentials) ? m.credentials.filter((c: any) => c && typeof c === 'object' && typeof c.id === 'string') : [],
-              })),
-              userSolvesReset
-            );
+          // 1. Targets & Machines Scope
+          if (scope === 'all' || scope === 'targets' || Array.isArray(data.machines)) {
+            const rawMachines = Array.isArray(data.machines) ? data.machines : null;
+            if (rawMachines && rawMachines.length > 0) {
+              const validMachines = rawMachines.filter((m: any) => {
+                return m && typeof m === 'object' && typeof m.id === 'string' && m.id.trim().length > 0;
+              });
+              if (validMachines.length > 0) {
+                const userSolvesReset = data.userSolvesReset !== undefined ? Boolean(data.userSolvesReset) : get().userSolvesReset;
+                const normalizedMachines = mergeMachinesWithCatalog(
+                  validMachines.map((m: any) => ({
+                    ...m,
+                    id: String(m.id).trim(),
+                    name: typeof m.name === 'string' ? m.name : 'Unknown Target',
+                    platform: (m.platform === 'HTB' || m.platform === 'THM' || m.platform === 'Other') ? m.platform : 'Other',
+                    tags: Array.isArray(m?.tags) ? m.tags.filter((t: any) => typeof t === 'string') : [],
+                    openPorts: Array.isArray(m?.openPorts) ? m.openPorts.map((p: any) => parseInt(p, 10)).filter((p: number) => !isNaN(p) && p >= 1 && p <= 65535) : [],
+                    checklist: m?.checklist && typeof m.checklist === 'object' ? m.checklist : {},
+                    credentials: Array.isArray(m?.credentials) ? m.credentials.filter((c: any) => c && typeof c === 'object' && typeof c.id === 'string') : [],
+                  })),
+                  userSolvesReset
+                );
+                set(() => ({
+                  machines: normalizedMachines,
+                  userSolvesReset,
+                  ...(data.globalVars && typeof data.globalVars === 'object' ? { globalVars: data.globalVars } : {}),
+                  ...(Array.isArray(data.activitySessions) ? { activitySessions: data.activitySessions } : {}),
+                }));
+              }
+            }
+          }
+
+          // 2. Cheatsheets & Custom Notes Scope
+          if (scope === 'all' || scope === 'cheatsheets') {
+            if (Array.isArray(data.cheatsheets) || Array.isArray(data.customNotes) || Array.isArray(data.deletedNoteIds)) {
+              set((state) => ({
+                ...(Array.isArray(data.cheatsheets) ? { cheatsheets: data.cheatsheets } : {}),
+                ...(Array.isArray(data.customNotes) ? { customNotes: data.customNotes } : {}),
+                ...(Array.isArray(data.deletedNoteIds) ? { deletedNoteIds: data.deletedNoteIds } : {}),
+              }));
+            }
+          }
+
+          // 3. Obsidian Vault User Notes Scope
+          if (scope === 'all' || scope === 'notes') {
             const importedUserNotes = Array.isArray(data.userNotes) ? data.userNotes : undefined;
             const importedWikilinks = (data.userWikilinkMap && typeof data.userWikilinkMap === 'object') ? data.userWikilinkMap : undefined;
-
-            set((state) => ({
-              machines: normalizedMachines,
-              globalVars: (data.globalVars && typeof data.globalVars === 'object') ? data.globalVars : state.globalVars,
-              cheatsheets: Array.isArray(data.cheatsheets) ? data.cheatsheets : state.cheatsheets,
-              activitySessions: Array.isArray(data.activitySessions) ? data.activitySessions : state.activitySessions,
-              customNotes: Array.isArray(data.customNotes) ? data.customNotes : state.customNotes,
-              deletedNoteIds: Array.isArray(data.deletedNoteIds) ? data.deletedNoteIds : state.deletedNoteIds,
-              userSolvesReset,
-              ...(importedUserNotes !== undefined ? { userNotes: importedUserNotes } : {}),
-              ...(importedWikilinks !== undefined ? { userWikilinkMap: importedWikilinks } : {}),
-            }));
-            if (importedUserNotes) {
-              saveVaultToIndexedDb({ notes: importedUserNotes, wikilinkMap: importedWikilinks || {} });
+            if (importedUserNotes !== undefined || importedWikilinks !== undefined) {
+              set(() => ({
+                ...(importedUserNotes !== undefined ? { userNotes: importedUserNotes } : {}),
+                ...(importedWikilinks !== undefined ? { userWikilinkMap: importedWikilinks } : {}),
+              }));
+              if (importedUserNotes) {
+                saveVaultToIndexedDb({ notes: importedUserNotes, wikilinkMap: importedWikilinks || {} });
+              }
             }
-            get().saveProfileData();
-            return true;
           }
-          return false;
+
+          get().saveProfileData();
+          return true;
         } catch (e) {
           console.error('Failed to parse backup JSON:', e);
           return false;
@@ -1449,7 +1504,7 @@ export const useCtfStore = create<CtfStoreState>()(
               machines: mergeMachinesWithCatalog(data.machines, userSolvesReset),
               activeTargetId: data.activeTargetId || null,
               globalVars: data.globalVars || DEFAULT_GLOBAL_VARS,
-              cheatsheets: data.cheatsheets || INITIAL_CHEATSHEET,
+              cheatsheets: mergeCheatsheetsWithInitial(data.cheatsheets),
               activitySessions: Array.isArray(data.activitySessions) ? data.activitySessions : [],
               customNotes: Array.isArray(data.customNotes) ? data.customNotes : [],
               deletedNoteIds: Array.isArray(data.deletedNoteIds) ? data.deletedNoteIds : [],
@@ -1552,6 +1607,19 @@ export const useCtfStore = create<CtfStoreState>()(
           userSolvesReset: false,
         }));
         get().saveProfileData(targetId);
+      },
+
+      panicWipeActiveSession: () => {
+        set(() => ({
+          activeTargetId: null,
+          isTimerRunning: false,
+          activeTimerSeconds: 0,
+          globalVars: {
+            ...DEFAULT_GLOBAL_VARS,
+            customVars: {},
+          },
+        }));
+        get().saveProfileData();
       }
     }),
     {
@@ -1570,6 +1638,7 @@ export const useCtfStore = create<CtfStoreState>()(
           userSolvesReset,
           customNotes: state.customNotes || [],
           deletedNoteIds: state.deletedNoteIds || [],
+          cheatsheets: mergeCheatsheetsWithInitial(state.cheatsheets),
           machines: mergeMachinesWithCatalog(state.machines, userSolvesReset),
         };
       },
@@ -1586,6 +1655,7 @@ export const useCtfStore = create<CtfStoreState>()(
           userSolvesReset,
           customNotes: persisted.customNotes || [],
           deletedNoteIds: persisted.deletedNoteIds || [],
+          cheatsheets: mergeCheatsheetsWithInitial(persisted.cheatsheets),
           machines: mergeMachinesWithCatalog(persisted.machines, userSolvesReset),
         };
       },

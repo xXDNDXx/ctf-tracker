@@ -324,6 +324,15 @@ export const INITIAL_CHEATSHEET: CheatsheetCommand[] = [
 
   // =================== 06. PIVOTING & TUNNELING ===================
   {
+    id: 'pivoting-matrix-tool',
+    title: 'Pivoting & Tunneling Matrix Deck',
+    category: 'pivoting',
+    description: 'Configure Ligolo-ng layer-3 TUN routes, Chisel reverse SOCKS5 proxies, multi-hop SSH tunnels, and Windows Netsh portproxy with 1-click execution commands.',
+    commandTemplate: '# Launch Matrix Deck modal for interactive Ligolo-ng, Chisel, and SSH command generation',
+    tags: ['pivoting', 'matrix', 'ligolo', 'chisel', 'tunnel', 'proxy'],
+    platform: 'Both'
+  },
+  {
     id: 'chisel-server',
     title: 'Chisel Attacker Reverse Tunnel Server',
     category: 'pivoting',
@@ -510,43 +519,7 @@ export const INITIAL_CHEATSHEET: CheatsheetCommand[] = [
     platform: 'Linux'
   },
 
-  // =================== ADDITIONAL EXPLOITATION & CRACKING ===================
-  {
-    id: 'hashcat-ntlm',
-    title: 'Hashcat NTLM Hashes (Mode 1000)',
-    category: 'exploitation',
-    description: 'High-speed GPU cracking of Windows NTLM hashes dumped from SAM or NTDS.dit.',
-    commandTemplate: 'hashcat -m 1000 ntlm.hashes /usr/share/wordlists/rockyou.txt -O',
-    tags: ['hashcat', 'ntlm', 'cracking', 'windows'],
-    platform: 'Both'
-  },
-  {
-    id: 'hashcat-sha512',
-    title: 'Hashcat Linux /etc/shadow Hashes (Mode 1800)',
-    category: 'exploitation',
-    description: 'Crack SHA512crypt ($6$) passwords dumped from Linux /etc/shadow.',
-    commandTemplate: 'hashcat -m 1800 shadow.hashes /usr/share/wordlists/rockyou.txt -O',
-    tags: ['hashcat', 'shadow', 'sha512', 'linux'],
-    platform: 'Linux'
-  },
-  {
-    id: 'hashcat-kerberoast',
-    title: 'Hashcat Kerberos 5 TGS (Mode 13100)',
-    category: 'exploitation',
-    description: 'Crack Kerberoasted Service Principal Name tickets to reveal service account passwords.',
-    commandTemplate: 'hashcat -m 13100 kerberoast.hashes /usr/share/wordlists/rockyou.txt -O',
-    tags: ['hashcat', 'kerberoast', 'tgs', 'active-directory'],
-    platform: 'Both'
-  },
-  {
-    id: 'hashcat-asrep',
-    title: 'Hashcat Kerberos 5 AS-REP (Mode 18200)',
-    category: 'exploitation',
-    description: 'Crack AS-REP hashes captured for accounts with Kerberos preauthentication disabled.',
-    commandTemplate: 'hashcat -m 18200 asrep.hashes /usr/share/wordlists/rockyou.txt -O',
-    tags: ['hashcat', 'asrep', 'kerberos', 'active-directory'],
-    platform: 'Both'
-  },
+  // =================== ADDITIONAL EXPLOITATION & BRUTE-FORCE ===================
   {
     id: 'hydra-ssh',
     title: 'Hydra Multi-Threaded SSH Brute Force',
@@ -809,6 +782,15 @@ export const INITIAL_CHEATSHEET: CheatsheetCommand[] = [
   },
 
   // =================== 08. PASSWORD & HASH CRACKING ===================
+  {
+    id: 'hashforge-tool',
+    title: 'HashForge · Tactical Hash Identifier & Syntax Crafter',
+    category: 'cracking',
+    description: 'Instantly identify unknown hashes (NTLM, Kerberoast, Shadow $6$, NetNTLMv2, bcrypt) and craft ready-to-run Hashcat (-m, -a 0, rules) & John the Ripper commands with zero external API dependencies.',
+    commandTemplate: 'hashcat -m [MODE] -a 0 hashes.txt /usr/share/wordlists/rockyou.txt',
+    tags: ['hashforge', 'hashcat', 'john', 'cracking', 'hashes', 'identifier'],
+    platform: 'Both'
+  },
   {
     id: 'hashcat-ntlm-rockyou',
     title: 'Hashcat NTLM Dictionary Crack (Mode 1000)',

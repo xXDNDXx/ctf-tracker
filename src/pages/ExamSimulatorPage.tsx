@@ -601,7 +601,7 @@ export const ExamSimulatorPage: React.FC = () => {
                             <Flag className="w-3.5 h-3.5" />
                             USER PROOF (local.txt)
                           </span>
-                          {box.userProof.flagText && (
+                          {box.userProof?.flagText && (
                             <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold uppercase ${
                               userVal.valid ? 'bg-emerald-100 dark:bg-cyber-emerald/20 text-emerald-900 dark:text-cyber-emerald border border-emerald-300 dark:border-cyber-emerald/40' : 'bg-red-100 dark:bg-red-950 text-red-900 dark:text-red-400 border border-red-300 dark:border-red-800'
                             }`}>
@@ -676,7 +676,7 @@ export const ExamSimulatorPage: React.FC = () => {
                             <Trophy className="w-3.5 h-3.5" />
                             ROOT / SYSTEM PROOF (proof.txt)
                           </span>
-                          {box.rootProof.flagText && (
+                          {box.rootProof?.flagText && (
                             <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold uppercase ${
                               rootVal.valid ? 'bg-emerald-100 dark:bg-cyber-emerald/20 text-emerald-900 dark:text-cyber-emerald border border-emerald-300 dark:border-cyber-emerald/40' : 'bg-red-100 dark:bg-red-950 text-red-900 dark:text-red-400 border border-red-300 dark:border-red-800'
                             }`}>

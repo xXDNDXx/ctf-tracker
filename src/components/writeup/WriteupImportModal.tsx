@@ -235,7 +235,7 @@ export const WriteupImportModal: React.FC<WriteupImportModalProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white font-mono">
-                  IMPORT STUFF INTO WRITEUP
+                  IMPORT SCAN & WRITEUP INTEL
                 </h2>
                 <span className="text-[10px] px-2 py-0.5 rounded-full font-mono font-bold bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 border border-purple-300 dark:border-purple-800">
                   {machine.name}

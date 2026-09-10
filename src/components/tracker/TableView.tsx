@@ -158,7 +158,7 @@ export const TableView: React.FC<TableViewProps> = ({ filteredMachines }) => {
       transition={{ duration: 0.3 }}
       className="rounded-xl border border-cyber-border bg-cyber-card overflow-hidden shadow-xl font-mono text-xs pb-6"
     >
-      <div className="overflow-x-auto max-h-[calc(100vh-230px)]">
+      <div className="overflow-x-auto max-h-[calc(100vh-230px)] overscroll-contain">
         <table className="w-full min-w-[820px] text-left border-collapse">
           <thead className="sticky top-0 z-10 bg-cyber-bg border-b border-cyber-border uppercase text-[10px] text-cyber-muted font-bold tracking-wider">
             <tr>
@@ -212,7 +212,6 @@ export const TableView: React.FC<TableViewProps> = ({ filteredMachines }) => {
               return (
                 <tr
                   key={m.id}
-                  style={{ contentVisibility: 'auto', containIntrinsicSize: '0 48px' }}
                   className={`hover:bg-cyber-cardHover transition-colors duration-150 group cursor-pointer ${
                     isActiveTarget ? 'bg-cyber-emerald/5 border-l-2 border-l-cyber-emerald' : ''
                   }`}

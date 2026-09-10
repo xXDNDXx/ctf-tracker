@@ -1,33 +1,27 @@
-import React, { useEffect } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { useWorkspaceScroll } from '../../context/ScrollContext';
 
 export const ScrollProgressBar: React.FC = () => {
   const { scrollProgress, isScrolled } = useWorkspaceScroll();
-  const motionProgress = useMotionValue(0);
-  const smoothProgress = useSpring(motionProgress, { stiffness: 350, damping: 30 });
-
-  useEffect(() => {
-    motionProgress.set(scrollProgress);
-  }, [scrollProgress, motionProgress]);
 
   return (
     <>
       {/* Top Cyber Laser Progress Track */}
       <div className="fixed top-0 left-0 right-0 z-50 h-[3px] bg-cyber-bg/80 border-b border-cyber-border/30 pointer-events-none">
-        <motion.div
-          className="h-full bg-gradient-to-r from-cyber-emerald via-cyber-cyan to-cyber-purple relative"
+        <div
+          className="h-full bg-gradient-to-r from-cyber-emerald via-cyber-cyan to-cyber-purple relative will-change-transform transform-gpu transition-transform duration-75 ease-out"
           style={{ 
-            scaleX: smoothProgress,
+            transform: `scaleX(${scrollProgress})`,
             transformOrigin: 'left',
             boxShadow: '0 0 12px #06B6D4, 0 0 24px #10B981'
           }}
         >
           {/* Leading Spark Laser Head */}
           {scrollProgress > 0.01 && (
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-[0_0_15px_#fff,0_0_25px_#06B6D4] animate-pulse pointer-events-none" />
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-[0_0_15px_#fff,0_0_25px_#06B6D4] pointer-events-none" />
           )}
-        </motion.div>
+        </div>
       </div>
 
       {/* Subtle Scroll Percentage HUD in Header Right */}

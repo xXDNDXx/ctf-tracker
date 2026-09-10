@@ -169,11 +169,14 @@ export const ReconAutomationModal: React.FC = () => {
     }
 
     // 2. If opened from dedicated /target/:id page
-    if (typeof window !== 'undefined' && window.location.pathname.startsWith('/target/')) {
-      const routeId = window.location.pathname.split('/target/')[1]?.split('/')[0]?.split('?')[0];
-      if (routeId && machines.some((m) => m.id === routeId)) {
-        setTargetMachineId(routeId);
-        return;
+    if (typeof window !== 'undefined') {
+      const pathOrHash = window.location.hash || window.location.pathname;
+      if (pathOrHash.includes('/target/')) {
+        const routeId = pathOrHash.split('/target/')[1]?.split('/')[0]?.split('?')[0];
+        if (routeId && machines.some((m) => m.id === routeId)) {
+          setTargetMachineId(routeId);
+          return;
+        }
       }
     }
 

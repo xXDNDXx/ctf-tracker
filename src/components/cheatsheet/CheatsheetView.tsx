@@ -48,6 +48,7 @@ import {
   getCategoryTopicGroups,
   parseSubCategory,
   searchCptsNotes,
+  getNoteSearchSnippet,
   getNoteById,
   buildCptsFileTree,
   getAllNotesInTreeNode,
@@ -82,6 +83,7 @@ const SNIPPET_CATEGORIES: CyberSelectOption[] = [
   { value: 'active-directory', label: '05. Windows & Active Directory' },
   { value: 'pivoting', label: '06. Pivoting & Tunneling' },
   { value: 'file-transfer', label: '07. File Transfers' },
+  { value: 'cracking', label: '08. Password & Hash Cracking' },
 ];
 
 export type CptsLanguageMode = 'en' | 'he';
@@ -410,7 +412,9 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
         if (!cmd.isStarred) return false;
       } else if (selectedCategory === 'custom') {
         if (!cmd.isCustom) return false;
-      } else if (selectedCategory !== 'all' && selectedCategory !== 'revshell') {
+      } else if (selectedCategory === 'revshell') {
+        return false;
+      } else if (selectedCategory !== 'all') {
         if (cmd.category !== selectedCategory) return false;
       }
 
@@ -468,6 +472,11 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
           catNorm.startsWith(normalizedSelected)
         );
       });
+    }
+
+    // Preserve relevance ranking scored by searchCptsNotes during active search
+    if (deferredSearchQuery.trim()) {
+      return pool;
     }
 
     if (cptsSortOrder === 'number') {
@@ -846,19 +855,36 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
               <>
                 {CHEATSHEET_CATEGORIES.map((cat) => {
                   const isSelected = selectedCategory === cat.id;
+                  let count = 0;
+                  if (cat.id === 'all') {
+                    count = cheatsheets.length;
+                  } else if (cat.id === 'revshell') {
+                    count = 131;
+                  } else if (cat.id === 'custom') {
+                    count = cheatsheets.filter((c) => c.isCustom).length;
+                  } else {
+                    count = cheatsheets.filter((c) => c.category === cat.id).length;
+                  }
                   return (
                     <motion.button
                       whileHover={{ x: 3 }}
                       whileTap={{ scale: 0.98 }}
                       key={cat.id}
                       onClick={() => setSelectedCategory(cat.id)}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-all text-left relative select-none ${
+                      className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-all text-left relative select-none cursor-pointer ${
                         isSelected
                           ? 'bg-cyan-50 dark:bg-cyan-500/15 text-cyan-900 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-500/40 font-bold shadow-sm'
                           : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 border border-transparent'
                       }`}
                     >
                       <span className="truncate">{cat.name}</span>
+                      <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded border ${
+                        isSelected
+                          ? 'bg-cyan-500/20 text-cyan-900 dark:text-cyan-300 border-cyan-400/40 font-bold'
+                          : 'bg-slate-200 dark:bg-black/40 text-slate-600 dark:text-cyber-muted border-slate-300 dark:border-cyber-border'
+                      }`}>
+                        {count}
+                      </span>
                     </motion.button>
                   );
                 })}
@@ -868,14 +894,19 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                     whileHover={{ x: 3 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setSelectedCategory('starred')}
-                    className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-all text-left select-none ${
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-all text-left select-none cursor-pointer ${
                       selectedCategory === 'starred'
                         ? 'bg-amber-50 dark:bg-amber-500/15 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40 font-bold shadow-sm'
                         : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 border border-transparent'
                     }`}
                   >
-                    <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                    <span>Bookmarked / Starred</span>
+                    <div className="flex items-center gap-2">
+                      <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                      <span>Bookmarked / Starred</span>
+                    </div>
+                    <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-200 dark:bg-black/40 border border-slate-300 dark:border-cyber-border text-amber-900 dark:text-amber-300 font-bold">
+                      {cheatsheets.filter((c) => c.isStarred).length}
+                    </span>
                   </motion.button>
                 </div>
               </>
@@ -967,6 +998,18 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                         <button
                           type="button"
                           onClick={() => {
+                            if (soundEnabled) playCyberSound('flag');
+                            handleLoadSampleNotes();
+                          }}
+                          className="w-full py-1.5 px-2.5 rounded bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-bold text-[10px] transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+                          title="Load 43+ built-in offensive playbooks into local browser cache"
+                        >
+                          <Sparkles className="w-3 h-3 text-amber-300 animate-pulse" />
+                          <span>Load Built-in Notes (43)</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
                             if (soundEnabled) playCyberSound('click');
                             setNotesImportModalOpen(true);
                           }}
@@ -1037,151 +1080,192 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
         <div className="lg:col-span-3 space-y-4">
           
           {/* SEARCH & REVSHELL SWITCHER */}
-          <div className="flex items-center gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-2.5 w-4 h-4 text-cyber-muted" />
-              <input
-                type="text"
-                id="cheatsheet-search-input"
-                name="cheatsheet-search"
-                aria-label="Search cheatsheets and field manual notes"
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCptsLimit(30);
-                }}
-                placeholder={
-                  viewMode === 'tactical'
-                    ? 'Search commands, flags, tools (e.g. nmap, ffuf, bloodhound, impacket)...'
-                    : allActiveNotes.length > 0
-                    ? `Search ${allActiveNotes.length} field manual notes, tags, summaries, and commands (e.g. kerberoast, suid, bloodhound)...`
-                    : 'Search field manual notes and commands...'
-                }
-                className="w-full pl-9 pr-4 py-2 bg-white dark:bg-cyber-card border border-slate-300 dark:border-cyber-border rounded-lg text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder-cyber-muted focus:outline-none focus:border-cyan-500 transition-all shadow-sm"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-2.5 text-xs text-cyber-muted hover:text-white"
-                >
-                  ✕
-                </button>
+          {!(viewMode === 'tactical' && selectedCategory === 'revshell') && (
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-3">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-2.5 w-4 h-4 text-cyber-muted" />
+                  <input
+                    type="text"
+                    id="cheatsheet-search-input"
+                    name="cheatsheet-search"
+                    aria-label="Search cheatsheets and field manual notes"
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setCptsLimit(30);
+                    }}
+                    placeholder={
+                      viewMode === 'tactical'
+                        ? 'Search commands, flags, tools (e.g. nmap, ffuf, bloodhound, impacket)...'
+                        : allActiveNotes.length > 0
+                        ? `Search ${allActiveNotes.length} notes by keywords, tags, commands (e.g. nmap scan, kerberoast, suid, pass-the-hash)...`
+                        : 'Search field manual notes and commands...'
+                    }
+                    className="w-full pl-9 pr-20 py-2 bg-white dark:bg-cyber-card border border-slate-300 dark:border-cyber-border rounded-lg text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder-cyber-muted focus:outline-none focus:border-cyan-500 transition-all shadow-sm font-mono"
+                  />
+                  <div className="absolute right-3 top-2 flex items-center gap-1.5">
+                    {searchQuery ? (
+                      <button
+                        onClick={() => setSearchQuery('')}
+                        className="text-xs text-cyber-muted hover:text-white px-1.5 py-0.5 rounded hover:bg-slate-700/50 cursor-pointer"
+                        title="Clear search"
+                      >
+                        ✕
+                      </button>
+                    ) : (
+                      <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[9px] font-mono text-cyber-muted bg-slate-100 dark:bg-cyber-bg border border-slate-300 dark:border-cyber-border rounded" title="Press / to focus search">
+                        /
+                      </kbd>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Tactical Search Filter Pills (When in Field Manual Mode) */}
+              {viewMode === 'cpts-manual' && allActiveNotes.length > 0 && (
+                <div className="flex items-center justify-between gap-2 flex-wrap text-[11px] font-mono">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-cyber-muted text-[10px] uppercase font-bold flex items-center gap-1">
+                      <Filter className="w-3 h-3 text-purple-400" />
+                      <span>Quick:</span>
+                    </span>
+                    {[
+                      { label: 'Active Directory', query: 'Active Directory' },
+                      { label: 'Linux PrivEsc', query: 'Linux PrivEsc' },
+                      { label: 'Recon & Nmap', query: 'nmap' },
+                      { label: 'Web & Fuzzing', query: 'web' },
+                      { label: 'Kerberos', query: 'kerberos' },
+                      { label: 'Pivoting', query: 'pivoting' },
+                    ].map((chip) => {
+                      const isActive = searchQuery.toLowerCase() === chip.query.toLowerCase();
+                      return (
+                        <button
+                          key={chip.label}
+                          type="button"
+                          onClick={() => {
+                            if (soundEnabled) playCyberSound('click');
+                            setSearchQuery(isActive ? '' : chip.query);
+                            setCptsLimit(30);
+                          }}
+                          className={`px-2 py-0.5 rounded transition-all cursor-pointer ${
+                            isActive
+                              ? 'bg-purple-600 text-white font-bold shadow-sm'
+                              : 'bg-purple-50 dark:bg-purple-950/40 text-purple-900 dark:text-purple-300 border border-purple-200 dark:border-purple-800/40 hover:bg-purple-100 dark:hover:bg-purple-900/60'
+                          }`}
+                        >
+                          {chip.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {searchQuery.trim() && (
+                    <div className="text-[11px] font-mono text-purple-900 dark:text-purple-300 flex items-center gap-1.5 bg-purple-50 dark:bg-purple-950/40 px-2 py-0.5 rounded border border-purple-200 dark:border-purple-800/40">
+                      <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
+                      <span>Found <strong>{filteredCptsNotes.length}</strong> matching notes</span>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
-          </div>
+          )}
 
           {/* VIEW MODE 1: TACTICAL CHEATSHEETS */}
           {viewMode === 'tactical' && (
             <>
-              {/* DEDICATED REVERSE SHELL GENERATOR & PENTESTMONKEY ARSENAL */}
-              {(selectedCategory === 'all' || selectedCategory === 'revshell') && !searchQuery && (
+              {selectedCategory === 'revshell' ? (
+                /* DEDICATED CLEAN REVERSE SHELL GENERATOR - ISOLATED & SELF-CONTAINED ("ONLY HIM") */
                 <Suspense fallback={<ModuleSuspenseFallback message="Loading reverse shell generator & payload arsenal..." />}>
                   <ReverseShellGenerator />
                 </Suspense>
-              )}
+              ) : (
+                <>
+                  {/* COMMAND SNIPPETS LIST with Scroll Entrance */}
+                  <div className="space-y-3">
+                    {filteredCommands.length === 0 ? (
+                      <div className="p-8 text-center rounded-xl border border-dashed border-cyber-border bg-cyber-card/50 text-cyber-muted text-xs">
+                        No command snippets matching this query.
+                      </div>
+                    ) : (
+                      filteredCommands.map((cmd, idx) => {
+                        const interpolated = interpolateCommand(cmd.commandTemplate, globalVars);
+                        const isCopied = copiedId === cmd.id;
 
-              {/* DEDICATED INTERACTIVE PIVOTING & TUNNELING MATRIX BANNER */}
-              {(selectedCategory === 'all' || selectedCategory === 'pivoting') && !searchQuery && (
-                <div className="p-4 rounded-xl border border-purple-500/30 bg-gradient-to-r from-purple-500/10 via-cyan-500/10 to-emerald-500/10 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2 text-purple-700 dark:text-purple-300 font-bold text-sm">
-                      <Network className="w-4 h-4" />
-                      <span>OFFENSIVE PIVOTING & TUNNELING MATRIX DECK</span>
-                    </div>
-                    <p className="text-xs text-slate-600 dark:text-cyber-muted font-sans max-w-xl">
-                      Configure Ligolo-ng layer-3 TUN routes, Chisel reverse SOCKS5 proxies, multi-hop SSH tunnels, and Windows Netsh portproxy with 1-click execution commands.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setPivotingMatrixModalOpen(true);
-                      if (soundEnabled) playCyberSound('click');
-                    }}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-md transition-all whitespace-nowrap hover:scale-105 active:scale-95 flex-shrink-0"
-                  >
-                    <Network className="w-4 h-4" />
-                    <span>Launch Matrix Deck</span>
-                  </button>
-                </div>
-              )}
+                        return (
+                          <motion.div
+                            key={cmd.id}
+                            initial={{ opacity: 0, y: 15 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: '-30px' }}
+                            transition={{ duration: 0.25, delay: Math.min((idx % 10) * 0.04, 0.3) }}
+                            whileHover={{ y: -2 }}
+                            className="p-3.5 rounded-xl border border-cyber-border bg-cyber-card hover:border-cyber-cyan/40 hover:shadow-glow-cyan/15 transition-all shadow-sm group"
+                          >
+                            {/* Snippet Header */}
+                            <div className="flex items-start justify-between gap-2 mb-1.5">
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-cyber-cyan transition-colors">
+                                    {cmd.title}
+                                  </span>
+                                  {cmd.isCustom && (
+                                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyber-purple/10 border border-cyber-purple/30 text-cyber-purple font-semibold">
+                                      CUSTOM
+                                    </span>
+                                  )}
+                                  {cmd.platform && (
+                                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyber-bg border border-cyber-border text-cyber-muted">
+                                      {cmd.platform}
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-[11px] text-cyber-muted mt-0.5">{cmd.description}</p>
+                              </div>
 
-              {/* DEDICATED HASHFORGE HASH IDENTIFIER & CRACKING CRAFTER BANNER */}
-              {(selectedCategory === 'all' || selectedCategory === 'cracking') && !searchQuery && (
-                <div className="p-4 rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-red-500/10 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300 font-bold text-sm">
-                      <Hash className="w-4 h-4" />
-                      <span>HASHFORGE &middot; TACTICAL HASH IDENTIFIER & CRACKING SYNTAX</span>
-                    </div>
-                    <p className="text-xs text-slate-600 dark:text-cyber-muted font-sans max-w-xl">
-                      Instantly identify unknown hashes (NTLM, Kerberoast, Shadow $6$, NetNTLMv2, bcrypt) and craft ready-to-run Hashcat (-m, -a 0, rules) &amp; John the Ripper commands with zero external API dependencies.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setHashForgeModalOpen(true);
-                      if (soundEnabled) playCyberSound('click');
-                    }}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-xs shadow-md transition-all whitespace-nowrap hover:scale-105 active:scale-95 flex-shrink-0"
-                  >
-                    <Hash className="w-4 h-4" />
-                    <span>Launch HashForge</span>
-                  </button>
-                </div>
-              )}
+                              <div className="flex items-center gap-1.5">
+                                {/* Interactive Tool Launchers within the List */}
+                                {cmd.id === 'hashforge-tool' && (
+                                  <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    type="button"
+                                    onClick={() => {
+                                      setHashForgeModalOpen(true);
+                                      if (soundEnabled) playCyberSound('click');
+                                    }}
+                                    className="flex items-center gap-1 px-2.5 py-1 rounded bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-xs shadow-sm transition-all whitespace-nowrap active:scale-95 cursor-pointer"
+                                    title="Open HashForge Identifier & Syntax Generator"
+                                  >
+                                    <Hash className="w-3.5 h-3.5" />
+                                    <span>Launch HashForge</span>
+                                  </motion.button>
+                                )}
 
-              {/* COMMAND SNIPPETS LIST with Scroll Entrance */}
-              <div className="space-y-3">
-                {filteredCommands.length === 0 ? (
-                  <div className="p-8 text-center rounded-xl border border-dashed border-cyber-border bg-cyber-card/50 text-cyber-muted text-xs">
-                    No command snippets matching this query.
-                  </div>
-                ) : (
-                  filteredCommands.map((cmd, idx) => {
-                    const interpolated = interpolateCommand(cmd.commandTemplate, globalVars);
-                    const isCopied = copiedId === cmd.id;
+                                {cmd.id === 'pivoting-matrix-tool' && (
+                                  <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    type="button"
+                                    onClick={() => {
+                                      setPivotingMatrixModalOpen(true);
+                                      if (soundEnabled) playCyberSound('click');
+                                    }}
+                                    className="flex items-center gap-1 px-2.5 py-1 rounded bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-sm transition-all whitespace-nowrap active:scale-95 cursor-pointer"
+                                    title="Open Offensive Pivoting & Tunneling Matrix Deck"
+                                  >
+                                    <Network className="w-3.5 h-3.5" />
+                                    <span>Launch Matrix Deck</span>
+                                  </motion.button>
+                                )}
 
-                    return (
-                      <motion.div
-                        key={cmd.id}
-                        initial={{ opacity: 0, y: 15 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-30px' }}
-                        transition={{ duration: 0.25, delay: Math.min((idx % 10) * 0.04, 0.3) }}
-                        whileHover={{ y: -2 }}
-                        className="p-3.5 rounded-xl border border-cyber-border bg-cyber-card hover:border-cyber-cyan/40 hover:shadow-glow-cyan/15 transition-all shadow-sm group"
-                      >
-                        {/* Snippet Header */}
-                        <div className="flex items-start justify-between gap-2 mb-1.5">
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-cyber-cyan transition-colors">
-                                {cmd.title}
-                              </span>
-                              {cmd.isCustom && (
-                                <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyber-purple/10 border border-cyber-purple/30 text-cyber-purple font-semibold">
-                                  CUSTOM
-                                </span>
-                              )}
-                              {cmd.platform && (
-                                <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyber-bg border border-cyber-border text-cyber-muted">
-                                  {cmd.platform}
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-[11px] text-cyber-muted mt-0.5">{cmd.description}</p>
-                          </div>
-
-                          <div className="flex items-center gap-1.5">
-                            <motion.button
-                              whileHover={{ scale: 1.15 }}
-                              whileTap={{ scale: 0.9 }}
-                              onClick={() => toggleStarCommand(cmd.id)}
-                              className="p-1 rounded text-cyber-muted hover:text-cyber-amber transition-colors"
-                              title="Bookmark / Star Snippet"
-                            >
+                                <motion.button
+                                  whileHover={{ scale: 1.15 }}
+                                  whileTap={{ scale: 0.9 }}
+                                  onClick={() => toggleStarCommand(cmd.id)}
+                                  className="p-1 rounded text-cyber-muted hover:text-cyber-amber transition-colors cursor-pointer"
+                                  title="Bookmark / Star Snippet"
+                                >
                               <Star
                                 className={`w-3.5 h-3.5 ${
                                   cmd.isStarred ? 'fill-cyber-amber text-cyber-amber' : ''
@@ -1253,6 +1337,8 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
               </div>
             </>
           )}
+        </>
+      )}
 
           {/* VIEW MODE 2: CPTS FIELD MANUAL (HIERARCHICAL TOPIC NAVIGATION & ANTI-SCROLL MODES) */}
           {viewMode === 'cpts-manual' && (
@@ -1286,7 +1372,7 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                 <input
                   ref={inlineFileInputRef}
                   type="file"
-                  accept=".zip,.json"
+                  accept=".zip,.json,.md,.markdown"
                   onChange={handleInlineFileChange}
                   className="hidden"
                 />
@@ -1307,14 +1393,14 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                     YOUR PRIVATE OFFENSIVE FIELD MANUAL & OBSIDIAN VAULT
                   </h2>
                   <p className="text-xs text-slate-600 dark:text-cyber-muted max-w-xl mx-auto leading-relaxed">
-                    ZeroBox gives every operator full private control over their field notes. Import your Obsidian vault directly from a folder or .zip file into your local browser IndexedDB cache.
+                    ZeroBox gives every operator full private control over their field notes. Import your Obsidian vault directly from a folder or .zip file into your local browser IndexedDB cache, or load the built-in tactical playbooks.
                   </p>
                 </div>
 
                 {/* Drag-and-drop notice */}
                 <div className="p-3 rounded-lg border border-dashed border-purple-300 dark:border-purple-500/40 bg-purple-50/50 dark:bg-purple-950/20 text-xs text-purple-800 dark:text-purple-300 flex items-center justify-center gap-2">
                   <Archive className="w-4 h-4 text-purple-500" />
-                  <span>Drag & drop your <strong>Obsidian Vault folder</strong> or <strong>.ZIP archive</strong> directly onto this box!</span>
+                  <span>Drag & drop your <strong>Obsidian Vault folder</strong>, <strong>.ZIP archive</strong>, or <strong>.md files</strong> directly onto this box!</span>
                 </div>
 
                 {/* Inline Progress Bar */}
@@ -1361,7 +1447,19 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 pt-2">
+                  <button
+                    type="button"
+                    disabled={isInlineProcessing}
+                    onClick={handleLoadSampleNotes}
+                    className="p-4 rounded-xl border border-purple-400 dark:border-purple-400/60 bg-gradient-to-br from-purple-600/30 via-purple-500/15 to-cyan-500/20 hover:from-purple-600/40 hover:to-cyan-500/30 text-slate-900 dark:text-white font-mono text-xs font-bold transition-all shadow-md hover:shadow-purple-500/30 flex flex-col items-center justify-center gap-2 cursor-pointer group disabled:opacity-50 ring-1 ring-purple-400/40"
+                    title="Load 43+ curated offensive security playbooks directly into browser cache"
+                  >
+                    <Sparkles className="w-5 h-5 text-amber-400 group-hover:scale-110 transition-transform animate-pulse" />
+                    <span>Load Built-in Notes</span>
+                    <span className="text-[10px] text-purple-700 dark:text-purple-300 font-normal">43+ Tactical Playbooks</span>
+                  </button>
+
                   <button
                     type="button"
                     disabled={isInlineProcessing}
@@ -1386,8 +1484,8 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                     className="p-4 rounded-xl border border-cyan-300 dark:border-cyan-500/40 bg-cyan-50 dark:bg-cyan-950/20 hover:bg-cyan-100 dark:hover:bg-cyan-950/40 text-slate-900 dark:text-white font-mono text-xs font-bold transition-all shadow-md hover:shadow-cyan-500/20 flex flex-col items-center justify-center gap-2 cursor-pointer group disabled:opacity-50"
                   >
                     <Archive className="w-5 h-5 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform" />
-                    <span>Select .ZIP</span>
-                    <span className="text-[10px] text-cyan-700 dark:text-cyan-300 font-normal">Vault .zip archive</span>
+                    <span>Select .ZIP / .MD</span>
+                    <span className="text-[10px] text-cyan-700 dark:text-cyan-300 font-normal">Vault .zip or .md</span>
                   </button>
 
                   <button
@@ -2447,6 +2545,20 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
                                 </div>
                               )}
 
+                              {/* Search Match Snippet Preview (When query active) */}
+                              {deferredSearchQuery.trim() && (() => {
+                                const snip = getNoteSearchSnippet(note, deferredSearchQuery);
+                                if (!snip) return null;
+                                return (
+                                  <div className="flex items-center gap-1.5 text-[10.5px] font-mono bg-purple-950/60 border border-purple-500/40 px-2.5 py-1 rounded text-purple-200 shadow-xs">
+                                    <span className="text-[9px] uppercase font-bold px-1.5 py-0.2 rounded bg-purple-900/90 text-purple-300 border border-purple-700/50 flex-shrink-0">
+                                      Match: {snip.matchedField}
+                                    </span>
+                                    <span className="truncate flex-1 text-slate-200">{snip.snippet}</span>
+                                  </div>
+                                );
+                              })()}
+
                               {/* Tags */}
                               {note.tags && note.tags.length > 0 && (
                                 <div className="flex flex-wrap gap-1 pt-0.5">
@@ -2729,6 +2841,8 @@ export const CheatsheetView: React.FC<CheatsheetViewProps> = ({ defaultMode }) =
             note={activeObsidianNote}
             globalVars={globalVars}
             soundEnabled={soundEnabled}
+            notesPool={filteredCptsNotes.length > 0 ? filteredCptsNotes : allActiveNotes}
+            allNotes={allActiveNotes}
             onClose={() => setActiveObsidianNote(null)}
             onNavigateToNote={(noteId) => {
               const found = getNoteById(noteId);

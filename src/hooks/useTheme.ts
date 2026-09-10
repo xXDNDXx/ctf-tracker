@@ -37,13 +37,9 @@ export function getPrefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-export function applyThemeToDOM(effective: 'light' | 'dark', animate = true) {
+export function applyThemeToDOM(effective: 'light' | 'dark', _animate = false) {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
-
-  if (animate) {
-    root.classList.add('theme-transition');
-  }
 
   if (effective === 'dark') {
     root.classList.add('dark');
@@ -53,12 +49,6 @@ export function applyThemeToDOM(effective: 'light' | 'dark', animate = true) {
     root.classList.remove('dark');
     root.classList.add('light');
     root.style.colorScheme = 'light';
-  }
-
-  if (animate) {
-    window.setTimeout(() => {
-      root.classList.remove('theme-transition');
-    }, 250);
   }
 }
 
@@ -95,7 +85,7 @@ export function useThemeEngine(): ThemeContextValue {
       const newSys = e.matches ? 'dark' : 'light';
       setSystemTheme(newSys);
       if (theme === 'system') {
-        applyThemeToDOM(newSys, true);
+        applyThemeToDOM(newSys, false);
       }
     };
 
@@ -116,9 +106,10 @@ export function useThemeEngine(): ThemeContextValue {
   }, []);
 
   const setTheme = useCallback((mode: ThemeMode) => {
-    setThemeState(mode);
     const eff = mode === 'system' ? getSystemTheme() : mode;
-    applyThemeToDOM(eff, !getPrefersReducedMotion());
+    applyThemeToDOM(eff, false);
+    setThemeState(mode);
+
     try {
       localStorage.setItem(STORAGE_KEY, mode);
     } catch {
@@ -126,24 +117,22 @@ export function useThemeEngine(): ThemeContextValue {
     }
   }, []);
 
-  // Instant, buttery-smooth theme toggle with 0ms input lag
+  // Instantaneous, buttery-smooth theme toggle with zero main-thread freezing
   const toggleTheme = useCallback(
     (_event?: React.MouseEvent | React.KeyboardEvent) => {
       const nextIsDark = !isDark;
       const nextMode: ThemeMode = nextIsDark ? 'dark' : 'light';
 
-      // Immediately and synchronously update DOM classes to eliminate all input latency
-      applyThemeToDOM(nextMode, !prefersReducedMotion);
-
-      // Update state and persistence
+      applyThemeToDOM(nextMode, false);
       setThemeState(nextMode);
+
       try {
         localStorage.setItem(STORAGE_KEY, nextMode);
       } catch {
         // Ignore storage errors
       }
     },
-    [isDark, prefersReducedMotion]
+    [isDark]
   );
 
   return {

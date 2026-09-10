@@ -601,11 +601,11 @@ ${credsSection}
 
           <button
             onClick={() => setImportModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyber-card border border-cyber-cyan/40 hover:border-cyber-cyan text-cyber-cyan hover:bg-cyber-cyan/10 text-xs font-bold transition-all shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyber-card border border-cyber-cyan/40 hover:border-cyber-cyan text-cyber-cyan hover:bg-cyber-cyan/10 text-xs font-bold active:scale-[0.98] transition-all shadow-sm"
             title="Import scans (Nmap, XML, Rustscan), markdown files, or sync machine data"
           >
             <Upload className="w-3.5 h-3.5" />
-            <span>Import Stuff</span>
+            <span>Import Scan Intel</span>
           </button>
 
           <button

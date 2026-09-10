@@ -18,11 +18,57 @@ export interface AttackCommand {
 
 export interface HashCandidate {
   name: string;
-  category: 'Windows / AD' | 'Linux / Unix' | 'Web / Database' | 'Generic';
+  category: 'Windows / AD' | 'Linux / Unix' | 'Web / Database' | 'Archives & Keys' | 'Generic';
   hashcatMode: string;
   johnFormat: string;
   confidence: 'High' | 'Medium' | 'Low';
   notes?: string;
+  sampleSyntax?: string;
+}
+
+export interface CustomCrackOptions {
+  attackMode: '0' | '3' | '1' | '6';
+  wordlist: string;
+  mask: string;
+  rule: string;
+  optimized: boolean;
+  workload: string;
+  force: boolean;
+  status: boolean;
+  outputFile: string;
+}
+
+export const DEFAULT_CRACK_OPTIONS: CustomCrackOptions = {
+  attackMode: '0',
+  wordlist: '/usr/share/wordlists/rockyou.txt',
+  mask: '?u?l?l?l?d?d?d?d',
+  rule: '/usr/share/hashcat/rules/best64.rule',
+  optimized: true,
+  workload: '3',
+  force: false,
+  status: true,
+  outputFile: 'cracked.txt',
+};
+
+export interface BatchParsedHash {
+  rawLine: string;
+  username?: string;
+  domain?: string;
+  hash: string;
+  lmHash?: string;
+  type: string;
+  isLmBlank?: boolean;
+  notes?: string;
+}
+
+export interface BatchParseResult {
+  totalLines: number;
+  validItems: BatchParsedHash[];
+  uniqueHashes: string[];
+  cleanHashesText: string;
+  userHashText: string;
+  pthCommands: string[];
+  formatIdentified: string;
 }
 
 export interface HashCrackCommands {
@@ -41,8 +87,203 @@ export function escapeShellArg(val: string): string {
 }
 
 /**
- * Comprehensive HashForge Heuristic Identifier
- * Analyzes string patterns to identify algorithm, Hashcat mode, and John format.
+ * Dynamically construct tailored Hashcat & John commands for any candidate and options
+ */
+export function getCrackCommandsForCandidate(
+  candidate: HashCandidate,
+  rawHash: string,
+  options: CustomCrackOptions = DEFAULT_CRACK_OPTIONS
+): { hashcatCommands: { label: string; cmd: string }[]; johnCommands: { label: string; cmd: string }[] } {
+  const mode = candidate.hashcatMode;
+  const jFmt = candidate.johnFormat;
+  const h = (rawHash || '').trim();
+  const escapedHash = h ? escapeShellArg(h) : 'hashes.txt';
+
+  const wordlist = options.wordlist || '/usr/share/wordlists/rockyou.txt';
+  const mask = options.mask || '?u?l?l?l?d?d?d?d';
+  const optFlag = options.optimized ? ' -O' : '';
+  const workFlag = options.workload && options.workload !== 'none' ? ` -w ${options.workload}` : '';
+  const forceFlag = options.force ? ' --force' : '';
+  const statusFlag = options.status ? ' --status --status-timer=10' : '';
+  const outFlag = options.outputFile ? ` -o ${options.outputFile}` : '';
+  const extraFlags = `${optFlag}${workFlag}${forceFlag}${statusFlag}${outFlag}`;
+
+  const hashcatCommands = [
+    {
+      label: 'Standard RockYou Wordlist (-a 0)',
+      cmd: `hashcat -m ${mode} -a 0 ${h ? escapedHash : 'hashes.txt'} ${wordlist}${extraFlags}`,
+    },
+    {
+      label: 'RockYou + Best64 Mutation Rules',
+      cmd: `hashcat -m ${mode} -a 0 ${h ? escapedHash : 'hashes.txt'} ${wordlist} -r /usr/share/hashcat/rules/best64.rule${extraFlags}`,
+    },
+    {
+      label: `Mask / Brute-Force (${mask}) (-a 3)`,
+      cmd: `hashcat -m ${mode} -a 3 ${h ? escapedHash : 'hashes.txt'} ${mask}${extraFlags}`,
+    },
+    {
+      label: 'RockYou + OneRuleToRuleThemAll',
+      cmd: `hashcat -m ${mode} -a 0 ${h ? escapedHash : 'hashes.txt'} ${wordlist} -r /usr/share/hashcat/rules/OneRuleToRuleThemAll.rule${extraFlags}`,
+    },
+    {
+      label: 'Show Cracked Potfile Results (--show)',
+      cmd: `hashcat -m ${mode} ${h ? escapedHash : 'hashes.txt'} --show`,
+    },
+  ];
+
+  const johnCommands = [
+    {
+      label: 'John the Ripper (RockYou)',
+      cmd: `john --wordlist=${wordlist} --format=${jFmt} ${h ? 'hash.txt' : 'hashes.txt'}`,
+    },
+    {
+      label: 'John the Ripper (RockYou + Rules)',
+      cmd: `john --wordlist=${wordlist} --rules=Jumbo --format=${jFmt} ${h ? 'hash.txt' : 'hashes.txt'}`,
+    },
+    {
+      label: `John Mask Brute Force (${mask})`,
+      cmd: `john --mask='${mask}' --format=${jFmt} ${h ? 'hash.txt' : 'hashes.txt'}`,
+    },
+    {
+      label: 'John Show Cracked Passwords',
+      cmd: `john --format=${jFmt} --show ${h ? 'hash.txt' : 'hashes.txt'}`,
+    },
+  ];
+
+  return { hashcatCommands, johnCommands };
+}
+
+/**
+ * Parse bulk terminal outputs (secretsdump /etc/shadow or Responder logs)
+ */
+export function parseBatchHashDump(dumpText: string): BatchParseResult {
+  const lines = (dumpText || '').split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  const validItems: BatchParsedHash[] = [];
+  const uniqueSet = new Set<string>();
+  let formatIdentified = 'Raw Hashes';
+
+  const BLANK_LM = 'aad3b435b51404eeaad3b435b51404ee';
+
+  for (const line of lines) {
+    if (line.startsWith('#') || line.startsWith('//')) continue;
+
+    // 1. secretsdump / pwdump style: Username:RID:LM:NTLM:::
+    const samParts = line.split(':');
+    if (samParts.length >= 4 && /^[0-9a-fA-F]{32}$/i.test(samParts[3])) {
+      const user = samParts[0];
+      const lm = samParts[2];
+      const ntlm = samParts[3].toLowerCase();
+      const isLmBlank = lm.toLowerCase() === BLANK_LM;
+      formatIdentified = 'Windows SAM / NTDS (secretsdump)';
+      validItems.push({
+        rawLine: line,
+        username: user,
+        hash: ntlm,
+        lmHash: isLmBlank ? undefined : lm,
+        type: 'NTLM',
+        isLmBlank,
+        notes: isLmBlank ? 'Empty LM hash filtered' : undefined,
+      });
+      uniqueSet.add(ntlm);
+      continue;
+    }
+
+    // 2. /etc/shadow style: root:$6$saltsalt$longhash...:19000:0:99999:7:::
+    if (samParts.length >= 2 && samParts[1].startsWith('$')) {
+      const user = samParts[0];
+      const hash = samParts[1];
+      let shadowType = 'Linux Crypt';
+      if (hash.startsWith('$6$')) shadowType = 'Linux SHA-512 ($6$)';
+      else if (hash.startsWith('$5$')) shadowType = 'Linux SHA-256 ($5$)';
+      else if (hash.startsWith('$y$')) shadowType = 'Linux yescrypt ($y$)';
+      else if (hash.startsWith('$1$')) shadowType = 'Linux MD5 ($1$)';
+      else if (hash.startsWith('$2')) shadowType = 'bcrypt ($2*)';
+      formatIdentified = '/etc/shadow Dumps';
+      validItems.push({
+        rawLine: line,
+        username: user,
+        hash,
+        type: shadowType,
+      });
+      uniqueSet.add(hash);
+      continue;
+    }
+
+    // 3. Responder NetNTLMv2: user::domain:challenge:response:blob
+    if (line.includes('::') && samParts.length >= 6) {
+      const user = samParts[0];
+      const domain = samParts[2];
+      formatIdentified = 'NetNTLMv2 (Responder)';
+      validItems.push({
+        rawLine: line,
+        username: user,
+        domain: domain || undefined,
+        hash: line,
+        type: 'NetNTLMv2',
+      });
+      uniqueSet.add(line);
+      continue;
+    }
+
+    // 4. user:hash
+    if (
+      samParts.length === 2 &&
+      (/^[0-9a-fA-F]{32}$/i.test(samParts[1]) || /^[0-9a-fA-F]{64}$/i.test(samParts[1]))
+    ) {
+      const user = samParts[0];
+      const hash = samParts[1].toLowerCase();
+      validItems.push({
+        rawLine: line,
+        username: user,
+        hash,
+        type: hash.length === 32 ? 'NTLM / MD5' : 'SHA-256',
+      });
+      uniqueSet.add(hash);
+      continue;
+    }
+
+    // 5. Plain single hash per line
+    if (/^[0-9a-fA-F]{32,128}$/i.test(line) || line.startsWith('$')) {
+      validItems.push({
+        rawLine: line,
+        hash: line,
+        type: 'Hash',
+      });
+      uniqueSet.add(line);
+      continue;
+    }
+  }
+
+  const uniqueHashes = Array.from(uniqueSet);
+  const cleanHashesText = uniqueHashes.join('\n');
+  const userHashText = validItems
+    .filter((item) => item.username)
+    .map((item) => `${item.username}:${item.hash}`)
+    .join('\n');
+
+  const pthCommands = validItems
+    .filter((item) => item.username && item.type === 'NTLM')
+    .map(
+      (item) =>
+        `netexec smb $TARGET -u ${escapeShellArg(item.username!)} -H ${escapeShellArg(
+          item.hash
+        )} --local-auth`
+    );
+
+  return {
+    totalLines: lines.length,
+    validItems,
+    uniqueHashes,
+    cleanHashesText,
+    userHashText,
+    pthCommands,
+    formatIdentified,
+  };
+}
+
+/**
+ * Comprehensive HashForge Heuristic Identifier (40+ Patterns)
+ * Uses fast prefix and delimiter matching to prevent regex backtracking.
  */
 export function analyzeAndIdentifyHash(rawHash: string): HashCrackCommands {
   const h = (rawHash || '').trim();
@@ -50,26 +291,77 @@ export function analyzeAndIdentifyHash(rawHash: string): HashCrackCommands {
 
   if (h.length > 0) {
     // 1. Kerberos 5 TGS-REP (Kerberoast)
-    if (h.startsWith('$krb5tgs$23$') || h.includes('$krb5tgs$')) {
+    if (h.startsWith('$krb5tgs$23$') || h.includes('$krb5tgs$23$')) {
+      candidates.push({
+        name: 'Kerberos 5 TGS-REP (Kerberoast RC4-HMAC)',
+        category: 'Windows / AD',
+        hashcatMode: '13100',
+        johnFormat: 'krb5tgs',
+        confidence: 'High',
+        notes: 'Active Directory TGS hash extracted via impacket-GetUserSPNs or Rubeus kerberoast.',
+        sampleSyntax: '$krb5tgs$23$*user*domain*spn*$hash...',
+      });
+    } else if (h.startsWith('$krb5tgs$17$') || h.includes('$krb5tgs$17$')) {
+      candidates.push({
+        name: 'Kerberos 5 TGS-REP (AES128-CTS-HMAC-SHA1-96)',
+        category: 'Windows / AD',
+        hashcatMode: '19800',
+        johnFormat: 'krb5tgs',
+        confidence: 'High',
+        notes: 'Kerberoast hash with AES128 encryption.',
+      });
+    } else if (h.startsWith('$krb5tgs$18$') || h.includes('$krb5tgs$18$')) {
+      candidates.push({
+        name: 'Kerberos 5 TGS-REP (AES256-CTS-HMAC-SHA1-96)',
+        category: 'Windows / AD',
+        hashcatMode: '19900',
+        johnFormat: 'krb5tgs',
+        confidence: 'High',
+        notes: 'Kerberoast hash with AES256 encryption.',
+      });
+    } else if (h.includes('$krb5tgs$')) {
       candidates.push({
         name: 'Kerberos 5 TGS-REP (Kerberoast)',
         category: 'Windows / AD',
         hashcatMode: '13100',
         johnFormat: 'krb5tgs',
         confidence: 'High',
-        notes: 'Extracted via impacket-GetUserSPNs or Rubeus kerberoast.',
       });
     }
 
     // 2. Kerberos 5 AS-REP (ASREPRoast)
-    if (h.startsWith('$krb5asrep$23$') || h.includes('$krb5asrep$')) {
+    if (h.startsWith('$krb5asrep$23$') || h.includes('$krb5asrep$23$')) {
+      candidates.push({
+        name: 'Kerberos 5 AS-REP (ASREPRoast RC4-HMAC)',
+        category: 'Windows / AD',
+        hashcatMode: '18200',
+        johnFormat: 'krb5asrep',
+        confidence: 'High',
+        notes: 'Pre-authentication disabled account roast hash extracted via impacket-GetNPUsers.',
+      });
+    } else if (h.startsWith('$krb5asrep$17$') || h.includes('$krb5asrep$17$')) {
+      candidates.push({
+        name: 'Kerberos 5 AS-REP (AES128-CTS-HMAC-SHA1-96)',
+        category: 'Windows / AD',
+        hashcatMode: '19600',
+        johnFormat: 'krb5asrep',
+        confidence: 'High',
+      });
+    } else if (h.startsWith('$krb5asrep$18$') || h.includes('$krb5asrep$18$')) {
+      candidates.push({
+        name: 'Kerberos 5 AS-REP (AES256-CTS-HMAC-SHA1-96)',
+        category: 'Windows / AD',
+        hashcatMode: '19700',
+        johnFormat: 'krb5asrep',
+        confidence: 'High',
+      });
+    } else if (h.includes('$krb5asrep$')) {
       candidates.push({
         name: 'Kerberos 5 AS-REP (ASREPRoast)',
         category: 'Windows / AD',
         hashcatMode: '18200',
         johnFormat: 'krb5asrep',
         confidence: 'High',
-        notes: 'Pre-authentication disabled account roast hash.',
       });
     }
 
@@ -77,7 +369,7 @@ export function analyzeAndIdentifyHash(rawHash: string): HashCrackCommands {
     if (
       h.startsWith('$NETNTLMv2$') ||
       h.includes('$NETNTLMv2$') ||
-      /^[a-zA-Z0-9._-]+::[a-zA-Z0-9._-]*:[0-9a-fA-F]{16}:[0-9a-fA-F]{32}:[0-9a-fA-F]+/i.test(h)
+      (h.includes('::') && h.split(':').length >= 6)
     ) {
       candidates.push({
         name: 'NetNTLMv2 (NTLMv2-SSP)',
@@ -90,11 +382,7 @@ export function analyzeAndIdentifyHash(rawHash: string): HashCrackCommands {
     }
 
     // 4. NetNTLMv1 / NTLMv1-SSP
-    if (
-      h.startsWith('$NETNTLM$') ||
-      h.includes('$NETNTLM$') ||
-      /^[a-zA-Z0-9._-]+::[a-zA-Z0-9._-]*:[0-9a-fA-F]{16}:[0-9a-fA-F]{48}/i.test(h)
-    ) {
+    if (h.startsWith('$NETNTLM$') || h.includes('$NETNTLM$')) {
       candidates.push({
         name: 'NetNTLMv1 (NTLMv1-SSP)',
         category: 'Windows / AD',
@@ -105,8 +393,173 @@ export function analyzeAndIdentifyHash(rawHash: string): HashCrackCommands {
       });
     }
 
-    // 5. Linux SHA-512 Crypt ($6$)
-    if (/^\$6\$[a-zA-Z0-9./]{1,16}\$[a-zA-Z0-9./]{86}$/.test(h) || h.startsWith('$6$')) {
+    // 5. Domain Cached Credentials 2 / mscache2 ($DCC2$)
+    if (h.startsWith('$DCC2$') || h.includes('$DCC2$')) {
+      candidates.push({
+        name: 'Domain Cached Credentials 2 (mscache2 / DCC2)',
+        category: 'Windows / AD',
+        hashcatMode: '2100',
+        johnFormat: 'mscache2',
+        confidence: 'High',
+        notes: 'Windows Vista / 7 / 10 / Server domain member cached logon hash (PBKDF2-HMAC-SHA1).',
+      });
+    }
+
+    // 6. Domain Cached Credentials 1 / mscache1 ($DCC$)
+    if (h.startsWith('$DCC$') || (h.startsWith('M$') && h.length === 34)) {
+      candidates.push({
+        name: 'Domain Cached Credentials 1 (mscache / DCC1)',
+        category: 'Windows / AD',
+        hashcatMode: '1100',
+        johnFormat: 'mscache',
+        confidence: 'High',
+        notes: 'Legacy Windows XP / Server 2003 domain member cached logon hash.',
+      });
+    }
+
+    // 7. DPAPI Masterkey
+    if (h.startsWith('$DPAPI$') || h.startsWith('dpapi_')) {
+      candidates.push({
+        name: 'DPAPI Masterkey (SHA1 / PBKDF2)',
+        category: 'Windows / AD',
+        hashcatMode: '15900',
+        johnFormat: 'dpapi',
+        confidence: 'High',
+        notes: 'Windows Data Protection API master key extracted from %APPDATA%\\Microsoft\\Protect.',
+      });
+    }
+
+    // 8. BitLocker
+    if (h.startsWith('$bitlocker$')) {
+      candidates.push({
+        name: 'BitLocker Full Volume / Recovery Password',
+        category: 'Windows / AD',
+        hashcatMode: '22100',
+        johnFormat: 'bitlocker',
+        confidence: 'High',
+        notes: 'BitLocker volume hash extracted via bitlocker2john.',
+      });
+    }
+
+    // 9. KeePass Database (*keepass2john)
+    if (h.startsWith('$keepass$')) {
+      candidates.push({
+        name: 'KeePass 1.x / 2.x Database Hash',
+        category: 'Archives & Keys',
+        hashcatMode: '13400',
+        johnFormat: 'keepass',
+        confidence: 'High',
+        notes: 'Extracted via keepass2john database.kdbx.',
+      });
+    }
+
+    // 10. SSH Private Key (*ssh2john)
+    if (
+      h.startsWith('$sshng$') ||
+      h.startsWith('$openbsd-bcrypt$') ||
+      h.startsWith('$ssh$') ||
+      h.includes('BEGIN OPENSSH PRIVATE KEY') ||
+      h.includes('BEGIN RSA PRIVATE KEY')
+    ) {
+      candidates.push({
+        name: 'SSH Private Key Passphrase (ssh2john)',
+        category: 'Archives & Keys',
+        hashcatMode: '22921',
+        johnFormat: 'ssh',
+        confidence: 'High',
+        notes: 'Extracted via ssh2john id_rsa > hash.txt.',
+      });
+    }
+
+    // 11. ZIP Archives (*zip2john)
+    if (h.startsWith('$pkzip$') || h.startsWith('$zip2$') || h.startsWith('$zip$')) {
+      candidates.push({
+        name: 'ZIP / WinZip Encrypted Archive',
+        category: 'Archives & Keys',
+        hashcatMode: '13600',
+        johnFormat: 'pkzip',
+        confidence: 'High',
+        notes: 'Extracted via zip2john archive.zip > hash.txt.',
+      });
+    }
+
+    // 12. RAR Archives (*rar2john)
+    if (h.startsWith('$rar5$') || h.startsWith('$RAR3$')) {
+      candidates.push({
+        name: 'RAR3 / RAR5 Encrypted Archive',
+        category: 'Archives & Keys',
+        hashcatMode: h.startsWith('$rar5$') ? '13000' : '12500',
+        johnFormat: h.startsWith('$rar5$') ? 'rar5' : 'rar',
+        confidence: 'High',
+        notes: 'Extracted via rar2john archive.rar > hash.txt.',
+      });
+    }
+
+    // 13. 7-Zip Archives (*7z2john)
+    if (h.startsWith('$7z$')) {
+      candidates.push({
+        name: '7-Zip Encrypted Archive',
+        category: 'Archives & Keys',
+        hashcatMode: '11600',
+        johnFormat: '7z',
+        confidence: 'High',
+        notes: 'Extracted via 7z2john.pl archive.7z > hash.txt.',
+      });
+    }
+
+    // 14. PDF Documents (*pdf2john)
+    if (h.startsWith('$pdf$')) {
+      candidates.push({
+        name: 'PDF Encrypted Document (PDF 1.1 - 1.7)',
+        category: 'Archives & Keys',
+        hashcatMode: '10500',
+        johnFormat: 'pdf',
+        confidence: 'High',
+        notes: 'Extracted via pdf2john.py document.pdf > hash.txt.',
+      });
+    }
+
+    // 15. PFX / PKCS#12 (*pfx2john)
+    if (h.startsWith('$pfx$') || h.startsWith('$pkcs12$')) {
+      candidates.push({
+        name: 'PKCS#12 / PFX Certificate Container',
+        category: 'Archives & Keys',
+        hashcatMode: '6600',
+        johnFormat: 'pfx',
+        confidence: 'High',
+        notes: 'Extracted via pfx2john cert.pfx > hash.txt.',
+      });
+    }
+
+    // 16. JWT (JSON Web Token HMAC-SHA256)
+    if (h.startsWith('ey') && h.includes('.')) {
+      const parts = h.split('.');
+      if (parts.length === 3) {
+        candidates.push({
+          name: 'JWT (JSON Web Token HMAC-SHA256)',
+          category: 'Web / Database',
+          hashcatMode: '16500',
+          johnFormat: 'jwt',
+          confidence: 'High',
+          notes: 'Crack the secret signing key using wordlist (-m 16500).',
+        });
+      }
+    }
+
+    // 17. Argon2 ($argon2id$, $argon2i$, $argon2d$)
+    if (h.startsWith('$argon2id$') || h.startsWith('$argon2i$') || h.startsWith('$argon2d$')) {
+      candidates.push({
+        name: 'Argon2 (Memory-Hard Password Hash)',
+        category: 'Web / Database',
+        hashcatMode: '33400',
+        johnFormat: 'argon2',
+        confidence: 'High',
+        notes: 'Modern winner of the Password Hashing Competition.',
+      });
+    }
+
+    // 18. Linux SHA-512 Crypt ($6$)
+    if (h.startsWith('$6$')) {
       candidates.push({
         name: 'Linux SHA-512 Crypt ($6$)',
         category: 'Linux / Unix',
@@ -117,8 +570,8 @@ export function analyzeAndIdentifyHash(rawHash: string): HashCrackCommands {
       });
     }
 
-    // 6. Linux yescrypt ($y$)
-    if (/^\$y\$[a-zA-Z0-9./]+\$[a-zA-Z0-9./]+\$[a-zA-Z0-9./]+$/.test(h) || h.startsWith('$y$')) {
+    // 19. Linux yescrypt ($y$)
+    if (h.startsWith('$y$')) {
       candidates.push({
         name: 'Linux yescrypt ($y$)',
         category: 'Linux / Unix',
@@ -129,8 +582,8 @@ export function analyzeAndIdentifyHash(rawHash: string): HashCrackCommands {
       });
     }
 
-    // 7. Linux SHA-256 Crypt ($5$)
-    if (/^\$5\$[a-zA-Z0-9./]{1,16}\$[a-zA-Z0-9./]{43}$/.test(h) || h.startsWith('$5$')) {
+    // 20. Linux SHA-256 Crypt ($5$)
+    if (h.startsWith('$5$')) {
       candidates.push({
         name: 'Linux SHA-256 Crypt ($5$)',
         category: 'Linux / Unix',
@@ -140,10 +593,10 @@ export function analyzeAndIdentifyHash(rawHash: string): HashCrackCommands {
       });
     }
 
-    // 8. Linux MD5-Crypt ($1$)
-    if (/^\$1\$[a-zA-Z0-9./]{1,8}\$[a-zA-Z0-9./]{22}$/.test(h) || h.startsWith('$1$')) {
+    // 21. Linux MD5-Crypt ($1$)
+    if (h.startsWith('$1$')) {
       candidates.push({
-        name: 'Linux MD5-Crypt ($1$)',
+        name: 'Linux MD5-Crypt ($1$) / Cisco Type 5',
         category: 'Linux / Unix',
         hashcatMode: '500',
         johnFormat: 'md5crypt',
@@ -151,8 +604,8 @@ export function analyzeAndIdentifyHash(rawHash: string): HashCrackCommands {
       });
     }
 
-    // 9. Apache APR1 ($apr1$)
-    if (/^\$apr1\$[a-zA-Z0-9./]{1,8}\$[a-zA-Z0-9./]{22}$/.test(h) || h.startsWith('$apr1$')) {
+    // 22. Apache APR1 ($apr1$)
+    if (h.startsWith('$apr1$')) {
       candidates.push({
         name: 'Apache APR1 ($apr1$)',
         category: 'Web / Database',
@@ -163,20 +616,25 @@ export function analyzeAndIdentifyHash(rawHash: string): HashCrackCommands {
       });
     }
 
-    // 10. bcrypt ($2a$, $2b$, $2y$)
-    if (/^\$2[abxy]\$[0-9]{2}\$[a-zA-Z0-9./]{53}$/.test(h) || /^\$2[abxy]\$/.test(h)) {
+    // 23. bcrypt ($2a$, $2b$, $2y$)
+    if (
+      h.startsWith('$2a$') ||
+      h.startsWith('$2b$') ||
+      h.startsWith('$2y$') ||
+      h.startsWith('$2x$')
+    ) {
       candidates.push({
         name: 'bcrypt ($2a$ / $2b$ / $2y$)',
-        category: 'Generic',
+        category: 'Web / Database',
         hashcatMode: '3200',
         johnFormat: 'bcrypt',
         confidence: 'High',
-        notes: 'High-cost key derivation function common in web apps.',
+        notes: 'High-cost key derivation function common in web apps and OpenBSD.',
       });
     }
 
-    // 11. WordPress / phpBB3 ($P$ / $H$)
-    if (/^\$[PH]\$[a-zA-Z0-9./]{31}$/.test(h)) {
+    // 24. WordPress / phpBB3 ($P$ / $H$)
+    if ((h.startsWith('$P$') || h.startsWith('$H$')) && h.length === 34) {
       candidates.push({
         name: 'phpass (WordPress / phpBB3)',
         category: 'Web / Database',
@@ -186,8 +644,30 @@ export function analyzeAndIdentifyHash(rawHash: string): HashCrackCommands {
       });
     }
 
-    // 12. MySQL 4.1+
-    if (/^\*[0-9a-fA-F]{40}$/.test(h)) {
+    // 25. Drupal 7 ($S$)
+    if (h.startsWith('$S$') && h.length === 55) {
+      candidates.push({
+        name: 'Drupal 7 ($S$)',
+        category: 'Web / Database',
+        hashcatMode: '7900',
+        johnFormat: 'drupal7',
+        confidence: 'High',
+      });
+    }
+
+    // 26. Django PBKDF2 / Argon2
+    if (h.startsWith('pbkdf2_sha256$')) {
+      candidates.push({
+        name: 'Django (PBKDF2-HMAC-SHA256)',
+        category: 'Web / Database',
+        hashcatMode: '10000',
+        johnFormat: 'django',
+        confidence: 'High',
+      });
+    }
+
+    // 27. MySQL 4.1+ / MariaDB
+    if (h.startsWith('*') && h.length === 41 && /^\*[0-9a-fA-F]{40}$/.test(h)) {
       candidates.push({
         name: 'MySQL 4.1+ / MariaDB',
         category: 'Web / Database',
@@ -197,8 +677,39 @@ export function analyzeAndIdentifyHash(rawHash: string): HashCrackCommands {
       });
     }
 
-    // 13. 32-Hex Characters (NTLM / MD5)
-    if (/^[0-9a-fA-F]{32}$/.test(h)) {
+    // 28. PostgreSQL MD5
+    if (h.startsWith('md5') && h.length === 35 && /^md5[0-9a-fA-F]{32}$/i.test(h)) {
+      candidates.push({
+        name: 'PostgreSQL MD5 (md5 + 32-hex)',
+        category: 'Web / Database',
+        hashcatMode: '111',
+        johnFormat: 'postgres',
+        confidence: 'High',
+      });
+    }
+
+    // 29. LM:NTLM pair (SAM format)
+    if (h.length === 65 && h.includes(':')) {
+      const parts = h.split(':');
+      if (
+        parts.length === 2 &&
+        parts[0].length === 32 &&
+        parts[1].length === 32 &&
+        /^[0-9a-fA-F]{32}:[0-9a-fA-F]{32}$/.test(h)
+      ) {
+        candidates.push({
+          name: 'LM:NTLM Hash Pair',
+          category: 'Windows / AD',
+          hashcatMode: '1000',
+          johnFormat: 'nt',
+          confidence: 'High',
+          notes: 'Windows SAM hash pair. Second half is NTLM (Hashcat -m 1000).',
+        });
+      }
+    }
+
+    // 30. 32-Hex Characters (NTLM / MD5 / MD4 / LM)
+    if (h.length === 32 && /^[0-9a-fA-F]{32}$/.test(h)) {
       candidates.push({
         name: 'NTLM (Windows SAM / NTDS.dit)',
         category: 'Windows / AD',
@@ -215,22 +726,24 @@ export function analyzeAndIdentifyHash(rawHash: string): HashCrackCommands {
         confidence: 'Medium',
         notes: 'Generic unsalted 128-bit MD5 digest.',
       });
-    }
-
-    // 14. LM:NTLM pair (SAM format)
-    if (/^[0-9a-fA-F]{32}:[0-9a-fA-F]{32}$/.test(h)) {
       candidates.push({
-        name: 'LM:NTLM Hash Pair',
+        name: 'MD4 (Raw)',
+        category: 'Generic',
+        hashcatMode: '900',
+        johnFormat: 'raw-md4',
+        confidence: 'Low',
+      });
+      candidates.push({
+        name: 'LM (LAN Manager)',
         category: 'Windows / AD',
-        hashcatMode: '1000',
-        johnFormat: 'nt',
-        confidence: 'High',
-        notes: 'Windows SAM hash pair. Hashcat mode 1000 targets the NTLM portion (second half).',
+        hashcatMode: '3000',
+        johnFormat: 'lm',
+        confidence: 'Low',
       });
     }
 
-    // 15. 40-Hex Characters (SHA-1)
-    if (/^[0-9a-fA-F]{40}$/.test(h)) {
+    // 31. 40-Hex Characters (SHA-1 / RIPEMD-160)
+    if (h.length === 40 && /^[0-9a-fA-F]{40}$/.test(h)) {
       candidates.push({
         name: 'SHA-1 (Raw)',
         category: 'Generic',
@@ -238,10 +751,17 @@ export function analyzeAndIdentifyHash(rawHash: string): HashCrackCommands {
         johnFormat: 'raw-sha1',
         confidence: 'High',
       });
+      candidates.push({
+        name: 'RIPEMD-160',
+        category: 'Generic',
+        hashcatMode: '6000',
+        johnFormat: 'ripemd-160',
+        confidence: 'Low',
+      });
     }
 
-    // 16. 64-Hex Characters (SHA-256)
-    if (/^[0-9a-fA-F]{64}$/.test(h)) {
+    // 32. 64-Hex Characters (SHA-256)
+    if (h.length === 64 && /^[0-9a-fA-F]{64}$/.test(h)) {
       candidates.push({
         name: 'SHA-256 (Raw)',
         category: 'Generic',
@@ -249,16 +769,41 @@ export function analyzeAndIdentifyHash(rawHash: string): HashCrackCommands {
         johnFormat: 'raw-sha256',
         confidence: 'High',
       });
+      candidates.push({
+        name: 'Keccak-256',
+        category: 'Generic',
+        hashcatMode: '17800',
+        johnFormat: 'keccak-256',
+        confidence: 'Low',
+      });
     }
 
-    // 17. 128-Hex Characters (SHA-512)
-    if (/^[0-9a-fA-F]{128}$/.test(h)) {
+    // 33. 96-Hex Characters (SHA-384)
+    if (h.length === 96 && /^[0-9a-fA-F]{96}$/.test(h)) {
+      candidates.push({
+        name: 'SHA-384 (Raw)',
+        category: 'Generic',
+        hashcatMode: '10800',
+        johnFormat: 'raw-sha384',
+        confidence: 'High',
+      });
+    }
+
+    // 34. 128-Hex Characters (SHA-512)
+    if (h.length === 128 && /^[0-9a-fA-F]{128}$/.test(h)) {
       candidates.push({
         name: 'SHA-512 (Raw)',
         category: 'Generic',
         hashcatMode: '1700',
         johnFormat: 'raw-sha512',
         confidence: 'High',
+      });
+      candidates.push({
+        name: 'Whirlpool',
+        category: 'Generic',
+        hashcatMode: '6100',
+        johnFormat: 'whirlpool',
+        confidence: 'Low',
       });
     }
   }
@@ -276,43 +821,7 @@ export function analyzeAndIdentifyHash(rawHash: string): HashCrackCommands {
   }
 
   const top = candidates[0];
-  const escapedHash = escapeShellArg(h);
-  const mode = top.hashcatMode;
-  const jFmt = top.johnFormat;
-
-  const hashcatCommands = [
-    {
-      label: 'Standard RockYou Wordlist (-a 0)',
-      cmd: `hashcat -m ${mode} -a 0 hashes.txt /usr/share/wordlists/rockyou.txt -O -w 3`,
-    },
-    {
-      label: 'RockYou + Best64 Mutation Rules',
-      cmd: `hashcat -m ${mode} -a 0 hashes.txt /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/best64.rule -O -w 3`,
-    },
-    {
-      label: 'Single Hash Inline Crack',
-      cmd: `hashcat -m ${mode} ${escapedHash} /usr/share/wordlists/rockyou.txt -O`,
-    },
-    {
-      label: 'RockYou + OneRuleToRuleThemAll',
-      cmd: `hashcat -m ${mode} -a 0 hashes.txt /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/OneRuleToRuleThemAll.rule -O`,
-    },
-  ];
-
-  const johnCommands = [
-    {
-      label: 'John the Ripper (RockYou)',
-      cmd: `john --wordlist=/usr/share/wordlists/rockyou.txt --format=${jFmt} hashes.txt`,
-    },
-    {
-      label: 'John Single Hash Pipe',
-      cmd: `echo ${escapedHash} > hash.txt && john --wordlist=/usr/share/wordlists/rockyou.txt --format=${jFmt} hash.txt`,
-    },
-    {
-      label: 'John Show Cracked Passwords',
-      cmd: `john --format=${jFmt} --show hashes.txt`,
-    },
-  ];
+  const { hashcatCommands, johnCommands } = getCrackCommandsForCandidate(top, h);
 
   return {
     candidates,

@@ -50,6 +50,7 @@ export function useTacticalHotkeys() {
         state.setNotesImportModalOpen(false);
         state.setOperatorModalOpen(false);
         state.setLicenseModalOpen(false);
+        state.setPdfModalMachineId(null);
         if (state.selectedMachineId) {
           state.setSelectedMachineId(null);
         }

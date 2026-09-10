@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -63,11 +63,16 @@ export const MachineDetailModal: React.FC = () => {
     setActiveModalTab('overview');
   }, [selectedMachineId]);
 
-  const machine = machines.find((m) => m.id === selectedMachineId);
+  const currentMachine = machines.find((m) => m.id === selectedMachineId);
+  const lastMachineRef = useRef(currentMachine);
+  if (currentMachine) {
+    lastMachineRef.current = currentMachine;
+  }
+  const machine = currentMachine || lastMachineRef.current;
 
   const checklistCompletedCount = useMemo(() => {
     if (!machine?.checklist?.itemsState) return 0;
-    return Object.values(machine.checklist.itemsState).filter((s) => s.status === 'done').length;
+    return Object.values(machine.checklist.itemsState).filter((s: any) => s?.status === 'done').length;
   }, [machine?.checklist?.itemsState]);
 
   // Handle ESC key to dismiss modal
@@ -93,7 +98,7 @@ export const MachineDetailModal: React.FC = () => {
     }
   }, [selectedMachineId]);
 
-  if (!machine || !selectedMachineId) return null;
+  if (!machine) return null;
 
   const handleOpenInWriteup = () => {
     setWriteupMachineId(machine.id);
@@ -110,7 +115,7 @@ export const MachineDetailModal: React.FC = () => {
       `- **User Flag:** \`${machine.userFlag || (machine.userPwnedAt ? 'HTB{user_flag_verified}' : 'Not captured')}\`\n` +
       `- **Root Flag:** \`${machine.rootFlag || (machine.rootPwnedAt ? 'HTB{root_flag_verified}' : 'Not captured')}\`\n\n` +
       (machine.quickNotes ? `## Assessor Field Notes\n${machine.quickNotes}\n\n` : '') +
-      `## Attack Vectors & Tags\n${machine.tags.map(t => `- ${t}`).join('\n')}\n`;
+      `## Attack Vectors & Tags\n${(machine.tags || []).map((t: string) => `- ${t}`).join('\n')}\n`;
     await safeCopyToClipboard(reportMd);
     setCopiedReportMd(true);
     if (soundEnabled) playCyberSound('copy');
@@ -127,10 +132,10 @@ export const MachineDetailModal: React.FC = () => {
       }}
     >
       <motion.div 
-        initial={{ opacity: 0, scale: 0.96, y: 10 }}
+        initial={{ opacity: 0, scale: 0.97, y: 8 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.96, y: 10 }}
-        transition={{ duration: 0.15 }}
+        exit={{ opacity: 0, scale: 0.97, y: 8 }}
+        transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
         role="dialog"
         aria-modal="true"
         aria-label={`Machine details for ${machine.name}`}
@@ -296,39 +301,41 @@ export const MachineDetailModal: React.FC = () => {
         </div>
 
         {/* Modal Navigation Tabs (Pinned below Header) */}
-        <div className="flex-shrink-0 flex items-center border-b border-slate-200 dark:border-cyber-border bg-slate-100/90 dark:bg-cyber-bg/70 px-4 overflow-x-auto">
+        <div className="flex-shrink-0 flex items-center border-b border-slate-200 dark:border-cyber-border bg-slate-100/90 dark:bg-cyber-bg/70 px-2 sm:px-4 overflow-x-auto scrollbar-none gap-0.5 sm:gap-1">
           <button
             onClick={() => setActiveModalTab('overview')}
-            className={`flex items-center gap-1.5 py-2.5 px-4 font-bold text-xs border-b-2 whitespace-nowrap transition-all ${
+            className={`flex items-center gap-1.5 py-2.5 px-3 sm:px-4 font-bold text-xs border-b-2 whitespace-nowrap active:scale-[0.98] transition-all ${
               activeModalTab === 'overview'
                 ? 'border-emerald-600 dark:border-cyber-emerald text-emerald-900 dark:text-cyber-emerald bg-emerald-50 dark:bg-cyber-emerald/5'
                 : 'border-transparent text-slate-600 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             <Crosshair className="w-3.5 h-3.5" />
-            <span>OVERVIEW & FLAGS</span>
+            <span>OVERVIEW</span>
+            <span className="hidden sm:inline">& FLAGS</span>
           </button>
           <button
             onClick={() => setActiveModalTab('commands')}
-            className={`flex items-center gap-1.5 py-2.5 px-4 font-bold text-xs border-b-2 whitespace-nowrap transition-all ${
+            className={`flex items-center gap-1.5 py-2.5 px-3 sm:px-4 font-bold text-xs border-b-2 whitespace-nowrap active:scale-[0.98] transition-all ${
               activeModalTab === 'commands'
                 ? 'border-amber-600 dark:border-cyber-amber text-amber-900 dark:text-cyber-amber bg-amber-50 dark:bg-cyber-amber/10'
                 : 'border-transparent text-slate-600 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             <Zap className="w-3.5 h-3.5 text-amber-600 dark:text-cyber-amber" />
-            <span>⚡ ATTACK ARSENAL</span>
+            <span>ARSENAL</span>
+            <span className="hidden sm:inline">(CMDS)</span>
           </button>
           <button
             onClick={() => setActiveModalTab('creds')}
-            className={`flex items-center gap-1.5 py-2.5 px-4 font-bold text-xs border-b-2 whitespace-nowrap transition-all ${
+            className={`flex items-center gap-1.5 py-2.5 px-3 sm:px-4 font-bold text-xs border-b-2 whitespace-nowrap active:scale-[0.98] transition-all ${
               activeModalTab === 'creds'
                 ? 'border-amber-500 text-amber-900 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10'
                 : 'border-transparent text-slate-600 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             <KeyRound className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-            <span>🔑 LOOT & CREDS</span>
+            <span>LOOT & CREDS</span>
             {Boolean(machine.credentials?.length) && (
               <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 font-bold border border-amber-300 dark:border-amber-800">
                 {machine.credentials?.length}
@@ -337,42 +344,46 @@ export const MachineDetailModal: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveModalTab('checklist')}
-            className={`flex items-center gap-1.5 py-2.5 px-4 font-bold text-xs border-b-2 whitespace-nowrap transition-all ${
+            className={`flex items-center gap-1.5 py-2.5 px-3 sm:px-4 font-bold text-xs border-b-2 whitespace-nowrap active:scale-[0.98] transition-all ${
               activeModalTab === 'checklist'
                 ? 'border-cyan-600 dark:border-cyber-cyan text-cyan-900 dark:text-cyber-cyan bg-cyan-50 dark:bg-cyber-cyan/5'
                 : 'border-transparent text-slate-600 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             <ListChecks className="w-3.5 h-3.5" />
-            <span>ATTACK CHECKLIST & METHODOLOGY</span>
+            <span className="hidden sm:inline">ATTACK </span>
+            <span>CHECKLIST</span>
+            <span className="hidden md:inline">& METHODOLOGY</span>
             {checklistCompletedCount > 0 && (
               <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-cyan-100 dark:bg-cyber-cyan/20 text-cyan-900 dark:text-cyber-cyan font-bold">
-                {checklistCompletedCount} done
+                {checklistCompletedCount}
               </span>
             )}
           </button>
           <button
             onClick={() => setActiveModalTab('report')}
-            className={`flex items-center gap-1.5 py-2.5 px-4 font-bold text-xs border-b-2 whitespace-nowrap transition-all ${
+            className={`flex items-center gap-1.5 py-2.5 px-3 sm:px-4 font-bold text-xs border-b-2 whitespace-nowrap active:scale-[0.98] transition-all ${
               activeModalTab === 'report'
                 ? 'border-purple-600 dark:border-purple-400 text-purple-900 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/20'
                 : 'border-transparent text-slate-600 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             <FileText className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
-            <span>📄 PENTEST REPORT</span>
+            <span className="hidden sm:inline">PENTEST </span>
+            <span>REPORT</span>
           </button>
           {!machine.isActive && Boolean(machine.officialSynopsis || machine.officialWalkthrough || (machine.skillsLearned && machine.skillsLearned.length > 0) || machine.officialPdf) && (
             <button
               onClick={() => setActiveModalTab('walkthrough')}
-              className={`flex items-center gap-1.5 py-2.5 px-4 font-bold text-xs border-b-2 whitespace-nowrap transition-all ${
+              className={`flex items-center gap-1.5 py-2.5 px-3 sm:px-4 font-bold text-xs border-b-2 whitespace-nowrap active:scale-[0.98] transition-all ${
                 activeModalTab === 'walkthrough'
                   ? 'border-emerald-600 dark:border-cyber-emerald text-emerald-900 dark:text-cyber-emerald bg-emerald-50 dark:bg-cyber-emerald/10'
                   : 'border-transparent text-slate-600 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <BookOpen className="w-3.5 h-3.5 text-emerald-600 dark:text-cyber-emerald" />
-              <span>OFFICIAL HTB INTEL</span>
+              <span className="hidden sm:inline">OFFICIAL </span>
+              <span>HTB INTEL</span>
               <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-cyber-emerald/20 text-emerald-900 dark:text-cyber-emerald font-bold border border-emerald-300 dark:border-cyber-emerald/40 uppercase">
                 HTB
               </span>

@@ -41,7 +41,6 @@ const AnalyticsView = lazy(() => import('./components/analytics/AnalyticsView').
 const TargetDetailPage = lazy(() => import('./pages/TargetDetailPage').then(m => ({ default: m.TargetDetailPage })));
 const MethodologyPage = lazy(() => import('./pages/MethodologyPage').then(m => ({ default: m.MethodologyPage })));
 const ExamSimulatorPage = lazy(() => import('./pages/ExamSimulatorPage').then(m => ({ default: m.ExamSimulatorPage })));
-const WarRoomView = lazy(() => import('./pages/WarRoomView').then(m => ({ default: m.WarRoomView })));
 const ThemeShowcaseDemo = lazy(() => import('./components/common/ThemeShowcaseDemo').then(m => ({ default: m.ThemeShowcaseDemo })));
 
 const CyberRouteLoader: React.FC = () => (
@@ -64,19 +63,17 @@ const CyberRouteLoader: React.FC = () => (
   </div>
 );
 
-const ParallaxBackdrop: React.FC = () => {
-  const { scrollProgress } = useWorkspaceScroll();
+const ParallaxBackdrop: React.FC = React.memo(() => {
   return (
     <div 
-      className="absolute inset-0 pointer-events-none opacity-[0.04] will-change-transform transform-gpu"
+      className="absolute inset-0 pointer-events-none opacity-[0.035]"
       style={{
         backgroundImage: `linear-gradient(#06B6D4 1px, transparent 1px), linear-gradient(90deg, #06B6D4 1px, transparent 1px)`,
         backgroundSize: '36px 36px',
-        transform: `translate3d(0, ${Math.round(scrollProgress * -60)}px, 0)`,
       }}
     />
   );
-};
+});
 
 const TimerController: React.FC = () => {
   const isTimerRunning = useCtfStore((s) => s.isTimerRunning);
@@ -166,8 +163,6 @@ const MainAppContent: React.FC = () => {
       setActiveTab('analytics');
     } else if (path.startsWith('/exam')) {
       setActiveTab('exam' as any);
-    } else if (path.startsWith('/warroom') || path.startsWith('/war-room')) {
-      setActiveTab('warroom' as any);
     } else {
       setActiveTab('tracker');
     }
@@ -193,39 +188,44 @@ const MainAppContent: React.FC = () => {
       {/* Heavy Tactical Modals (Deferred Lazy Loading - Fetched strictly when triggered) */}
       <RouteErrorBoundary>
         <Suspense fallback={null}>
-          {backupModalOpen && <BackupModal />}
-          {reconAutomationModalOpen && <ReconAutomationModal />}
-          {selectedMachineId && <MachineDetailModal />}
-          {assignIpMachineId && <QuickAssignIpModal />}
-          {newMachineModalOpen && <NewMachineModal />}
-          {reportMachineId && (
-            <PentestReportModal
-              machineId={reportMachineId}
-              isOpen={Boolean(reportMachineId)}
-              onClose={() => setReportMachineId(null)}
-            />
-          )}
-          {operatorModalOpen && <OperatorDossierModal />}
-          {licenseModalOpen && <LicenseModal />}
-          {notesImportModalOpen && <NotesImportModal />}
-          {flexCardModalOpen && <OperatorFlexCardModal />}
-          {shortcutsModalOpen && <KeyboardShortcutsModal />}
-          {pivotingMatrixModalOpen && (
-            <PivotingMatrixModal
-              isOpen={pivotingMatrixModalOpen}
-              onClose={() => setPivotingMatrixModalOpen(false)}
-            />
-          )}
-          {hashForgeModalOpen && <HashForgeModal />}
-          {cyberForgeModalOpen && <CyberForgeModal />}
-          {cvssModalOpen && <CvssCalculatorModal />}
-          {pdfModalMachineId && (
-            <PdfViewerModal
-              isOpen={Boolean(pdfModalMachineId)}
-              onClose={() => setPdfModalMachineId(null)}
-              machineId={pdfModalMachineId}
-            />
-          )}
+          <AnimatePresence>
+            {backupModalOpen && <BackupModal key="modal-backup" />}
+            {reconAutomationModalOpen && <ReconAutomationModal key="modal-recon" />}
+            {selectedMachineId && <MachineDetailModal key="modal-machine-detail" />}
+            {assignIpMachineId && <QuickAssignIpModal key="modal-assign-ip" />}
+            {newMachineModalOpen && <NewMachineModal key="modal-new-machine" />}
+            {reportMachineId && (
+              <PentestReportModal
+                key="modal-pentest-report"
+                machineId={reportMachineId}
+                isOpen={Boolean(reportMachineId)}
+                onClose={() => setReportMachineId(null)}
+              />
+            )}
+            {operatorModalOpen && <OperatorDossierModal key="modal-operator" />}
+            {licenseModalOpen && <LicenseModal key="modal-license" />}
+            {notesImportModalOpen && <NotesImportModal key="modal-notes-import" />}
+            {flexCardModalOpen && <OperatorFlexCardModal key="modal-flex-card" />}
+            {shortcutsModalOpen && <KeyboardShortcutsModal key="modal-shortcuts" />}
+            {pivotingMatrixModalOpen && (
+              <PivotingMatrixModal
+                key="modal-pivoting-matrix"
+                isOpen={pivotingMatrixModalOpen}
+                onClose={() => setPivotingMatrixModalOpen(false)}
+              />
+            )}
+            {hashForgeModalOpen && <HashForgeModal key="modal-hash-forge" />}
+            {cyberForgeModalOpen && <CyberForgeModal key="modal-cyber-forge" />}
+            {cvssModalOpen && <CvssCalculatorModal key="modal-cvss" />}
+            {pdfModalMachineId && (
+              <PdfViewerModal
+                key="modal-pdf-viewer"
+                isOpen={Boolean(pdfModalMachineId)}
+                onClose={() => setPdfModalMachineId(null)}
+                machineId={pdfModalMachineId}
+              />
+            )}
+          </AnimatePresence>
         </Suspense>
       </RouteErrorBoundary>
 
@@ -273,9 +273,9 @@ const MainAppContent: React.FC = () => {
                     <Route path="/analytics" element={<AnalyticsView />} />
                     <Route path="/exam" element={<ExamSimulatorPage />} />
                     <Route path="/exam-simulator" element={<Navigate to="/exam" replace />} />
-                    <Route path="/warroom" element={<WarRoomView />} />
-                    <Route path="/war-room" element={<Navigate to="/warroom" replace />} />
-                    <Route path="/ops-deck" element={<Navigate to="/warroom" replace />} />
+                    <Route path="/warroom" element={<Navigate to="/tracker" replace />} />
+                    <Route path="/war-room" element={<Navigate to="/tracker" replace />} />
+                    <Route path="/ops-deck" element={<Navigate to="/tracker" replace />} />
                     <Route path="/theme-demo" element={<ThemeShowcaseDemo />} />
                     <Route path="/theme" element={<ThemeShowcaseDemo />} />
                     <Route path="/dark-mode" element={<ThemeShowcaseDemo />} />

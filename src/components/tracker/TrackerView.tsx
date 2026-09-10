@@ -71,6 +71,13 @@ const DIFFICULTY_FILTER_OPTIONS: CyberSelectOption<Difficulty | 'ALL'>[] = [
   { value: 'Insane', label: 'Insane', color: '#A855F7' },
 ];
 
+const CERT_FILTER_OPTIONS: CyberSelectOption[] = [
+  { value: 'ALL', label: 'All Certifications' },
+  { value: 'OSCP', label: 'OSCP (OffSec)' },
+  { value: 'CPTS', label: 'CPTS (HTB)' },
+  { value: 'CRTO', label: 'CRTO (Zero-Point)' },
+];
+
 /** Fast numerical IP converter for zero-allocation sorting */
 const ipToNumeric = (ip: string): number => {
   if (!ip) return 0;
@@ -158,7 +165,16 @@ export const TrackerView: React.FC = () => {
     try {
       const saved = localStorage.getItem('specter-tracks-collapsed');
       if (saved !== null) return saved === 'true';
-      return typeof window !== 'undefined' && window.innerWidth < 1280;
+      return true; // Default to collapsed for a clean, focused first-open experience
+    } catch {
+      return true;
+    }
+  });
+
+  const [filtersExpanded, setFiltersExpanded] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('zerobox-filters-expanded');
+      return saved === 'true';
     } catch {
       return false;
     }
@@ -169,6 +185,16 @@ export const TrackerView: React.FC = () => {
       const next = !prev;
       try {
         localStorage.setItem('specter-tracks-collapsed', String(next));
+      } catch {}
+      return next;
+    });
+  };
+
+  const toggleFiltersExpanded = () => {
+    setFiltersExpanded((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('zerobox-filters-expanded', String(next));
       } catch {}
       return next;
     });
@@ -427,6 +453,97 @@ export const TrackerView: React.FC = () => {
     filters.selectedCert !== 'ALL' ||
     filters.selectedTags.length > 0;
 
+  // Active filter tokens for the progressive disclosure pill bar
+  const activeFiltersList = useMemo(() => {
+    const list: { id: string; label: string; onRemove: () => void }[] = [];
+    if (filters.selectedStatus && filters.selectedStatus !== 'ALL') {
+      const statusLabels: Record<string, string> = {
+        completed: '🏆 Rooted',
+        foothold: '⚡ Foothold',
+        recon: '🔍 Recon',
+        backlog: '📋 Backlog',
+      };
+      list.push({
+        id: 'status',
+        label: `Status: ${statusLabels[filters.selectedStatus] || filters.selectedStatus}`,
+        onRemove: () => setFilters({ selectedStatus: 'ALL' }),
+      });
+    }
+    if (filters.selectedOs && filters.selectedOs !== 'ALL') {
+      list.push({
+        id: 'os',
+        label: `OS: ${filters.selectedOs}`,
+        onRemove: () => setFilters({ selectedOs: 'ALL' }),
+      });
+    }
+    if (filters.selectedDifficulty && filters.selectedDifficulty !== 'ALL') {
+      list.push({
+        id: 'difficulty',
+        label: `Diff: ${filters.selectedDifficulty}`,
+        onRemove: () => setFilters({ selectedDifficulty: 'ALL' }),
+      });
+    }
+    if (filters.selectedCert && filters.selectedCert !== 'ALL') {
+      list.push({
+        id: 'cert',
+        label: `Cert: ${filters.selectedCert}`,
+        onRemove: () => setFilters({ selectedCert: 'ALL' }),
+      });
+    }
+    if (filters.selectedTrack && filters.selectedTrack !== 'ALL') {
+      const trackObj = PRACTICE_TRACKS.find((t) => t.id === filters.selectedTrack);
+      list.push({
+        id: 'track',
+        label: `Track: ${trackObj?.shortName || filters.selectedTrack}`,
+        onRemove: () => setFilters({ selectedTrack: 'ALL' }),
+      });
+    }
+    if (filters.selectedVulnCategory && filters.selectedVulnCategory !== 'ALL') {
+      list.push({
+        id: 'vuln',
+        label: `Category: ${filters.selectedVulnCategory}`,
+        onRemove: () => setFilters({ selectedVulnCategory: 'ALL', selectedCategory: 'ALL' }),
+      });
+    } else if (filters.selectedCategory && filters.selectedCategory !== 'ALL') {
+      list.push({
+        id: 'category',
+        label: `Category: ${filters.selectedCategory}`,
+        onRemove: () => setFilters({ selectedCategory: 'ALL' }),
+      });
+    }
+    if (filters.excludeActiveDirectory) {
+      list.push({
+        id: 'exclude-ad',
+        label: '🚫 Exclude AD',
+        onRemove: () => setFilters({ excludeActiveDirectory: false }),
+      });
+    }
+    if (filters.hasWriteupPdf) {
+      list.push({
+        id: 'has-pdf',
+        label: 'Writeup PDF',
+        onRemove: () => setFilters({ hasWriteupPdf: false }),
+      });
+    }
+    if (filters.hasNotes) {
+      list.push({
+        id: 'has-notes',
+        label: 'Field Notes',
+        onRemove: () => setFilters({ hasNotes: false }),
+      });
+    }
+    filters.selectedTags.forEach((tag) => {
+      list.push({
+        id: `tag-${tag}`,
+        label: `#${tag}`,
+        onRemove: () => setFilters({ selectedTags: filters.selectedTags.filter((t) => t !== tag) }),
+      });
+    });
+    return list;
+  }, [filters, setFilters]);
+
+  const activeAdvancedFilterCount = activeFiltersList.length;
+
   return (
     <div className="space-y-4 w-full">
       {/* 1. Curated Practice Tracks Carousel / Pathways */}
@@ -434,7 +551,7 @@ export const TrackerView: React.FC = () => {
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Target className="w-4 h-4 text-cyber-cyan flex-shrink-0" />
-            <span className="text-xs font-bold text-white uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
               CURATED TACTICAL PATHWAYS & TRACKS
             </span>
           </div>
@@ -536,11 +653,10 @@ export const TrackerView: React.FC = () => {
       </div>
 
       {/* 2. Primary Filter, Search, and View Controls */}
-      <div className="p-3.5 rounded-xl border border-cyber-border bg-cyber-card/90 shadow-md font-mono space-y-3">
-        
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="p-3.5 rounded-xl border border-cyber-border bg-cyber-card/90 shadow-md font-mono space-y-2.5">
+        <div className="flex flex-wrap items-center justify-between gap-2.5">
           {/* Search Input */}
-          <div className="relative flex-1 min-w-[260px]">
+          <div className="relative flex-1 min-w-[240px]">
             <Search className="absolute left-3 top-2.5 w-4 h-4 text-cyber-muted" />
             <input
               type="text"
@@ -549,41 +665,41 @@ export const TrackerView: React.FC = () => {
               aria-label="Search targets by name, IP, OS, or CVE"
               value={filters.searchQuery}
               onChange={(e) => setFilters({ searchQuery: e.target.value })}
-              placeholder="Search by target name, IP (10.10.x), OS, exploit vector, or CVE..."
-              className="w-full pl-9 pr-4 py-2 bg-cyber-bg border border-cyber-border rounded-lg text-xs text-slate-900 dark:text-white placeholder-cyber-muted focus:outline-none focus:border-cyber-emerald"
+              placeholder="Search targets by name, IP, OS, vector, CVE..."
+              className="w-full pl-9 pr-8 py-1.5 bg-cyber-bg border border-cyber-border rounded-lg text-xs text-slate-900 dark:text-white placeholder-cyber-muted focus:outline-none focus:border-cyber-cyan transition-colors"
             />
             {filters.searchQuery && (
               <button
                 onClick={() => setFilters({ searchQuery: '' })}
-                className="absolute right-3 top-2.5 text-xs text-cyber-muted hover:text-slate-900 dark:hover:text-white"
+                className="absolute right-2.5 top-2 text-xs text-cyber-muted hover:text-slate-900 dark:hover:text-white"
               >
                 ✕
               </button>
             )}
           </div>
 
-          {/* Attractive Platform Selector with Genuine Glowing Badges */}
-          <div className="flex items-center gap-1.5 overflow-x-auto py-0.5">
+          {/* Platform Segmented Switch */}
+          <div className="flex items-center gap-1 overflow-x-auto py-0.5">
             {platformList.map((p) => {
               const active = filters.selectedPlatform === p;
               return (
-                <motion.button
+                <button
                   key={p}
-                  whileTap={{ scale: 0.95 }}
+                  type="button"
                   onClick={() => setFilters({ selectedPlatform: p })}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
+                  className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
                     active
                       ? p === 'HTB'
-                        ? 'bg-emerald-100 dark:bg-cyber-emerald/20 border-emerald-400 dark:border-cyber-emerald text-emerald-900 dark:text-cyber-emerald shadow-glow-emerald/30 font-bold'
+                        ? 'bg-emerald-100 dark:bg-cyber-emerald/20 border-emerald-400 dark:border-cyber-emerald text-emerald-950 dark:text-cyber-emerald shadow-glow-emerald/20 font-bold'
                         : p === 'THM'
-                        ? 'bg-red-100 dark:bg-cyber-crimson/20 border-red-400 dark:border-cyber-crimson text-red-900 dark:text-cyber-crimson shadow-glow-crimson/30 font-bold'
-                        : 'bg-cyan-100 dark:bg-cyber-cyan/20 border-cyan-400 dark:border-cyber-cyan text-cyan-900 dark:text-cyber-cyan shadow-glow-cyan/30 font-bold'
+                        ? 'bg-red-100 dark:bg-cyber-crimson/20 border-red-400 dark:border-cyber-crimson text-red-950 dark:text-cyber-crimson shadow-glow-crimson/20 font-bold'
+                        : 'bg-cyan-100 dark:bg-cyber-cyan/20 border-cyan-400 dark:border-cyber-cyan text-cyan-950 dark:text-cyber-cyan shadow-glow-cyan/20 font-bold'
                       : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:border-cyber-borderGlow'
                   }`}
                 >
                   {p !== 'ALL' && <PlatformIcon platform={p as Platform} className="w-3.5 h-3.5" />}
                   <span>{p === 'ALL' ? 'All Platforms' : p}</span>
-                </motion.button>
+                </button>
               );
             })}
           </div>
@@ -591,7 +707,7 @@ export const TrackerView: React.FC = () => {
           {/* Sorting Controls */}
           <div className="flex items-center gap-1.5 bg-cyber-bg px-2.5 py-1 rounded-lg border border-cyber-border text-xs">
             <ArrowUpDown className="w-3.5 h-3.5 text-cyber-cyan flex-shrink-0" />
-            <span className="text-[10px] uppercase font-bold text-cyber-muted">Sort:</span>
+            <span className="text-[10px] uppercase font-bold text-cyber-muted hidden sm:inline">Sort:</span>
             <CyberSelect
               id="tracker-sort-select"
               name="tracker-sort-select"
@@ -608,7 +724,7 @@ export const TrackerView: React.FC = () => {
               <button
                 onClick={() => setFilters({ sortDirection: filters.sortDirection === 'asc' ? 'desc' : 'asc' })}
                 className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-cyber-card hover:bg-cyber-card/80 text-cyber-cyan border border-cyber-cyan/30"
-                title={`Sort ${filters.sortDirection === 'asc' ? 'Ascending' : 'Descending'} (Click to toggle)`}
+                title={`Sort ${filters.sortDirection === 'asc' ? 'Ascending' : 'Descending'}`}
               >
                 {filters.sortDirection === 'asc' ? 'ASC ↑' : 'DESC ↓'}
               </button>
@@ -621,24 +737,45 @@ export const TrackerView: React.FC = () => {
               onClick={() => setFilters({ hideEmptyLanes: !filters.hideEmptyLanes })}
               className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition-all whitespace-nowrap ${
                 filters.hideEmptyLanes
-                  ? 'bg-amber-100 dark:bg-cyber-amber/15 text-amber-900 dark:text-cyber-amber border-amber-400 dark:border-cyber-amber/50 shadow-glow-amber/20'
+                  ? 'bg-amber-100 dark:bg-cyber-amber/15 text-amber-900 dark:text-cyber-amber border-amber-400 dark:border-cyber-amber/50'
                   : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-slate-900 dark:hover:text-white'
               }`}
               title="Toggle collapsing empty Kanban columns"
             >
               {filters.hideEmptyLanes ? <EyeOff className="w-3.5 h-3.5 text-amber-600 dark:text-cyber-amber" /> : <Eye className="w-3.5 h-3.5 text-cyber-muted" />}
-              <span>{filters.hideEmptyLanes ? 'Empty Lanes Hidden' : 'Hide Empty Lanes'}</span>
+              <span className="hidden xl:inline">{filters.hideEmptyLanes ? 'Empty Hidden' : 'Hide Empty'}</span>
             </button>
           )}
 
           {/* Tactical Recon Automation Launcher */}
           <button
             onClick={() => setReconAutomationModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-100 dark:bg-cyber-cyan/10 text-cyan-900 dark:text-cyber-cyan border border-cyan-400 dark:border-cyber-cyan/40 hover:bg-cyan-500 hover:text-black font-semibold text-xs transition-all shadow-glow-cyan/20 whitespace-nowrap"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-cyan-50 dark:bg-cyber-cyan/10 text-cyan-900 dark:text-cyber-cyan border border-cyan-400/60 dark:border-cyber-cyan/40 hover:bg-cyan-500 hover:text-black font-semibold text-xs transition-all shadow-glow-cyan/20 whitespace-nowrap"
             title="Launch Tactical Scan Importer & Payload Crafter"
           >
             <Zap className="w-3.5 h-3.5" />
-            <span>Scan & Payloads</span>
+            <span className="hidden sm:inline">Scan & Payloads</span>
+          </button>
+
+          {/* Progressive Disclosure Filter Toggle Button */}
+          <button
+            type="button"
+            onClick={toggleFiltersExpanded}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all whitespace-nowrap ${
+              filtersExpanded || activeAdvancedFilterCount > 0
+                ? 'bg-cyan-100 dark:bg-cyber-cyan/15 text-cyan-950 dark:text-cyber-cyan border-cyan-400 dark:border-cyber-cyan font-bold ring-1 ring-cyan-400/40'
+                : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:border-cyber-borderGlow'
+            }`}
+            title={filtersExpanded ? 'Collapse advanced filter panel' : 'Expand advanced filter panel'}
+          >
+            <Filter className="w-3.5 h-3.5 text-cyber-cyan" />
+            <span>Filters</span>
+            {activeAdvancedFilterCount > 0 && (
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-cyan-600 dark:bg-cyber-cyan text-white dark:text-black font-bold font-mono">
+                {activeAdvancedFilterCount}
+              </span>
+            )}
+            <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${filtersExpanded ? 'rotate-180 text-cyber-cyan' : 'text-cyber-muted'}`} />
           </button>
 
           {/* View Mode Switcher */}
@@ -690,537 +827,452 @@ export const TrackerView: React.FC = () => {
           </div>
         </div>
 
-        {/* 3. Quick Status, OS & Box Archetype Vector Filter Bars */}
-        <div className="pt-2.5 border-t border-cyber-border/70 space-y-2.5">
-          {/* Target Status Quick Filters */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-cyber-muted text-[10px] uppercase font-bold tracking-wider flex items-center gap-1">
-              <Trophy className="w-3.5 h-3.5 text-cyber-emerald" />
-              <span>STATUS:</span>
-            </span>
+        {/* Active Filter Tokens Strip (Dismissable Chips) */}
+        {activeFiltersList.length > 0 && (
+          <div className="flex items-center justify-between gap-2 flex-wrap pt-2 border-t border-cyber-border/50 text-xs">
             <div className="flex items-center gap-1.5 flex-wrap">
-              {/* ALL */}
-              <button
-                type="button"
-                onClick={() => {
-                  setFilters({ selectedStatus: 'ALL' });
-                  if (soundEnabled) playCyberSound('click');
-                }}
-                className={`px-2.5 py-1 rounded text-[11px] border font-semibold transition-all flex items-center gap-1.5 ${
-                  (filters.selectedStatus || 'ALL') === 'ALL'
-                    ? 'bg-cyber-card text-slate-900 dark:text-white border-cyber-cyan shadow-glow-cyan/20 font-bold ring-1 ring-cyber-cyan/30'
-                    : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:border-cyber-borderGlow'
-                }`}
-                title="Show all targets regardless of solve status"
-              >
-                <span>All Statuses</span>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-slate-200/60 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono font-bold">
-                  {statusCounts.ALL}
-                </span>
-              </button>
-
-              {/* COMPLETED / ROOT */}
-              <button
-                type="button"
-                onClick={() => {
-                  setFilters({ selectedStatus: filters.selectedStatus === 'completed' ? 'ALL' : 'completed' });
-                  if (soundEnabled) playCyberSound('flag');
-                }}
-                className={`px-2.5 py-1 rounded text-[11px] border font-semibold transition-all flex items-center gap-1.5 ${
-                  filters.selectedStatus === 'completed'
-                    ? 'bg-emerald-100 dark:bg-cyber-emerald/20 text-emerald-950 dark:text-cyber-emerald border-emerald-500 shadow-glow-emerald/30 font-bold ring-1 ring-emerald-500/40'
-                    : 'bg-cyber-bg border-emerald-500/30 text-emerald-700 dark:text-cyber-emerald/80 hover:text-emerald-900 dark:hover:text-cyber-emerald hover:border-emerald-500'
-                }`}
-                title="Filter fully completed / rooted machines (Click to toggle)"
-              >
-                <Trophy className="w-3.5 h-3.5 text-cyber-emerald" />
-                <span>🏆 Completed / Root</span>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-200/80 dark:bg-cyber-emerald/20 text-emerald-900 dark:text-cyber-emerald font-mono font-bold">
-                  {statusCounts.completed}
-                </span>
-              </button>
-
-              {/* FOOTHOLD / USER */}
-              <button
-                type="button"
-                onClick={() => {
-                  setFilters({ selectedStatus: filters.selectedStatus === 'foothold' ? 'ALL' : 'foothold' });
-                  if (soundEnabled) playCyberSound('flag');
-                }}
-                className={`px-2.5 py-1 rounded text-[11px] border font-semibold transition-all flex items-center gap-1.5 ${
-                  filters.selectedStatus === 'foothold'
-                    ? 'bg-amber-100 dark:bg-cyber-amber/20 text-amber-950 dark:text-cyber-amber border-amber-500 shadow-glow-amber/30 font-bold ring-1 ring-amber-500/40'
-                    : 'bg-cyber-bg border-amber-500/30 text-amber-700 dark:text-cyber-amber/80 hover:text-amber-900 dark:hover:text-cyber-amber hover:border-amber-500'
-                }`}
-                title="Filter targets where initial foothold / user shell is achieved, but not yet rooted (Click to toggle)"
-              >
-                <Key className="w-3.5 h-3.5 text-cyber-amber" />
-                <span>⚡ Foothold / User</span>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-200/80 dark:bg-cyber-amber/20 text-amber-900 dark:text-cyber-amber font-mono font-bold">
-                  {statusCounts.foothold}
-                </span>
-              </button>
-
-              {/* RECON */}
-              <button
-                type="button"
-                onClick={() => {
-                  setFilters({ selectedStatus: filters.selectedStatus === 'recon' ? 'ALL' : 'recon' });
-                  if (soundEnabled) playCyberSound('click');
-                }}
-                className={`px-2.5 py-1 rounded text-[11px] border font-semibold transition-all flex items-center gap-1.5 ${
-                  filters.selectedStatus === 'recon'
-                    ? 'bg-cyan-100 dark:bg-cyber-cyan/20 text-cyan-950 dark:text-cyber-cyan border-cyan-500 shadow-glow-cyan/30 font-bold ring-1 ring-cyan-500/40'
-                    : 'bg-cyber-bg border-cyan-500/30 text-cyan-700 dark:text-cyber-cyan/80 hover:text-cyan-900 dark:hover:text-cyber-cyan hover:border-cyan-500'
-                }`}
-                title="Filter targets currently undergoing active reconnaissance & scanning (Click to toggle)"
-              >
-                <Zap className="w-3.5 h-3.5 text-cyber-cyan" />
-                <span>🔍 Recon In-Progress</span>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-200/80 dark:bg-cyber-cyan/20 text-cyan-900 dark:text-cyber-cyan font-mono font-bold">
-                  {statusCounts.recon}
-                </span>
-              </button>
-
-              {/* BACKLOG */}
-              <button
-                type="button"
-                onClick={() => {
-                  setFilters({ selectedStatus: filters.selectedStatus === 'backlog' ? 'ALL' : 'backlog' });
-                  if (soundEnabled) playCyberSound('click');
-                }}
-                className={`px-2.5 py-1 rounded text-[11px] border font-semibold transition-all flex items-center gap-1.5 ${
-                  filters.selectedStatus === 'backlog'
-                    ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white border-slate-400 dark:border-slate-500 font-bold ring-1 ring-slate-400/40'
-                    : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:border-cyber-borderGlow'
-                }`}
-                title="Filter unstarted / queued backlog targets (Click to toggle)"
-              >
-                <Target className="w-3.5 h-3.5 text-cyber-muted" />
-                <span>📋 Queued / Backlog</span>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-slate-200/60 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono font-bold">
-                  {statusCounts.backlog}
-                </span>
-              </button>
-            </div>
-          </div>
-
-          {/* OS Quick Filters */}
-          <div className="flex items-center gap-2 flex-wrap pt-1 border-t border-cyber-border/40">
-            <span className="text-cyber-muted text-[10px] uppercase font-bold tracking-wider">TARGET OS:</span>
-            <div className="flex items-center gap-1.5 flex-wrap">
-              {osList.map((os) => {
-                const isActive = (filters.selectedOs || 'ALL') === os;
-                return (
+              <span className="text-cyber-muted text-[10px] uppercase font-bold tracking-wider mr-0.5">Active:</span>
+              {activeFiltersList.map((item) => (
+                <span
+                  key={item.id}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-50 dark:bg-cyber-cyan/15 text-cyan-900 dark:text-cyber-cyan border border-cyan-300 dark:border-cyber-cyan/30 text-[11px] shadow-xs"
+                >
+                  <span>{item.label}</span>
                   <button
-                    key={os}
-                    onClick={() => setFilters({ selectedOs: os })}
-                    className={`px-2.5 py-1 rounded text-[11px] border font-semibold transition-all flex items-center gap-1.5 ${
-                      isActive
-                        ? 'bg-cyber-card text-slate-900 dark:text-white border-cyber-emerald shadow-glow-emerald/20 font-bold'
-                        : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:border-cyber-borderGlow'
-                    }`}
+                    type="button"
+                    onClick={item.onRemove}
+                    className="hover:text-rose-600 dark:hover:text-rose-400 transition-colors p-0.5 font-bold"
+                    title={`Remove ${item.label}`}
                   >
-                    {os === 'ALL' ? (
-                      <Globe className="w-3.5 h-3.5 text-cyber-cyan" />
-                    ) : (
-                      <OsIcon os={os} className="w-3.5 h-3.5" />
-                    )}
-                    <span>{os === 'ALL' ? 'All OS' : os}</span>
+                    ✕
                   </button>
-                );
-              })}
+                </span>
+              ))}
             </div>
-          </div>
 
-          {/* Tactical 1-Click Presets Strip: ONLY WEB | ONLY AD | NO ACTIVE DIRECTORY (EXCLUSION) */}
-          <div className="flex items-center gap-2 flex-wrap pt-1 border-t border-cyber-border/40">
-            <span className="text-cyber-muted text-[10px] uppercase font-bold tracking-wider flex items-center gap-1">
-              <span>TACTICAL PRESETS:</span>
-            </span>
-            <div className="flex items-center gap-1.5 flex-wrap">
-              {/* Preset: ONLY WEB */}
+            <div className="flex items-center gap-2.5">
+              <span className="text-cyber-muted text-xs">
+                Showing <strong className="text-slate-900 dark:text-white">{filteredMachines.length}</strong> / {machines.length}
+              </span>
               <button
                 type="button"
-                onClick={() => {
-                  const isOnlyWeb = filters.selectedVulnCategory === 'Web' && !filters.excludeActiveDirectory;
-                  if (isOnlyWeb) {
-                    setFilters({ selectedVulnCategory: 'ALL', selectedCategory: 'ALL' });
-                  } else {
-                    setFilters({ selectedVulnCategory: 'Web', selectedCategory: 'ALL', excludeActiveDirectory: false });
-                  }
-                  if (soundEnabled) playCyberSound('click');
-                }}
-                className={`px-2.5 py-1 rounded text-[11px] border font-mono font-bold transition-all flex items-center gap-1.5 ${
-                  filters.selectedVulnCategory === 'Web' && !filters.excludeActiveDirectory
-                    ? 'bg-cyan-100 dark:bg-cyan-500/20 text-cyan-900 dark:text-cyan-300 border-cyan-400 shadow-glow-cyan/20 ring-1 ring-cyan-500/40 font-extrabold'
-                    : 'bg-cyber-bg border-cyan-500/30 text-cyan-800 dark:text-cyan-400/80 hover:text-cyan-950 dark:hover:text-cyan-300 hover:border-cyan-400'
-                }`}
-                title="Filter only Web application targets (SQLi, XSS, SSRF, LFI, RCE, etc.)"
+                onClick={resetFilters}
+                className="text-[11px] font-bold text-cyber-muted hover:text-rose-600 dark:hover:text-rose-400 underline transition-colors"
               >
-                <Globe className="w-3.5 h-3.5 text-cyan-500" />
-                <span>🌐 ONLY WEB</span>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-200/70 text-cyan-950 dark:bg-cyan-500/20 dark:text-cyan-300 ml-0.5">
-                  {categoryCounts['Web'] || 0}
-                </span>
-              </button>
-
-              {/* Preset: ONLY ACTIVE DIRECTORY */}
-              <button
-                type="button"
-                onClick={() => {
-                  const isOnlyAd = filters.selectedVulnCategory === 'Active Directory' && !filters.excludeActiveDirectory;
-                  if (isOnlyAd) {
-                    setFilters({ selectedVulnCategory: 'ALL', selectedCategory: 'ALL' });
-                  } else {
-                    setFilters({ selectedVulnCategory: 'Active Directory', selectedCategory: 'ALL', excludeActiveDirectory: false });
-                  }
-                  if (soundEnabled) playCyberSound('click');
-                }}
-                className={`px-2.5 py-1 rounded text-[11px] border font-mono font-bold transition-all flex items-center gap-1.5 ${
-                  filters.selectedVulnCategory === 'Active Directory' && !filters.excludeActiveDirectory
-                    ? 'bg-purple-100 dark:bg-purple-500/20 text-purple-900 dark:text-purple-300 border-purple-400 shadow-glow-purple/20 ring-1 ring-purple-500/40 font-extrabold'
-                    : 'bg-cyber-bg border-purple-500/30 text-purple-800 dark:text-purple-400/80 hover:text-purple-950 dark:hover:text-purple-300 hover:border-purple-400'
-                }`}
-                title="Filter only Active Directory domain environments (Kerberos, DCSync, BloodHound, etc.)"
-              >
-                <Cpu className="w-3.5 h-3.5 text-purple-500" />
-                <span>🛡️ ONLY AD</span>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-purple-200/70 text-purple-950 dark:bg-purple-500/20 dark:text-purple-300 ml-0.5">
-                  {categoryCounts['AD_TOTAL'] || 0}
-                </span>
-              </button>
-
-              {/* Preset: TJ NULL (OSCP 2024) */}
-              <button
-                type="button"
-                onClick={() => {
-                  const isTjNull = filters.selectedTrack === 'tjnull-oscp';
-                  if (isTjNull) {
-                    setFilters({ selectedTrack: 'ALL' });
-                  } else {
-                    setFilters({ selectedTrack: 'tjnull-oscp', selectedVulnCategory: 'ALL', selectedCategory: 'ALL', excludeActiveDirectory: false });
-                  }
-                  if (soundEnabled) playCyberSound('click');
-                }}
-                className={`px-2.5 py-1 rounded text-[11px] border font-mono font-bold transition-all flex items-center gap-1.5 ${
-                  filters.selectedTrack === 'tjnull-oscp'
-                    ? 'bg-emerald-100 dark:bg-emerald-500/25 text-emerald-900 dark:text-emerald-300 border-emerald-400 shadow-glow-emerald/30 ring-1 ring-emerald-500/50 font-extrabold'
-                    : 'bg-cyber-bg border-emerald-500/30 text-emerald-800 dark:text-emerald-400/80 hover:text-emerald-950 dark:hover:text-emerald-300 hover:border-emerald-400'
-                }`}
-                title="Filter machines on TJ_Null's legendary OSCP 2024 syllabus"
-              >
-                <Target className="w-3.5 h-3.5 text-emerald-500" />
-                <span>🎯 TJ NULL (OSCP)</span>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-200/70 text-emerald-950 dark:bg-emerald-500/20 dark:text-emerald-300 ml-0.5">
-                  {trackStats['tjnull-oscp']?.total || 0}
-                </span>
-              </button>
-
-              {/* Preset: CPTS TROPHY ROOM */}
-              <button
-                type="button"
-                onClick={() => {
-                  const isCpts = filters.selectedTrack === 'cpts-path';
-                  if (isCpts) {
-                    setFilters({ selectedTrack: 'ALL' });
-                  } else {
-                    setFilters({ selectedTrack: 'cpts-path', selectedVulnCategory: 'ALL', selectedCategory: 'ALL', excludeActiveDirectory: false });
-                  }
-                  if (soundEnabled) playCyberSound('click');
-                }}
-                className={`px-2.5 py-1 rounded text-[11px] border font-mono font-bold transition-all flex items-center gap-1.5 ${
-                  filters.selectedTrack === 'cpts-path'
-                    ? 'bg-cyan-100 dark:bg-cyan-500/25 text-cyan-900 dark:text-cyan-300 border-cyan-400 shadow-glow-cyan/30 ring-1 ring-cyan-500/50 font-extrabold'
-                    : 'bg-cyber-bg border-cyan-500/30 text-cyan-800 dark:text-cyan-400/80 hover:text-cyan-950 dark:hover:text-cyan-300 hover:border-cyan-400'
-                }`}
-                title="Filter machines on Penetration Testing Track Trophy Room"
-              >
-                <Trophy className="w-3.5 h-3.5 text-cyan-500" />
-                <span>🏆 PEN-TEST PATH</span>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-200/70 text-cyan-950 dark:bg-cyan-500/20 dark:text-cyan-300 ml-0.5">
-                  {trackStats['cpts-path']?.total || 0}
-                </span>
-              </button>
-
-              {/* Exclusion Toggle: NO ACTIVE DIRECTORY (EXCLUDE AD) */}
-              <button
-                type="button"
-                onClick={() => {
-                  const nextExclude = !filters.excludeActiveDirectory;
-                  const updates: Partial<FilterState> = { excludeActiveDirectory: nextExclude };
-                  if (nextExclude && (filters.selectedVulnCategory === 'Active Directory' || filters.selectedCategory === 'Active Directory')) {
-                    updates.selectedVulnCategory = 'ALL';
-                    updates.selectedCategory = 'ALL';
-                  }
-                  setFilters(updates);
-                  if (soundEnabled) playCyberSound('toggle');
-                }}
-                className={`px-2.5 py-1 rounded text-[11px] border font-mono font-bold transition-all flex items-center gap-1.5 ${
-                  filters.excludeActiveDirectory
-                    ? 'bg-rose-100 dark:bg-rose-950/60 text-rose-900 dark:text-rose-300 border-rose-500 shadow-glow-crimson/20 ring-1 ring-rose-500/50 font-extrabold'
-                    : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-rose-700 dark:hover:text-rose-400 hover:border-rose-500/40'
-                }`}
-                title="Exclude all 55 Active Directory machines from results (show pure standalone Linux/Windows/Web boxes)"
-              >
-                <Ban className={`w-3.5 h-3.5 ${filters.excludeActiveDirectory ? 'text-rose-500' : 'text-cyber-muted'}`} />
-                <span>{filters.excludeActiveDirectory ? '🚫 EXCLUDING DOMAIN LABS' : '🚫 EXCLUDE DOMAIN LABS'}</span>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-200/70 text-rose-950 dark:bg-rose-500/20 dark:text-rose-300 ml-0.5">
-                  {filters.excludeActiveDirectory ? `${categoryCounts['NON_AD_TOTAL'] || 0} left` : `-${categoryCounts['AD_TOTAL'] || 0}`}
-                </span>
+                Clear all
               </button>
             </div>
           </div>
+        )}
 
-          {/* Vulnerability Archetype Category Filter Pills */}
-          <div className="flex items-center gap-2 flex-wrap pt-1 border-t border-cyber-border/40">
-            <span className="text-cyber-muted text-[10px] uppercase font-bold tracking-wider">VULNERABILITY CATEGORY:</span>
-            <div className="flex items-center gap-1.5 flex-wrap">
-              {/* ALL Categories Pill */}
-              <button
-                type="button"
-                onClick={() => setFilters({ selectedVulnCategory: 'ALL', selectedCategory: 'ALL' })}
-                className={`px-2.5 py-1 rounded text-[11px] border transition-all flex items-center gap-1 font-semibold ${
-                  (filters.selectedVulnCategory === 'ALL' || !filters.selectedVulnCategory) && (filters.selectedCategory === 'ALL' || !filters.selectedCategory)
-                    ? 'bg-cyber-card text-slate-900 dark:text-white border-cyber-cyan shadow-glow-cyan/20 font-bold'
-                    : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:border-cyber-borderGlow'
-                }`}
-              >
-                <span>All Categories</span>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyber-bg border border-cyber-border text-cyber-muted ml-0.5">
-                  {machines.length}
+        {/* 3. Collapsible Advanced Filter Drawer */}
+        <AnimatePresence>
+          {filtersExpanded && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="pt-3 border-t border-cyber-border/70 space-y-3 overflow-hidden"
+            >
+            {/* Group 1: Target Status & OS */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-cyber-muted text-[10px] uppercase font-bold tracking-wider flex items-center gap-1 min-w-[70px]">
+                  <Trophy className="w-3.5 h-3.5 text-cyber-emerald" />
+                  <span>STATUS:</span>
                 </span>
-              </button>
-
-              {/* Has Writeup PDF Filter Pill */}
-              <button
-                type="button"
-                onClick={() => {
-                  setFilters({ hasWriteupPdf: !filters.hasWriteupPdf });
-                  if (soundEnabled) playCyberSound('click');
-                }}
-                className={`px-2.5 py-1 rounded text-[11px] border transition-all flex items-center gap-1.5 font-semibold ${
-                  filters.hasWriteupPdf
-                    ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-900 dark:text-emerald-400 border-emerald-400 dark:border-emerald-500 shadow-glow-cyan/20 font-bold ring-1 ring-emerald-500/50'
-                    : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:border-cyber-borderGlow'
-                }`}
-                title="Filter targets with available writeup PDFs (Official HTB or Local Uploads)"
-              >
-                <FileText className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                <span>Writeup PDF</span>
-                <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono ${filters.hasWriteupPdf ? 'bg-black/30 text-white' : 'bg-cyber-card text-emerald-600 dark:text-emerald-400'}`}>
-                  {pdfCount}
-                </span>
-              </button>
-
-              {/* Has In-Progress / Tactical Notes Filter Pill */}
-              <button
-                type="button"
-                onClick={() => {
-                  setFilters({ hasNotes: !filters.hasNotes });
-                  if (soundEnabled) playCyberSound('click');
-                }}
-                className={`px-2.5 py-1 rounded text-[11px] border transition-all flex items-center gap-1.5 font-semibold ${
-                  filters.hasNotes
-                    ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-900 dark:text-amber-400 border-amber-400 dark:border-amber-500 shadow-glow-amber/20 font-bold ring-1 ring-amber-500/50'
-                    : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:border-cyber-borderGlow'
-                }`}
-                title="Filter targets with tactical operator scratchpad notes"
-              >
-                <FileText className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                <span>📝 Notes</span>
-                <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono ${filters.hasNotes ? 'bg-black/30 text-white' : 'bg-cyber-card text-amber-600 dark:text-amber-400'}`}>
-                  {notesCount}
-                </span>
-              </button>
-
-              {/* Batch Import PDFs Action */}
-              <button
-                type="button"
-                onClick={() => {
-                  if (machines.length > 0) {
-                    setPdfModalMachineId(machines[0].id);
-                  }
-                }}
-                className="px-2 py-1 rounded text-[11px] border border-cyan-300 dark:border-cyber-cyan/30 bg-cyan-50 dark:bg-cyber-cyan/10 text-cyan-800 dark:text-cyber-cyan hover:bg-cyan-100 dark:hover:bg-cyber-cyan/20 transition-all flex items-center gap-1 font-mono"
-                title="Open HTB Writeup PDF Batch Importer"
-              >
-                <FolderArchive className="w-3.5 h-3.5 text-cyan-600 dark:text-cyber-cyan" />
-                <span>Import PDFs</span>
-              </button>
-
-              {/* Specific Vulnerability Pills */}
-              {VULN_CATEGORIES.map((cat) => {
-                const isActive = (filters.selectedVulnCategory === cat.id) || (filters.selectedCategory === cat.id);
-                const count = categoryCounts[cat.id] || 0;
-                return (
+                <div className="flex items-center gap-1.5 flex-wrap">
                   <button
-                    key={cat.id}
                     type="button"
                     onClick={() => {
-                      if (isActive) {
+                      setFilters({ selectedStatus: 'ALL' });
+                      if (soundEnabled) playCyberSound('click');
+                    }}
+                    className={`px-2 py-0.5 rounded text-[11px] border font-semibold transition-all flex items-center gap-1.5 ${
+                      (filters.selectedStatus || 'ALL') === 'ALL'
+                        ? 'bg-cyber-card text-slate-900 dark:text-white border-cyber-cyan shadow-glow-cyan/20 font-bold ring-1 ring-cyber-cyan/30'
+                        : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    <span>All</span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-slate-200/60 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono font-bold">
+                      {statusCounts.ALL}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFilters({ selectedStatus: filters.selectedStatus === 'completed' ? 'ALL' : 'completed' });
+                      if (soundEnabled) playCyberSound('flag');
+                    }}
+                    className={`px-2 py-0.5 rounded text-[11px] border font-semibold transition-all flex items-center gap-1.5 ${
+                      filters.selectedStatus === 'completed'
+                        ? 'bg-emerald-100 dark:bg-cyber-emerald/20 text-emerald-950 dark:text-cyber-emerald border-emerald-500 shadow-glow-emerald/30 font-bold ring-1 ring-emerald-500/40'
+                        : 'bg-cyber-bg border-emerald-500/30 text-emerald-700 dark:text-cyber-emerald/80 hover:text-emerald-900 dark:hover:text-cyber-emerald'
+                    }`}
+                  >
+                    <Trophy className="w-3 h-3 text-cyber-emerald" />
+                    <span>Rooted</span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-200/80 dark:bg-cyber-emerald/20 text-emerald-900 dark:text-cyber-emerald font-mono font-bold">
+                      {statusCounts.completed}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFilters({ selectedStatus: filters.selectedStatus === 'foothold' ? 'ALL' : 'foothold' });
+                      if (soundEnabled) playCyberSound('flag');
+                    }}
+                    className={`px-2 py-0.5 rounded text-[11px] border font-semibold transition-all flex items-center gap-1.5 ${
+                      filters.selectedStatus === 'foothold'
+                        ? 'bg-amber-100 dark:bg-cyber-amber/20 text-amber-950 dark:text-cyber-amber border-amber-500 shadow-glow-amber/30 font-bold ring-1 ring-amber-500/40'
+                        : 'bg-cyber-bg border-amber-500/30 text-amber-700 dark:text-cyber-amber/80 hover:text-amber-900 dark:hover:text-cyber-amber'
+                    }`}
+                  >
+                    <Key className="w-3 h-3 text-cyber-amber" />
+                    <span>Foothold</span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-200/80 dark:bg-cyber-amber/20 text-amber-900 dark:text-cyber-amber font-mono font-bold">
+                      {statusCounts.foothold}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFilters({ selectedStatus: filters.selectedStatus === 'recon' ? 'ALL' : 'recon' });
+                      if (soundEnabled) playCyberSound('click');
+                    }}
+                    className={`px-2 py-0.5 rounded text-[11px] border font-semibold transition-all flex items-center gap-1.5 ${
+                      filters.selectedStatus === 'recon'
+                        ? 'bg-cyan-100 dark:bg-cyber-cyan/20 text-cyan-950 dark:text-cyber-cyan border-cyan-500 shadow-glow-cyan/30 font-bold ring-1 ring-cyan-500/40'
+                        : 'bg-cyber-bg border-cyan-500/30 text-cyan-700 dark:text-cyber-cyan/80 hover:text-cyan-900 dark:hover:text-cyber-cyan'
+                    }`}
+                  >
+                    <Zap className="w-3 h-3 text-cyber-cyan" />
+                    <span>Recon</span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-200/80 dark:bg-cyber-cyan/20 text-cyan-900 dark:text-cyber-cyan font-mono font-bold">
+                      {statusCounts.recon}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFilters({ selectedStatus: filters.selectedStatus === 'backlog' ? 'ALL' : 'backlog' });
+                      if (soundEnabled) playCyberSound('click');
+                    }}
+                    className={`px-2 py-0.5 rounded text-[11px] border font-semibold transition-all flex items-center gap-1.5 ${
+                      filters.selectedStatus === 'backlog'
+                        ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white border-slate-400 dark:border-slate-500 font-bold ring-1 ring-slate-400/40'
+                        : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    <Target className="w-3 h-3 text-cyber-muted" />
+                    <span>Queued</span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-slate-200/60 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono font-bold">
+                      {statusCounts.backlog}
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {/* OS Quick Filters */}
+              <div className="flex items-center gap-2 flex-wrap pt-1 border-t border-cyber-border/40">
+                <span className="text-cyber-muted text-[10px] uppercase font-bold tracking-wider min-w-[70px]">TARGET OS:</span>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {osList.map((os) => {
+                    const isActive = (filters.selectedOs || 'ALL') === os;
+                    return (
+                      <button
+                        key={os}
+                        type="button"
+                        onClick={() => setFilters({ selectedOs: os })}
+                        className={`px-2 py-0.5 rounded text-[11px] border font-semibold transition-all flex items-center gap-1.5 ${
+                          isActive
+                            ? 'bg-cyber-card text-slate-900 dark:text-white border-cyber-emerald shadow-glow-emerald/20 font-bold'
+                            : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-slate-900 dark:hover:text-white'
+                        }`}
+                      >
+                        {os === 'ALL' ? (
+                          <Globe className="w-3 h-3 text-cyber-cyan" />
+                        ) : (
+                          <OsIcon os={os} className="w-3 h-3" />
+                        )}
+                        <span>{os === 'ALL' ? 'All OS' : os}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Group 2: Tactical Presets & Vulnerability Categories */}
+            <div className="space-y-2 pt-2 border-t border-cyber-border/40">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-cyber-muted text-[10px] uppercase font-bold tracking-wider min-w-[70px]">PRESETS:</span>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {/* Preset: ONLY WEB */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const isOnlyWeb = filters.selectedVulnCategory === 'Web' && !filters.excludeActiveDirectory;
+                      if (isOnlyWeb) {
                         setFilters({ selectedVulnCategory: 'ALL', selectedCategory: 'ALL' });
                       } else {
-                        const updates: Partial<FilterState> = {
-                          selectedVulnCategory: cat.id,
-                          selectedCategory: 'ALL',
-                        };
-                        if (cat.id === 'Active Directory' && filters.excludeActiveDirectory) {
-                          updates.excludeActiveDirectory = false;
-                        }
-                        setFilters(updates);
+                        setFilters({ selectedVulnCategory: 'Web', selectedCategory: 'ALL', excludeActiveDirectory: false });
                       }
                       if (soundEnabled) playCyberSound('click');
                     }}
-                    className={`px-2 py-0.5 rounded text-[11px] border font-mono transition-all flex items-center gap-1 ${
-                      isActive
-                        ? `${cat.badgeColor} ${cat.borderColor} shadow-sm font-bold ring-1`
-                        : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:border-cyber-borderGlow'
+                    className={`px-2 py-0.5 rounded text-[11px] border font-mono font-bold transition-all flex items-center gap-1.5 ${
+                      filters.selectedVulnCategory === 'Web' && !filters.excludeActiveDirectory
+                        ? 'bg-cyan-100 dark:bg-cyan-500/20 text-cyan-900 dark:text-cyan-300 border-cyan-400 shadow-glow-cyan/20 ring-1 ring-cyan-500/40 font-extrabold'
+                        : 'bg-cyber-bg border-cyan-500/30 text-cyan-800 dark:text-cyan-400/80 hover:text-cyan-950 dark:hover:text-cyan-300'
                     }`}
-                    title={`Filter by ${cat.label}`}
+                    title="Filter only Web application targets"
                   >
-                    <span>{cat.shortLabel}</span>
-                    <span className={`text-[9px] px-1 py-0.2 rounded ${isActive ? 'bg-black/30 text-white' : 'bg-cyber-card text-cyber-muted'}`}>
-                      {count}
+                    <Globe className="w-3 h-3 text-cyan-500" />
+                    <span>🌐 ONLY WEB</span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-200/70 text-cyan-950 dark:bg-cyan-500/20 dark:text-cyan-300">
+                      {categoryCounts['Web'] || 0}
                     </span>
                   </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
 
-        {/* 4. Secondary Filters Bar (Difficulty, Cert, Attack Tag, Reset) */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-2.5 border-t border-cyber-border/70 text-xs">
-          
-          <div className="flex flex-wrap items-center gap-3">
-            {/* Difficulty Dropdown */}
-            <div className="flex items-center gap-1.5">
-              <span className="text-cyber-muted text-[10px] uppercase font-bold">Difficulty:</span>
-              <CyberSelect<Difficulty | 'ALL'>
-                id="tracker-difficulty-select"
-                name="tracker-difficulty-select"
-                aria-label="Filter difficulty"
-                value={filters.selectedDifficulty}
-                onChange={(val) => setFilters({ selectedDifficulty: val })}
-                options={DIFFICULTY_FILTER_OPTIONS}
-                size="xs"
-                variant="default"
-                soundEnabled={soundEnabled}
-              />
+                  {/* Preset: ONLY ACTIVE DIRECTORY */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const isOnlyAd = filters.selectedVulnCategory === 'Active Directory' && !filters.excludeActiveDirectory;
+                      if (isOnlyAd) {
+                        setFilters({ selectedVulnCategory: 'ALL', selectedCategory: 'ALL' });
+                      } else {
+                        setFilters({ selectedVulnCategory: 'Active Directory', selectedCategory: 'ALL', excludeActiveDirectory: false });
+                      }
+                      if (soundEnabled) playCyberSound('click');
+                    }}
+                    className={`px-2 py-0.5 rounded text-[11px] border font-mono font-bold transition-all flex items-center gap-1.5 ${
+                      filters.selectedVulnCategory === 'Active Directory' && !filters.excludeActiveDirectory
+                        ? 'bg-purple-100 dark:bg-purple-500/20 text-purple-900 dark:text-purple-300 border-purple-400 shadow-glow-purple/20 ring-1 ring-purple-500/40 font-extrabold'
+                        : 'bg-cyber-bg border-purple-500/30 text-purple-800 dark:text-purple-400/80 hover:text-purple-950 dark:hover:text-purple-300'
+                    }`}
+                    title="Filter only Active Directory domain environments"
+                  >
+                    <Cpu className="w-3 h-3 text-purple-500" />
+                    <span>🛡️ ONLY AD</span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-purple-200/70 text-purple-950 dark:bg-purple-500/20 dark:text-purple-300">
+                      {categoryCounts['AD_TOTAL'] || 0}
+                    </span>
+                  </button>
+
+                  {/* Exclusion Toggle: NO ACTIVE DIRECTORY */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const nextExclude = !filters.excludeActiveDirectory;
+                      const updates: Partial<FilterState> = { excludeActiveDirectory: nextExclude };
+                      if (nextExclude && (filters.selectedVulnCategory === 'Active Directory' || filters.selectedCategory === 'Active Directory')) {
+                        updates.selectedVulnCategory = 'ALL';
+                        updates.selectedCategory = 'ALL';
+                      }
+                      setFilters(updates);
+                      if (soundEnabled) playCyberSound('toggle');
+                    }}
+                    className={`px-2 py-0.5 rounded text-[11px] border font-mono font-bold transition-all flex items-center gap-1.5 ${
+                      filters.excludeActiveDirectory
+                        ? 'bg-rose-100 dark:bg-rose-950/60 text-rose-900 dark:text-rose-300 border-rose-500 shadow-glow-crimson/20 ring-1 ring-rose-500/50 font-extrabold'
+                        : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-rose-700 dark:hover:text-rose-400'
+                    }`}
+                    title="Exclude Active Directory machines (show standalone targets)"
+                  >
+                    <Ban className={`w-3 h-3 ${filters.excludeActiveDirectory ? 'text-rose-500' : 'text-cyber-muted'}`} />
+                    <span>{filters.excludeActiveDirectory ? '🚫 EXCLUDING DOMAIN LABS' : '🚫 EXCLUDE DOMAIN LABS'}</span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-200/70 text-rose-950 dark:bg-rose-500/20 dark:text-rose-300">
+                      {filters.excludeActiveDirectory ? `${categoryCounts['NON_AD_TOTAL'] || 0} left` : `-${categoryCounts['AD_TOTAL'] || 0}`}
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Vulnerability Category Pills & Writeup/Notes */}
+              <div className="flex items-center gap-2 flex-wrap pt-1 border-t border-cyber-border/40">
+                <span className="text-cyber-muted text-[10px] uppercase font-bold tracking-wider min-w-[70px]">CATEGORIES:</span>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <button
+                    type="button"
+                    onClick={() => setFilters({ selectedVulnCategory: 'ALL', selectedCategory: 'ALL' })}
+                    className={`px-2 py-0.5 rounded text-[11px] border transition-all flex items-center gap-1 font-semibold ${
+                      (filters.selectedVulnCategory === 'ALL' || !filters.selectedVulnCategory) && (filters.selectedCategory === 'ALL' || !filters.selectedCategory)
+                        ? 'bg-cyber-card text-slate-900 dark:text-white border-cyber-cyan shadow-glow-cyan/20 font-bold'
+                        : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    <span>All</span>
+                    <span className="text-[9px] px-1 py-0.2 rounded bg-cyber-bg border border-cyber-border text-cyber-muted">
+                      {machines.length}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFilters({ hasWriteupPdf: !filters.hasWriteupPdf });
+                      if (soundEnabled) playCyberSound('click');
+                    }}
+                    className={`px-2 py-0.5 rounded text-[11px] border transition-all flex items-center gap-1.5 font-semibold ${
+                      filters.hasWriteupPdf
+                        ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-900 dark:text-emerald-400 border-emerald-400 dark:border-emerald-500 font-bold ring-1 ring-emerald-500/50'
+                        : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    <FileText className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                    <span>PDF</span>
+                    <span className={`text-[9px] px-1 py-0.2 rounded font-mono ${filters.hasWriteupPdf ? 'bg-black/30 text-white' : 'bg-cyber-card text-emerald-600 dark:text-emerald-400'}`}>
+                      {pdfCount}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFilters({ hasNotes: !filters.hasNotes });
+                      if (soundEnabled) playCyberSound('click');
+                    }}
+                    className={`px-2 py-0.5 rounded text-[11px] border transition-all flex items-center gap-1.5 font-semibold ${
+                      filters.hasNotes
+                        ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-900 dark:text-amber-400 border-amber-400 dark:border-amber-500 font-bold ring-1 ring-amber-500/50'
+                        : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    <FileText className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+                    <span>Notes</span>
+                    <span className={`text-[9px] px-1 py-0.2 rounded font-mono ${filters.hasNotes ? 'bg-black/30 text-white' : 'bg-cyber-card text-amber-600 dark:text-amber-400'}`}>
+                      {notesCount}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (machines.length > 0) {
+                        setPdfModalMachineId(machines[0].id);
+                      }
+                    }}
+                    className="px-2 py-0.5 rounded text-[11px] border border-cyan-300 dark:border-cyber-cyan/30 bg-cyan-50 dark:bg-cyber-cyan/10 text-cyan-800 dark:text-cyber-cyan hover:bg-cyan-100 dark:hover:bg-cyber-cyan/20 transition-all flex items-center gap-1 font-mono"
+                    title="Open HTB Writeup PDF Batch Importer"
+                  >
+                    <FolderArchive className="w-3 h-3 text-cyan-600 dark:text-cyber-cyan" />
+                    <span>Import PDFs</span>
+                  </button>
+
+                  {VULN_CATEGORIES.map((cat) => {
+                    const isActive = (filters.selectedVulnCategory === cat.id) || (filters.selectedCategory === cat.id);
+                    const count = categoryCounts[cat.id] || 0;
+                    return (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => {
+                          if (isActive) {
+                            setFilters({ selectedVulnCategory: 'ALL', selectedCategory: 'ALL' });
+                          } else {
+                            const updates: Partial<FilterState> = {
+                              selectedVulnCategory: cat.id,
+                              selectedCategory: 'ALL',
+                            };
+                            if (cat.id === 'Active Directory' && filters.excludeActiveDirectory) {
+                              updates.excludeActiveDirectory = false;
+                            }
+                            setFilters(updates);
+                          }
+                          if (soundEnabled) playCyberSound('click');
+                        }}
+                        className={`px-2 py-0.5 rounded text-[11px] border font-mono transition-all flex items-center gap-1 ${
+                          isActive
+                            ? `${cat.badgeColor} ${cat.borderColor} shadow-sm font-bold ring-1`
+                            : 'bg-cyber-bg border-cyber-border text-cyber-muted hover:text-slate-900 dark:hover:text-white'
+                        }`}
+                        title={`Filter by ${cat.label}`}
+                      >
+                        <span>{cat.shortLabel}</span>
+                        <span className={`text-[9px] px-1 py-0.2 rounded ${isActive ? 'bg-black/30 text-white' : 'bg-cyber-card text-cyber-muted'}`}>
+                          {count}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
 
-            {/* Attack Tag Select */}
-            <div className="flex items-center gap-1.5">
-              <span className="text-cyber-muted text-[10px] uppercase font-bold">Attack Tag:</span>
-              <CyberMultiSelect
-                id="tracker-attack-tag-select"
-                name="tracker-attack-tag-select"
-                aria-label="Filter attack tag"
-                selectedValues={filters.selectedTags}
-                onChange={(tags) => setFilters({ selectedTags: tags })}
-                options={allTags.map((t) => ({ value: t, label: t }))}
-                placeholder="Filter by vector tag..."
-                searchPlaceholder="Search vector tags..."
-                size="xs"
-                variant="cyan"
-                soundEnabled={soundEnabled}
-              />
-            </div>
+            {/* Group 3: Secondary Filters Bar (Difficulty, Cert, Attack Tag, Reset) */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-cyber-border/40 text-xs">
+              <div className="flex flex-wrap items-center gap-3">
+                {/* Difficulty Dropdown */}
+                <div className="flex items-center gap-1.5">
+                  <span className="text-cyber-muted text-[10px] uppercase font-bold">Difficulty:</span>
+                  <CyberSelect<Difficulty | 'ALL'>
+                    id="tracker-difficulty-select"
+                    name="tracker-difficulty-select"
+                    aria-label="Filter difficulty"
+                    value={filters.selectedDifficulty}
+                    onChange={(val) => setFilters({ selectedDifficulty: val })}
+                    options={DIFFICULTY_FILTER_OPTIONS}
+                    size="xs"
+                    variant="default"
+                    soundEnabled={soundEnabled}
+                  />
+                </div>
 
-            {/* Selected Tag Pills */}
-            {filters.selectedTags.map((t) => (
-              <span
-                key={t}
-                className="flex items-center gap-1 px-2 py-0.5 rounded bg-cyber-bg border border-cyber-cyan/40 text-cyber-cyan text-[11px]"
-              >
-                <span>{t}</span>
-                <button
-                  onClick={() =>
-                    setFilters({
-                      selectedTags: filters.selectedTags.filter((x) => x !== t),
-                    })
-                  }
-                  className="hover:text-cyber-crimson"
-                >
-                  ✕
-                </button>
-              </span>
-            ))}
-            {/* Active Category & Exclusion Filter Chips */}
-            {((filters.selectedVulnCategory && filters.selectedVulnCategory !== 'ALL') || (filters.selectedCategory && filters.selectedCategory !== 'ALL')) && (
-              <span className="flex items-center gap-1 px-2 py-0.5 rounded bg-cyber-cyan/10 border border-cyber-cyan/40 text-cyber-cyan text-[11px] font-mono">
-                <span>Category: <strong>{filters.selectedVulnCategory && filters.selectedVulnCategory !== 'ALL' ? filters.selectedVulnCategory : filters.selectedCategory}</strong></span>
+                {/* Certification Dropdown */}
+                <div className="flex items-center gap-1.5">
+                  <span className="text-cyber-muted text-[10px] uppercase font-bold">Cert:</span>
+                  <CyberSelect
+                    id="tracker-cert-select"
+                    name="tracker-cert-select"
+                    aria-label="Filter certification"
+                    value={filters.selectedCert || 'ALL'}
+                    onChange={(val) => setFilters({ selectedCert: val as any })}
+                    options={CERT_FILTER_OPTIONS}
+                    size="xs"
+                    variant="default"
+                    soundEnabled={soundEnabled}
+                  />
+                </div>
+
+                {/* Attack Tag Select */}
+                <div className="flex items-center gap-1.5">
+                  <span className="text-cyber-muted text-[10px] uppercase font-bold">Tags:</span>
+                  <CyberMultiSelect
+                    id="tracker-attack-tag-select"
+                    name="tracker-attack-tag-select"
+                    aria-label="Filter attack tag"
+                    selectedValues={filters.selectedTags}
+                    onChange={(tags) => setFilters({ selectedTags: tags })}
+                    options={allTags.map((t) => ({ value: t, label: t }))}
+                    placeholder="Filter vector tags..."
+                    searchPlaceholder="Search vector tags..."
+                    size="xs"
+                    variant="cyan"
+                    soundEnabled={soundEnabled}
+                  />
+                </div>
+              </div>
+
+              {isFiltered && (
                 <button
                   type="button"
-                  onClick={() => setFilters({ selectedVulnCategory: 'ALL', selectedCategory: 'ALL' })}
-                  className="hover:text-cyber-crimson ml-0.5 font-bold"
-                  title="Clear category filter"
+                  onClick={resetFilters}
+                  className="flex items-center gap-1 text-cyber-muted hover:text-rose-600 dark:hover:text-rose-400 hover:underline text-xs"
                 >
-                  ✕
+                  <RotateCcw className="w-3 h-3" /> Reset All Filters
                 </button>
-              </span>
-            )}
-
-            {filters.excludeActiveDirectory && (
-              <span className="flex items-center gap-1 px-2 py-0.5 rounded bg-rose-950/40 border border-rose-500/50 text-rose-300 text-[11px] font-mono font-bold">
-                <span>🚫 Excluded: Active Directory</span>
-                <button
-                  type="button"
-                  onClick={() => setFilters({ excludeActiveDirectory: false })}
-                  className="hover:text-cyber-crimson ml-0.5 font-bold"
-                  title="Remove AD exclusion"
-                >
-                  ✕
-                </button>
-              </span>
-            )}
-
-            {/* Active Status Filter Chip */}
-            {filters.selectedStatus && filters.selectedStatus !== 'ALL' && (
-              <span className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono font-bold border ${
-                filters.selectedStatus === 'completed'
-                  ? 'bg-emerald-100 dark:bg-cyber-emerald/20 text-emerald-950 dark:text-cyber-emerald border-emerald-500/50'
-                  : filters.selectedStatus === 'foothold'
-                  ? 'bg-amber-100 dark:bg-cyber-amber/20 text-amber-950 dark:text-cyber-amber border-amber-500/50'
-                  : filters.selectedStatus === 'recon'
-                  ? 'bg-cyan-100 dark:bg-cyber-cyan/20 text-cyan-950 dark:text-cyber-cyan border-cyan-500/50'
-                  : 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white border-slate-500/50'
-              }`}>
-                <span>Status: <strong>{
-                  filters.selectedStatus === 'completed' ? '🏆 Completed / Root' :
-                  filters.selectedStatus === 'foothold' ? '⚡ Foothold / User' :
-                  filters.selectedStatus === 'recon' ? '🔍 Recon In-Progress' : '📋 Queued / Backlog'
-                }</strong></span>
-                <button
-                  type="button"
-                  onClick={() => setFilters({ selectedStatus: 'ALL' })}
-                  className="hover:text-cyber-crimson ml-0.5 font-bold"
-                  title="Clear status filter"
-                >
-                  ✕
-                </button>
-              </span>
-            )}
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span className="text-cyber-muted text-xs">
-              Showing <strong className="text-slate-900 dark:text-white">{filteredMachines.length}</strong> / {machines.length} targets
-            </span>
-
-            {isFiltered && (
-              <button
-                onClick={resetFilters}
-                className="flex items-center gap-1 text-cyber-muted hover:text-slate-900 dark:hover:text-white hover:underline text-xs"
-              >
-                <RotateCcw className="w-3 h-3" /> Reset All Filters
-              </button>
-            )}
-          </div>
-
-        </div>
-
+              )}
+            </div>
+          </motion.div>
+        )}
+        </AnimatePresence>
       </div>
 
       {/* Main View Renderer */}

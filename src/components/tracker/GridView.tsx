@@ -93,16 +93,14 @@ export const GridView: React.FC<GridViewProps> = ({ filteredMachines }) => {
         return (
           <motion.div
             key={m.id}
-            initial={{ opacity: 0, y: 32, scale: 0.96 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: true, margin: '-20px', amount: 0.12 }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ 
-              type: 'spring',
-              stiffness: 280,
-              damping: 24,
-              delay: Math.min((idx % 8) * 0.035, 0.25)
+              duration: 0.2,
+              ease: 'easeOut',
+              delay: Math.min((idx % 12) * 0.02, 0.2)
             }}
-            whileHover={{ y: -6, scale: 1.015, transition: { duration: 0.18 } }}
+            whileHover={{ y: -4, transition: { duration: 0.15 } }}
             whileTap={{ scale: 0.985 }}
             onClick={() => setSelectedMachineId(m.id)}
             style={{ contentVisibility: 'auto', containIntrinsicSize: '0 340px' }}
@@ -224,13 +222,23 @@ export const GridView: React.FC<GridViewProps> = ({ filteredMachines }) => {
                   <AnimatePresence initial={false}>
                     <motion.div 
                       layout
-                      className={`p-2 rounded border text-[11px] font-mono leading-relaxed transition-all ${
+                      onClick={(e) => {
+                        if (!isHintRevealed) toggleHint(e, m.id);
+                      }}
+                      className={`p-2 rounded border text-[11px] font-mono leading-relaxed transition-[background-color,border-color,color] duration-150 ${
                         isHintRevealed
                           ? 'bg-amber-50 border-amber-200 text-slate-800 dark:bg-cyber-amber/10 dark:border-cyber-amber/40 dark:text-cyber-text'
-                          : 'bg-cyber-bg border-cyber-border/70 text-transparent select-none blur-[3px]'
+                          : 'bg-slate-100 dark:bg-cyber-bg/80 border-slate-200 dark:border-cyber-border/80 text-slate-500 dark:text-cyber-muted select-none cursor-pointer hover:border-amber-500/40'
                       }`}
                     >
-                      {m.hint}
+                      {isHintRevealed ? (
+                        m.hint
+                      ) : (
+                        <div className="flex items-center gap-1.5 text-[10px] text-amber-800/80 dark:text-cyber-amber/70 font-mono tracking-wider">
+                          <Lock className="w-3 h-3 text-amber-600 dark:text-cyber-amber flex-shrink-0" />
+                          <span>INTEL REDACTED // Click to Peek</span>
+                        </div>
+                      )}
                     </motion.div>
                   </AnimatePresence>
                 </div>

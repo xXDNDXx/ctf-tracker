@@ -151,3 +151,27 @@ export function isEncryptedZeroboxBackup(buffer: ArrayBuffer): boolean {
   }
   return true;
 }
+
+/**
+ * Computes a SHA-256 hex digest of a string payload using browser-native Web Crypto.
+ */
+export async function computeSha256(content: string): Promise<string> {
+  if (typeof crypto === 'undefined' || !crypto.subtle) {
+    return '';
+  }
+  const enc = new TextEncoder();
+  const buffer = enc.encode(content);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+/**
+ * Verifies if the computed SHA-256 digest matches the expected hex hash.
+ */
+export async function verifySha256(content: string, expectedHex: string): Promise<boolean> {
+  if (!content || !expectedHex) return false;
+  const computed = await computeSha256(content);
+  return computed.toLowerCase() === expectedHex.trim().toLowerCase();
+}
+

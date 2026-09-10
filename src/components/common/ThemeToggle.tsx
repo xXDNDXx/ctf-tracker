@@ -1,5 +1,4 @@
 import React, { useId } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../hooks/useTheme';
 import { playCyberSound } from '../../utils/helpers';
 
@@ -68,19 +67,13 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
     }
   };
 
-  // Ultra-snappy spring physics: eliminates draggy feeling (under 80ms response)
-  const springTransition = prefersReducedMotion
-    ? { duration: 0.05 }
-    : {
-        type: 'spring' as const,
-        damping: 30,
-        stiffness: 600,
-        mass: 0.25,
-      };
+  const fastTransition = prefersReducedMotion
+    ? 'none'
+    : 'transform 150ms cubic-bezier(0.16, 1, 0.3, 1), opacity 150ms ease-out';
 
   return (
     <div className={`inline-flex items-center gap-2.5 select-none ${className}`}>
-      <motion.button
+      <button
         type="button"
         role="switch"
         aria-checked={isDark}
@@ -88,7 +81,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
         tabIndex={0}
         onClick={handleToggle}
         onKeyDown={handleKeyDown}
-        className={`relative flex items-center rounded-full cursor-pointer overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-cyber-bg ${
+        className={`relative flex items-center rounded-full cursor-pointer overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-cyber-bg transition-transform duration-100 active:scale-95 hover:scale-[1.02] ${
           isDark
             ? 'border border-indigo-500/40 shadow-[inset_0_2px_5px_rgba(0,0,0,0.5),0_0_12px_rgba(99,102,241,0.25)]'
             : 'border border-sky-300/60 shadow-[inset_0_2px_4px_rgba(0,0,0,0.1),0_0_12px_rgba(56,189,248,0.3)]'
@@ -97,101 +90,96 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
           width: dimensions.width,
           height: dimensions.height,
         }}
-        whileHover={prefersReducedMotion ? {} : { scale: 1.03 }}
-        whileTap={prefersReducedMotion ? {} : { scale: 0.96 }}
       >
-        {/* Dynamic Sky / Midnight Capsule Background */}
-        <motion.div
-          className="absolute inset-0"
-          animate={{
-            background: isDark
-              ? 'linear-gradient(135deg, #090D16 0%, #0F172A 50%, #1E1B4B 100%)'
-              : 'linear-gradient(135deg, #38BDF8 0%, #60A5FA 50%, #93C5FD 100%)',
+        {/* Dynamic Sky Capsule Background (Light Mode) */}
+        <div
+          className="absolute inset-0 transition-opacity duration-150 ease-out"
+          style={{
+            background: 'linear-gradient(135deg, #38BDF8 0%, #60A5FA 50%, #93C5FD 100%)',
+            opacity: isDark ? 0 : 1,
           }}
-          transition={{ duration: prefersReducedMotion ? 0.05 : 0.12, ease: 'easeOut' }}
         />
 
-        {/* LIGHT MODE: Floating Semi-Transparent Pillowy Clouds */}
-        <AnimatePresence>
-          {!isDark && (
-            <motion.div
-              key="clouds"
-              initial={{ opacity: 0, x: 6 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 8 }}
-              transition={{ duration: prefersReducedMotion ? 0.05 : 0.15 }}
-              className="absolute inset-0 pointer-events-none overflow-hidden"
-            >
-              <div className="absolute right-1.5 bottom-0.5 flex items-end">
-                <div className="w-3.5 h-3.5 -mr-1 rounded-full bg-white/75 shadow-sm" />
-                <div className="w-4.5 h-4.5 -mr-1 rounded-full bg-white/90 shadow-sm" />
-                <div className="w-3 h-3 rounded-full bg-white/80 shadow-sm" />
-              </div>
-              <div className="absolute top-0.5 left-2 right-2 h-[1px] bg-gradient-to-r from-white/0 via-white/50 to-white/0" />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Dynamic Midnight Capsule Background (Dark Mode) */}
+        <div
+          className="absolute inset-0 transition-opacity duration-150 ease-out"
+          style={{
+            background: 'linear-gradient(135deg, #090D16 0%, #0F172A 50%, #1E1B4B 100%)',
+            opacity: isDark ? 1 : 0,
+          }}
+        />
+
+        {/* LIGHT MODE: Floating Pillowy Clouds */}
+        <div
+          className="absolute inset-0 pointer-events-none overflow-hidden"
+          style={{
+            opacity: isDark ? 0 : 1,
+            transform: isDark ? 'translate3d(8px, 0, 0)' : 'translate3d(0, 0, 0)',
+            transition: fastTransition,
+          }}
+        >
+          <div className="absolute right-1.5 bottom-0.5 flex items-end">
+            <div className="w-3.5 h-3.5 -mr-1 rounded-full bg-white/75 shadow-sm" />
+            <div className="w-4.5 h-4.5 -mr-1 rounded-full bg-white/90 shadow-sm" />
+            <div className="w-3 h-3 rounded-full bg-white/80 shadow-sm" />
+          </div>
+          <div className="absolute top-0.5 left-2 right-2 h-[1px] bg-gradient-to-r from-white/0 via-white/50 to-white/0" />
+        </div>
 
         {/* DARK MODE: Staggered Twinkling Star Field */}
-        <AnimatePresence>
-          {isDark && (
-            <motion.div
-              key="stars"
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.85 }}
-              transition={{ duration: prefersReducedMotion ? 0.05 : 0.15 }}
-              className="absolute inset-0 pointer-events-none"
-            >
-              {/* Star 1 */}
-              <div className="absolute left-2.5 top-2 w-1.5 h-1.5 rounded-full bg-indigo-100 shadow-[0_0_4px_#A5B4FC]" />
-              {/* Star 2 */}
-              <div className="absolute left-6 top-3.5 w-1 h-1 rounded-full bg-cyan-200 shadow-[0_0_3px_#67E8F9]" />
-              {/* Star 3 */}
-              <div className="absolute left-4 bottom-2 w-1.5 h-1.5 rounded-full bg-purple-200 shadow-[0_0_4px_#C084FC]" />
-              {/* Star 4 */}
-              <div className="absolute left-7 bottom-2.5 w-0.5 h-0.5 rounded-full bg-white opacity-80" />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            opacity: isDark ? 1 : 0,
+            transform: isDark ? 'scale(1)' : 'scale(0.85)',
+            transition: fastTransition,
+          }}
+        >
+          {/* Star 1 */}
+          <div className="absolute left-2.5 top-2 w-1.5 h-1.5 rounded-full bg-indigo-100 shadow-[0_0_4px_#A5B4FC]" />
+          {/* Star 2 */}
+          <div className="absolute left-6 top-3.5 w-1 h-1 rounded-full bg-cyan-200 shadow-[0_0_3px_#67E8F9]" />
+          {/* Star 3 */}
+          <div className="absolute left-4 bottom-2 w-1.5 h-1.5 rounded-full bg-purple-200 shadow-[0_0_4px_#C084FC]" />
+          {/* Star 4 */}
+          <div className="absolute left-7 bottom-2.5 w-0.5 h-0.5 rounded-full bg-white opacity-80" />
+        </div>
 
-        {/* Interactive Fast-Spring Knob */}
-        <motion.div
-          className="absolute z-10 flex items-center justify-center rounded-full"
+        {/* 120 FPS GPU-Accelerated Glide Knob */}
+        <div
+          className="absolute z-10 flex items-center justify-center rounded-full will-change-transform"
           style={{
             width: dimensions.knobSize,
             height: dimensions.knobSize,
             top: dimensions.padding,
             left: dimensions.padding,
+            transform: isDark
+              ? `translate3d(${dimensions.travel}px, 0, 0)`
+              : 'translate3d(0, 0, 0)',
+            transition: prefersReducedMotion
+              ? 'none'
+              : 'transform 150ms cubic-bezier(0.16, 1, 0.3, 1)',
           }}
-          animate={{
-            x: isDark ? dimensions.travel : 0,
-          }}
-          whileTap={
-            prefersReducedMotion
-              ? {}
-              : {
-                  scaleX: 1.15,
-                  scaleY: 0.9,
-                }
-          }
-          transition={springTransition}
         >
-          {/* Knob Outer Celestial Halo Glow */}
-          <motion.div
-            className="absolute inset-0 rounded-full"
-            animate={{
-              boxShadow: isDark
-                ? '0 0 14px 2px rgba(226, 232, 240, 0.45), 0 2px 6px rgba(0,0,0,0.5)'
-                : '0 0 14px 3px rgba(245, 158, 11, 0.65), 0 2px 6px rgba(0,0,0,0.2)',
-              background: isDark
-                ? 'linear-gradient(135deg, #1E293B 0%, #0F172A 100%)'
-                : 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
-              borderColor: isDark ? 'rgba(203, 213, 225, 0.5)' : 'rgba(251, 191, 36, 0.7)',
-            }}
-            transition={{ duration: prefersReducedMotion ? 0.05 : 0.15 }}
+          {/* Knob Outer Celestial Halo Glow - Light Mode */}
+          <div
+            className="absolute inset-0 rounded-full border transition-opacity duration-150 ease-out"
             style={{
-              borderWidth: 1,
+              opacity: isDark ? 0 : 1,
+              borderColor: 'rgba(251, 191, 36, 0.7)',
+              background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
+              boxShadow: '0 0 14px 3px rgba(245, 158, 11, 0.65), 0 2px 6px rgba(0,0,0,0.2)',
+            }}
+          />
+
+          {/* Knob Outer Celestial Halo Glow - Dark Mode */}
+          <div
+            className="absolute inset-0 rounded-full border transition-opacity duration-150 ease-out"
+            style={{
+              opacity: isDark ? 1 : 0,
+              borderColor: 'rgba(203, 213, 225, 0.5)',
+              background: 'linear-gradient(135deg, #1E293B 0%, #0F172A 100%)',
+              boxShadow: '0 0 14px 2px rgba(226, 232, 240, 0.45), 0 2px 6px rgba(0,0,0,0.5)',
             }}
           />
 
@@ -238,15 +226,13 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
               </defs>
 
               {/* LIGHT MODE: RADIANT GOLDEN SUN */}
-              <motion.g
-                initial={false}
-                animate={{
+              <g
+                style={{
                   opacity: isDark ? 0 : 1,
-                  scale: isDark ? 0.3 : 1,
-                  rotate: isDark ? 45 : 0,
+                  transform: isDark ? 'scale(0.3) rotate(45deg)' : 'scale(1) rotate(0deg)',
+                  transformOrigin: '12px 12px',
+                  transition: fastTransition,
                 }}
-                transition={springTransition}
-                style={{ originX: '12px', originY: '12px' }}
               >
                 {/* Sun Rays */}
                 <g stroke="#D97706" strokeWidth="1.8" strokeLinecap="round">
@@ -264,18 +250,16 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
                 <circle cx="12" cy="12" r="6.6" fill={`url(#${idPrefix}-sun-core)`} />
                 {/* Specular Highlight */}
                 <circle cx="10.2" cy="10.2" r="2.2" fill="#FFFFFF" opacity="0.5" />
-              </motion.g>
+              </g>
 
               {/* DARK MODE: REAL CELESTIAL CRATERED MOON */}
-              <motion.g
-                initial={false}
-                animate={{
+              <g
+                style={{
                   opacity: isDark ? 1 : 0,
-                  scale: isDark ? 1 : 0.3,
-                  rotate: isDark ? 0 : -35,
+                  transform: isDark ? 'scale(1) rotate(0deg)' : 'scale(0.3) rotate(-35deg)',
+                  transformOrigin: '12px 12px',
+                  transition: fastTransition,
                 }}
-                transition={springTransition}
-                style={{ originX: '12px', originY: '12px' }}
               >
                 {/* Moon Base Sphere */}
                 <circle cx="12" cy="12" r="8.2" fill={`url(#${idPrefix}-real-moon)`} />
@@ -320,11 +304,11 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
                 <circle cx="14.6" cy="7.2" r="0.5" fill="#475569" opacity="0.7" />
                 <circle cx="10.5" cy="6.6" r="0.45" fill="#475569" opacity="0.6" />
                 <circle cx="15.2" cy="15.0" r="0.45" fill="#475569" opacity="0.6" />
-              </motion.g>
+              </g>
             </svg>
           </div>
-        </motion.div>
-      </motion.button>
+        </div>
+      </button>
 
       {/* Optional Mode Label */}
       {showLabel && (

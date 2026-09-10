@@ -17,6 +17,7 @@ import {
   User,
   ExternalLink
 } from 'lucide-react';
+import { computeSha256 } from '../../utils/cryptoUtils';
 
 export const UserMenu: React.FC = () => {
   const { 
@@ -124,8 +125,15 @@ export const UserMenu: React.FC = () => {
   };
 
   // 1-Click Export JSON (Full Personal Profile Backup)
-  const handleExportBackup = () => {
-    const jsonStr = exportBackup({ redactSecrets: false });
+  const handleExportBackup = async () => {
+    const rawJson = exportBackup({ redactSecrets: false, scope: 'all' });
+    let jsonStr = rawJson;
+    try {
+      const parsed = JSON.parse(rawJson);
+      const hash = await computeSha256(JSON.stringify(parsed));
+      parsed.checksum = `sha256:${hash}`;
+      jsonStr = JSON.stringify(parsed, null, 2);
+    } catch {}
     const blob = new Blob([jsonStr], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -175,14 +183,14 @@ export const UserMenu: React.FC = () => {
   return (
     <div ref={menuRef} className="relative font-mono text-xs">
       {/* Header Button Group: 1-Click Save + Profile / Local Operator Badge */}
-      <div className="flex items-center gap-1.5 bg-cyber-card/90 border border-cyber-border rounded-xl p-1 shadow-sm">
+      <div className="flex items-center gap-1.5 bg-white dark:bg-cyber-card/90 border border-slate-200 dark:border-cyber-border rounded-xl p-1 shadow-sm">
         {/* Instant 1-Click Quick Save Button */}
         <button
           onClick={handleQuickSave}
           className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-bold transition-all ${
             justSaved
               ? 'bg-cyber-emerald text-black shadow-glow-emerald/40'
-              : 'bg-cyber-bg border border-cyber-border text-cyber-emerald hover:border-cyber-emerald/60 hover:bg-cyber-emerald/10'
+              : 'bg-emerald-50 dark:bg-cyber-bg border border-emerald-300 dark:border-cyber-border text-emerald-800 dark:text-cyber-emerald hover:border-emerald-500 hover:bg-emerald-100 dark:hover:bg-cyber-emerald/10'
           }`}
           title={
             lastSavedTimestamp
@@ -206,7 +214,7 @@ export const UserMenu: React.FC = () => {
         {/* Profile / Local Operator Dropdown Trigger */}
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center gap-1.5 px-2 py-0.5 rounded-lg hover:bg-cyber-bg transition-colors group"
+          className="flex items-center gap-1.5 px-2 py-0.5 rounded-lg hover:bg-slate-100 dark:hover:bg-cyber-bg transition-colors group"
           title={isAuthenticated && user ? `Google Account: ${user.name} (${user.email})` : 'Local Mode: Offline & Zero Cloud Egress'}
         >
           {isAuthenticated && user?.avatarUrl ? (
@@ -220,29 +228,29 @@ export const UserMenu: React.FC = () => {
               {activeName.charAt(0).toUpperCase()}
             </div>
           ) : (
-            <div className="w-5 h-5 rounded-full bg-cyber-cyan/15 border border-cyber-cyan/50 flex items-center justify-center text-cyber-cyan">
+            <div className="w-5 h-5 rounded-full bg-cyan-50 dark:bg-cyber-cyan/15 border border-cyan-300 dark:border-cyber-cyan/50 flex items-center justify-center text-cyan-700 dark:text-cyber-cyan">
               <User className="w-3 h-3" />
             </div>
           )}
 
-          <span className="font-bold text-white text-xs max-w-[100px] truncate group-hover:text-cyber-cyan transition-colors">
+          <span className="font-bold text-slate-900 dark:text-white text-xs max-w-[150px] sm:max-w-none truncate group-hover:text-cyan-600 dark:group-hover:text-cyber-cyan transition-colors">
             {isAuthenticated && user ? activeName : 'Local Operator'}
           </span>
 
           <span className={`w-1.5 h-1.5 rounded-full ${isAuthenticated ? 'bg-cyber-emerald' : 'bg-cyber-cyan'} animate-pulse`} />
 
-          <ChevronDown className="w-3 h-3 text-cyber-muted group-hover:text-white transition-transform" />
+          <ChevronDown className="w-3 h-3 text-slate-500 dark:text-cyber-muted group-hover:text-slate-900 dark:group-hover:text-white transition-transform" />
         </button>
       </div>
 
       {/* Control Station Dropdown */}
       {dropdownOpen && (
         <div
-          className="absolute right-0 top-full mt-2 w-80 p-3.5 rounded-2xl bg-cyber-card border border-cyber-border shadow-2xl z-50 space-y-3 backdrop-blur-md"
+          className="absolute right-0 top-full mt-2 w-80 p-3.5 rounded-2xl bg-white dark:bg-cyber-card border border-slate-200 dark:border-cyber-border shadow-2xl z-50 space-y-3 backdrop-blur-md"
           onMouseLeave={() => setDropdownOpen(false)}
         >
           {/* User Status Header */}
-          <div className="flex items-center justify-between pb-2.5 border-b border-cyber-border/70">
+          <div className="flex items-center justify-between pb-2.5 border-b border-slate-200 dark:border-cyber-border/70">
             <div className="flex items-center gap-2.5 min-w-0">
               {isAuthenticated && user?.avatarUrl ? (
                 <img
@@ -251,30 +259,30 @@ export const UserMenu: React.FC = () => {
                   className="w-10 h-10 rounded-full border-2 border-cyber-emerald shadow-[0_0_8px_rgba(16,185,129,0.3)] object-cover"
                 />
               ) : isAuthenticated && user ? (
-                <div className="w-10 h-10 rounded-full bg-cyber-bg border-2 border-cyber-emerald flex items-center justify-center text-sm font-bold text-cyber-emerald">
+                <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-cyber-bg border-2 border-cyber-emerald flex items-center justify-center text-sm font-bold text-emerald-800 dark:text-cyber-emerald">
                   {activeName.charAt(0).toUpperCase()}
                 </div>
               ) : (
-                <div className="w-10 h-10 rounded-full bg-cyber-cyan/15 border-2 border-cyber-cyan/60 flex items-center justify-center text-cyber-cyan">
+                <div className="w-10 h-10 rounded-full bg-cyan-50 dark:bg-cyber-cyan/15 border-2 border-cyan-300 dark:border-cyber-cyan/60 flex items-center justify-center text-cyan-700 dark:text-cyber-cyan">
                   <HardDrive className="w-5 h-5" />
                 </div>
               )}
 
               <div className="min-w-0 flex-1">
-                <div className="font-bold text-white text-sm truncate">
+                <div className="font-bold text-slate-900 dark:text-white text-sm truncate">
                   {isAuthenticated && user ? activeName : 'LOCAL OPERATOR (PRIVATE)'}
                 </div>
-                <div className="text-[10px] text-cyber-muted truncate">
+                <div className="text-[10px] text-slate-500 dark:text-cyber-muted truncate">
                   {isAuthenticated && user?.email ? user.email : 'Local Storage · Zero Egress'}
                 </div>
                 <div className="flex items-center gap-1 mt-0.5">
                   {isAuthenticated ? (
-                    <span className="inline-flex items-center gap-1 text-[9px] font-bold text-cyber-emerald bg-cyber-emerald/10 border border-cyber-emerald/30 px-1.5 py-0.2 rounded">
+                    <span className="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-800 dark:text-cyber-emerald bg-emerald-100 dark:bg-cyber-emerald/10 border border-emerald-300 dark:border-cyber-emerald/30 px-1.5 py-0.2 rounded">
                       <ShieldCheck className="w-2.5 h-2.5" />
                       GOOGLE AUTHENTICATED
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 text-[9px] font-bold text-cyber-cyan bg-cyber-cyan/10 border border-cyber-cyan/30 px-1.5 py-0.2 rounded">
+                    <span className="inline-flex items-center gap-1 text-[9px] font-bold text-cyan-800 dark:text-cyber-cyan bg-cyan-100 dark:bg-cyber-cyan/10 border border-cyan-300 dark:border-cyber-cyan/30 px-1.5 py-0.2 rounded">
                       <HardDrive className="w-2.5 h-2.5" />
                       LOCAL / OFFLINE MODE
                     </span>
@@ -284,8 +292,8 @@ export const UserMenu: React.FC = () => {
             </div>
 
             <div className="text-right">
-              <div className="text-xs font-bold text-cyber-emerald">{rootedCount} / {totalCount}</div>
-              <div className="text-[9px] text-cyber-muted uppercase">Pwned</div>
+              <div className="text-xs font-bold text-emerald-700 dark:text-cyber-emerald">{rootedCount} / {totalCount}</div>
+              <div className="text-[9px] text-slate-500 dark:text-cyber-muted uppercase">Pwned</div>
             </div>
           </div>
 
@@ -315,29 +323,29 @@ export const UserMenu: React.FC = () => {
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={handleExportBackup}
-              className="p-2 rounded-xl bg-cyber-bg hover:bg-cyber-card border border-cyber-border text-white text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors"
+              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-cyber-bg dark:hover:bg-cyber-card border border-slate-300 dark:border-cyber-border text-slate-800 dark:text-white text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors"
               title="Download backup file"
             >
-              <Download className="w-3.5 h-3.5 text-cyber-cyan" />
+              <Download className="w-3.5 h-3.5 text-cyan-600 dark:text-cyber-cyan" />
               <span>Export Backup</span>
             </button>
 
             <button
               onClick={handleImportBackup}
-              className="p-2 rounded-xl bg-cyber-bg hover:bg-cyber-card border border-cyber-border text-white text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors"
+              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-cyber-bg dark:hover:bg-cyber-card border border-slate-300 dark:border-cyber-border text-slate-800 dark:text-white text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors"
               title="Upload backup file"
             >
-              <Upload className="w-3.5 h-3.5 text-purple-400" />
+              <Upload className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
               <span>Import Backup</span>
             </button>
           </div>
 
           {/* Operator & Creator Showcase */}
-          <div className="p-2.5 rounded-xl bg-gradient-to-r from-cyber-emerald/10 via-cyber-card to-cyber-cyan/10 border border-cyber-emerald/40 space-y-2">
+          <div className="p-2.5 rounded-xl bg-gradient-to-r from-emerald-50 via-slate-50 dark:via-cyber-card to-cyan-50 dark:from-cyber-emerald/10 dark:to-cyber-cyan/10 border border-emerald-300 dark:border-cyber-emerald/40 space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5 min-w-0">
                 <span className="w-2 h-2 rounded-full bg-cyber-emerald animate-pulse" />
-                <span className="text-[10px] uppercase font-bold text-white tracking-wider truncate">
+                <span className="text-[10px] uppercase font-bold text-slate-900 dark:text-white tracking-wider truncate">
                   BUILT BY DANIEL DAYAN
                 </span>
               </div>
@@ -346,7 +354,7 @@ export const UserMenu: React.FC = () => {
                   setDropdownOpen(false);
                   setOperatorModalOpen(true);
                 }}
-                className="text-[9px] font-bold text-cyber-emerald hover:underline"
+                className="text-[9px] font-bold text-emerald-700 dark:text-cyber-emerald hover:underline"
               >
                 DOSSIER ↗
               </button>
@@ -357,7 +365,7 @@ export const UserMenu: React.FC = () => {
                 href={CREATOR_PROFILE_LINKS.portfolio}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-cyber-emerald/20 hover:bg-cyber-emerald/30 text-cyber-emerald hover:text-white border border-cyber-emerald/50 transition-all text-[10px] font-bold shadow-sm"
+                className="flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-emerald-100 hover:bg-emerald-200 dark:bg-cyber-emerald/20 dark:hover:bg-cyber-emerald/30 text-emerald-800 hover:text-emerald-950 dark:text-cyber-emerald dark:hover:text-white border border-emerald-300 dark:border-cyber-emerald/50 transition-all text-[10px] font-bold shadow-sm"
                 title="Daniel Dayan's Official Portfolio"
               >
                 <Globe className="w-3 h-3 flex-shrink-0" />
@@ -367,7 +375,7 @@ export const UserMenu: React.FC = () => {
                 href={CREATOR_PROFILE_LINKS.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-[#0077B5]/20 hover:bg-[#0077B5]/30 text-[#0077B5] hover:text-white border border-[#0077B5]/50 transition-all text-[10px] font-bold shadow-sm"
+                className="flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-blue-100 hover:bg-blue-200 dark:bg-[#0077B5]/20 dark:hover:bg-[#0077B5]/30 text-blue-800 hover:text-blue-950 dark:text-[#0077B5] dark:hover:text-white border border-blue-300 dark:border-[#0077B5]/50 transition-all text-[10px] font-bold shadow-sm"
                 title="Daniel Dayan LinkedIn Profile"
               >
                 <svg className="w-3 h-3 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.7a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2Z"/></svg>
@@ -377,7 +385,7 @@ export const UserMenu: React.FC = () => {
                 href={CREATOR_PROFILE_LINKS.coffee}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-[#FFDD00]/20 hover:bg-[#FFDD00]/30 text-[#FFDD00] hover:text-white border border-[#FFDD00]/50 transition-all text-[10px] font-bold shadow-sm"
+                className="flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-amber-100 hover:bg-amber-200 dark:bg-[#FFDD00]/20 dark:hover:bg-[#FFDD00]/30 text-amber-900 hover:text-amber-950 dark:text-[#FFDD00] dark:hover:text-white border border-amber-300 dark:border-[#FFDD00]/50 transition-all text-[10px] font-bold shadow-sm"
                 title="Buy Daniel Dayan a Coffee (buymeacoffee.com/xxdndxx)"
               >
                 <Coffee className="w-3 h-3 flex-shrink-0" />
@@ -387,12 +395,12 @@ export const UserMenu: React.FC = () => {
           </div>
 
           {/* Google Auth Option: Connect or Sign Out */}
-          <div className="pt-2 border-t border-cyber-border/70 space-y-2">
+          <div className="pt-2 border-t border-slate-200 dark:border-cyber-border/70 space-y-2">
             {!isAuthenticated ? (
               <div>
-                <div className="text-[10px] text-cyber-muted mb-1.5 flex items-center justify-between">
+                <div className="text-[10px] text-slate-500 dark:text-cyber-muted mb-1.5 flex items-center justify-between">
                   <span>OPTIONAL CLOUD SYNC:</span>
-                  <span className="text-[9px] text-cyber-emerald">MULTI-DEVICE</span>
+                  <span className="text-[9px] text-emerald-700 dark:text-cyber-emerald font-bold">MULTI-DEVICE</span>
                 </div>
                 <button
                   onClick={handleLaunchGoogleSignIn}
@@ -435,9 +443,9 @@ export const UserMenu: React.FC = () => {
 
             <button
               onClick={handleReset}
-              className="w-full py-1.5 px-2 rounded-lg bg-cyber-bg hover:bg-cyber-card border border-cyber-border text-cyber-muted hover:text-white text-[11px] font-semibold transition-colors flex items-center justify-center gap-1.5"
+              className="w-full py-1.5 px-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-cyber-bg dark:hover:bg-cyber-card border border-slate-200 dark:border-cyber-border text-slate-600 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white text-[11px] font-semibold transition-colors flex items-center justify-center gap-1.5"
             >
-              <RotateCcw className="w-3 h-3 text-cyber-amber" />
+              <RotateCcw className="w-3 h-3 text-amber-600 dark:text-cyber-amber" />
               <span>Reset CTF Progress</span>
             </button>
           </div>

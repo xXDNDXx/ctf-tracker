@@ -78,4 +78,6 @@ HackTheBoxPDF/
 scratch/
 scripts/index-cpts-notes.cjs
 
-
+# Local Editor & Tool Configs
+.mcp.json
+main.js

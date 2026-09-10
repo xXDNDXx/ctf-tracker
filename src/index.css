@@ -13,7 +13,7 @@
   --cyber-border-glow: 203 213 225; /* #CBD5E1 slate-300 */
   --cyber-text: 15 23 42;           /* #0F172A slate-900 */
   --cyber-muted: 100 116 139;       /* #64748B slate-500 */
-  --cyber-code: 241 245 249;        /* #F1F5F9 slate-100 */
+  --cyber-code: 15 23 42;           /* #0F172A slate-900 - Keeps code & terminal snippets dark & high-contrast */
 }
 
 .dark {
@@ -49,22 +49,55 @@
   }
 }
 
-/* Ultra-Smooth Theme Switching: Synchronously transition theme colors smoothly across the DOM */
-html.theme-transition,
-html.theme-transition *,
-html.theme-transition *::before,
-html.theme-transition *::after {
-  transition-property: background-color, border-color, color, box-shadow !important;
-  transition-duration: 200ms !important;
-  transition-timing-function: ease-out !important;
-  transition-delay: 0s !important;
-}
-
-/* Semantic Light Mode Adaptions */
-html:not(.dark) .text-white:not(.bg-cyan-600 *):not(.bg-cyan-600):not(.bg-purple-600 *):not(.bg-purple-600):not(.bg-purple-700 *):not(.bg-purple-700):not(.bg-emerald-600 *):not(.bg-emerald-600):not(.bg-rose-600 *):not(.bg-rose-600):not(.bg-blue-600 *):not(.bg-blue-600):not(.bg-red-500 *):not(.bg-red-500):not(.bg-red-600 *):not(.bg-red-600):not(.bg-slate-900 *):not(.bg-slate-900):not(.bg-slate-800 *):not(.bg-slate-800):not(.bg-black *):not(.bg-black):not(.bg-cyber-crimson *):not(.bg-cyber-purple *):not(.keep-white) {
+/* Semantic Light Mode: Adapt default text-white to dark text on light backgrounds */
+html:not(.dark) .text-white {
   color: rgb(var(--cyber-text));
 }
 
+/* Explicitly preserve crisp white text on colored buttons, dark badges, codeblocks, and dark surfaces */
+html:not(.dark) [class*="bg-black"] .text-white,
+html:not(.dark) [class*="bg-slate-9"] .text-white,
+html:not(.dark) [class*="bg-slate-8"] .text-white,
+html:not(.dark) [class*="bg-gray-9"] .text-white,
+html:not(.dark) [class*="bg-gray-8"] .text-white,
+html:not(.dark) [class*="bg-purple-600"] .text-white,
+html:not(.dark) [class*="bg-purple-700"] .text-white,
+html:not(.dark) [class*="bg-cyan-600"] .text-white,
+html:not(.dark) [class*="bg-emerald-600"] .text-white,
+html:not(.dark) [class*="bg-rose-600"] .text-white,
+html:not(.dark) [class*="bg-amber-600"] .text-white,
+html:not(.dark) [class*="bg-orange-600"] .text-white,
+html:not(.dark) [class*="bg-cyber-code"] .text-white,
+html:not(.dark) pre .text-white,
+html:not(.dark) code .text-white,
+html:not(.dark) .dark-surface .text-white,
+html:not(.dark) .keep-white,
+html:not(.dark) .keep-white * {
+  color: #ffffff !important;
+}
+
+/* Ensure direct text-white on dark and saturated accent backgrounds stays white */
+html:not(.dark) [class*="bg-purple-600"].text-white,
+html:not(.dark) [class*="bg-purple-700"].text-white,
+html:not(.dark) [class*="bg-cyan-600"].text-white,
+html:not(.dark) [class*="bg-emerald-600"].text-white,
+html:not(.dark) [class*="bg-rose-600"].text-white,
+html:not(.dark) [class*="bg-amber-600"].text-white,
+html:not(.dark) [class*="bg-orange-600"].text-white,
+html:not(.dark) [class*="bg-red-600"].text-white,
+html:not(.dark) [class*="bg-blue-600"].text-white,
+html:not(.dark) [class*="bg-indigo-600"].text-white,
+html:not(.dark) [class*="bg-slate-900"].text-white,
+html:not(.dark) [class*="bg-slate-800"].text-white,
+html:not(.dark) [class*="bg-black"].text-white,
+html:not(.dark) [class*="bg-[#"].text-white,
+html:not(.dark) [class*="bg-cyber-code"].text-white,
+html:not(.dark) pre.text-white,
+html:not(.dark) code.text-white {
+  color: #ffffff !important;
+}
+
+/* Light Mode Code & Container Background Adaptations */
 html:not(.dark) .bg-black\/40,
 html:not(.dark) .bg-black\/50,
 html:not(.dark) .bg-black\/60,
@@ -91,12 +124,20 @@ html:not(.dark) .border-gray-900 {
 ::-webkit-scrollbar-thumb {
   background: rgb(var(--cyber-border));
   border-radius: 3px;
-  transition: all 0.25s ease;
+  transition: background-color 150ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #10B981;
   box-shadow: 0 0 10px rgba(16, 185, 129, 0.7);
+}
+
+/* Emil Kowalski Tactility: Immediate click press feedback for responsive physical feel */
+@media (hover: hover) and (pointer: fine) {
+  button:not([data-no-scale]):active, [role="button"]:not([data-no-scale]):active {
+    transform: scale(0.985);
+    transition: transform 80ms ease-out;
+  }
 }
 
 /* Slow tactical rotation for crosshairs */

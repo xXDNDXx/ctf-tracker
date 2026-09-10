@@ -508,8 +508,87 @@ export function getCategoryTopicGroups(category: string = 'ALL', notes: CptsNote
     .sort((a, b) => b.count - a.count);
 }
 
+export interface NoteSearchSnippet {
+  snippet: string;
+  matchedField: 'title' | 'command' | 'tool' | 'tag' | 'summary' | 'content';
+}
+
 /**
- * Fast search and filter across note titles (EN & HE), subcategories, topic groups, tags, summaries, and commands
+ * Extracts a concise contextual snippet highlighting where a search query matched in a note
+ */
+export function getNoteSearchSnippet(note: CptsNoteEntry, query: string): NoteSearchSnippet | null {
+  if (!query || !query.trim()) return null;
+  const terms = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  if (terms.length === 0) return null;
+
+  // 1. Check title
+  const title = (note.titleEn || note.title || '').toLowerCase();
+  if (terms.some((t) => title.includes(t))) {
+    return { snippet: note.titleEn || note.title, matchedField: 'title' };
+  }
+
+  // 2. Check commands
+  if (note.commands && note.commands.length > 0) {
+    for (const cmd of note.commands) {
+      const lower = cmd.toLowerCase();
+      if (terms.some((t) => lower.includes(t))) {
+        const trimmed = cmd.length > 110 ? cmd.slice(0, 110) + '...' : cmd;
+        return { snippet: trimmed, matchedField: 'command' };
+      }
+    }
+  }
+
+  // 3. Check tools
+  if (note.tools && note.tools.length > 0) {
+    const matchedTool = note.tools.find((t) => terms.some((term) => t.toLowerCase().includes(term)));
+    if (matchedTool) {
+      return { snippet: `Tool: ${matchedTool}`, matchedField: 'tool' };
+    }
+  }
+
+  // 4. Check tags
+  if (note.tags && note.tags.length > 0) {
+    const matchedTag = note.tags.find((t) => terms.some((term) => t.toLowerCase().includes(term)));
+    if (matchedTag) {
+      return { snippet: `#${matchedTag}`, matchedField: 'tag' };
+    }
+  }
+
+  // 5. Check summary
+  const summary = note.summary || note.enSummary || '';
+  if (summary) {
+    const lowerSum = summary.toLowerCase();
+    for (const term of terms) {
+      const idx = lowerSum.indexOf(term);
+      if (idx !== -1) {
+        const start = Math.max(0, idx - 30);
+        const end = Math.min(summary.length, idx + term.length + 50);
+        const excerpt = (start > 0 ? '...' : '') + summary.slice(start, end).trim() + (end < summary.length ? '...' : '');
+        return { snippet: excerpt, matchedField: 'summary' };
+      }
+    }
+  }
+
+  // 6. Check raw markdown
+  if (note.rawMarkdown) {
+    const lowerMd = note.rawMarkdown.toLowerCase();
+    for (const term of terms) {
+      const idx = lowerMd.indexOf(term);
+      if (idx !== -1) {
+        const start = Math.max(0, idx - 30);
+        const end = Math.min(note.rawMarkdown.length, idx + term.length + 50);
+        const excerpt = (start > 0 ? '...' : '') + note.rawMarkdown.slice(start, end).replace(/[\r\n]+/g, ' ').trim() + (end < note.rawMarkdown.length ? '...' : '');
+        return { snippet: excerpt, matchedField: 'content' };
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
+ * High-performance search and filter across note titles (EN & HE), subcategories, topic groups,
+ * tags, summaries, and commands with tokenized multi-term matching and relevance ranking.
  */
 export function searchCptsNotes(
   query: string, 
@@ -542,21 +621,81 @@ export function searchCptsNotes(
 
   if (!q) return pool;
 
-  return pool.filter((n) => {
-    if (n.title?.toLowerCase().includes(q)) return true;
-    if (n.titleEn?.toLowerCase().includes(q)) return true;
-    if (n.titleHe?.toLowerCase().includes(q)) return true;
-    if (n.subCategory?.toLowerCase().includes(q)) return true;
-    if (n.tags?.some((t) => typeof t === 'string' && t.toLowerCase().includes(q))) return true;
-    if (n.summary?.toLowerCase().includes(q)) return true;
-    if (n.enSummary?.toLowerCase().includes(q)) return true;
-    if (n.heSummary?.toLowerCase().includes(q)) return true;
-    if (n.stage?.toLowerCase().includes(q)) return true;
-    if (n.tools?.some((t) => typeof t === 'string' && t.toLowerCase().includes(q))) return true;
-    if (n.commands?.some((c) => typeof c === 'string' && c.toLowerCase().includes(q))) return true;
-    if (n.rawMarkdown?.toLowerCase().includes(q)) return true;
-    return false;
-  });
+  const terms = q.split(/\s+/).filter(Boolean);
+
+  // Score each note for relevance
+  const scored: { note: CptsNoteEntry; score: number }[] = [];
+
+  for (const n of pool) {
+    let score = 0;
+    const titleLower = (n.title || '').toLowerCase();
+    const titleEnLower = (n.titleEn || '').toLowerCase();
+    const titleHe = n.titleHe || '';
+    const subCatLower = (n.subCategory || '').toLowerCase();
+    const summaryLower = (n.summary || n.enSummary || '').toLowerCase();
+    const tagsJoined = (n.tags || []).join(' ').toLowerCase();
+    const toolsJoined = (n.tools || []).join(' ').toLowerCase();
+    const commandsJoined = (n.commands || []).join(' ').toLowerCase();
+    const rawLower = (n.rawMarkdown || '').toLowerCase();
+
+    // Exact full query bonus
+    if (titleLower === q || titleEnLower === q) {
+      score += 250;
+    } else if (titleLower.includes(q) || titleEnLower.includes(q)) {
+      score += 120;
+    } else if (commandsJoined.includes(q)) {
+      score += 85;
+    } else if (toolsJoined.includes(q) || tagsJoined.includes(q)) {
+      score += 75;
+    }
+
+    // Check each individual term
+    let allTermsMatch = true;
+    for (const term of terms) {
+      let termMatched = false;
+      if (titleLower.includes(term) || titleEnLower.includes(term) || (titleHe && titleHe.includes(term))) {
+        score += 40;
+        termMatched = true;
+      }
+      if (toolsJoined.includes(term)) {
+        score += 30;
+        termMatched = true;
+      }
+      if (tagsJoined.includes(term)) {
+        score += 25;
+        termMatched = true;
+      }
+      if (commandsJoined.includes(term)) {
+        score += 25;
+        termMatched = true;
+      }
+      if (subCatLower.includes(term)) {
+        score += 20;
+        termMatched = true;
+      }
+      if (summaryLower.includes(term)) {
+        score += 15;
+        termMatched = true;
+      }
+      if (rawLower.includes(term)) {
+        score += 10;
+        termMatched = true;
+      }
+
+      if (!termMatched) {
+        allTermsMatch = false;
+        break;
+      }
+    }
+
+    if (allTermsMatch && score > 0) {
+      scored.push({ note: n, score });
+    }
+  }
+
+  // Sort descending by relevance score
+  scored.sort((a, b) => b.score - a.score);
+  return scored.map((item) => item.note);
 }
 
 /**

@@ -33,7 +33,7 @@ import { useCtfStore } from '../../store/useCtfStore';
 import { playCyberSound, triggerRootCelebration, safeCopyToClipboard } from '../../utils/helpers';
 import { generateObsidianVaultZip } from '../../utils/obsidianVaultExporter';
 import { extractCandidateNames, matchCandidateNamesToCatalog } from '../../utils/bulkPwnImporter';
-import { isEncryptedZeroboxBackup } from '../../utils/cryptoUtils';
+import { isEncryptedZeroboxBackup, computeSha256 } from '../../utils/cryptoUtils';
 import { PipelineStatus } from '../../types';
 import { useModalA11y } from '../../hooks/useModalA11y';
 
@@ -46,6 +46,7 @@ export const BackupModal: React.FC = () => {
     importBackup,
     importEncryptedBackup,
     resetAllProgress,
+    panicWipeActiveSession,
     machines,
     cheatsheets,
     soundEnabled,
@@ -61,6 +62,12 @@ export const BackupModal: React.FC = () => {
   const [importText, setImportText] = useState('');
   const [copied, setCopied] = useState(false);
   const [redactSecrets, setRedactSecrets] = useState(true);
+  const [exportScope, setExportScope] = useState<'all' | 'targets' | 'cheatsheets' | 'notes'>('all');
+  const [integrityStatus, setIntegrityStatus] = useState<{
+    status: 'none' | 'verified' | 'mismatch' | 'legacy';
+    hash?: string;
+  }>({ status: 'none' });
+  const [panicWiped, setPanicWiped] = useState(false);
   const [isExportingVault, setIsExportingVault] = useState(false);
   const [importStatus, setImportStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
@@ -111,14 +118,27 @@ export const BackupModal: React.FC = () => {
 
   if (!backupModalOpen) return null;
 
-  const handleDownloadBackup = () => {
-    const jsonStr = exportBackup({ redactSecrets });
+  const generateScopedJsonWithChecksum = async () => {
+    const rawJson = exportBackup({ redactSecrets, scope: exportScope });
+    try {
+      const parsed = JSON.parse(rawJson);
+      const hash = await computeSha256(JSON.stringify(parsed));
+      parsed.checksum = `sha256:${hash}`;
+      return JSON.stringify(parsed, null, 2);
+    } catch {
+      return rawJson;
+    }
+  };
+
+  const handleDownloadBackup = async () => {
+    const jsonStr = await generateScopedJsonWithChecksum();
     const blob = new Blob([jsonStr], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
     const dateStr = new Date().toISOString().slice(0, 10);
-    link.download = `zerobox_ctf_backup_${redactSecrets ? 'redacted_' : ''}${dateStr}.json`;
+    const scopeTag = exportScope !== 'all' ? `_${exportScope}` : '';
+    link.download = `zerobox${scopeTag}_backup_${redactSecrets ? 'redacted_' : ''}${dateStr}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -223,11 +243,58 @@ export const BackupModal: React.FC = () => {
   });
 
   const handleCopyBackup = async () => {
-    const jsonStr = exportBackup({ redactSecrets });
+    const jsonStr = await generateScopedJsonWithChecksum();
     await safeCopyToClipboard(jsonStr);
     setCopied(true);
     if (soundEnabled) playCyberSound('copy');
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  useEffect(() => {
+    if (!importText.trim()) {
+      setIntegrityStatus({ status: 'none' });
+      return;
+    }
+
+    let isMounted = true;
+    const checkIntegrity = async () => {
+      try {
+        const parsed = JSON.parse(importText);
+        if (parsed && typeof parsed === 'object' && parsed.checksum && typeof parsed.checksum === 'string') {
+          const expected = parsed.checksum.replace(/^sha256:/i, '').trim();
+          const clone = { ...parsed };
+          delete clone.checksum;
+          const computed = await computeSha256(JSON.stringify(clone));
+          if (isMounted) {
+            if (computed.toLowerCase() === expected.toLowerCase()) {
+              setIntegrityStatus({ status: 'verified', hash: computed });
+            } else {
+              setIntegrityStatus({ status: 'mismatch', hash: computed });
+            }
+          }
+        } else if (parsed && typeof parsed === 'object' && (parsed.machines || parsed.cheatsheets || parsed.userNotes)) {
+          if (isMounted) setIntegrityStatus({ status: 'legacy' });
+        } else {
+          if (isMounted) setIntegrityStatus({ status: 'none' });
+        }
+      } catch {
+        if (isMounted) setIntegrityStatus({ status: 'none' });
+      }
+    };
+
+    checkIntegrity();
+    return () => {
+      isMounted = false;
+    };
+  }, [importText]);
+
+  const handlePanicWipe = () => {
+    if (confirm('🚨 EMERGENCY OPSEC PURGE: Are you sure you want to scrub the active session? This will immediately clear the active target, stop timers, and wipe temporary IPs/tokens from memory.')) {
+      panicWipeActiveSession();
+      setPanicWiped(true);
+      if (soundEnabled) playCyberSound('engage');
+      setTimeout(() => setPanicWiped(false), 3000);
+    }
   };
 
   const MAX_BACKUP_FILE_BYTES = 10 * 1024 * 1024; // 10MB limit
@@ -373,7 +440,7 @@ export const BackupModal: React.FC = () => {
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center border-b border-cyber-border bg-[#0a0f1d] px-4 pt-2 gap-2 flex-shrink-0 text-xs">
+        <div className="flex items-center border-b border-cyber-border bg-slate-100 dark:bg-[#0a0f1d] px-4 pt-2 gap-2 flex-shrink-0 text-xs">
           <button
             onClick={() => {
               setActiveTab('backup');
@@ -418,7 +485,7 @@ export const BackupModal: React.FC = () => {
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4 text-cyber-emerald" />
-                    <span className="font-bold text-white text-sm">
+                    <span className="font-bold text-slate-900 dark:text-white text-sm">
                       Encrypted Secure Backup (.zerobox.enc)
                     </span>
                     <span className="text-[9px] px-2 py-0.5 rounded bg-cyber-emerald/20 text-cyber-emerald font-black border border-cyber-emerald/40">
@@ -430,7 +497,7 @@ export const BackupModal: React.FC = () => {
                   </span>
                 </div>
 
-                <p className="text-gray-300 text-[11px] leading-relaxed">
+                <p className="text-slate-600 dark:text-gray-300 text-[11px] leading-relaxed">
                   Creates an offline, military-grade encrypted vault of your entire CTF profile. 
                   Unlike shared JSON files, this preserves <strong>all cracked credentials, passwords, tokens, private notes, and custom targets unredacted</strong>, sealed entirely inside your browser using Web Crypto API.
                 </p>
@@ -510,6 +577,35 @@ export const BackupModal: React.FC = () => {
                     <span>Redact sensitive credentials (LHOST, target IPs, passwords, hashes & tokens)</span>
                   </span>
                 </label>
+
+                {/* Export Scope Selector */}
+                <div className="space-y-1.5 pt-1">
+                  <div className="text-[10px] text-cyber-muted uppercase tracking-wider font-bold">
+                    Export Scope:
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                    {[
+                      { id: 'all', label: '🌐 Full Profile', desc: 'All targets, notes & cheatsheets' },
+                      { id: 'targets', label: '🎯 Targets Only', desc: 'Machine catalog & solves' },
+                      { id: 'cheatsheets', label: '📚 Cheatsheets', desc: 'Commands & methodologies' },
+                      { id: 'notes', label: '📝 Obsidian Notes', desc: 'Custom notes & links' },
+                    ].map((scopeOption) => (
+                      <button
+                        key={scopeOption.id}
+                        type="button"
+                        onClick={() => setExportScope(scopeOption.id as any)}
+                        className={`p-2 rounded-lg border text-left transition-all ${
+                          exportScope === scopeOption.id
+                            ? 'bg-cyber-purple/20 border-cyber-purple text-white shadow-sm'
+                            : 'bg-cyber-card/60 border-cyber-border/70 text-cyber-muted hover:text-white hover:border-cyber-border'
+                        }`}
+                      >
+                        <div className="font-bold text-[11px]">{scopeOption.label}</div>
+                        <div className="text-[9px] text-cyber-muted leading-tight mt-0.5">{scopeOption.desc}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
                 <div className="flex items-center gap-2 pt-1">
                   <button
@@ -620,7 +716,7 @@ export const BackupModal: React.FC = () => {
                       </button>
                     </div>
 
-                    <p className="text-[11px] text-gray-300 leading-relaxed font-sans">
+                    <p className="text-[11px] text-slate-600 dark:text-gray-300 leading-relaxed font-sans">
                       This file is protected by AES-256-GCM authenticated encryption. Enter the passphrase you used when creating the vault:
                     </p>
 
@@ -677,6 +773,36 @@ export const BackupModal: React.FC = () => {
                       placeholder="Or paste exported JSON content directly here..."
                       className="w-full p-2.5 rounded bg-cyber-card border border-cyber-border text-xs text-white placeholder-cyber-muted focus:outline-none focus:border-cyber-cyan resize-none font-mono"
                     />
+
+                    {/* Integrity Checksum Banner */}
+                    {integrityStatus.status === 'verified' && (
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 text-xs">
+                        <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="font-bold">SHA-256 Integrity Verified</div>
+                          <div className="text-[10px] text-emerald-400/80 font-mono truncate">
+                            Digest: {integrityStatus.hash}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {integrityStatus.status === 'mismatch' && (
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-rose-950/40 border border-rose-500/50 text-rose-300 text-xs">
+                        <AlertTriangle className="w-4 h-4 text-rose-400 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="font-bold">Warning: SHA-256 Checksum Mismatch!</div>
+                          <div className="text-[10px] text-rose-400/80">
+                            Payload data differs from signature — content may have been modified or corrupted.
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {integrityStatus.status === 'legacy' && (
+                      <div className="flex items-center gap-2 p-1.5 rounded-lg bg-blue-950/30 border border-blue-500/30 text-blue-300 text-xs">
+                        <Sparkles className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
+                        <span className="text-[11px]">Legacy Schema Detected (Valid Format)</span>
+                      </div>
+                    )}
 
                     {importStatus === 'error' && (
                       <div className="flex items-center gap-2 text-cyber-crimson text-xs">
@@ -768,22 +894,63 @@ export const BackupModal: React.FC = () => {
                 </div>
               </div>
 
-              {/* Section 3: Reset */}
-              <div className="p-3.5 rounded-lg bg-rose-950/15 border border-rose-900/30 space-y-2">
+              {/* Section 3: Danger Zone */}
+              <div className="p-3.5 rounded-lg bg-rose-950/15 border border-rose-900/30 space-y-3">
                 <div className="flex items-center gap-2 text-cyber-crimson">
                   <AlertTriangle className="w-4 h-4" />
-                  <span className="font-bold">Danger Zone: Reset All Target States</span>
+                  <span className="font-bold text-sm">Danger Zone: Session Purge & Factory Reset</span>
                 </div>
-                <p className="text-cyber-muted text-[11px]">
-                  Resets active flags, notes, and resets all machines to their default catalog baseline.
-                </p>
-                <button
-                  onClick={handleResetProgress}
-                  className="px-3 py-1.5 rounded-lg bg-cyber-crimson/20 border border-cyber-crimson/50 text-cyber-crimson hover:bg-cyber-crimson hover:text-white font-bold transition-all flex items-center gap-1.5"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                  <span>Reset All Progress</span>
-                </button>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="p-3 rounded-lg bg-cyber-card border border-cyber-border/70 space-y-2 flex flex-col justify-between">
+                    <div>
+                      <div className="font-bold text-white text-xs flex items-center gap-1.5">
+                        <ShieldAlert className="w-3.5 h-3.5 text-cyber-amber" />
+                        <span>OPSEC Panic Session Wipe</span>
+                      </div>
+                      <p className="text-cyber-muted text-[10px] leading-relaxed mt-1">
+                        Immediately clears active target machine, stops timers, and resets temporary LHOST/RHOST and credential tokens from browser memory.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handlePanicWipe}
+                      className="w-full py-1.5 px-3 rounded-lg bg-amber-500/15 hover:bg-amber-500 hover:text-black border border-amber-500/40 text-amber-400 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      {panicWiped ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-cyber-emerald" />
+                          <span className="text-cyber-emerald">Session Scrubbed Clean!</span>
+                        </>
+                      ) : (
+                        <>
+                          <ShieldAlert className="w-3.5 h-3.5" />
+                          <span>Scrub Active Session</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-cyber-card border border-cyber-border/70 space-y-2 flex flex-col justify-between">
+                    <div>
+                      <div className="font-bold text-white text-xs flex items-center gap-1.5">
+                        <RotateCcw className="w-3.5 h-3.5 text-cyber-crimson" />
+                        <span>Factory Reset Catalog</span>
+                      </div>
+                      <p className="text-cyber-muted text-[10px] leading-relaxed mt-1">
+                        Resets all active flags, notes, custom machines, and restores catalog targets to default baseline.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleResetProgress}
+                      className="w-full py-1.5 px-3 rounded-lg bg-cyber-crimson/20 border border-cyber-crimson/50 text-cyber-crimson hover:bg-cyber-crimson hover:text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>Reset All Progress</span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </>
           ) : (
@@ -791,7 +958,7 @@ export const BackupModal: React.FC = () => {
             <div className="space-y-4">
               <div className="p-3.5 rounded-xl bg-gradient-to-r from-cyber-emerald/15 via-cyber-card to-cyber-bg border border-cyber-emerald/40 space-y-2">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-white font-bold text-sm">
+                  <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold text-sm">
                     <Flame className="w-4 h-4 text-cyber-emerald" />
                     <span>Auto-Sync Solved Machines</span>
                   </div>
@@ -802,7 +969,7 @@ export const BackupModal: React.FC = () => {
                     Load Sample Preset
                   </button>
                 </div>
-                <p className="text-gray-300 text-[11px] leading-relaxed">
+                <p className="text-slate-600 dark:text-gray-300 text-[11px] leading-relaxed">
                   Paste a list of machines you have already solved on <strong>Hack The Box</strong> or <strong>TryHackMe</strong> (comma separated, line-by-line, or exported CSV). 
                   ZeroBox will match them against the catalog of 945 targets and automatically mark them as solved in seconds.
                 </p>
@@ -817,7 +984,7 @@ export const BackupModal: React.FC = () => {
                 >
                   <div className="flex items-center gap-2">
                     <HelpCircle className="w-4 h-4 text-cyber-cyan" />
-                    <span className="font-bold text-white text-[11px]">
+                    <span className="font-bold text-slate-900 dark:text-white text-[11px]">
                       💡 HOW TO GRAB YOUR SOLVES FROM HTB OR THM (IN 5 SECONDS)
                     </span>
                   </div>
@@ -829,15 +996,15 @@ export const BackupModal: React.FC = () => {
                 </button>
 
                 {showExportGuide && (
-                  <div className="p-3.5 pt-0 space-y-3 border-t border-cyber-border/60 bg-[#080d1a]/80 text-[11px]">
+                  <div className="p-3.5 pt-0 space-y-3 border-t border-cyber-border/60 bg-slate-100/80 dark:bg-[#080d1a]/80 text-[11px]">
                     {/* Method 1 */}
                     <div className="space-y-1">
                       <div className="font-bold text-cyber-emerald flex items-center gap-1">
                         <span>1. The Simple Way (No Code // Highlight & Copy)</span>
                       </div>
                       <p className="text-cyber-muted leading-relaxed">
-                        • <strong className="text-white">Hack The Box:</strong> Go to <em>Profile → Activity</em> (or <em>Labs → Machines → State: Owned</em>), select the machine names with your cursor, copy, and paste below.<br />
-                        • <strong className="text-white">TryHackMe:</strong> Open <em>tryhackme.com/p/YOUR_USERNAME</em>, scroll to <em>Rooms Completed</em>, highlight the text, and paste below.
+                        • <strong className="text-slate-900 dark:text-white">Hack The Box:</strong> Go to <em>Profile → Activity</em> (or <em>Labs → Machines → State: Owned</em>), select the machine names with your cursor, copy, and paste below.<br />
+                        • <strong className="text-slate-900 dark:text-white">TryHackMe:</strong> Open <em>tryhackme.com/p/YOUR_USERNAME</em>, scroll to <em>Rooms Completed</em>, highlight the text, and paste below.
                       </p>
                     </div>
 

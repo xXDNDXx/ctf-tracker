@@ -105,13 +105,13 @@ const FileTreeItem: React.FC<{
         style={{ paddingLeft: `${depth * 14 + 8}px` }}
         className={`flex items-center justify-between py-1.5 pr-2 rounded-lg cursor-pointer transition-colors group ${
           isActive
-            ? 'bg-cyber-cyan/15 border-l-2 border-cyber-cyan text-cyber-cyan font-bold shadow-sm'
-            : 'hover:bg-slate-800/60 text-slate-300 hover:text-white'
+            ? 'bg-cyan-50 dark:bg-cyber-cyan/15 border-l-2 border-cyan-600 dark:border-cyber-cyan text-cyan-800 dark:text-cyber-cyan font-bold shadow-xs'
+            : 'hover:bg-slate-100 dark:hover:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white'
         }`}
       >
         <div className="flex items-center gap-2 truncate">
           {isFolder && (
-            <span className="text-slate-500 hover:text-slate-300">
+            <span className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
               {isExpanded ? (
                 <ChevronDown className="w-3.5 h-3.5" />
               ) : (
@@ -120,13 +120,13 @@ const FileTreeItem: React.FC<{
             </span>
           )}
           {getNodeIcon()}
-          <span className={`truncate text-xs ${isActive ? 'text-cyber-cyan font-bold' : ''}`}>
+          <span className={`truncate text-xs ${isActive ? 'text-cyan-800 dark:text-cyber-cyan font-bold' : ''}`}>
             {node.name}
           </span>
         </div>
 
         {itemCount !== null && itemCount > 0 && (
-          <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800/80 text-slate-400 border border-slate-700/60 font-mono">
+          <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700/60 font-mono">
             {itemCount}
           </span>
         )}
@@ -134,7 +134,7 @@ const FileTreeItem: React.FC<{
 
       {/* Recursive Children */}
       {isFolder && isExpanded && sortedChildren.length > 0 && (
-        <div className="border-l border-slate-800/80 ml-3">
+        <div className="border-l border-slate-200 dark:border-slate-800/80 ml-3">
           {sortedChildren.map((child) => (
             <FileTreeItem
               key={child.id || child.path}
@@ -201,22 +201,22 @@ export const FileExplorer: React.FC<FileExplorerProps> = ({
   }, [tree.roots]);
 
   return (
-    <div className={`flex flex-col h-full bg-[#070B14] border-r border-cyber-border font-mono text-xs ${className}`}>
+    <div className={`flex flex-col h-full bg-slate-50 dark:bg-[#070B14] border-r border-slate-200 dark:border-cyber-border font-mono text-xs ${className}`}>
       {/* Search Header */}
-      <div className="p-3 border-b border-cyber-border/70 space-y-2">
+      <div className="p-3 border-b border-slate-200 dark:border-cyber-border/70 space-y-2">
         <div className="flex items-center justify-between text-cyber-muted text-[10px] font-bold uppercase tracking-wider">
           <span>VAULT EXPLORER</span>
           <div className="flex items-center gap-1">
             <button
               onClick={handleExpandAll}
-              className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800"
+              className="p-1 rounded text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
               title="Expand All"
             >
               <ChevronsUpDown className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={handleCollapseAll}
-              className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800"
+              className="p-1 rounded text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
               title="Collapse All"
             >
               <ChevronsDownUp className="w-3.5 h-3.5" />
@@ -224,17 +224,17 @@ export const FileExplorer: React.FC<FileExplorerProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2 bg-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-800 text-xs">
-          <Search className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+        <div className="flex items-center gap-2 bg-white dark:bg-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-xs shadow-xs">
+          <Search className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
           <input
             type="text"
             placeholder="Search notes & files..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-transparent text-white focus:outline-none text-xs placeholder:text-slate-500"
+            className="w-full bg-transparent text-slate-900 dark:text-white focus:outline-none text-xs placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
           {search && (
-            <button onClick={() => setSearch('')} className="text-slate-500 hover:text-white">
+            <button onClick={() => setSearch('')} className="text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-white">
               <X className="w-3 h-3" />
             </button>
           )}
@@ -242,9 +242,9 @@ export const FileExplorer: React.FC<FileExplorerProps> = ({
       </div>
 
       {/* File Tree List */}
-      <div className="flex-1 overflow-y-auto p-2 space-y-0.5 scrollbar-thin scrollbar-thumb-slate-800">
+      <div className="flex-1 overflow-y-auto p-2 space-y-0.5 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-800">
         {sortedRoots.length === 0 ? (
-          <div className="p-4 text-center text-slate-500 text-xs italic">
+          <div className="p-4 text-center text-slate-400 dark:text-slate-500 text-xs italic">
             Vault is empty.
           </div>
         ) : (

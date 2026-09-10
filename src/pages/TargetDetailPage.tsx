@@ -393,7 +393,7 @@ During the security assessment of target host ${machine.name} (${machine.ip}), s
 
           <button
             onClick={() => {
-              setSelectedMachineId(machine.id);
+              setActiveTarget(machine.id);
               setReconAutomationModalOpen(true);
             }}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-100 dark:bg-cyber-cyan/10 border border-cyan-300 dark:border-cyber-cyan/40 text-cyan-900 dark:text-cyber-cyan hover:bg-cyan-500 hover:text-white dark:hover:bg-cyber-cyan dark:hover:text-black font-semibold text-xs transition-all shadow-glow-cyan/20"

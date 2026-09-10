@@ -6,6 +6,10 @@ import {
   Check, 
   ChevronDown, 
   ChevronRight, 
+  ChevronLeft,
+  Search,
+  Maximize2,
+  Minimize2,
   FileText, 
   Terminal, 
   AlertTriangle, 
@@ -50,6 +54,8 @@ interface ObsidianNoteViewerProps {
   onNavigateToNote: (noteId: string) => void;
   onDeleteNote?: (noteId: string, noteTitle?: string) => void;
   defaultLanguage?: ObsidianNoteLanguage;
+  notesPool?: CptsNoteEntry[];
+  allNotes?: CptsNoteEntry[];
 }
 
 export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
@@ -60,12 +66,57 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
   onNavigateToNote,
   onDeleteNote,
   defaultLanguage = 'en',
+  notesPool,
+  allNotes,
 }) => {
   const [viewMode, setViewMode] = useState<ObsidianViewMode>('reading');
   const [langMode, setLangMode] = useState<ObsidianNoteLanguage>(defaultLanguage);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [openCallouts, setOpenCallouts] = useState<Record<number, boolean>>({});
   const [checkedItems, setCheckedItems] = useState<Record<number, boolean>>({});
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [inNoteQuery, setInNoteQuery] = useState('');
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Sibling note navigation: safe index lookup in notesPool with graceful fallback to allNotes
+  const { prevNote, nextNote } = useMemo(() => {
+    const pool = notesPool && notesPool.length > 0 ? notesPool : (allNotes || []);
+    if (!pool || pool.length <= 1) {
+      return { prevNote: null, nextNote: null };
+    }
+
+    const idx = pool.findIndex((n) => n.id === note.id);
+    if (idx === -1 && allNotes && allNotes.length > 0) {
+      const allIdx = allNotes.findIndex((n) => n.id === note.id);
+      if (allIdx !== -1) {
+        return {
+          prevNote: allIdx > 0 ? allNotes[allIdx - 1] : null,
+          nextNote: allIdx < allNotes.length - 1 ? allNotes[allIdx + 1] : null,
+        };
+      }
+      return { prevNote: null, nextNote: null };
+    }
+
+    return {
+      prevNote: idx > 0 ? pool[idx - 1] : null,
+      nextNote: idx < pool.length - 1 ? pool[idx + 1] : null,
+    };
+  }, [note.id, notesPool, allNotes]);
+
+  // Match counter for in-note search
+  const totalMatches = useMemo(() => {
+    if (!inNoteQuery.trim()) return 0;
+    const q = inNoteQuery.toLowerCase();
+    const text = (note.rawMarkdown || '').toLowerCase();
+    let count = 0;
+    let pos = 0;
+    while ((pos = text.indexOf(q, pos)) !== -1) {
+      count++;
+      pos += q.length;
+    }
+    return count;
+  }, [inNoteQuery, note.rawMarkdown]);
 
   // Parse note markdown on the fly
   const parsed = useMemo(() => {
@@ -93,18 +144,36 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
     modalRef.current?.focus();
   }, [note.id]);
 
-  // Close on Escape key
+  // Escape key & Ctrl+F handler with Advisor Fix: dismiss in-note search first
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl+F / Cmd+F: Open In-Note Search
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'f' || e.key === 'F')) {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsSearchOpen(true);
+        setTimeout(() => {
+          searchInputRef.current?.focus();
+          searchInputRef.current?.select();
+        }, 40);
+        return;
+      }
+
+      // Escape: Dismiss in-note search if active, otherwise close modal
       if (e.key === 'Escape') {
         e.preventDefault();
         e.stopPropagation();
+        if (isSearchOpen) {
+          setIsSearchOpen(false);
+          setInNoteQuery('');
+          return;
+        }
         onClose();
       }
     };
     window.addEventListener('keydown', handleKeyDown, true);
     return () => window.removeEventListener('keydown', handleKeyDown, true);
-  }, [onClose]);
+  }, [onClose, isSearchOpen]);
 
   const handleCopy = async (text: string, id: string) => {
     await safeCopyToClipboard(text);
@@ -131,6 +200,34 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
     });
   };
 
+  // Helper to highlight active in-note search matches
+  const highlightSearchQuery = (content: string, keyPrefix: string): React.ReactNode => {
+    if (!inNoteQuery.trim()) return content;
+    const q = inNoteQuery.trim().toLowerCase();
+    const lower = content.toLowerCase();
+    if (!lower.includes(q)) return content;
+
+    const parts: React.ReactNode[] = [];
+    let cur = 0;
+    let matchIdx = lower.indexOf(q, cur);
+    while (matchIdx !== -1) {
+      if (matchIdx > cur) {
+        parts.push(content.substring(cur, matchIdx));
+      }
+      parts.push(
+        <mark key={`${keyPrefix}-q-${matchIdx}`} className="bg-amber-400 text-black font-bold px-0.5 rounded shadow-xs">
+          {content.substring(matchIdx, matchIdx + q.length)}
+        </mark>
+      );
+      cur = matchIdx + q.length;
+      matchIdx = lower.indexOf(q, cur);
+    }
+    if (cur < content.length) {
+      parts.push(content.substring(cur));
+    }
+    return parts;
+  };
+
   // Helper to parse Obsidian inline formatting: ==highlight==, **bold**, *italic*, `code`, ~~strike~~
   const parseInlineMarkdownText = (rawText: string, keyPrefix: string): React.ReactNode[] => {
     if (!rawText) return [];
@@ -141,7 +238,8 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
 
     while ((tMatch = tokenRegex.exec(rawText)) !== null) {
       if (tMatch.index > lastIdx) {
-        tokens.push(rawText.substring(lastIdx, tMatch.index));
+        const textSegment = rawText.substring(lastIdx, tMatch.index);
+        tokens.push(highlightSearchQuery(textSegment, `${keyPrefix}-pre-${lastIdx}`));
       }
       const token = tMatch[1];
       const tKey = `${keyPrefix}-${tMatch.index}`;
@@ -155,19 +253,19 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
       } else if (token.startsWith('**') && token.endsWith('**') && token.length > 4) {
         tokens.push(
           <strong key={tKey} className="font-bold text-slate-900 dark:text-white">
-            {token.slice(2, -2)}
+            {highlightSearchQuery(token.slice(2, -2), `${tKey}-b`)}
           </strong>
         );
       } else if (token.startsWith('*') && token.endsWith('*') && token.length > 2) {
         tokens.push(
           <em key={tKey} className="italic">
-            {token.slice(1, -1)}
+            {highlightSearchQuery(token.slice(1, -1), `${tKey}-i`)}
           </em>
         );
       } else if (token.startsWith('`') && token.endsWith('`') && token.length > 2) {
         tokens.push(
           <code key={tKey} className="px-1.5 py-0.5 rounded font-mono text-[11px] bg-purple-100/70 dark:bg-black/60 border border-purple-200 dark:border-purple-900/40 text-purple-950 dark:text-cyan-300">
-            {token.slice(1, -1)}
+            {highlightSearchQuery(token.slice(1, -1), `${tKey}-c`)}
           </code>
         );
       } else if (token.startsWith('~~') && token.endsWith('~~') && token.length > 4) {
@@ -177,14 +275,15 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
           </span>
         );
       } else {
-        tokens.push(token);
+        tokens.push(highlightSearchQuery(token, `${tKey}-raw`));
       }
 
       lastIdx = tMatch.index + token.length;
     }
 
     if (lastIdx < rawText.length) {
-      tokens.push(rawText.substring(lastIdx));
+      const remaining = rawText.substring(lastIdx);
+      tokens.push(highlightSearchQuery(remaining, `${keyPrefix}-post-${lastIdx}`));
     }
 
     return tokens;
@@ -767,35 +866,92 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
       ref={modalRef}
       tabIndex={-1}
       onClick={onClose}
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md animate-fadeIn outline-none"
+      className={`fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 backdrop-blur-md animate-fadeIn outline-none ${
+        isFullscreen ? 'p-0' : 'p-2 sm:p-4 md:p-6'
+      }`}
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-label={`Field manual note: ${note.titleEn || note.title}`}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-6xl max-h-[92vh] flex flex-col rounded-2xl border border-purple-500/40 bg-cyber-card shadow-2xl shadow-purple-950/50 overflow-hidden"
+        className={`relative w-full flex flex-col bg-cyber-card shadow-2xl shadow-purple-950/50 overflow-hidden transition-all duration-200 ${
+          isFullscreen
+            ? 'fixed inset-0 z-[10000] w-screen h-screen rounded-none border-0'
+            : 'max-w-6xl max-h-[92vh] rounded-2xl border border-purple-500/40'
+        }`}
       >
         {/* Top Header */}
-        <div className="flex items-center justify-between px-4 py-3 bg-cyber-bg/90 border-b border-purple-900/40">
-          <div className="flex items-center gap-2 text-xs font-mono truncate max-w-xl">
-            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-purple-100 dark:bg-purple-950/60 border border-purple-300 dark:border-purple-500/40 text-purple-900 dark:text-purple-300 font-bold">
+        <div className="flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-cyber-bg/95 border-b border-purple-900/40 gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-2 text-xs font-mono min-w-0 flex-1">
+            <div className="hidden xl:inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-purple-100 dark:bg-purple-950/60 border border-purple-300 dark:border-purple-500/40 text-purple-900 dark:text-purple-300 font-bold flex-shrink-0">
               <BookOpen className="w-3.5 h-3.5 text-purple-400" />
-              <span>OFFENSIVE FIELD MANUAL</span>
+              <span>FIELD MANUAL</span>
             </div>
-            <span className="text-cyber-muted">/</span>
-            <span className="text-cyber-muted truncate">{note.category}</span>
-            {note.subCategory && (
-              <>
-                <span className="text-cyber-muted">/</span>
-                <span className="text-purple-300 truncate">{note.subCategory}</span>
-              </>
-            )}
-            <span className="text-cyber-muted">/</span>
-            <span className="text-slate-900 dark:text-white font-bold truncate">{note.titleEn || note.title}</span>
+            <span className="text-cyber-muted hidden xl:inline">/</span>
+            <span className="text-cyber-muted truncate hidden sm:inline max-w-[120px] lg:max-w-[180px]">{note.category}</span>
+            <span className="text-cyber-muted hidden sm:inline">/</span>
+            <span className="text-slate-900 dark:text-white font-bold truncate flex-1 min-w-0" title={note.titleEn || note.title}>
+              {note.titleEn || note.title}
+            </span>
+
+            {/* Sibling Navigation Buttons */}
+            <div className="flex items-center gap-1 ml-1 sm:ml-2 flex-shrink-0">
+              {prevNote && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (soundEnabled) playCyberSound('click');
+                    onNavigateToNote(prevNote.id);
+                  }}
+                  className="flex items-center gap-0.5 px-2 py-0.5 rounded bg-slate-100 dark:bg-purple-950/40 border border-slate-300 dark:border-purple-800/40 text-purple-900 dark:text-purple-300 hover:text-white hover:bg-purple-600 text-[10px] font-mono active:scale-[0.97] transition-all cursor-pointer shadow-xs"
+                  title={`Previous note: ${prevNote.titleEn || prevNote.title}`}
+                >
+                  <ChevronLeft className="w-3 h-3" />
+                  <span className="hidden sm:inline">Prev</span>
+                </button>
+              )}
+              {nextNote && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (soundEnabled) playCyberSound('click');
+                    onNavigateToNote(nextNote.id);
+                  }}
+                  className="flex items-center gap-0.5 px-2 py-0.5 rounded bg-slate-100 dark:bg-purple-950/40 border border-slate-300 dark:border-purple-800/40 text-purple-900 dark:text-purple-300 hover:text-white hover:bg-purple-600 text-[10px] font-mono active:scale-[0.97] transition-all cursor-pointer shadow-xs"
+                  title={`Next note: ${nextNote.titleEn || nextNote.title}`}
+                >
+                  <span className="hidden sm:inline">Next</span>
+                  <ChevronRight className="w-3 h-3" />
+                </button>
+              )}
+            </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            {/* Find in Note Toggle Button */}
+            <button
+              type="button"
+              onClick={() => {
+                setIsSearchOpen((prev) => !prev);
+                if (!isSearchOpen) {
+                  setTimeout(() => {
+                    searchInputRef.current?.focus();
+                    searchInputRef.current?.select();
+                  }, 40);
+                }
+              }}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs font-mono transition-all cursor-pointer ${
+                isSearchOpen
+                  ? 'bg-amber-400 text-black border border-amber-400 font-bold shadow-sm'
+                  : 'bg-slate-100 dark:bg-black/50 border border-slate-300 dark:border-purple-900/40 text-slate-700 dark:text-purple-300 hover:text-purple-950 dark:hover:text-white'
+              }`}
+              title="Find in Note (Ctrl+F)"
+            >
+              <Search className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
+              <span className="hidden sm:inline">Find</span>
+            </button>
+
             <div className="hidden sm:flex items-center p-0.5 rounded-lg bg-slate-100 dark:bg-black/50 border border-slate-300 dark:border-purple-900/40 text-[11px] font-mono">
               <button
                 type="button"
@@ -877,13 +1033,13 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
               path={`/cheatsheets?note=${note.id}`}
               title={note.titleEn || note.title}
               label="Share"
-              className="px-2.5 py-1"
+              className="px-2.5 py-1 hidden sm:flex"
             />
 
             <button
               type="button"
               onClick={handleCopyRawMarkdown}
-              className="flex items-center gap-1 px-2.5 py-1 rounded bg-black/60 border border-cyber-border text-cyber-muted hover:text-white hover:border-purple-400 text-xs font-semibold transition-all cursor-pointer"
+              className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded bg-black/60 border border-cyber-border text-cyber-muted hover:text-white hover:border-purple-400 text-xs font-semibold transition-all cursor-pointer"
               title="Copy raw markdown to paste into your Obsidian vault"
             >
               {copiedId === 'raw-md-' + note.id ? (
@@ -894,7 +1050,7 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
               ) : (
                 <>
                   <Copy className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Copy MD</span>
+                  <span>Copy MD</span>
                 </>
               )}
             </button>
@@ -917,6 +1073,16 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
               </button>
             )}
 
+            {/* Maximize / Fullscreen Button */}
+            <button
+              type="button"
+              onClick={() => setIsFullscreen((prev) => !prev)}
+              className="p-1.5 rounded-lg bg-cyber-bg border border-cyber-border text-cyber-muted hover:text-white hover:border-purple-400 transition-all cursor-pointer"
+              title={isFullscreen ? 'Restore window' : 'Fullscreen'}
+            >
+              {isFullscreen ? <Minimize2 className="w-4 h-4 text-purple-400" /> : <Maximize2 className="w-4 h-4" />}
+            </button>
+
             <button
               type="button"
               onClick={onClose}
@@ -927,6 +1093,42 @@ export const ObsidianNoteViewer: React.FC<ObsidianNoteViewerProps> = ({
             </button>
           </div>
         </div>
+
+        {/* Dedicated In-Note Search Strip (Ctrl+F) */}
+        {isSearchOpen && (
+          <div className="flex items-center justify-between gap-3 px-4 py-2 bg-slate-900/95 border-b border-amber-500/40 font-mono text-xs animate-fadeIn z-20">
+            <div className="flex items-center gap-2 flex-1 max-w-lg">
+              <Search className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={inNoteQuery}
+                onChange={(e) => setInNoteQuery(e.target.value)}
+                placeholder="Find in this note (keywords, flags, commands)..."
+                className="w-full bg-slate-950 px-2.5 py-1 rounded border border-amber-500/40 text-amber-200 placeholder-slate-500 text-xs focus:outline-none focus:border-amber-400"
+              />
+              {inNoteQuery && (
+                <span className="text-[10px] text-amber-300 whitespace-nowrap bg-amber-950/70 px-2 py-0.5 rounded border border-amber-500/30">
+                  {totalMatches > 0 ? `${totalMatches} match${totalMatches > 1 ? 'es' : ''}` : 'No matches'}
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] text-slate-400 hidden sm:inline">Press Esc to dismiss search</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsSearchOpen(false);
+                  setInNoteQuery('');
+                }}
+                className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-white text-xs cursor-pointer"
+                title="Dismiss search (Esc)"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Canvas */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
