@@ -28,7 +28,7 @@ import { CyberLogo } from '../common/CyberLogo';
 import { PlatformIcon } from '../common/PlatformBadge';
 import { EditableIpBadge } from '../common/EditableIpBadge';
 import { extractMachineCves } from '../../utils/cveUtils';
-import { playCyberSound, formatSeconds, triggerRootCelebration, safeCopyToClipboard } from '../../utils/helpers';
+import { playCyberSound, formatSeconds, triggerRootCelebration, safeCopyToClipboard, CREATOR_PROFILE_LINKS } from '../../utils/helpers';
 import { recordCurrentVisit } from '../../utils/trafficTracker';
 import { UserMenu } from '../auth/UserMenu';
 import { ThemeToggle } from '../common/ThemeToggle';
@@ -227,6 +227,8 @@ export const Header: React.FC = () => {
     setCommandPaletteOpen,
     setNewMachineModalOpen,
     setReconAutomationModalOpen,
+    setOperatorModalOpen,
+    setFlexCardModalOpen,
   } = useCtfStore(
     useShallow((s) => ({
       activeTargetId: s.activeTargetId,
@@ -247,6 +249,8 @@ export const Header: React.FC = () => {
       setCommandPaletteOpen: s.setCommandPaletteOpen,
       setNewMachineModalOpen: s.setNewMachineModalOpen,
       setReconAutomationModalOpen: s.setReconAutomationModalOpen,
+      setOperatorModalOpen: s.setOperatorModalOpen,
+      setFlexCardModalOpen: s.setFlexCardModalOpen,
     }))
   );
 
@@ -307,9 +311,9 @@ export const Header: React.FC = () => {
       {/* Tier 1: Primary Bar (Brand on Left, Centered Global Search, Tools & Profile on Right) */}
       <div className="w-full px-4 xl:px-6 py-2 border-b border-slate-200/60 dark:border-cyber-border/40 flex items-center justify-between gap-3">
         
-        {/* Left: Brand Identity (Unified ZEROBOX) */}
-        <div className="flex items-center gap-3">
-          <Link to="/tracker" className="flex items-center gap-3 group">
+        {/* Left: Brand Identity (Unified ZEROBOX) & Creator Contact Info */}
+        <div className="flex items-center gap-3 flex-shrink-0">
+          <Link to="/tracker" className="flex items-center gap-3 group flex-shrink-0">
             <CyberLogo size="lg" />
             <div className="text-left">
               <div className="flex items-center">
@@ -324,6 +328,70 @@ export const Header: React.FC = () => {
               </div>
             </div>
           </Link>
+
+          {/* Subtle Vertical Divider */}
+          <div className="hidden md:block h-9 w-[1px] bg-slate-200 dark:bg-cyber-border/80 flex-shrink-0" />
+
+          {/* Creator Contact Info Card (Direct Match to User Specification) */}
+          <div className="hidden md:flex flex-col gap-1 p-1 px-2.5 rounded-xl bg-slate-50/90 dark:bg-cyber-card/60 border border-slate-200/80 dark:border-cyber-border/60 shadow-xs flex-shrink-0">
+            {/* Top row: [DD] Icon + Name & Role */}
+            <button
+              type="button"
+              onClick={() => {
+                setOperatorModalOpen(true);
+                if (soundEnabled) playCyberSound('click');
+              }}
+              className="flex items-center gap-2 group text-left focus:outline-none"
+              title="Open Daniel Dayan Creator Dossier"
+              aria-label="Daniel Dayan Creator Dossier"
+            >
+              <div className="w-6 h-6 rounded-lg bg-emerald-50 dark:bg-cyber-emerald/15 border border-emerald-400 dark:border-cyber-emerald flex items-center justify-center text-[10px] font-black text-emerald-800 dark:text-cyber-emerald shadow-[0_0_8px_rgba(16,185,129,0.25)] group-hover:scale-105 transition-transform flex-shrink-0">
+                DD
+              </div>
+              <div className="flex flex-col leading-none">
+                <div className="flex items-center gap-1">
+                  <span className="font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-cyber-emerald transition-colors text-[11px] font-mono">
+                    Daniel Dayan
+                  </span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyber-emerald animate-pulse" />
+                </div>
+                <span className="text-[9px] text-slate-500 dark:text-cyber-muted font-mono tracking-tight mt-0.5">
+                  Creator &amp; Pentester
+                </span>
+              </div>
+            </button>
+
+            {/* Bottom row: [ PORTFOLIO ] [ LINKEDIN ] [ GITHUB ] */}
+            <div className="hidden lg:flex items-center gap-1 font-mono text-[9px] font-bold">
+              <a
+                href={CREATOR_PROFILE_LINKS.portfolio}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-1.5 py-0.5 rounded bg-emerald-100/90 hover:bg-emerald-200 dark:bg-cyber-card dark:hover:bg-emerald-500/20 border border-emerald-300 dark:border-emerald-500/50 hover:border-emerald-500 text-emerald-800 dark:text-emerald-400 hover:text-emerald-950 dark:hover:text-emerald-300 transition-all text-center tracking-wider flex-shrink-0"
+                title="Daniel Dayan Official Portfolio Website"
+              >
+                PORTFOLIO
+              </a>
+              <a
+                href={CREATOR_PROFILE_LINKS.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-1.5 py-0.5 rounded bg-blue-100/90 hover:bg-blue-200 dark:bg-cyber-card dark:hover:bg-[#0077B5]/25 border border-blue-300 dark:border-[#0077B5]/50 hover:border-blue-500 text-blue-800 dark:text-[#38bdf8] hover:text-blue-950 dark:hover:text-white transition-all text-center tracking-wider flex-shrink-0"
+                title="Daniel Dayan on LinkedIn"
+              >
+                LINKEDIN
+              </a>
+              <a
+                href={CREATOR_PROFILE_LINKS.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 dark:bg-cyber-card dark:hover:bg-white/10 border border-slate-300 dark:border-cyber-border hover:border-slate-400 dark:hover:border-white text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white transition-all text-center tracking-wider flex-shrink-0"
+                title="xXDNDXx on GitHub"
+              >
+                GITHUB
+              </a>
+            </div>
+          </div>
         </div>
 
         {/* Center: Global Quick Command Search (Ctrl+K) */}
@@ -606,6 +674,20 @@ export const Header: React.FC = () => {
           >
             <Plus className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Box</span>
+          </button>
+
+          {/* Sharable Operator Flex Card Button (Restored) */}
+          <button
+            onClick={() => {
+              setFlexCardModalOpen(true);
+              if (soundEnabled) playCyberSound('click');
+            }}
+            className="flex items-center gap-1 px-2 py-1 rounded-md bg-purple-100 dark:bg-purple-500/15 text-purple-900 dark:text-purple-300 border border-purple-300 dark:border-purple-500/40 hover:bg-purple-600 dark:hover:bg-purple-500 hover:text-white dark:hover:text-white font-mono text-xs font-semibold transition-all shadow-glow-purple/20 group"
+            title="Operator Achievements Flex Card (Sharable 1200x630 Social Card)"
+            aria-label="Generate Operator Achievements Flex Card"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400 group-hover:text-white transition-colors" />
+            <span className="hidden sm:inline">Flex Card</span>
           </button>
         </div>
 

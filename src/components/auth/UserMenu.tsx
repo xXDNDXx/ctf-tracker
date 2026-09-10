@@ -15,7 +15,8 @@ import {
   Coffee,
   HardDrive,
   User,
-  ExternalLink
+  ExternalLink,
+  Sparkles
 } from 'lucide-react';
 import { computeSha256 } from '../../utils/cryptoUtils';
 
@@ -29,13 +30,15 @@ export const UserMenu: React.FC = () => {
   } = useAuthStore();
 
   const { 
-    machines, 
-    currentProfileId, 
     saveProfileData, 
+    currentProfileId, 
+    soundEnabled, 
+    machines, 
     exportBackup, 
     importBackup, 
     resetAllProgress,
-    setOperatorModalOpen
+    setOperatorModalOpen,
+    setFlexCardModalOpen
   } = useCtfStore();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -349,15 +352,28 @@ export const UserMenu: React.FC = () => {
                   BUILT BY DANIEL DAYAN
                 </span>
               </div>
-              <button
-                onClick={() => {
-                  setDropdownOpen(false);
-                  setOperatorModalOpen(true);
-                }}
-                className="text-[9px] font-bold text-emerald-700 dark:text-cyber-emerald hover:underline"
-              >
-                DOSSIER ↗
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    setDropdownOpen(false);
+                    setFlexCardModalOpen(true);
+                  }}
+                  className="text-[9px] font-bold text-purple-700 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300 hover:underline flex items-center gap-0.5"
+                  title="Generate 1200x630 Social Flex Card"
+                >
+                  <Sparkles className="w-2.5 h-2.5" />
+                  <span>FLEX CARD</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setDropdownOpen(false);
+                    setOperatorModalOpen(true);
+                  }}
+                  className="text-[9px] font-bold text-emerald-700 dark:text-cyber-emerald hover:underline"
+                >
+                  DOSSIER ↗
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-3 gap-1.5">
