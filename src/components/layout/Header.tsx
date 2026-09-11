@@ -21,7 +21,9 @@ import {
   Sparkles, 
   Zap,
   X,
-  Dices
+  Dices,
+  Globe,
+  ArrowUpRight
 } from 'lucide-react';
 import { Machine } from '../../types';
 import { CyberLogo } from '../common/CyberLogo';
@@ -332,63 +334,106 @@ export const Header: React.FC = () => {
           {/* Subtle Vertical Divider */}
           <div className="hidden md:block h-9 w-[1px] bg-slate-200 dark:bg-cyber-border/80 flex-shrink-0" />
 
-          {/* Creator Contact Info Card (Direct Match to User Specification) */}
-          <div className="hidden md:flex flex-col gap-1 p-1 px-2.5 rounded-xl bg-slate-50/90 dark:bg-cyber-card/60 border border-slate-200/80 dark:border-cyber-border/60 shadow-xs flex-shrink-0">
+          {/* Creator Contact Info Card (Single Unified Source of Truth) */}
+          <div className="hidden md:flex flex-col gap-1 p-1 px-2.5 rounded-xl bg-white/90 dark:bg-cyber-card/80 border border-slate-200/90 dark:border-cyber-border/80 shadow-xs hover:border-emerald-400/50 dark:hover:border-cyber-emerald/40 transition-all flex-shrink-0 backdrop-blur-xs">
             {/* Top row: [DD] Icon + Name & Role */}
-            <button
-              type="button"
-              onClick={() => {
-                setOperatorModalOpen(true);
-                if (soundEnabled) playCyberSound('click');
-              }}
-              className="flex items-center gap-2 group text-left focus:outline-none"
-              title="Open Daniel Dayan Creator Dossier"
-              aria-label="Daniel Dayan Creator Dossier"
-            >
-              <div className="w-6 h-6 rounded-lg bg-emerald-50 dark:bg-cyber-emerald/15 border border-emerald-400 dark:border-cyber-emerald flex items-center justify-center text-[10px] font-black text-emerald-800 dark:text-cyber-emerald shadow-[0_0_8px_rgba(16,185,129,0.25)] group-hover:scale-105 transition-transform flex-shrink-0">
-                DD
-              </div>
-              <div className="flex flex-col leading-none">
-                <div className="flex items-center gap-1">
-                  <span className="font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-cyber-emerald transition-colors text-[11px] font-mono">
-                    Daniel Dayan
+            <div className="flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setOperatorModalOpen(true);
+                  if (soundEnabled) playCyberSound('click');
+                }}
+                className="flex items-center gap-2 group text-left focus:outline-none"
+                title="View Daniel Dayan's Operator Dossier & Security Credentials"
+                aria-label="Daniel Dayan Operator Dossier"
+              >
+                <div className="relative flex-shrink-0">
+                  <div className="w-6 h-6 rounded-lg bg-emerald-500/10 dark:bg-cyber-emerald/15 border border-emerald-500/40 dark:border-cyber-emerald flex items-center justify-center text-[10px] font-black text-emerald-800 dark:text-cyber-emerald shadow-[0_0_8px_rgba(16,185,129,0.25)] group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(16,185,129,0.45)] group-hover:border-emerald-500 transition-all">
+                    DD
+                  </div>
+                  {/* Live Active Radar Ping */}
+                  <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_6px_#10b981]" />
                   </span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyber-emerald animate-pulse" />
                 </div>
-                <span className="text-[9px] text-slate-500 dark:text-cyber-muted font-mono tracking-tight mt-0.5">
-                  Creator &amp; Pentester
-                </span>
-              </div>
-            </button>
+                <div className="flex flex-col leading-none">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-cyber-emerald transition-colors text-[11px] font-mono tracking-tight">
+                      Daniel Dayan
+                    </span>
+                    <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-100 dark:bg-cyber-emerald/20 text-emerald-800 dark:text-cyber-emerald font-mono font-bold border border-emerald-300 dark:border-cyber-emerald/40 hidden xl:inline-block">
+                      VERIFIED
+                    </span>
+                  </div>
+                  <span className="text-[9px] text-slate-500 dark:text-cyber-muted font-mono tracking-tight mt-0.5">
+                    Creator &amp; Pentester
+                  </span>
+                </div>
+              </button>
 
-            {/* Bottom row: [ PORTFOLIO ] [ LINKEDIN ] [ GITHUB ] */}
-            <div className="hidden lg:flex items-center gap-1 font-mono text-[9px] font-bold">
+              {/* Quick Flex Card launcher badge */}
+              <button
+                type="button"
+                onClick={() => {
+                  setFlexCardModalOpen(true);
+                  if (soundEnabled) playCyberSound('click');
+                }}
+                className="hidden xl:flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold text-purple-700 dark:text-purple-300 bg-purple-100/70 hover:bg-purple-200 dark:bg-purple-950/40 dark:hover:bg-purple-900/50 border border-purple-300 dark:border-purple-500/40 hover:border-purple-400 transition-all shadow-2xs"
+                title="Generate 1200x630 Social Flex Card"
+              >
+                <Sparkles className="w-2.5 h-2.5 text-purple-600 dark:text-purple-400" />
+                <span>FLEX</span>
+              </button>
+            </div>
+
+            {/* Bottom row: [ PORTFOLIO ] [ LINKEDIN ] [ GITHUB ] - High CTR Design */}
+            <div className="flex items-center gap-1.5 pt-0.5 font-mono text-[9px] font-bold">
+              {/* Portfolio */}
               <a
                 href={CREATOR_PROFILE_LINKS.portfolio}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-1.5 py-0.5 rounded bg-emerald-100/90 hover:bg-emerald-200 dark:bg-cyber-card dark:hover:bg-emerald-500/20 border border-emerald-300 dark:border-emerald-500/50 hover:border-emerald-500 text-emerald-800 dark:text-emerald-400 hover:text-emerald-950 dark:hover:text-emerald-300 transition-all text-center tracking-wider flex-shrink-0"
-                title="Daniel Dayan Official Portfolio Website"
+                className="group/btn relative flex items-center gap-1 px-2 py-0.5 rounded-md text-[9px] font-mono font-bold tracking-tight bg-emerald-50 hover:bg-emerald-100 dark:bg-cyber-emerald/15 dark:hover:bg-cyber-emerald/30 border border-emerald-300 hover:border-emerald-500 dark:border-cyber-emerald/40 dark:hover:border-cyber-emerald text-emerald-800 hover:text-emerald-950 dark:text-cyber-emerald dark:hover:text-white shadow-2xs hover:shadow-[0_0_12px_rgba(16,185,129,0.35)] transition-all duration-150 active:scale-95 flex-shrink-0"
+                title="Explore Daniel Dayan's Official Portfolio Website"
+                aria-label="Daniel Dayan's Official Portfolio"
               >
-                PORTFOLIO
+                <Globe className="w-3 h-3 text-emerald-600 dark:text-cyber-emerald group-hover/btn:scale-110 transition-transform flex-shrink-0" />
+                <span className="hidden lg:inline">PORTFOLIO</span>
+                <ArrowUpRight className="w-2.5 h-2.5 opacity-60 group-hover/btn:opacity-100 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-all flex-shrink-0" />
               </a>
+
+              {/* LinkedIn (High CTR Focus) */}
               <a
                 href={CREATOR_PROFILE_LINKS.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-1.5 py-0.5 rounded bg-blue-100/90 hover:bg-blue-200 dark:bg-cyber-card dark:hover:bg-[#0077B5]/25 border border-blue-300 dark:border-[#0077B5]/50 hover:border-blue-500 text-blue-800 dark:text-[#38bdf8] hover:text-blue-950 dark:hover:text-white transition-all text-center tracking-wider flex-shrink-0"
-                title="Daniel Dayan on LinkedIn"
+                className="group/btn relative flex items-center gap-1 px-2 py-0.5 rounded-md text-[9px] font-mono font-bold tracking-tight bg-blue-50 hover:bg-blue-100 dark:bg-[#0077B5]/20 dark:hover:bg-[#0077B5]/35 border border-blue-300 hover:border-[#0077B5] dark:border-[#0077B5]/50 dark:hover:border-[#38bdf8] text-blue-700 hover:text-blue-950 dark:text-[#38bdf8] dark:hover:text-white shadow-2xs hover:shadow-[0_0_12px_rgba(0,119,181,0.45)] transition-all duration-150 active:scale-95 flex-shrink-0"
+                title="Connect with Daniel Dayan on LinkedIn"
+                aria-label="Daniel Dayan on LinkedIn"
               >
-                LINKEDIN
+                <svg className="w-3 h-3 fill-current flex-shrink-0 text-[#0A66C2] dark:text-[#38bdf8] group-hover/btn:scale-110 transition-transform" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.7a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2Z"/>
+                </svg>
+                <span className="hidden lg:inline">LINKEDIN</span>
+                <ArrowUpRight className="w-2.5 h-2.5 opacity-60 group-hover/btn:opacity-100 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-all flex-shrink-0" />
               </a>
+
+              {/* GitHub */}
               <a
                 href={CREATOR_PROFILE_LINKS.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 dark:bg-cyber-card dark:hover:bg-white/10 border border-slate-300 dark:border-cyber-border hover:border-slate-400 dark:hover:border-white text-slate-700 dark:text-cyber-muted hover:text-slate-900 dark:hover:text-white transition-all text-center tracking-wider flex-shrink-0"
-                title="xXDNDXx on GitHub"
+                className="group/btn relative flex items-center gap-1 px-2 py-0.5 rounded-md text-[9px] font-mono font-bold tracking-tight bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/20 border border-slate-300 hover:border-slate-500 dark:border-white/20 dark:hover:border-white/50 text-slate-800 hover:text-slate-950 dark:text-slate-200 dark:hover:text-white shadow-2xs hover:shadow-[0_0_12px_rgba(255,255,255,0.2)] transition-all duration-150 active:scale-95 flex-shrink-0"
+                title="View Daniel Dayan (@xXDNDXx) on GitHub"
+                aria-label="Daniel Dayan on GitHub"
               >
-                GITHUB
+                <svg className="w-3 h-3 fill-current flex-shrink-0 text-slate-800 dark:text-slate-200 group-hover/btn:scale-110 transition-transform" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                </svg>
+                <span className="hidden lg:inline">GITHUB</span>
+                <ArrowUpRight className="w-2.5 h-2.5 opacity-60 group-hover/btn:opacity-100 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-all flex-shrink-0" />
               </a>
             </div>
           </div>
