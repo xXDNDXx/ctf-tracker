@@ -24,7 +24,8 @@ import {
   Dices,
   Globe,
   ArrowUpRight,
-  CheckCircle2
+  CheckCircle2,
+  Coffee
 } from 'lucide-react';
 import { Machine } from '../../types';
 import { CyberLogo } from '../common/CyberLogo';
@@ -335,57 +336,55 @@ export const Header: React.FC = () => {
           {/* Subtle Vertical Divider */}
           <div className="hidden md:block h-9 w-[1px] bg-slate-200 dark:bg-cyber-border/80 flex-shrink-0" />
 
-          {/* Creator Contact & Social Suite */}
-          <div className="hidden md:flex flex-col gap-1.5 py-1.5 px-3 rounded-2xl bg-white/95 dark:bg-[#0c1322]/90 border border-slate-200/90 dark:border-cyan-500/20 shadow-xs hover:border-emerald-400/40 dark:hover:border-cyber-emerald/40 transition-all duration-200 flex-shrink-0 backdrop-blur-md">
-            {/* Top row: [DD] Avatar + Name & Verified Badge */}
-            <div className="flex items-center justify-between gap-3">
-              <button
-                type="button"
-                onClick={() => {
-                  setOperatorModalOpen(true);
-                  if (soundEnabled) playCyberSound('click');
-                }}
-                className="flex items-center gap-2 group text-left focus:outline-none"
-                title="View Daniel Dayan's Operator Dossier & Security Credentials"
-                aria-label="Daniel Dayan Operator Dossier"
-              >
-                <div className="relative flex-shrink-0">
-                  <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-emerald-500/20 via-cyan-500/10 to-transparent dark:from-emerald-500/25 dark:via-cyan-500/15 border border-emerald-500/40 dark:border-cyber-emerald/60 flex items-center justify-center text-[11px] font-black text-emerald-800 dark:text-cyber-emerald shadow-[0_0_10px_rgba(16,185,129,0.25)] group-hover:scale-105 group-hover:shadow-[0_0_14px_rgba(16,185,129,0.45)] group-hover:border-emerald-500 transition-all">
-                    DD
-                  </div>
-                  {/* Live Active Radar Ping */}
-                  <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_6px_#10b981]" />
-                  </span>
+          {/* Creator Dynamic Capsule: Operator Identity + Branded Action Pills */}
+          <div className="hidden md:flex items-center gap-1.5 h-9 px-2 xl:px-2.5 rounded-full bg-white/95 dark:bg-slate-900/80 border border-slate-200/90 dark:border-cyan-500/25 shadow-xs hover:border-emerald-400/50 dark:hover:border-cyber-emerald/40 transition-all duration-200 flex-shrink-0 backdrop-blur-md">
+            {/* Operator Dossier Trigger */}
+            <button
+              type="button"
+              onClick={() => {
+                setOperatorModalOpen(true);
+                if (soundEnabled) playCyberSound('click');
+              }}
+              className="flex items-center gap-2 group text-left focus:outline-none flex-shrink-0"
+              title="View Daniel Dayan's Operator Dossier & Security Credentials"
+              aria-label="Daniel Dayan Operator Dossier"
+            >
+              {/* Circular Avatar with Active Radar Ping */}
+              <div className="relative flex-shrink-0">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-emerald-500/25 via-cyan-500/15 to-transparent dark:from-emerald-500/30 dark:via-cyan-500/20 border border-emerald-500/50 dark:border-cyber-emerald/60 flex items-center justify-center text-[10px] font-black text-emerald-800 dark:text-cyber-emerald shadow-[0_0_8px_rgba(16,185,129,0.25)] group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(16,185,129,0.5)] transition-all">
+                  DD
                 </div>
-                <div className="flex flex-col leading-tight">
-                  <div className="flex items-center gap-1">
-                    <span className="font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-cyber-emerald transition-colors text-xs tracking-tight">
-                      Daniel Dayan
-                    </span>
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-cyber-emerald flex-shrink-0" />
-                  </div>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium tracking-tight">
-                    Creator &amp; Pentester
-                  </span>
-                </div>
-              </button>
-            </div>
+                <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_6px_#10b981]" />
+                </span>
+              </div>
+              
+              {/* Operator Name & Verified Check */}
+              <div className="flex items-center gap-1">
+                <span className="font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-cyber-emerald transition-colors text-xs tracking-tight whitespace-nowrap">
+                  Daniel Dayan
+                </span>
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-cyber-emerald flex-shrink-0" />
+              </div>
+            </button>
 
-            {/* Bottom row: High-CTR Social & Contact Pills */}
-            <div className="flex items-center gap-1.5">
+            {/* Subtle Vertical Divider */}
+            <div className="h-4 w-[1px] bg-slate-200 dark:bg-slate-700/80 flex-shrink-0 mx-0.5" />
+
+            {/* 4 Branded Action Pills */}
+            <div className="flex items-center gap-1 flex-shrink-0">
               {/* Portfolio */}
               <a
                 href={CREATOR_PROFILE_LINKS.portfolio}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/btn relative h-7 px-2.5 rounded-lg flex items-center gap-1.5 text-[11px] font-medium tracking-tight bg-emerald-50/80 hover:bg-emerald-600 text-emerald-800 hover:text-white dark:bg-emerald-950/40 dark:hover:bg-cyber-emerald dark:text-emerald-300 dark:hover:text-slate-950 border border-emerald-300/80 hover:border-emerald-600 dark:border-emerald-500/40 dark:hover:border-cyber-emerald shadow-2xs hover:shadow-[0_0_14px_rgba(16,185,129,0.4)] transition-all duration-150 active:scale-95 flex-shrink-0"
+                className="group/btn relative h-7 px-2 xl:px-2.5 rounded-full flex items-center gap-1 text-[11px] font-medium tracking-tight bg-emerald-50/90 hover:bg-emerald-600 text-emerald-800 hover:text-white dark:bg-emerald-950/40 dark:hover:bg-cyber-emerald dark:text-emerald-300 dark:hover:text-slate-950 border border-emerald-300/80 hover:border-emerald-600 dark:border-emerald-500/40 dark:hover:border-cyber-emerald shadow-2xs hover:shadow-[0_0_12px_rgba(16,185,129,0.4)] transition-all duration-150 active:scale-95 flex-shrink-0"
                 title="Explore Daniel Dayan's Official Portfolio Website"
                 aria-label="Daniel Dayan's Official Portfolio"
               >
                 <Globe className="w-3.5 h-3.5 text-emerald-600 dark:text-cyber-emerald group-hover/btn:text-white dark:group-hover/btn:text-slate-950 group-hover/btn:scale-110 transition-all flex-shrink-0" />
-                <span className="hidden lg:inline">Portfolio</span>
+                <span className="hidden xl:inline">Portfolio</span>
                 <ArrowUpRight className="w-3 h-3 opacity-60 group-hover/btn:opacity-100 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-all flex-shrink-0" />
               </a>
 
@@ -394,14 +393,14 @@ export const Header: React.FC = () => {
                 href={CREATOR_PROFILE_LINKS.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/btn relative h-7 px-2.5 rounded-lg flex items-center gap-1.5 text-[11px] font-medium tracking-tight bg-[#0A66C2]/10 hover:bg-[#0A66C2] text-[#0A66C2] hover:text-white dark:bg-[#0077B5]/15 dark:hover:bg-[#0A66C2] dark:text-[#38bdf8] dark:hover:text-white border border-[#0A66C2]/25 hover:border-[#0A66C2] dark:border-[#0077B5]/40 dark:hover:border-[#0A66C2] shadow-2xs hover:shadow-[0_0_14px_rgba(10,102,194,0.45)] transition-all duration-150 active:scale-95 flex-shrink-0"
+                className="group/btn relative h-7 px-2 xl:px-2.5 rounded-full flex items-center gap-1 text-[11px] font-medium tracking-tight bg-[#0A66C2]/10 hover:bg-[#0A66C2] text-[#0A66C2] hover:text-white dark:bg-[#0077B5]/15 dark:hover:bg-[#0A66C2] dark:text-[#38bdf8] dark:hover:text-white border border-[#0A66C2]/25 hover:border-[#0A66C2] dark:border-[#0077B5]/40 dark:hover:border-[#0A66C2] shadow-2xs hover:shadow-[0_0_12px_rgba(10,102,194,0.45)] transition-all duration-150 active:scale-95 flex-shrink-0"
                 title="Connect with Daniel Dayan on LinkedIn"
                 aria-label="Daniel Dayan on LinkedIn"
               >
                 <svg className="w-3.5 h-3.5 fill-current flex-shrink-0 text-[#0A66C2] dark:text-[#38bdf8] group-hover/btn:text-white dark:group-hover/btn:text-white group-hover/btn:scale-110 transition-all" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.7a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2Z"/>
                 </svg>
-                <span className="hidden lg:inline">LinkedIn</span>
+                <span className="hidden xl:inline">LinkedIn</span>
                 <ArrowUpRight className="w-3 h-3 opacity-60 group-hover/btn:opacity-100 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-all flex-shrink-0" />
               </a>
 
@@ -410,14 +409,28 @@ export const Header: React.FC = () => {
                 href={CREATOR_PROFILE_LINKS.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/btn relative h-7 px-2.5 rounded-lg flex items-center gap-1.5 text-[11px] font-medium tracking-tight bg-slate-100 hover:bg-slate-900 text-slate-800 hover:text-white dark:bg-white/10 dark:hover:bg-white dark:text-slate-200 dark:hover:text-slate-950 border border-slate-300 hover:border-slate-900 dark:border-white/20 dark:hover:border-white shadow-2xs hover:shadow-[0_0_14px_rgba(255,255,255,0.3)] transition-all duration-150 active:scale-95 flex-shrink-0"
+                className="group/btn relative h-7 px-2 xl:px-2.5 rounded-full flex items-center gap-1 text-[11px] font-medium tracking-tight bg-slate-100 hover:bg-slate-900 text-slate-800 hover:text-white dark:bg-white/10 dark:hover:bg-white dark:text-slate-200 dark:hover:text-slate-950 border border-slate-300 hover:border-slate-900 dark:border-white/20 dark:hover:border-white shadow-2xs hover:shadow-[0_0_12px_rgba(255,255,255,0.3)] transition-all duration-150 active:scale-95 flex-shrink-0"
                 title="View Daniel Dayan (@xXDNDXx) on GitHub"
                 aria-label="Daniel Dayan on GitHub"
               >
                 <svg className="w-3.5 h-3.5 fill-current flex-shrink-0 text-slate-800 dark:text-slate-200 group-hover/btn:text-white dark:group-hover/btn:text-slate-950 group-hover/btn:scale-110 transition-all" viewBox="0 0 24 24" aria-hidden="true">
                   <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
                 </svg>
-                <span className="hidden lg:inline">GitHub</span>
+                <span className="hidden xl:inline">GitHub</span>
+                <ArrowUpRight className="w-3 h-3 opacity-60 group-hover/btn:opacity-100 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-all flex-shrink-0" />
+              </a>
+
+              {/* Buy Me a Coffee */}
+              <a
+                href={CREATOR_PROFILE_LINKS.coffee}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/btn relative h-7 px-2 xl:px-2.5 rounded-full flex items-center gap-1 text-[11px] font-medium tracking-tight bg-amber-500/10 hover:bg-[#FFDD00] text-amber-800 hover:text-black dark:bg-[#FFDD00]/15 dark:hover:bg-[#FFDD00] dark:text-[#FFDD00] dark:hover:text-black border border-amber-400/40 hover:border-[#FFDD00] dark:border-[#FFDD00]/40 dark:hover:border-[#FFDD00] shadow-2xs hover:shadow-[0_0_14px_rgba(255,221,0,0.5)] transition-all duration-150 active:scale-95 flex-shrink-0"
+                title="Support Daniel Dayan on Buy Me a Coffee"
+                aria-label="Support Daniel Dayan on Buy Me a Coffee"
+              >
+                <Coffee className="w-3.5 h-3.5 text-amber-600 dark:text-[#FFDD00] group-hover/btn:text-black dark:group-hover/btn:text-black group-hover/btn:scale-110 transition-all flex-shrink-0" />
+                <span className="hidden xl:inline font-semibold">Coffee</span>
                 <ArrowUpRight className="w-3 h-3 opacity-60 group-hover/btn:opacity-100 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-all flex-shrink-0" />
               </a>
             </div>
